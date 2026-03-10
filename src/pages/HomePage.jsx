@@ -201,14 +201,24 @@ function PumdokiLogo() {
 
 /* ─── Heart-Shaped Story Avatar ──────────────────────────────────────── */
 
-function HeartAvatar({ src, name, borderColor, size = 56, borderWidth = 3 }) {
+function HeartAvatar({ src, name, borderColor, borderGradient, size = 56, borderWidth = 3 }) {
   const innerSize = size - borderWidth * 2;
   const heartPath = (s) =>
     `M${s/2},${s*0.9} C${s/2},${s*0.9} ${s*0.03},${s*0.6} ${s*0.03},${s*0.33} C${s*0.03},${s*0.13} ${s*0.18},0 ${s*0.34},0 C${s*0.43},0 ${s*0.47},${s*0.06} ${s/2},${s*0.14} C${s*0.53},${s*0.06} ${s*0.57},0 ${s*0.66},0 C${s*0.82},0 ${s*0.97},${s*0.13} ${s*0.97},${s*0.33} C${s*0.97},${s*0.6} ${s/2},${s*0.9} ${s/2},${s*0.9} Z`;
 
+  const gradientId = `heart-grad-${name}-${size}`;
+  const hasBorderGradient = borderGradient && borderGradient.length >= 2;
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="shrink-0">
       <defs>
+        {hasBorderGradient && (
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+            {borderGradient.map((color, i) => (
+              <stop key={i} offset={`${(i / (borderGradient.length - 1)) * 100}%`} stopColor={color} />
+            ))}
+          </linearGradient>
+        )}
         <clipPath id={`heart-clip-${name}-${size}`}>
           <path d={heartPath(size)} />
         </clipPath>
@@ -216,7 +226,7 @@ function HeartAvatar({ src, name, borderColor, size = 56, borderWidth = 3 }) {
           <path d={heartPath(innerSize)} />
         </clipPath>
       </defs>
-      <path d={heartPath(size)} fill={borderColor} />
+      <path d={heartPath(size)} fill={hasBorderGradient ? `url(#${gradientId})` : borderColor} />
       <g transform={`translate(${borderWidth},${borderWidth})`}>
         <image
           href={src}
@@ -242,7 +252,9 @@ export default function HomePage({ onLogout }) {
   const [showCompose, setShowCompose] = useState(false);
   const [kokoroStates, setKokoroStates] = useState({});
   const [activePage, setActivePage] = useState("home");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const storiesRef = useRef(null);
+  const sidebarTimeout = useRef(null);
 
   const toggleKokoro = (postId) => {
     setKokoroStates((prev) => ({ ...prev, [postId]: !prev[postId] }));
@@ -345,6 +357,35 @@ export default function HomePage({ onLogout }) {
               )}
             </div>
 
+            {/* Zen Garden – Sakura Plant */}
+            <button
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]"
+              aria-label="My Plant"
+            >
+              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
+                {/* Stem */}
+                <path d="M12 22V13" stroke="#6b9a5b" strokeWidth="1.5" strokeLinecap="round" />
+                {/* Left leaf */}
+                <path d="M12 17C9.5 17 7.5 15.5 8 13.5C8.5 11.5 10.5 11 12 12" stroke="#6b9a5b" strokeWidth="1" fill="#a8d5a2" fillOpacity="0.5" />
+                {/* Right leaf */}
+                <path d="M12 15C14.5 15 16 13.5 15.5 11.5C15 9.5 13 9 12 10" stroke="#6b9a5b" strokeWidth="1" fill="#a8d5a2" fillOpacity="0.5" />
+                {/* Sakura petals - 5 petal flower */}
+                <g transform="translate(12, 7)">
+                  <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(0)" />
+                  <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(72)" />
+                  <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(144)" />
+                  <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(216)" />
+                  <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(288)" />
+                  {/* Center */}
+                  <circle cx="0" cy="0" r="1.8" fill="#f472b6" />
+                  {/* Stamen dots */}
+                  <circle cx="0.8" cy="-0.8" r="0.5" fill="#fbbf24" />
+                  <circle cx="-0.8" cy="-0.5" r="0.5" fill="#fbbf24" />
+                  <circle cx="0.3" cy="0.8" r="0.5" fill="#fbbf24" />
+                </g>
+              </svg>
+            </button>
+
             {/* Profile */}
             <div className="relative" data-dropdown>
               <button
@@ -396,34 +437,56 @@ export default function HomePage({ onLogout }) {
 
       {/* ─── Layout Container ──────────────────────────────────────── */}
       <div className="flex pt-16 min-h-screen">
-        {/* ─── Left Sidebar (Desktop) ──────────────────────────────── */}
-        <aside className="hidden md:flex flex-col items-center w-[72px] shrink-0 sticky top-16 h-[calc(100vh-4rem)] bg-white border-r border-pink-100 py-6 gap-2 z-40">
-          {navItems.map((item) => (
-            <div key={item.id} className="group relative">
-              <button
-                onClick={() => {
-                  if (item.id === "compose") {
-                    setShowCompose(true);
-                  } else {
-                    setActivePage(item.id);
-                  }
-                }}
-                className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-200 ${
-                  activePage === item.id
-                    ? "bg-gradient-to-br from-[#f9a8c8] to-[#f472b6] text-white shadow-md shadow-pink-200/50"
-                    : "text-[#8c6d7f] hover:bg-pink-50 hover:text-[#df5f97]"
-                }`}
-                aria-label={item.label}
-              >
-                {item.icon}
-              </button>
-              {/* Tooltip */}
-              <div className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-3 rounded-xl bg-[#241a22] px-3 py-2 text-xs font-medium text-white whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100 shadow-lg">
-                {item.label}
-                <div className="absolute right-full top-1/2 -translate-y-1/2 border-[5px] border-transparent border-r-[#241a22]" />
-              </div>
-            </div>
-          ))}
+        {/* ─── Left Sidebar (Desktop) – IG-style collapsible drawer ── */}
+        <aside
+          className={`hidden md:flex flex-col shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-r border-pink-100 z-40 transition-all duration-300 ease-in-out ${
+            sidebarOpen ? "w-[220px]" : "w-[72px]"
+          }`}
+          onMouseEnter={() => {
+            clearTimeout(sidebarTimeout.current);
+            sidebarTimeout.current = setTimeout(() => setSidebarOpen(true), 80);
+          }}
+          onMouseLeave={() => {
+            clearTimeout(sidebarTimeout.current);
+            sidebarTimeout.current = setTimeout(() => setSidebarOpen(false), 200);
+          }}
+        >
+          <nav className="flex flex-col gap-1 py-6 px-3">
+            {navItems.map((item) => {
+              const isActive = activePage === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    if (item.id === "compose") {
+                      setShowCompose(true);
+                    } else {
+                      setActivePage(item.id);
+                    }
+                  }}
+                  className={`flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden ${
+                    isActive
+                      ? "text-[#241a22]"
+                      : "text-[#8c6d7f] hover:bg-pink-50/60 hover:text-[#df5f97]"
+                  }`}
+                  aria-label={item.label}
+                >
+                  <div className={`shrink-0 transition-transform duration-200 ${isActive ? "scale-110" : ""}`}>
+                    {item.icon}
+                  </div>
+                  <span
+                    className={`whitespace-nowrap text-sm transition-all duration-300 ${
+                      sidebarOpen
+                        ? "opacity-100 translate-x-0"
+                        : "opacity-0 -translate-x-2 pointer-events-none w-0"
+                    } ${isActive ? "font-bold" : "font-medium"}`}
+                  >
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
         </aside>
 
         {/* ─── Main Content ────────────────────────────────────────── */}
@@ -443,6 +506,13 @@ export default function HomePage({ onLogout }) {
                         ? HEART_RED
                         : SAKURA_PINK;
 
+                  const borderGradient =
+                    story.type === "regular"
+                      ? ["#fcd5e5", "#f9a8c8", "#f472b6", "#ec4899"]
+                      : story.type === "private"
+                        ? ["#fca5a5", "#ef4444", "#dc2626", "#b91c1c"]
+                        : undefined;
+
                   return (
                     <button
                       key={story.id}
@@ -453,8 +523,9 @@ export default function HomePage({ onLogout }) {
                           src={story.avatar}
                           name={`story-${story.id}`}
                           borderColor={borderColor}
+                          borderGradient={borderGradient}
                           size={76}
-                          borderWidth={3}
+                          borderWidth={4.5}
                         />
                         {story.type === "own" && (
                           <div className="absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#f472b6] text-white ring-2 ring-white">
@@ -619,13 +690,13 @@ export default function HomePage({ onLogout }) {
                 {chatContacts.map((contact) => (
                   <button
                     key={contact.id}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-pink-50/60"
+                    className="flex w-full items-center gap-3 px-4 py-4 text-left transition hover:bg-pink-50/60"
                   >
                     <div className="relative shrink-0">
                       <img
                         src={contact.avatar}
                         alt={contact.name}
-                        className="h-14 w-14 rounded-full object-cover"
+                        className="h-16 w-16 rounded-full object-cover"
                       />
                       {contact.online && (
                         <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-400 ring-2 ring-white" />
@@ -654,7 +725,7 @@ export default function HomePage({ onLogout }) {
               </div>
             ) : (
               /* ─── Collapsed: Avatar Stack ─── */
-              <div className="flex flex-col items-center gap-3 py-3">
+              <div className="flex flex-col items-center gap-5 py-3">
                 {totalUnread > 0 && (
                   <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#f472b6] px-1 text-[10px] font-bold text-white">
                     {totalUnread}
@@ -670,7 +741,7 @@ export default function HomePage({ onLogout }) {
                     <img
                       src={contact.avatar}
                       alt={contact.name}
-                      className="h-12 w-12 rounded-full object-cover border-2 border-pink-100 transition group-hover:border-pink-300"
+                      className="h-14 w-14 rounded-full object-cover border-2 border-pink-100 transition group-hover:border-pink-300"
                     />
                     {contact.online && (
                       <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-white" />
