@@ -501,6 +501,13 @@ export default function LoginPage({ onLogin }) {
                 >
                   Log in
                 </button>
+
+                <p className="mt-3 text-center text-xs leading-5 text-[#8c6d7f]">
+                  By logging in and using Pumdoki, you agree to our{" "}
+                  <a href="#" className="text-[#df5f97] hover:underline">Terms of Service</a>{" "}
+                  and{" "}
+                  <a href="#" className="text-[#df5f97] hover:underline">Privacy Policy</a>, and confirm that you are at least 18 years old.
+                </p>
               </form>
 
               <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-[#c194aa]">
