@@ -2,21 +2,40 @@ import { useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
+import OasisPage from "./pages/OasisPage";
+import ConnectPage from "./pages/ConnectPage";
+import StorePage from "./pages/StorePage";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("login");
 
+  const nav = {
+    onBack: () => setCurrentPage("home"),
+    onLogout: () => setCurrentPage("login"),
+    onViewProfile: () => setCurrentPage("profile"),
+    onOpenOasis: () => setCurrentPage("oasis"),
+    onOpenConnect: () => setCurrentPage("connect"),
+    onOpenStore: () => setCurrentPage("store"),
+  };
+
+  if (currentPage === "oasis") {
+    return <OasisPage onBack={nav.onBack} />;
+  }
+
+  if (currentPage === "connect") {
+    return <ConnectPage {...nav} />;
+  }
+
+  if (currentPage === "store") {
+    return <StorePage {...nav} />;
+  }
+
   if (currentPage === "profile") {
-    return <ProfilePage onBack={() => setCurrentPage("home")} onLogout={() => setCurrentPage("login")} />;
+    return <ProfilePage {...nav} />;
   }
 
   if (currentPage === "home") {
-    return (
-      <HomePage
-        onLogout={() => setCurrentPage("login")}
-        onViewProfile={() => setCurrentPage("profile")}
-      />
-    );
+    return <HomePage {...nav} />;
   }
 
   return <LoginPage onLogin={() => setCurrentPage("home")} />;

@@ -104,7 +104,7 @@ const profileData = {
   avatarDecoration: "sakura",
 };
 
-const profileStories = [
+const profileMoments = [
   { id: 1, name: "Beach Day", thumb: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=150&q=80", type: "regular" },
   { id: 2, name: "BTS Shoot", thumb: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=150&q=80", type: "private" },
   { id: 3, name: "Travel", thumb: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=150&q=80", type: "regular" },
@@ -287,7 +287,7 @@ function PumdokiLogo() {
   );
 }
 
-/* ─── Heart-Shaped Story Avatar ──────────────────────────────────────── */
+/* ─── Heart-Shaped Moment Avatar ─────────────────────────────────────── */
 
 function HeartAvatar({ src, name, borderColor, borderGradient, size = 56, borderWidth = 3 }) {
   const innerSize = size - borderWidth * 2;
@@ -430,7 +430,7 @@ function StarRating({ rating }) {
 
 /* ─── Profile Page ───────────────────────────────────────────────────── */
 
-export default function ProfilePage({ onBack, onLogout }) {
+export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOasis, onOpenConnect, onOpenStore }) {
   const [activeTab, setActiveTab] = useState("services");
   const [isFollowing, setIsFollowing] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
@@ -444,7 +444,7 @@ export default function ProfilePage({ onBack, onLogout }) {
   const [storeFilter, setStoreFilter] = useState("all");
   const [storeSearch, setStoreSearch] = useState("");
   const [storeLayout, setStoreLayout] = useState("grid");
-  const storiesRef = useRef(null);
+  const momentsRef = useRef(null);
 
   // Layout states (shared with HomePage)
   const [chatExpanded, setChatExpanded] = useState(false);
@@ -453,6 +453,12 @@ export default function ProfilePage({ onBack, onLogout }) {
   const [showSearch, setShowSearch] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showComposeMenu, setShowComposeMenu] = useState(false);
+  const [showCompose, setShowCompose] = useState(false);
+  const [composeFontSize, setComposeFontSize] = useState("normal");
+  const [composeFontColor, setComposeFontColor] = useState("#4a3340");
+  const [composeBold, setComposeBold] = useState(false);
+  const [composeItalic, setComposeItalic] = useState(false);
   const sidebarTimeout = useRef(null);
 
   const profile = profileData;
@@ -682,27 +688,78 @@ export default function ProfilePage({ onBack, onLogout }) {
         >
           <div className="flex-[1]" />
           <nav className="flex flex-col gap-1 px-3">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  if (item.id === "home") onBack();
-                }}
-                className={`flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden text-[#8c6d7f] hover:bg-pink-50/60 hover:text-[#df5f97]`}
-                aria-label={item.label}
-              >
-                <div className="shrink-0">{item.icon}</div>
-                <span
-                  className={`whitespace-nowrap text-sm font-medium transition-all duration-300 ${
-                    sidebarOpen
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 -translate-x-2 pointer-events-none w-0"
-                  }`}
+            {navItems.map((item) => {
+              /* Compose button gets a dropdown menu */
+              if (item.id === "compose") {
+                return (
+                  <div key={item.id} className="relative" data-dropdown>
+                    <button
+                      onClick={() => setShowComposeMenu(!showComposeMenu)}
+                      className="flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden text-[#8c6d7f] hover:bg-pink-50/60 hover:text-[#df5f97]"
+                      aria-label="Create"
+                    >
+                      <div className="shrink-0">{item.icon}</div>
+                      <span
+                        className={`whitespace-nowrap text-sm font-medium transition-all duration-300 ${
+                          sidebarOpen
+                            ? "opacity-100 translate-x-0"
+                            : "opacity-0 -translate-x-2 pointer-events-none w-0"
+                        }`}
+                      >
+                        Create
+                      </span>
+                    </button>
+                    {showComposeMenu && (
+                      <div className="absolute left-0 bottom-full mb-2 w-[200px] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
+                        <button
+                          onClick={() => { setShowCompose(true); setShowComposeMenu(false); }}
+                          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97]"
+                        >
+                          <svg viewBox="0 0 24 24" className="h-4.5 w-4.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                          </svg>
+                          Create Post
+                        </button>
+                        <button
+                          onClick={() => { setShowComposeMenu(false); }}
+                          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97]"
+                        >
+                          <svg viewBox="0 0 24 24" className="h-4.5 w-4.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                          </svg>
+                          Create Moment
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    if (item.id === "home") onBack();
+                    else if (item.id === "connect" && onOpenConnect) onOpenConnect();
+                    else if (item.id === "store" && onOpenStore) onOpenStore();
+                  }}
+                  className={`flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden text-[#8c6d7f] hover:bg-pink-50/60 hover:text-[#df5f97]`}
+                  aria-label={item.label}
                 >
-                  {item.label}
-                </span>
-              </button>
-            ))}
+                  <div className="shrink-0">{item.icon}</div>
+                  <span
+                    className={`whitespace-nowrap text-sm font-medium transition-all duration-300 ${
+                      sidebarOpen
+                        ? "opacity-100 translate-x-0"
+                        : "opacity-0 -translate-x-2 pointer-events-none w-0"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
           </nav>
           <div className="flex-[2]" />
 
@@ -938,27 +995,27 @@ export default function ProfilePage({ onBack, onLogout }) {
             </div>
           </div>
 
-          {/* ─── Stories (under banner, ePal-style semi-transparent boxes) ── */}
+          {/* ─── Moments (under banner, ePal-style semi-transparent boxes) ── */}
           <div className="bg-[#fff8fb] py-4">
             <div
-              ref={storiesRef}
+              ref={momentsRef}
               className="flex gap-3 overflow-x-auto hide-scrollbar justify-center max-w-[1500px] mx-auto px-4"
             >
-              {profileStories.map((story) => {
+              {profileMoments.map((moment) => {
                 const borderGradient =
-                  story.type === "private"
+                  moment.type === "private"
                     ? ["#fca5a5", "#ef4444", "#dc2626", "#b91c1c"]
                     : ["#fcd5e5", "#f9a8c8", "#f472b6", "#ec4899"];
 
                 return (
                   <button
-                    key={story.id}
+                    key={moment.id}
                     className="flex flex-col items-center gap-1.5 shrink-0 group"
                   >
                     <div className="relative">
                       <HeartAvatar
-                        src={story.thumb}
-                        name={`profile-story-${story.id}`}
+                        src={moment.thumb}
+                        name={`profile-moment-${moment.id}`}
                         borderColor={SAKURA_PINK}
                         borderGradient={borderGradient}
                         size={68}
@@ -967,7 +1024,7 @@ export default function ProfilePage({ onBack, onLogout }) {
                     </div>
                     {/* Semi-transparent label box (ePal-style) */}
                     <span className="text-[11px] text-[#4a3340] font-medium max-w-[72px] truncate px-2.5 py-0.5 rounded-full bg-[#5b4153]/10 backdrop-blur-sm group-hover:bg-[#f472b6]/15 group-hover:text-[#df5f97] transition">
-                      {story.name}
+                      {moment.name}
                     </span>
                   </button>
                 );
@@ -1860,16 +1917,53 @@ export default function ProfilePage({ onBack, onLogout }) {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-pink-100 bg-white/95 backdrop-blur-md">
         <div className="flex h-14 items-center justify-around px-2">
           {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                if (item.id === "home") onBack();
-              }}
-              className="flex h-11 w-11 items-center justify-center rounded-xl transition text-[#8c6d7f] active:text-[#df5f97]"
-              aria-label={item.label}
-            >
-              {item.icon}
-            </button>
+            item.id === "compose" ? (
+              <div key={item.id} className="relative" data-dropdown>
+                <button
+                  onClick={() => setShowComposeMenu(!showComposeMenu)}
+                  className="flex h-11 w-11 items-center justify-center rounded-xl transition text-[#8c6d7f] active:text-[#df5f97]"
+                  aria-label="Create"
+                >
+                  {item.icon}
+                </button>
+                {showComposeMenu && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[180px] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
+                    <button
+                      onClick={() => { setShowCompose(true); setShowComposeMenu(false); }}
+                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                      </svg>
+                      Create Post
+                    </button>
+                    <button
+                      onClick={() => setShowComposeMenu(false)}
+                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                      </svg>
+                      Create Moment
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                key={item.id}
+                onClick={() => {
+                  if (item.id === "home") onBack();
+                  else if (item.id === "connect" && onOpenConnect) onOpenConnect();
+                  else if (item.id === "store" && onOpenStore) onOpenStore();
+                }}
+                className="flex h-11 w-11 items-center justify-center rounded-xl transition text-[#8c6d7f] active:text-[#df5f97]"
+                aria-label={item.label}
+              >
+                {item.icon}
+              </button>
+            )
           ))}
           <button
             className="relative flex h-11 w-11 items-center justify-center rounded-xl transition text-[#8c6d7f] active:text-[#df5f97]"
@@ -1886,6 +1980,143 @@ export default function ProfilePage({ onBack, onLogout }) {
           </button>
         </div>
       </nav>
+
+      {/* ─── Compose Modal ─────────────────────────────────────────── */}
+      {showCompose && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg rounded-3xl border border-pink-100 bg-white shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between border-b border-pink-50 px-5 py-4">
+              <h2 className="text-lg font-semibold text-[#241a22]">Create Post</h2>
+              <button
+                onClick={() => setShowCompose(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#e8384f]"
+                aria-label="Close"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-5">
+              <div className="flex items-start gap-3">
+                <img
+                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80"
+                  alt="Your avatar"
+                  className="h-10 w-10 rounded-full object-cover border border-pink-100"
+                />
+                <textarea
+                  placeholder="What's on your mind?"
+                  rows={4}
+                  className="flex-1 resize-none rounded-xl border border-pink-100 bg-[#fffafc] px-4 py-3 outline-none placeholder:text-[#c59aae] focus:border-pink-300"
+                  style={{
+                    fontSize: composeFontSize === "small" ? "13px" : composeFontSize === "large" ? "18px" : "14px",
+                    fontWeight: composeBold ? "700" : "400",
+                    fontStyle: composeItalic ? "italic" : "normal",
+                    color: composeFontColor,
+                  }}
+                />
+              </div>
+              <div className="mt-3 flex items-center gap-2 flex-wrap border-t border-pink-50 pt-3">
+                <div className="flex items-center rounded-lg border border-pink-100 overflow-hidden">
+                  {[
+                    { id: "small", label: "S", title: "Small" },
+                    { id: "normal", label: "M", title: "Medium" },
+                    { id: "large", label: "L", title: "Large" },
+                  ].map((size) => (
+                    <button
+                      key={size.id}
+                      onClick={() => setComposeFontSize(size.id)}
+                      className={`px-2.5 py-1.5 text-xs font-semibold transition ${
+                        composeFontSize === size.id
+                          ? "bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] text-white"
+                          : "text-[#8c6d7f] hover:bg-pink-50"
+                      }`}
+                      title={size.title}
+                    >
+                      {size.label}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setComposeBold(!composeBold)}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-bold transition ${
+                    composeBold
+                      ? "border-[#f472b6] bg-pink-50 text-[#f472b6]"
+                      : "border-pink-100 text-[#8c6d7f] hover:bg-pink-50"
+                  }`}
+                  title="Bold"
+                >
+                  B
+                </button>
+                <button
+                  onClick={() => setComposeItalic(!composeItalic)}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border text-xs transition ${
+                    composeItalic
+                      ? "border-[#f472b6] bg-pink-50 text-[#f472b6]"
+                      : "border-pink-100 text-[#8c6d7f] hover:bg-pink-50"
+                  }`}
+                  title="Italic"
+                >
+                  <span className="italic font-serif">I</span>
+                </button>
+                <div className="flex items-center gap-1 ml-1">
+                  {[
+                    { color: "#4a3340", name: "Default" },
+                    { color: "#8b2252", name: "Berry" },
+                    { color: "#c2185b", name: "Rose" },
+                    { color: "#f472b6", name: "Sakura" },
+                    { color: "#7c3aed", name: "Violet" },
+                    { color: "#2563eb", name: "Ocean" },
+                  ].map((c) => (
+                    <button
+                      key={c.color}
+                      onClick={() => setComposeFontColor(c.color)}
+                      className={`h-6 w-6 rounded-full border-2 transition ${
+                        composeFontColor === c.color
+                          ? "border-[#241a22] scale-110"
+                          : "border-transparent hover:border-pink-200"
+                      }`}
+                      style={{ backgroundColor: c.color }}
+                      title={c.name}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="mt-3 flex items-center gap-2 border-t border-pink-50 pt-3">
+                <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <path d="M21 15l-5-5L5 21" />
+                  </svg>
+                  Photo
+                </button>
+                <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="23 7 16 12 23 17 23 7" />
+                    <rect x="1" y="5" width="15" height="14" rx="2" />
+                  </svg>
+                  Video
+                </button>
+                <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                  </svg>
+                  Price
+                </button>
+                <div className="flex-1" />
+                <button
+                  onClick={() => setShowCompose(false)}
+                  className="rounded-xl bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-pink-200/50 transition hover:shadow-lg"
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
