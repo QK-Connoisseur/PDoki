@@ -430,7 +430,7 @@ function StarRating({ rating }) {
 
 /* ─── Profile Page ───────────────────────────────────────────────────── */
 
-export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOasis, onOpenConnect, onOpenStore }) {
+export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOasis, onOpenConnect, onOpenStore, onOpenDiscover }) {
   const [activeTab, setActiveTab] = useState("services");
   const [isFollowing, setIsFollowing] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
@@ -743,6 +743,7 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
                     if (item.id === "home") onBack();
                     else if (item.id === "connect" && onOpenConnect) onOpenConnect();
                     else if (item.id === "store" && onOpenStore) onOpenStore();
+                    else if (item.id === "discover" && onOpenDiscover) onOpenDiscover();
                   }}
                   className={`flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden text-[#8c6d7f] hover:bg-pink-50/60 hover:text-[#df5f97]`}
                   aria-label={item.label}

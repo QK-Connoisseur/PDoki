@@ -555,7 +555,7 @@ function PumdokiLogo() {
 
 /* ─── Main Component ─────────────────────────────────────────────────── */
 
-export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenConnect, onOpenStore }) {
+export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenConnect, onOpenStore, onOpenDiscover }) {
   const [chatExpanded, setChatExpanded] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -593,6 +593,8 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
       onBack && onBack();
     } else if (id === "store") {
       onOpenStore && onOpenStore();
+    } else if (id === "discover") {
+      onOpenDiscover && onOpenDiscover();
     } else {
       setActivePage(id);
     }
@@ -603,8 +605,10 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
     ? creators
     : creators.filter((c) => c.services.includes(activeFilter));
 
-  const recentCreators = filteredCreators.filter((c) => c.section === "recent");
-  const popularCreators = filteredCreators.filter((c) => c.section === "popular");
+  const eChatCreators = filteredCreators.filter((c) => c.services.includes("chat"));
+  const voiceCallCreators = filteredCreators.filter((c) => c.services.includes("voice"));
+  const videoCallCreators = filteredCreators.filter((c) => c.services.includes("video"));
+  const gameCreators = filteredCreators.filter((c) => c.services.includes("game"));
 
   const totalUnread = chatContacts.reduce((sum, c) => sum + c.unread, 0);
 
@@ -895,7 +899,7 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
 
         {/* ─── Main Content ────────────────────────────────────────── */}
         <main className="flex-1 min-w-0 pb-20 md:pb-8">
-          <div className="max-w-[900px] mx-auto px-4 pt-4">
+          <div className="max-w-[1700px] mx-auto px-4 pt-4">
             {/* ─── Page Header ─────────────────────────────────────── */}
             <div className="mb-5">
               <h1 className="text-xl font-bold text-[#241a22]">Connect</h1>
@@ -919,32 +923,94 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
               ))}
             </div>
 
-            {/* ─── Recently Updated Creators ───────────────────────── */}
-            {recentCreators.length > 0 && (
+            {/* ─── E-Chat ───────────────────────────────────────────── */}
+            {eChatCreators.length > 0 && (
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8]">Recently Updated Creators</h2>
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#f472b6]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg>
+                    E-Chat
+                  </h2>
                   <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
                     Show All
                   </button>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {recentCreators.map((creator) => (
-                    <CreatorCard key={creator.id} creator={creator} />
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                  {eChatCreators.map((creator) => (
+                    <CreatorCard key={`chat-${creator.id}`} creator={creator} />
                   ))}
                 </div>
               </div>
             )}
 
-            {/* ─── Popular Creators ────────────────────────────────── */}
-            {popularCreators.length > 0 && (
+            {/* ─── Voice Call Ready ─────────────────────────────────── */}
+            {voiceCallCreators.length > 0 && (
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8]">Popular Creators</h2>
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#f472b6]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+                    </svg>
+                    Voice Call Ready
+                  </h2>
+                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
+                    Show All
+                  </button>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {popularCreators.map((creator) => (
-                    <CreatorCard key={creator.id} creator={creator} />
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                  {voiceCallCreators.map((creator) => (
+                    <CreatorCard key={`voice-${creator.id}`} creator={creator} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ─── Video Call ───────────────────────────────────────── */}
+            {videoCallCreators.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#f472b6]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="23 7 16 12 23 17 23 7" />
+                      <rect x="1" y="5" width="15" height="14" rx="2" />
+                    </svg>
+                    Video Call
+                  </h2>
+                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
+                    Show All
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                  {videoCallCreators.map((creator) => (
+                    <CreatorCard key={`video-${creator.id}`} creator={creator} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ─── Game With Me ─────────────────────────────────────── */}
+            {gameCreators.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#f472b6]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="6" y1="11" x2="10" y2="11" />
+                      <line x1="8" y1="9" x2="8" y2="13" />
+                      <line x1="15" y1="12" x2="15.01" y2="12" />
+                      <line x1="18" y1="10" x2="18.01" y2="10" />
+                      <path d="M17.32 5H6.68a4 4 0 00-3.978 3.59C2.166 12.4 2 16.29 2 18a2 2 0 002 2c1.105 0 2-.672 2.5-1.5L8 16h8l1.5 2.5c.5.828 1.395 1.5 2.5 1.5a2 2 0 002-2c0-1.71-.166-5.6-.703-9.41A4 4 0 0017.32 5z" />
+                    </svg>
+                    Game With Me
+                  </h2>
+                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
+                    Show All
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                  {gameCreators.map((creator) => (
+                    <CreatorCard key={`game-${creator.id}`} creator={creator} />
                   ))}
                 </div>
               </div>

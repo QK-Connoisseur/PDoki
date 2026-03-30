@@ -309,7 +309,7 @@ function HeartAvatar({ src, name, borderColor, borderGradient, size = 56, border
 
 /* ─── Main Component ─────────────────────────────────────────────────── */
 
-export default function HomePage({ onLogout, onViewProfile, onOpenOasis, onOpenConnect, onOpenStore, onBack }) {
+export default function HomePage({ onLogout, onViewProfile, onOpenOasis, onOpenConnect, onOpenStore, onOpenDiscover, onBack }) {
   const [chatExpanded, setChatExpanded] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -585,6 +585,7 @@ export default function HomePage({ onLogout, onViewProfile, onOpenOasis, onOpenC
                   onClick={() => {
                     if (item.id === "connect" && onOpenConnect) onOpenConnect();
                     else if (item.id === "store" && onOpenStore) onOpenStore();
+                    else if (item.id === "discover" && onOpenDiscover) onOpenDiscover();
                     else setActivePage(item.id);
                   }}
                   className={`flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden ${

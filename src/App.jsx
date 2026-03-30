@@ -5,6 +5,7 @@ import ProfilePage from "./pages/ProfilePage";
 import OasisPage from "./pages/OasisPage";
 import ConnectPage from "./pages/ConnectPage";
 import StorePage from "./pages/StorePage";
+import DiscoverPage from "./pages/DiscoverPage";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("login");
@@ -16,6 +17,7 @@ export default function App() {
     onOpenOasis: () => setCurrentPage("oasis"),
     onOpenConnect: () => setCurrentPage("connect"),
     onOpenStore: () => setCurrentPage("store"),
+    onOpenDiscover: () => setCurrentPage("discover"),
   };
 
   if (currentPage === "oasis") {
@@ -28,6 +30,10 @@ export default function App() {
 
   if (currentPage === "store") {
     return <StorePage {...nav} />;
+  }
+
+  if (currentPage === "discover") {
+    return <DiscoverPage {...nav} />;
   }
 
   if (currentPage === "profile") {
