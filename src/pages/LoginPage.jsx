@@ -104,9 +104,9 @@ export default function LoginPage({ onLogin }) {
       action: "Explore members",
     },
     {
-      title: "Discover",
-      body: "Find people, moments, and experiences worth coming back for",
-      action: "Browse creators",
+      title: "Promotions",
+      body: "Exclusive deals, free trials, and discounts from top creators",
+      action: "View deals",
     },
     {
       title: "Create & Earn",

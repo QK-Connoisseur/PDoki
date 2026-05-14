@@ -9,7 +9,7 @@ const chatContacts = [
   { id: 1, name: "Luna Bloom", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80", lastMessage: "Thanks for the support!", status: "online", unread: 2, fromMe: false, time: "2m" },
   { id: 2, name: "Mika Rose", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80", lastMessage: "See you on the stream tonight!", status: "busy", unread: 0, fromMe: true, time: "15m" },
   { id: 3, name: "Airi Vale", avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80", lastMessage: "New content coming soon", status: "resting", unread: 1, fromMe: false, time: "1h" },
-  { id: 4, name: "Sora Nyx", avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80", lastMessage: "Loved your comment!", status: "online", unread: 11, fromMe: false, time: "3h" },
+  { id: 4, name: "Sora Nyx", avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80", lastMessage: "Loved your comment!", status: "online", unread: 0, fromMe: false, time: "3h" },
   { id: 5, name: "Naomi Hart", avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80", lastMessage: "Check out my latest post", status: "offline", unread: 0, fromMe: true, time: "5h" },
   { id: 6, name: "Reina Noir", avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80", lastMessage: "When's the next drop?", status: "busy", unread: 3, fromMe: false, time: "6h" },
 ];
@@ -21,174 +21,179 @@ const notifications = [
   { id: 4, text: "Sora Nyx commented on your post", time: "3h ago", avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80" },
 ];
 
-const creators = [
+const promotions = [
   {
     id: 1,
     name: "Luna Bloom",
     username: "lunabloom",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "gold",
-    services: ["chat", "voice", "video"],
-    price: "$3.99/min",
-    description: "Friendly conversations about life, love, and everything in between.",
-    section: "recent",
+    cover: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "free-trial",
+    promoLabel: "7 Days Free",
+    promoDetail: "Free trial for new subscribers",
+    originalPrice: "$9.99/mo",
+    subscribers: "12.4k",
+    posts: 847,
+    category: "lifestyle",
   },
   {
     id: 2,
     name: "Mika Rose",
     username: "mikarose",
     avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "star",
-    services: ["chat", "video", "game"],
-    price: "$5.99/min",
-    description: "Let's play games together or just vibe on a video call!",
-    section: "recent",
+    cover: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "discount",
+    promoLabel: "50% Off",
+    promoDetail: "First month half price",
+    originalPrice: "$14.99/mo",
+    discountPrice: "$7.49/mo",
+    subscribers: "8.7k",
+    posts: 523,
+    category: "gaming",
   },
   {
     id: 3,
     name: "Airi Vale",
     username: "airivale",
     avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "silver",
-    services: ["chat", "voice"],
-    price: "$2.49/msg",
-    description: "Deep talks and late-night chats. Always here to listen.",
-    section: "recent",
+    cover: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "free-trial",
+    promoLabel: "14 Days Free",
+    promoDetail: "Two weeks free access",
+    originalPrice: "$7.99/mo",
+    subscribers: "5.2k",
+    posts: 312,
+    category: "asmr",
   },
   {
     id: 4,
     name: "Sora Nyx",
     username: "soranyx",
     avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "legend",
-    services: ["chat", "voice", "video", "game"],
-    price: "$8.99/min",
-    description: "Premium 1-on-1 experiences. Gaming, chatting, and more.",
-    section: "recent",
+    cover: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "discount",
+    promoLabel: "30% Off",
+    promoDetail: "Limited time discount",
+    originalPrice: "$19.99/mo",
+    discountPrice: "$13.99/mo",
+    subscribers: "21.1k",
+    posts: 1203,
+    category: "premium",
   },
   {
     id: 5,
     name: "Naomi Hart",
     username: "naomihart",
     avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "gold",
-    services: ["chat", "video"],
-    price: "$4.49/min",
-    description: "Video calls with good vibes and great energy every time.",
-    section: "recent",
+    cover: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "bundle",
+    promoLabel: "3 for 2",
+    promoDetail: "Subscribe 3 months, pay for 2",
+    originalPrice: "$12.99/mo",
+    subscribers: "3.8k",
+    posts: 198,
+    category: "fitness",
   },
   {
     id: 6,
     name: "Reina Noir",
     username: "reinanoir",
     avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "2stars",
-    services: ["voice", "video"],
-    price: "$6.99/min",
-    description: "Voice and video sessions with a creative twist. Come say hi!",
-    section: "recent",
+    cover: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "free-trial",
+    promoLabel: "3 Days Free",
+    promoDetail: "Quick free preview",
+    originalPrice: "$24.99/mo",
+    subscribers: "15.9k",
+    posts: 976,
+    category: "premium",
   },
   {
     id: 7,
     name: "Kira Dawn",
     username: "kiradawn",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "bronze",
-    services: ["chat", "game"],
-    price: "$1.99/msg",
-    description: "Casual gaming sessions and fun chat. Let's hang out!",
-    section: "recent",
+    cover: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "discount",
+    promoLabel: "70% Off",
+    promoDetail: "Massive first-month deal",
+    originalPrice: "$9.99/mo",
+    discountPrice: "$2.99/mo",
+    subscribers: "2.1k",
+    posts: 87,
+    category: "lifestyle",
   },
   {
     id: 8,
     name: "Yuki Star",
     username: "yukistar",
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "star",
-    services: ["chat", "voice", "video"],
-    price: "$5.49/min",
-    description: "Warm conversations and cozy voice calls. Your comfort zone.",
-    section: "popular",
+    cover: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "free-trial",
+    promoLabel: "30 Days Free",
+    promoDetail: "Full month free trial",
+    originalPrice: "$5.99/mo",
+    subscribers: "9.4k",
+    posts: 634,
+    category: "asmr",
   },
   {
     id: 9,
     name: "Hana Mizu",
     username: "hanamizu",
     avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "gold",
-    services: ["chat", "voice", "game"],
-    price: "$4.99/min",
-    description: "Challenge me to a game or just chat about anything.",
-    section: "popular",
+    cover: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "bundle",
+    promoLabel: "6 for 4",
+    promoDetail: "Subscribe 6 months, pay for 4",
+    originalPrice: "$11.99/mo",
+    subscribers: "6.3k",
+    posts: 421,
+    category: "gaming",
   },
   {
     id: 10,
     name: "Emi Skye",
     username: "emiskye",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "legend",
-    services: ["chat", "voice", "video", "game"],
-    price: "$9.99/min",
-    description: "Full interactive experience. Games, calls, and exclusive chats.",
-    section: "popular",
+    cover: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "discount",
+    promoLabel: "40% Off",
+    promoDetail: "Spring sale discount",
+    originalPrice: "$16.99/mo",
+    discountPrice: "$9.99/mo",
+    subscribers: "18.2k",
+    posts: 1087,
+    category: "premium",
   },
   {
     id: 11,
     name: "Rin Velvet",
     username: "rinvelvet",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "silver",
-    services: ["chat", "video"],
-    price: "$3.49/min",
-    description: "Chill video sessions. Let's talk about your day.",
-    section: "popular",
+    cover: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "free-trial",
+    promoLabel: "5 Days Free",
+    promoDetail: "Try before you subscribe",
+    originalPrice: "$8.99/mo",
+    subscribers: "4.6k",
+    posts: 265,
+    category: "fitness",
   },
   {
     id: 12,
     name: "Mei Soleil",
     username: "meisoleil",
     avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "2stars",
-    services: ["voice", "video", "game"],
-    price: "$7.49/min",
-    description: "High-energy gaming and interactive voice experiences.",
-    section: "popular",
-  },
-  {
-    id: 13,
-    name: "Zara Lux",
-    username: "zaralux",
-    avatar: "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "bronze",
-    services: ["chat"],
-    price: "$1.49/msg",
-    description: "Quick messages and personal replies. Always responsive.",
-    section: "popular",
-  },
-  {
-    id: 14,
-    name: "Noa Ember",
-    username: "noaember",
-    avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&q=80",
-    photo: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=400&h=530&q=80",
-    level: "gold",
-    services: ["chat", "voice", "video"],
-    price: "$4.99/min",
-    description: "Voice calls with personality. Let me brighten your day.",
-    section: "popular",
+    cover: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=600&h=400&q=80",
+    promoType: "discount",
+    promoLabel: "60% Off",
+    promoDetail: "Limited time mega deal",
+    originalPrice: "$22.99/mo",
+    discountPrice: "$8.99/mo",
+    subscribers: "11.7k",
+    posts: 789,
+    category: "lifestyle",
   },
 ];
 
@@ -200,236 +205,134 @@ const HEART_RED = "#e8384f";
 /* ─── Filter Tabs ────────────────────────────────────────────────────── */
 
 const filterTabs = [
-  { id: "all", label: "All" },
-  { id: "chat", label: "E-Chat" },
-  { id: "voice", label: "Voice Call" },
-  { id: "video", label: "Video Call" },
-  { id: "game", label: "Game With Me" },
+  { id: "all", label: "All Promos" },
+  { id: "free-trial", label: "Free Trials" },
+  { id: "discount", label: "Discounts" },
+  { id: "bundle", label: "Bundles" },
 ];
 
-/* ─── Level Badge Component ──────────────────────────────────────────── */
+/* ─── Promo Badge Component ─────────────────────────────────────────── */
 
-function LevelBadge({ level, size = 16 }) {
-  if (level === "bronze") {
-    return (
-      <span
-        className="inline-flex items-center justify-center rounded-full"
-        style={{ width: size, height: size, backgroundColor: "#cd7f32", border: "1.5px solid #a0522d" }}
-        title="Bronze"
-      >
-        <span className="text-white text-[8px] font-bold">B</span>
-      </span>
-    );
-  }
-  if (level === "silver") {
-    return (
-      <span
-        className="inline-flex items-center justify-center rounded-full"
-        style={{ width: size, height: size, backgroundColor: "#c0c0c0", border: "1.5px solid #a8a8a8" }}
-        title="Silver"
-      >
-        <span className="text-white text-[8px] font-bold">S</span>
-      </span>
-    );
-  }
-  if (level === "gold") {
-    return (
-      <span
-        className="inline-flex items-center justify-center rounded-full"
-        style={{ width: size, height: size, backgroundColor: "#ffd700", border: "1.5px solid #daa520" }}
-        title="Gold"
-      >
-        <span className="text-white text-[8px] font-bold">G</span>
-      </span>
-    );
-  }
-  if (level === "star") {
-    return (
-      <svg width={size} height={size} viewBox="0 0 16 16" title="Star">
-        <polygon
-          points="8,1 10,6 15.5,6.5 11.5,10 12.5,15.5 8,13 3.5,15.5 4.5,10 0.5,6.5 6,6"
-          fill="#f9a8c8"
-          stroke="#e882a8"
-          strokeWidth="0.8"
-        />
+function PromoBadge({ type, label }) {
+  const styles = {
+    "free-trial": "bg-emerald-500 text-white",
+    "discount": "bg-amber-500 text-white",
+    "bundle": "bg-violet-500 text-white",
+  };
+
+  const icons = {
+    "free-trial": (
+      <svg viewBox="0 0 16 16" className="w-3 h-3" fill="currentColor">
+        <path d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 9H8.7l1.9 3.2-.9.5L7.5 9H5V8h2.3L5.4 4.8l.8-.6L8 7.7l1.8-3.5.8.6L8.7 8h2.8v1z" />
       </svg>
-    );
-  }
-  if (level === "2stars") {
-    return (
-      <span className="inline-flex items-center gap-px" title="2 Stars">
-        <svg width={size * 0.8} height={size * 0.8} viewBox="0 0 16 16">
-          <polygon
-            points="8,1 10,6 15.5,6.5 11.5,10 12.5,15.5 8,13 3.5,15.5 4.5,10 0.5,6.5 6,6"
-            fill="#f9a8c8"
-            stroke="#e882a8"
-            strokeWidth="0.8"
-          />
-        </svg>
-        <svg width={size * 0.8} height={size * 0.8} viewBox="0 0 16 16">
-          <polygon
-            points="8,1 10,6 15.5,6.5 11.5,10 12.5,15.5 8,13 3.5,15.5 4.5,10 0.5,6.5 6,6"
-            fill="#f9a8c8"
-            stroke="#e882a8"
-            strokeWidth="0.8"
-          />
-        </svg>
-      </span>
-    );
-  }
-  if (level === "legend") {
-    return (
-      <svg width={size} height={size} viewBox="0 0 16 16" title="Legend">
-        <path
-          d="M8 1L10.5 5H14L11 8L12.5 13L8 10.5L3.5 13L5 8L2 5H5.5L8 1Z"
-          fill="#ffd700"
-          stroke="#daa520"
-          strokeWidth="0.6"
-        />
-        <path
-          d="M4 2L8 1L12 2"
-          fill="none"
-          stroke="#daa520"
-          strokeWidth="1"
-          strokeLinecap="round"
-        />
-        <circle cx="5" cy="1.5" r="0.8" fill="#ffd700" stroke="#daa520" strokeWidth="0.4" />
-        <circle cx="8" cy="0.5" r="0.8" fill="#ffd700" stroke="#daa520" strokeWidth="0.4" />
-        <circle cx="11" cy="1.5" r="0.8" fill="#ffd700" stroke="#daa520" strokeWidth="0.4" />
+    ),
+    "discount": (
+      <svg viewBox="0 0 16 16" className="w-3 h-3" fill="currentColor">
+        <path d="M3.5 9.5a1 1 0 100-2 1 1 0 000 2zm9-4a1 1 0 100-2 1 1 0 000 2zM13.5 2l-11 11 1 1 11-11-1-1z" />
       </svg>
-    );
-  }
-  return null;
+    ),
+    "bundle": (
+      <svg viewBox="0 0 16 16" className="w-3 h-3" fill="currentColor">
+        <path d="M2.5 2A1.5 1.5 0 001 3.5v2A1.5 1.5 0 002.5 7h11A1.5 1.5 0 0015 5.5v-2A1.5 1.5 0 0013.5 2h-11zM2.5 9A1.5 1.5 0 001 10.5v2A1.5 1.5 0 002.5 14h11a1.5 1.5 0 001.5-1.5v-2A1.5 1.5 0 0013.5 9h-11z" />
+      </svg>
+    ),
+  };
+
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${styles[type]}`}>
+      {icons[type]}
+      {label}
+    </span>
+  );
 }
 
-/* ─── Service Icon Component ─────────────────────────────────────────── */
+/* ─── Promo Card Component ──────────────────────────────────────────── */
 
-function ServiceIcon({ type, size = 14 }) {
-  if (type === "chat") {
-    return (
-      <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-      </svg>
-    );
-  }
-  if (type === "voice") {
-    return (
-      <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
-      </svg>
-    );
-  }
-  if (type === "video") {
-    return (
-      <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="23 7 16 12 23 17 23 7" />
-        <rect x="1" y="5" width="15" height="14" rx="2" />
-      </svg>
-    );
-  }
-  if (type === "game") {
-    return (
-      <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="6" y1="11" x2="10" y2="11" />
-        <line x1="8" y1="9" x2="8" y2="13" />
-        <line x1="15" y1="12" x2="15.01" y2="12" />
-        <line x1="18" y1="10" x2="18.01" y2="10" />
-        <path d="M17.32 5H6.68a4 4 0 00-3.978 3.59C2.166 12.4 2 16.29 2 18a2 2 0 002 2c1.105 0 2-.672 2.5-1.5L8 16h8l1.5 2.5c.5.828 1.395 1.5 2.5 1.5a2 2 0 002-2c0-1.71-.166-5.6-.703-9.41A4 4 0 0017.32 5z" />
-      </svg>
-    );
-  }
-  return null;
-}
-
-/* ─── Creator Card Component ─────────────────────────────────────────── */
-
-function CreatorCard({ creator }) {
-  const [isFlipped, setIsFlipped] = useState(false);
+function PromoCard({ promo }) {
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className="group cursor-pointer"
-      style={{ perspective: "1000px" }}
-      onMouseEnter={() => setIsFlipped(true)}
-      onMouseLeave={() => setIsFlipped(false)}
+      className="group relative rounded-2xl overflow-hidden border border-pink-100 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-pink-100/50 hover:-translate-y-1 cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div
-        className="relative w-full transition-transform duration-500 ease-in-out"
-        style={{
-          transformStyle: "preserve-3d",
-          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          aspectRatio: "3/4",
-        }}
-      >
-        {/* ─── Front Face ─── */}
-        <div
-          className="absolute inset-0 rounded-2xl overflow-hidden border border-pink-100 shadow-sm"
-          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
-        >
-          <img
-            src={creator.photo}
-            alt={creator.name}
-            className="w-full h-full object-cover"
-          />
-          {/* Gradient overlay at bottom */}
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pt-16 pb-3 px-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-white font-semibold text-sm truncate">{creator.name}</span>
-              <LevelBadge level={creator.level} size={14} />
-            </div>
-            <p className="text-white/70 text-xs mt-0.5">@{creator.username}</p>
-          </div>
-          {/* Service indicators in bottom-right */}
-          <div className="absolute bottom-3 right-3 flex items-center gap-1">
-            {creator.services.map((service) => (
-              <span
-                key={service}
-                className="flex items-center justify-center w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm text-white/90"
-              >
-                <ServiceIcon type={service} size={12} />
-              </span>
-            ))}
-          </div>
+      {/* Cover Image */}
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <img
+          src={promo.cover}
+          alt={promo.name}
+          className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? "scale-110" : "scale-100"}`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+        {/* Promo Badge - top left */}
+        <div className="absolute top-3 left-3">
+          <PromoBadge type={promo.promoType} label={promo.promoLabel} />
         </div>
 
-        {/* ─── Back Face ─── */}
-        <div
-          className="absolute inset-0 rounded-2xl overflow-hidden border border-pink-100 shadow-sm bg-white flex flex-col items-center justify-center px-4 py-5"
-          style={{
-            backfaceVisibility: "hidden",
-            WebkitBackfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-          }}
-        >
-          {/* Avatar */}
-          <img
-            src={creator.avatar}
-            alt={creator.name}
-            className="w-16 h-16 rounded-full object-cover border-2 border-pink-200"
-          />
-          {/* Name + Level */}
-          <div className="flex items-center gap-1.5 mt-3">
-            <span className="text-[#241a22] font-semibold text-sm">{creator.name}</span>
-            <LevelBadge level={creator.level} size={14} />
-          </div>
-          {/* Username */}
-          <p className="text-[#b89aa8] text-xs mt-0.5">@{creator.username}</p>
-          {/* Description */}
-          <p className="text-[#8c6d7f] text-xs text-center mt-3 leading-relaxed line-clamp-2">
-            {creator.description}
-          </p>
-          {/* Price */}
-          <p className="text-[#241a22] font-bold text-sm mt-3">{creator.price}</p>
-          {/* Buttons */}
-          <div className="flex flex-col gap-2 w-full mt-3">
-            <button className="w-full rounded-full border-2 border-[#f9a8c8] py-2 text-xs font-semibold text-[#f472b6] transition hover:bg-pink-50">
-              View Profile
-            </button>
-            <button className="w-full rounded-full bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] py-2 text-xs font-semibold text-white shadow-md shadow-pink-200/50 transition hover:shadow-lg hover:from-[#f472b6] hover:to-[#ec4899]">
-              Message
-            </button>
+        {/* Creator info overlay at bottom */}
+        <div className="absolute bottom-0 inset-x-0 p-3">
+          <div className="flex items-center gap-2.5">
+            <img
+              src={promo.avatar}
+              alt={promo.name}
+              className="h-10 w-10 rounded-full object-cover border-2 border-white/80 shadow-md"
+            />
+            <div className="min-w-0">
+              <p className="text-white font-semibold text-sm truncate">{promo.name}</p>
+              <p className="text-white/70 text-xs">@{promo.username}</p>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Card Body */}
+      <div className="p-4">
+        {/* Promo Detail */}
+        <p className="text-sm font-medium text-[#241a22]">{promo.promoDetail}</p>
+
+        {/* Stats Row */}
+        <div className="flex items-center gap-3 mt-2 text-xs text-[#8c6d7f]">
+          <span className="flex items-center gap-1">
+            <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M8 14s-5.5-3.5-5.5-7.5a3.5 3.5 0 017 0 3.5 3.5 0 017 0c0 4-5.5 7.5-5.5 7.5z" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            {promo.subscribers}
+          </span>
+          <span className="flex items-center gap-1">
+            <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <rect x="2" y="2" width="12" height="12" rx="2" strokeLinecap="round" />
+              <path d="M5 6h6M5 8.5h4" strokeLinecap="round" />
+            </svg>
+            {promo.posts} posts
+          </span>
+        </div>
+
+        {/* Pricing */}
+        <div className="flex items-center gap-2 mt-3">
+          {promo.promoType === "free-trial" ? (
+            <>
+              <span className="text-emerald-600 font-bold text-sm">FREE</span>
+              <span className="text-xs text-[#b89aa8]">then {promo.originalPrice}</span>
+            </>
+          ) : promo.promoType === "discount" ? (
+            <>
+              <span className="text-amber-600 font-bold text-sm">{promo.discountPrice}</span>
+              <span className="text-xs text-[#b89aa8] line-through">{promo.originalPrice}</span>
+            </>
+          ) : (
+            <>
+              <span className="text-violet-600 font-bold text-sm">{promo.promoLabel}</span>
+              <span className="text-xs text-[#b89aa8]">at {promo.originalPrice}</span>
+            </>
+          )}
+        </div>
+
+        {/* CTA Button */}
+        <button className="w-full mt-3 rounded-xl bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] py-2.5 text-sm font-semibold text-white shadow-md shadow-pink-200/50 transition hover:shadow-lg hover:from-[#f472b6] hover:to-[#ec4899]">
+          {promo.promoType === "free-trial" ? "Start Free Trial" : promo.promoType === "discount" ? "Claim Discount" : "Get Bundle"}
+        </button>
       </div>
     </div>
   );
@@ -441,12 +344,12 @@ function PumdokiLogo() {
   return (
     <svg viewBox="0 0 520 120" className="h-9 w-auto" aria-label="Pumdoki" role="img">
       <defs>
-        <linearGradient id="connectMiniHeartBase" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="promoMiniHeartBase" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#fff7fa" />
           <stop offset="48%" stopColor="#ffd8e5" />
           <stop offset="100%" stopColor="#f3a0bc" />
         </linearGradient>
-        <linearGradient id="connectMiniWordFill" x1="0%" y1="0%" x2="100%" y2="0%">
+        <linearGradient id="promoMiniWordFill" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#ffd1e0" />
           <stop offset="55%" stopColor="#f8b3ca" />
           <stop offset="100%" stopColor="#ef8fb1" />
@@ -455,7 +358,7 @@ function PumdokiLogo() {
       <g transform="translate(4,6)">
         <path
           d="M52 66c-4-3-7-6-9-8C27 43 18 33 18 20 18 9 26 0 37 0c7 0 13 3 17 10 5-7 11-10 18-10 11 0 19 9 19 20 0 13-10 23-27 38l-9 8-5 5-5-5Z"
-          fill="url(#connectMiniHeartBase)"
+          fill="url(#promoMiniHeartBase)"
           stroke="#111"
           strokeWidth="1.8"
           strokeLinejoin="round"
@@ -488,7 +391,7 @@ function PumdokiLogo() {
         y="75"
         fontSize="60"
         fontWeight="700"
-        fill="url(#connectMiniWordFill)"
+        fill="url(#promoMiniWordFill)"
         fontFamily="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
         letterSpacing="0.5"
       >
@@ -500,7 +403,7 @@ function PumdokiLogo() {
 
 /* ─── Main Component ─────────────────────────────────────────────────── */
 
-export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenConnect, onOpenStore, onOpenPromotions, onOpenDashboard, userStatus = 'online', onStatusChange }) {
+export default function PromotionsPage({ onBack, onLogout, onViewProfile, onOpenConnect, onOpenStore, onOpenPromotions, onOpenDashboard, userStatus = 'online', onStatusChange }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -512,7 +415,6 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
   const [composeBold, setComposeBold] = useState(false);
   const [composeItalic, setComposeItalic] = useState(false);
 
-  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e) => {
       if (!e.target.closest("[data-dropdown]")) {
@@ -526,15 +428,13 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Filter creators based on active filter
-  const filteredCreators = activeFilter === "all"
-    ? creators
-    : creators.filter((c) => c.services.includes(activeFilter));
+  const filteredPromotions = activeFilter === "all"
+    ? promotions
+    : promotions.filter((p) => p.promoType === activeFilter);
 
-  const eChatCreators = filteredCreators.filter((c) => c.services.includes("chat"));
-  const voiceCallCreators = filteredCreators.filter((c) => c.services.includes("voice"));
-  const videoCallCreators = filteredCreators.filter((c) => c.services.includes("video"));
-  const gameCreators = filteredCreators.filter((c) => c.services.includes("game"));
+  const freeTrialPromos = filteredPromotions.filter((p) => p.promoType === "free-trial");
+  const discountPromos = filteredPromotions.filter((p) => p.promoType === "discount");
+  const bundlePromos = filteredPromotions.filter((p) => p.promoType === "bundle");
 
   const totalUnread = chatContacts.reduce((sum, c) => sum + c.unread, 0);
 
@@ -548,14 +448,11 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
       {/* ─── Top Bar ───────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50 h-16 border-b border-pink-100 bg-white/92 backdrop-blur-md">
         <div className="flex h-full items-center justify-between px-4">
-          {/* Left: Logo */}
           <div className="flex items-center shrink-0">
             <button type="button" onClick={onBack} className="cursor-pointer" aria-label="Back to home">
               <PumdokiLogo />
             </button>
           </div>
-
-          {/* Right: Search, Notifications, Profile */}
           <div className="flex items-center gap-1">
             {/* Search */}
             <div className="relative" data-dropdown>
@@ -574,10 +471,10 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
                   <input
                     autoFocus
                     type="text"
-                    placeholder="Search creators, posts, tags..."
+                    placeholder="Search promotions, creators..."
                     className="w-full rounded-xl border border-pink-100 bg-[#fffafc] px-4 py-2.5 text-sm outline-none placeholder:text-[#c59aae] focus:border-pink-300"
                   />
-                  <div className="mt-3 text-xs text-[#b89aa8]">Try searching for a creator or hashtag</div>
+                  <div className="mt-3 text-xs text-[#b89aa8]">Try searching for a creator or promotion type</div>
                 </div>
               )}
             </div>
@@ -672,11 +569,11 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
       {/* ─── Layout Container ──────────────────────────────────────── */}
       <div className="flex pt-16 min-h-screen">
         <Sidebar
-          activePage="connect"
+          activePage="promotions"
           onNavigate={(id) => {
             if (id === "home") onBack && onBack();
+            else if (id === "connect") onOpenConnect && onOpenConnect();
             else if (id === "store") onOpenStore && onOpenStore();
-            else if (id === "promotions") onOpenPromotions && onOpenPromotions();
           }}
           onOpenDashboard={onOpenDashboard}
           onLogout={onLogout}
@@ -690,8 +587,48 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
           <div className="max-w-[1700px] mx-auto px-4 pt-4">
             {/* ─── Page Header ─────────────────────────────────────── */}
             <div className="mb-5">
-              <h1 className="text-xl font-bold text-[#241a22]">Connect</h1>
-              <p className="text-sm text-[#8c6d7f] mt-1">Find creators offering interactive sessions</p>
+              <div className="flex items-center gap-3">
+                <h1 className="text-xl font-bold text-[#241a22]">Promotions</h1>
+                <span className="flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 px-3 py-1 text-xs font-bold text-white">
+                  <svg viewBox="0 0 16 16" className="w-3 h-3" fill="currentColor">
+                    <path d="M8 1.5l2 4 4.5.7-3.3 3.1.8 4.5L8 11.8l-4 2 .8-4.5L1.5 6.2 6 5.5z" />
+                  </svg>
+                  {promotions.length} active
+                </span>
+              </div>
+              <p className="text-sm text-[#8c6d7f] mt-1">Exclusive deals from your favorite creators</p>
+            </div>
+
+            {/* ─── Hero Banner ─────────────────────────────────────── */}
+            <div className="relative mb-6 rounded-2xl overflow-hidden bg-gradient-to-r from-[#f9a8c8] via-[#f472b6] to-[#ec4899] p-6 md:p-8">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-4 right-8 w-24 h-24 rounded-full bg-white/40" />
+                <div className="absolute bottom-2 left-12 w-16 h-16 rounded-full bg-white/30" />
+                <div className="absolute top-1/2 right-1/3 w-10 h-10 rounded-full bg-white/20" />
+              </div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+                    <line x1="7" y1="7" x2="7.01" y2="7" />
+                  </svg>
+                  <span className="text-white/90 text-sm font-medium">Limited Time Offers</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-bold text-white">Save big on subscriptions</h2>
+                <p className="text-white/80 text-sm mt-2 max-w-lg">
+                  Discover free trials, exclusive discounts, and bundle deals from creators on Pumdoki. Don't miss out!
+                </p>
+                <div className="flex gap-3 mt-4">
+                  <div className="flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1.5">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-white text-xs font-medium">{freeTrialPromos.length + (activeFilter === "all" ? promotions.filter(p => p.promoType === "free-trial").length - freeTrialPromos.length : 0)} Free Trials</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1.5">
+                    <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                    <span className="text-white text-xs font-medium">Up to 70% Off</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* ─── Filter Tabs ─────────────────────────────────────── */}
@@ -711,163 +648,91 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
               ))}
             </div>
 
-            {/* ─── E-Chat ───────────────────────────────────────────── */}
-            {eChatCreators.length > 0 && (
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#f472b6]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-                    </svg>
-                    E-Chat
-                  </h2>
-                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
-                    Show All
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                  {eChatCreators.map((creator) => (
-                    <CreatorCard key={`chat-${creator.id}`} creator={creator} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ─── Voice Call Ready ─────────────────────────────────── */}
-            {voiceCallCreators.length > 0 && (
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#f472b6]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
-                    </svg>
-                    Voice Call Ready
-                  </h2>
-                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
-                    Show All
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                  {voiceCallCreators.map((creator) => (
-                    <CreatorCard key={`voice-${creator.id}`} creator={creator} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ─── Video Call ───────────────────────────────────────── */}
-            {videoCallCreators.length > 0 && (
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#f472b6]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="23 7 16 12 23 17 23 7" />
-                      <rect x="1" y="5" width="15" height="14" rx="2" />
-                    </svg>
-                    Video Call
-                  </h2>
-                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
-                    Show All
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                  {videoCallCreators.map((creator) => (
-                    <CreatorCard key={`video-${creator.id}`} creator={creator} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ─── Game With Me ─────────────────────────────────────── */}
-            {gameCreators.length > 0 && (
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#f472b6]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="6" y1="11" x2="10" y2="11" />
-                      <line x1="8" y1="9" x2="8" y2="13" />
-                      <line x1="15" y1="12" x2="15.01" y2="12" />
-                      <line x1="18" y1="10" x2="18.01" y2="10" />
-                      <path d="M17.32 5H6.68a4 4 0 00-3.978 3.59C2.166 12.4 2 16.29 2 18a2 2 0 002 2c1.105 0 2-.672 2.5-1.5L8 16h8l1.5 2.5c.5.828 1.395 1.5 2.5 1.5a2 2 0 002-2c0-1.71-.166-5.6-.703-9.41A4 4 0 0017.32 5z" />
-                    </svg>
-                    Game With Me
-                  </h2>
-                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
-                    Show All
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                  {gameCreators.map((creator) => (
-                    <CreatorCard key={`game-${creator.id}`} creator={creator} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ─── New to Pumdoki ──────────────────────────────────── */}
-            {activeFilter === "all" && (
+            {/* ─── Free Trials Section ─────────────────────────────── */}
+            {freeTrialPromos.length > 0 && (
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
                     <svg viewBox="0 0 24 24" className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
                     </svg>
-                    New to Pumdoki
+                    Free Trials
                   </h2>
+                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
+                    Show All
+                  </button>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                  {creators.filter(c => c.level === "bronze" || c.id >= 12).map((creator) => (
-                    <div key={`new-${creator.id}`} className="relative">
-                      <div className="absolute top-2 left-2 z-10">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md">
-                          <svg viewBox="0 0 12 12" className="w-2.5 h-2.5" fill="currentColor">
-                            <path d="M6 1l1.5 3.1 3.4.5-2.5 2.4.6 3.4L6 8.8 3 10.4l.6-3.4L1.1 4.6l3.4-.5L6 1z" />
-                          </svg>
-                          NEW
-                        </span>
-                      </div>
-                      <CreatorCard creator={creator} />
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {freeTrialPromos.map((promo) => (
+                    <PromoCard key={`trial-${promo.id}`} promo={promo} />
                   ))}
                 </div>
               </div>
             )}
 
-            {/* ─── See All Creators ────────────────────────────────── */}
-            {activeFilter === "all" && (
+            {/* ─── Discounts Section ───────────────────────────────── */}
+            {discountPromos.length > 0 && (
               <div className="mb-8">
-                <div className="rounded-2xl border border-pink-100 bg-white p-6 text-center shadow-sm">
-                  <div className="mx-auto mb-4 flex -space-x-3 justify-center">
-                    {creators.slice(0, 6).map((c) => (
-                      <img
-                        key={c.id}
-                        src={c.avatar}
-                        alt={c.name}
-                        className="h-10 w-10 rounded-full object-cover border-2 border-white"
-                      />
-                    ))}
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-pink-50 text-xs font-bold text-[#f472b6]">
-                      +{creators.length - 6}
-                    </div>
-                  </div>
-                  <h3 className="text-base font-bold text-[#241a22]">See All Creators</h3>
-                  <p className="mt-1 text-sm text-[#8c6d7f]">Browse all {creators.length} creators available for interactive sessions</p>
-                  <button className="mt-4 rounded-xl bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-pink-200/50 transition hover:shadow-lg hover:from-[#f472b6] hover:to-[#ec4899]">
-                    Browse All Creators
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="19" y1="5" x2="5" y2="19" />
+                      <circle cx="6.5" cy="6.5" r="2.5" />
+                      <circle cx="17.5" cy="17.5" r="2.5" />
+                    </svg>
+                    Discounts
+                  </h2>
+                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
+                    Show All
                   </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {discountPromos.map((promo) => (
+                    <PromoCard key={`discount-${promo.id}`} promo={promo} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ─── Bundle Deals Section ────────────────────────────── */}
+            {bundlePromos.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="7" width="20" height="14" rx="2" />
+                      <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+                    </svg>
+                    Bundle Deals
+                  </h2>
+                  <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition">
+                    Show All
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {bundlePromos.map((promo) => (
+                    <PromoCard key={`bundle-${promo.id}`} promo={promo} />
+                  ))}
                 </div>
               </div>
             )}
 
             {/* ─── Empty State ─────────────────────────────────────── */}
-            {filteredCreators.length === 0 && (
+            {filteredPromotions.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-[#b89aa8] text-sm">No creators found for this filter.</p>
+                <div className="mx-auto w-16 h-16 rounded-full bg-pink-50 flex items-center justify-center mb-4">
+                  <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#f472b6]" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+                    <line x1="7" y1="7" x2="7.01" y2="7" />
+                  </svg>
+                </div>
+                <p className="text-[#b89aa8] text-sm">No promotions found for this filter.</p>
                 <button
                   onClick={() => setActiveFilter("all")}
                   className="mt-3 text-sm font-semibold text-[#f472b6] hover:text-[#ec4899] transition"
                 >
-                  Clear filter
+                  View all promos
                 </button>
               </div>
             )}
@@ -878,11 +743,11 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
       </div>
 
       <MobileNav
-        activePage="connect"
+        activePage="promotions"
         onNavigate={(id) => {
           if (id === "home") onBack && onBack();
+          else if (id === "connect") onOpenConnect && onOpenConnect();
           else if (id === "store") onOpenStore && onOpenStore();
-          else if (id === "promotions") onOpenPromotions && onOpenPromotions();
         }}
         showComposeMenu={showComposeMenu}
         setShowComposeMenu={setShowComposeMenu}
@@ -894,7 +759,6 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
       {showCompose && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg rounded-3xl border border-pink-100 bg-white shadow-2xl overflow-hidden">
-            {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-pink-50 px-5 py-4">
               <h2 className="text-lg font-semibold text-[#241a22]">Create Post</h2>
               <button
@@ -907,8 +771,6 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
                 </svg>
               </button>
             </div>
-
-            {/* Modal Body */}
             <div className="p-5">
               <div className="flex items-start gap-3">
                 <img
@@ -928,10 +790,7 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
                   }}
                 />
               </div>
-
-              {/* ─── Text Formatting Toolbar ─── */}
               <div className="mt-3 flex items-center gap-2 flex-wrap border-t border-pink-50 pt-3">
-                {/* Font Size */}
                 <div className="flex items-center rounded-lg border border-pink-100 overflow-hidden">
                   {[
                     { id: "small", label: "S", title: "Small" },
@@ -952,8 +811,6 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
                     </button>
                   ))}
                 </div>
-
-                {/* Bold */}
                 <button
                   onClick={() => setComposeBold(!composeBold)}
                   className={`flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-bold transition ${
@@ -965,8 +822,6 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
                 >
                   B
                 </button>
-
-                {/* Italic */}
                 <button
                   onClick={() => setComposeItalic(!composeItalic)}
                   className={`flex h-8 w-8 items-center justify-center rounded-lg border text-xs transition ${
@@ -978,8 +833,6 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
                 >
                   <span className="italic font-serif">I</span>
                 </button>
-
-                {/* Color Picker */}
                 <div className="flex items-center gap-1 ml-1">
                   {[
                     { color: "#4a3340", name: "Default" },
@@ -1003,8 +856,6 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
                   ))}
                 </div>
               </div>
-
-              {/* Media Actions */}
               <div className="mt-3 flex items-center gap-2 border-t border-pink-50 pt-3">
                 <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -1021,7 +872,6 @@ export default function ConnectPage({ onBack, onLogout, onViewProfile, onOpenCon
                   </svg>
                   Video
                 </button>
-                {/* Lock toggle for paid posts */}
                 <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" />

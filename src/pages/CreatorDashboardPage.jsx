@@ -1,4 +1,9 @@
 import { useState, useMemo } from "react";
+import { StatusMenuRow } from "../components/UserStatusSwitcher";
+
+/* ─── Feature Flags ──────────────────────────────────────────────────── */
+
+const SHOW_LIVE_STREAMING = false;
 
 /* ─── Colors ─────────────────────────────────────────────────────────── */
 
@@ -364,10 +369,12 @@ function OverviewSection({ go }) {
               <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
               New Post
             </button>
-            <button onClick={() => go("live")} className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110">
-              <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-              Go Live
-            </button>
+            {SHOW_LIVE_STREAMING && (
+              <button onClick={() => go("live")} className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110">
+                <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+                Go Live
+              </button>
+            )}
           </div>
         }
       />
@@ -439,7 +446,7 @@ function OverviewSection({ go }) {
               { l: "Launch promo", sub: "Discounts & trials", s: "tiers", i: "M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7h.01" },
               { l: "Schedule a stream", sub: "Announce go-live", s: "live", i: "M8 2v4M16 2v4M3 10h18M3 6h18v14H3z" },
               { l: "Update subscriber tier", sub: "Perks & prices", s: "tiers", i: "M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z" },
-            ].map((a, i) => (
+            ].filter((a) => SHOW_LIVE_STREAMING || a.s !== "live").map((a, i) => (
               <button key={i} onClick={() => go(a.s)} className="flex items-center gap-3 rounded-xl bg-white p-3 text-left ring-1 ring-pink-100 transition hover:ring-pink-300 hover:bg-pink-50/40">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-pink-100 text-[#df5f97]">
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={a.i} /></svg>
@@ -1409,7 +1416,7 @@ function SettingsSection() {
           <h3 className="mb-4 text-base font-bold text-[#241a22]">Content & privacy</h3>
           <div className="space-y-3">
             {[
-              { l: "Hide from non-subscribers in Discover", on: false },
+              { l: "Hide from non-subscribers in Promotions", on: false },
               { l: "Block screenshots in DMs (best effort)", on: true },
               { l: "Watermark all images", on: true },
               { l: "Auto-apply content warning to PPV", on: true },
@@ -1465,7 +1472,7 @@ function SettingsSection() {
 
 /* ─── Main Component ─────────────────────────────────────────────────── */
 
-export default function CreatorDashboardPage({ onBack, onLogout, onViewProfile, onOpenOasis, onOpenConnect, onOpenStore, onOpenDiscover }) {
+export default function CreatorDashboardPage({ onBack, onLogout, onViewProfile, onOpenOasis, onOpenConnect, onOpenStore, onOpenPromotions, userStatus = 'online', onStatusChange }) {
   const [section, setSection] = useState("overview");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -1477,7 +1484,7 @@ export default function CreatorDashboardPage({ onBack, onLogout, onViewProfile, 
       case "content": return <ContentSection />;
       case "messages": return <MessagesSection />;
       case "tiers": return <TiersSection />;
-      case "live": return <LiveSection />;
+      case "live": return SHOW_LIVE_STREAMING ? <LiveSection /> : <OverviewSection go={setSection} />;
       case "sessions": return <SessionsSection />;
       case "shop": return <ShopSection />;
       case "fans": return <FanCrmSection />;
@@ -1499,7 +1506,9 @@ export default function CreatorDashboardPage({ onBack, onLogout, onViewProfile, 
             >
               <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
             </button>
-            <PumdokiLogo />
+            <button type="button" onClick={onBack} className="cursor-pointer" aria-label="Back to home">
+              <PumdokiLogo />
+            </button>
             <div className="hidden md:flex items-center gap-2 rounded-full bg-pink-50 px-3 py-1 ring-1 ring-pink-200">
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[#df5f97]" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z" /></svg>
               <span className="text-xs font-semibold text-[#df5f97]">Creator Dashboard</span>
@@ -1531,6 +1540,8 @@ export default function CreatorDashboardPage({ onBack, onLogout, onViewProfile, 
               </button>
               {showProfileMenu && (
                 <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden">
+                  <StatusMenuRow status={userStatus} onStatusChange={onStatusChange} />
+                  <hr className="my-1 border-pink-100" />
                   <button onClick={() => { onViewProfile && onViewProfile(); setShowProfileMenu(false); }} className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97]">
                     <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z" /></svg>
                     My Profile
@@ -1566,7 +1577,7 @@ export default function CreatorDashboardPage({ onBack, onLogout, onViewProfile, 
               </div>
             </div>
             <nav className="mt-4 space-y-0.5">
-              {NAV_SECTIONS.map((n) => {
+              {NAV_SECTIONS.filter((n) => SHOW_LIVE_STREAMING || n.id !== "live").map((n) => {
                 const active = section === n.id;
                 return (
                   <button

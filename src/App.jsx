@@ -5,12 +5,13 @@ import ProfilePage from "./pages/ProfilePage";
 import OasisPage from "./pages/OasisPage";
 import ConnectPage from "./pages/ConnectPage";
 import StorePage from "./pages/StorePage";
-import DiscoverPage from "./pages/DiscoverPage";
+import PromotionsPage from "./pages/PromotionsPage";
 import CreatorDashboardPage from "./pages/CreatorDashboardPage";
 import WalletPage from "./pages/WalletPage";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("login");
+  const [userStatus, setUserStatus] = useState("online");
 
   const nav = {
     onBack: () => setCurrentPage("home"),
@@ -19,9 +20,11 @@ export default function App() {
     onOpenOasis: () => setCurrentPage("oasis"),
     onOpenConnect: () => setCurrentPage("connect"),
     onOpenStore: () => setCurrentPage("store"),
-    onOpenDiscover: () => setCurrentPage("discover"),
+    onOpenPromotions: () => setCurrentPage("promotions"),
     onOpenDashboard: () => setCurrentPage("dashboard"),
     onOpenWallet: () => setCurrentPage("wallet"),
+    userStatus,
+    onStatusChange: setUserStatus,
   };
 
   if (currentPage === "oasis") {
@@ -36,8 +39,8 @@ export default function App() {
     return <StorePage {...nav} />;
   }
 
-  if (currentPage === "discover") {
-    return <DiscoverPage {...nav} />;
+  if (currentPage === "promotions") {
+    return <PromotionsPage {...nav} />;
   }
 
   if (currentPage === "profile") {

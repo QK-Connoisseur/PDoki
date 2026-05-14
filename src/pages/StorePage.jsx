@@ -1,4 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+import Sidebar, { MobileNav } from "../components/Sidebar";
+import ChatSidebar from "../components/ChatSidebar";
+import { StatusMenuRow } from "../components/UserStatusSwitcher";
 
 /* ─── Mock Store Content Data ────────────────────────────────────────── */
 
@@ -153,12 +156,12 @@ const storeContent = [
 ];
 
 const chatContacts = [
-  { id: 1, name: "Luna Bloom", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80", lastMessage: "Thanks for the support!", online: true, unread: 2, time: "2m" },
-  { id: 2, name: "Mika Rose", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80", lastMessage: "See you on the stream tonight!", online: true, unread: 0, time: "15m" },
-  { id: 3, name: "Airi Vale", avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80", lastMessage: "New content coming soon", online: false, unread: 1, time: "1h" },
-  { id: 4, name: "Sora Nyx", avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80", lastMessage: "Loved your comment!", online: true, unread: 0, time: "3h" },
-  { id: 5, name: "Naomi Hart", avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80", lastMessage: "Check out my latest post", online: false, unread: 0, time: "5h" },
-  { id: 6, name: "Reina Noir", avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80", lastMessage: "When's the next drop?", online: true, unread: 3, time: "6h" },
+  { id: 1, name: "Luna Bloom", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80", lastMessage: "Thanks for the support!", status: "online", unread: 2, fromMe: false, time: "2m" },
+  { id: 2, name: "Mika Rose", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80", lastMessage: "See you on the stream tonight!", status: "busy", unread: 0, fromMe: true, time: "15m" },
+  { id: 3, name: "Airi Vale", avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80", lastMessage: "New content coming soon", status: "resting", unread: 1, fromMe: false, time: "1h" },
+  { id: 4, name: "Sora Nyx", avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80", lastMessage: "Loved your comment!", status: "online", unread: 0, fromMe: false, time: "3h" },
+  { id: 5, name: "Naomi Hart", avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80", lastMessage: "Check out my latest post", status: "offline", unread: 0, fromMe: true, time: "5h" },
+  { id: 6, name: "Reina Noir", avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80", lastMessage: "When's the next drop?", status: "busy", unread: 3, fromMe: false, time: "6h" },
 ];
 
 const notifications = [
@@ -209,64 +212,6 @@ const lengthFilters = [
 
 const SAKURA_PINK = "#f9a8c8";
 const HEART_RED = "#e8384f";
-
-/* ─── Nav Items ──────────────────────────────────────────────────────── */
-
-const navItems = [
-  {
-    id: "home",
-    label: "Home",
-    icon: (
-      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" />
-        <path d="M9 21V12h6v9" />
-      </svg>
-    ),
-  },
-  {
-    id: "connect",
-    label: "Connect",
-    icon: (
-      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M22 21v-2a4 4 0 00-3-3.87" />
-        <path d="M16 3.13a4 4 0 010 7.75" />
-      </svg>
-    ),
-  },
-  {
-    id: "store",
-    label: "Store",
-    icon: (
-      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 2L3 7v13a1 1 0 001 1h16a1 1 0 001-1V7l-3-5H6z" />
-        <path d="M3 7h18" />
-        <path d="M16 11a4 4 0 01-8 0" />
-      </svg>
-    ),
-  },
-  {
-    id: "discover",
-    label: "Discover",
-    icon: (
-      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88" />
-      </svg>
-    ),
-  },
-  {
-    id: "compose",
-    label: "Create Post",
-    icon: (
-      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="4" />
-        <path d="M12 8v8M8 12h8" />
-      </svg>
-    ),
-  },
-];
 
 /* ─── Level Badge ────────────────────────────────────────────────────── */
 
@@ -393,21 +338,16 @@ function durationToMinutes(dur) {
 
 /* ─── Main Component ─────────────────────────────────────────────────── */
 
-export default function StorePage({ onBack, onLogout, onViewProfile, onOpenConnect, onOpenStore, onOpenDiscover, onOpenDashboard }) {
-  const [chatExpanded, setChatExpanded] = useState(false);
+export default function StorePage({ onBack, onLogout, onViewProfile, onOpenConnect, onOpenStore, onOpenPromotions, onOpenDashboard, userStatus = 'online', onStatusChange }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showCompose, setShowCompose] = useState(false);
-  const [activePage, setActivePage] = useState("store");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showComposeMenu, setShowComposeMenu] = useState(false);
   const [composeFontSize, setComposeFontSize] = useState("normal");
   const [composeFontColor, setComposeFontColor] = useState("#4a3340");
   const [composeBold, setComposeBold] = useState(false);
   const [composeItalic, setComposeItalic] = useState(false);
-  const sidebarTimeout = useRef(null);
 
   /* ─── Store-specific state ─── */
   const [activeTab, setActiveTab] = useState("recent");
@@ -425,21 +365,12 @@ export default function StorePage({ onBack, onLogout, onViewProfile, onOpenConne
         setShowProfileMenu(false);
         setShowNotifications(false);
         setShowSearch(false);
-        setShowMoreMenu(false);
         setShowComposeMenu(false);
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
-
-  // Handle nav clicks
-  const handleNavClick = (id) => {
-    if (id === "home") onBack && onBack();
-    else if (id === "connect" && onOpenConnect) onOpenConnect();
-    else if (id === "discover" && onOpenDiscover) onOpenDiscover();
-    else setActivePage(id);
-  };
 
   const totalUnread = chatContacts.reduce((sum, c) => sum + c.unread, 0);
 
@@ -542,7 +473,9 @@ export default function StorePage({ onBack, onLogout, onViewProfile, onOpenConne
         <div className="flex h-full items-center justify-between px-4">
           {/* Left: Logo */}
           <div className="flex items-center shrink-0">
-            <PumdokiLogo />
+            <button type="button" onClick={onBack} className="cursor-pointer" aria-label="Back to home">
+              <PumdokiLogo />
+            </button>
           </div>
 
           {/* Right: Search, Notifications, Profile */}
@@ -622,6 +555,8 @@ export default function StorePage({ onBack, onLogout, onViewProfile, onOpenConne
               </button>
               {showProfileMenu && (
                 <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden">
+                  <StatusMenuRow status={userStatus} onStatusChange={onStatusChange} />
+                  <hr className="my-1 border-pink-100" />
                   {[
                     { label: "My Profile", icon: "M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z", action: () => onViewProfile && onViewProfile() },
                     { label: "Creator Dashboard", icon: "M4 6h16M4 12h16M4 18h7", action: onOpenDashboard },
@@ -659,160 +594,19 @@ export default function StorePage({ onBack, onLogout, onViewProfile, onOpenConne
 
       {/* ─── Layout Container ──────────────────────────────────────── */}
       <div className="flex pt-16 min-h-screen">
-        {/* ─── Left Sidebar (Desktop) ─────────────────────────────── */}
-        <aside
-          className={`hidden md:flex flex-col shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-r border-pink-100 bg-white z-40 transition-all duration-300 ease-in-out ${
-            sidebarOpen ? "w-[220px]" : "w-[72px]"
-          }`}
-          onMouseEnter={() => {
-            clearTimeout(sidebarTimeout.current);
-            sidebarTimeout.current = setTimeout(() => setSidebarOpen(true), 80);
+        <Sidebar
+          activePage="store"
+          onNavigate={(id) => {
+            if (id === "home") onBack && onBack();
+            else if (id === "connect") onOpenConnect && onOpenConnect();
+            else if (id === "promotions") onOpenPromotions && onOpenPromotions();
           }}
-          onMouseLeave={() => {
-            clearTimeout(sidebarTimeout.current);
-            sidebarTimeout.current = setTimeout(() => setSidebarOpen(false), 200);
-          }}
-        >
-          <div className="flex-[1]" />
-          <nav className="flex flex-col gap-1 px-3">
-            {navItems.map((item) => {
-              const isActive = activePage === item.id;
-
-              if (item.id === "compose") {
-                return (
-                  <div key={item.id} className="relative" data-dropdown>
-                    <button
-                      onClick={() => setShowComposeMenu(!showComposeMenu)}
-                      className="flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden text-[#8c6d7f] hover:bg-pink-50/60 hover:text-[#df5f97]"
-                      aria-label="Create"
-                    >
-                      <div className="shrink-0">{item.icon}</div>
-                      <span
-                        className={`whitespace-nowrap text-sm font-medium transition-all duration-300 ${
-                          sidebarOpen
-                            ? "opacity-100 translate-x-0"
-                            : "opacity-0 -translate-x-2 pointer-events-none w-0"
-                        }`}
-                      >
-                        Create
-                      </span>
-                    </button>
-                    {showComposeMenu && (
-                      <div className="absolute left-0 bottom-full mb-2 w-[200px] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
-                        <button
-                          onClick={() => { setShowCompose(true); setShowComposeMenu(false); }}
-                          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97]"
-                        >
-                          <svg viewBox="0 0 24 24" className="h-4.5 w-4.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                          </svg>
-                          Create Post
-                        </button>
-                        <button
-                          onClick={() => { setShowComposeMenu(false); }}
-                          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97]"
-                        >
-                          <svg viewBox="0 0 24 24" className="h-4.5 w-4.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                          </svg>
-                          Create Moment
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden ${
-                    isActive
-                      ? "text-[#241a22]"
-                      : "text-[#8c6d7f] hover:bg-pink-50/60 hover:text-[#df5f97]"
-                  }`}
-                  aria-label={item.label}
-                >
-                  <div className={`shrink-0 transition-transform duration-200 ${isActive ? "scale-110" : ""}`}>
-                    {item.icon}
-                  </div>
-                  <span
-                    className={`whitespace-nowrap text-sm transition-all duration-300 ${
-                      sidebarOpen
-                        ? "opacity-100 translate-x-0"
-                        : "opacity-0 -translate-x-2 pointer-events-none w-0"
-                    } ${isActive ? "font-bold" : "font-medium"}`}
-                  >
-                    {item.label}
-                  </span>
-                </button>
-              );
-            })}
-          </nav>
-          <div className="flex-[2]" />
-
-          {/* ─── More Menu ─── */}
-          <div className="relative px-3 pb-4" data-dropdown>
-            <button
-              onClick={() => setShowMoreMenu(!showMoreMenu)}
-              className={`flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden ${
-                showMoreMenu
-                  ? "bg-pink-50 text-[#241a22]"
-                  : "text-[#8c6d7f] hover:bg-pink-50/60 hover:text-[#df5f97]"
-              }`}
-              aria-label="More"
-            >
-              <div className="shrink-0">
-                <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                  <path d="M3 6h18M3 12h18M3 18h18" />
-                </svg>
-              </div>
-              <span
-                className={`whitespace-nowrap text-sm font-medium transition-all duration-300 ${
-                  sidebarOpen
-                    ? "opacity-100 translate-x-0"
-                    : "opacity-0 -translate-x-2 pointer-events-none w-0"
-                }`}
-              >
-                More
-              </span>
-            </button>
-            {showMoreMenu && (
-              <div className="absolute bottom-full left-3 mb-2 w-[240px] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
-                {[
-                  { label: "Settings", icon: "M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z" },
-                  { label: "Your Activity", icon: "M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" },
-                  { label: "Saved", icon: "M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" },
-                  { label: "Creator Dashboard", icon: "M4 6h16M4 12h16M4 18h7", action: onOpenDashboard },
-                  { label: "Help & Support", icon: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01" },
-                ].map((item) => (
-                  <button
-                    key={item.label}
-                    onClick={item.action || undefined}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97]"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d={item.icon} />
-                    </svg>
-                    {item.label}
-                  </button>
-                ))}
-                <hr className="my-1 border-pink-100" />
-                <button
-                  onClick={onLogout}
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8384f] transition hover:bg-red-50/60"
-                >
-                  <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
-                  </svg>
-                  Log out
-                </button>
-              </div>
-            )}
-          </div>
-        </aside>
+          onOpenDashboard={onOpenDashboard}
+          onLogout={onLogout}
+          showComposeMenu={showComposeMenu}
+          setShowComposeMenu={setShowComposeMenu}
+          onComposePost={() => setShowCompose(true)}
+        />
 
         {/* ─── Main Content ────────────────────────────────────────── */}
         <main className="flex-1 min-w-0 pb-20 md:pb-8">
@@ -1014,7 +808,7 @@ export default function StorePage({ onBack, onLogout, onViewProfile, onOpenConne
                     {filteredItems.map((item) => (
                       <div
                         key={item.id}
-                        className="group rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-1"
+                        className="group rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
                       >
                         {/* Thumbnail */}
                         <div className="relative aspect-[4/3] overflow-hidden bg-pink-50">
@@ -1153,172 +947,21 @@ export default function StorePage({ onBack, onLogout, onViewProfile, onOpenConne
           </div>
         </main>
 
-        {/* ─── Right Chat Sidebar (Desktop) ────────────────────────── */}
-        <aside
-          className={`hidden md:flex flex-col shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-l border-pink-100 bg-white transition-all duration-300 ease-in-out ${
-            chatExpanded ? "w-[300px]" : "w-[82px]"
-          }`}
-        >
-          {/* Toggle Arrow */}
-          <button
-            onClick={() => setChatExpanded(!chatExpanded)}
-            className="flex h-10 w-full items-center justify-center border-b border-pink-50 text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]"
-            aria-label={chatExpanded ? "Collapse inbox" : "Expand inbox"}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className={`w-4 h-4 transition-transform duration-300 ${chatExpanded ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          {/* Chat Content */}
-          <div className="flex-1 overflow-y-auto hide-scrollbar">
-            {chatExpanded ? (
-              <div>
-                <div className="px-4 py-3 border-b border-pink-50">
-                  <h3 className="text-sm font-semibold text-[#241a22]">Messages</h3>
-                </div>
-                {chatContacts.map((contact) => (
-                  <button
-                    key={contact.id}
-                    className="flex w-full items-center gap-3 px-4 py-4 text-left transition hover:bg-pink-50/60"
-                  >
-                    <div className="relative shrink-0">
-                      <img
-                        src={contact.avatar}
-                        alt={contact.name}
-                        className="h-[72px] w-[72px] rounded-full object-cover"
-                      />
-                      {contact.online && (
-                        <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-400 ring-2 ring-white" />
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-[#241a22] truncate">
-                          {contact.name}
-                        </p>
-                        <span className="text-[10px] text-[#b89aa8] shrink-0 ml-2">
-                          {contact.time}
-                        </span>
-                      </div>
-                      <p className="mt-0.5 text-xs text-[#8c6d7f] truncate">
-                        {contact.lastMessage}
-                      </p>
-                    </div>
-                    {contact.unread > 0 && (
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f472b6] text-[10px] font-bold text-white">
-                        {contact.unread}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-4 py-3">
-                {chatContacts.map((contact) => (
-                  <button
-                    key={contact.id}
-                    className="relative group"
-                    onClick={() => setChatExpanded(true)}
-                    aria-label={`Chat with ${contact.name}`}
-                  >
-                    <img
-                      src={contact.avatar}
-                      alt={contact.name}
-                      className="h-14 w-14 rounded-full object-cover border-2 border-pink-100 transition group-hover:border-pink-300"
-                    />
-                    {contact.online && (
-                      <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-white" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </aside>
+        <ChatSidebar contacts={chatContacts} />
       </div>
 
-      {/* ─── Mobile Bottom Nav ─────────────────────────────────────── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-pink-100 bg-white/95 backdrop-blur-md">
-        <div className="flex h-14 items-center justify-around px-2">
-          {navItems.map((item) => (
-            item.id === "compose" ? (
-              <div key={item.id} className="relative" data-dropdown>
-                <button
-                  onClick={() => setShowComposeMenu(!showComposeMenu)}
-                  className="flex h-11 w-11 items-center justify-center rounded-xl transition text-[#8c6d7f] active:text-[#df5f97]"
-                  aria-label="Create"
-                >
-                  {item.icon}
-                </button>
-                {showComposeMenu && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[180px] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
-                    <button
-                      onClick={() => { setShowCompose(true); setShowComposeMenu(false); }}
-                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60"
-                    >
-                      <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                      Create Post
-                    </button>
-                    <button
-                      onClick={() => setShowComposeMenu(false)}
-                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60"
-                    >
-                      <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                      </svg>
-                      Create Moment
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`flex h-11 w-11 items-center justify-center rounded-xl transition ${
-                  activePage === item.id
-                    ? "text-[#f472b6]"
-                    : "text-[#8c6d7f] active:text-[#df5f97]"
-                }`}
-                aria-label={item.label}
-              >
-                {item.icon}
-              </button>
-            )
-          ))}
-          {/* Mobile Chat Icon */}
-          <button
-            onClick={() => setActivePage("chat")}
-            className={`relative flex h-11 w-11 items-center justify-center rounded-xl transition ${
-              activePage === "chat"
-                ? "text-[#f472b6]"
-                : "text-[#8c6d7f] active:text-[#df5f97]"
-            }`}
-            aria-label="Messages"
-          >
-            <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-            </svg>
-            {totalUnread > 0 && (
-              <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#e8384f] text-[9px] font-bold text-white">
-                {totalUnread}
-              </span>
-            )}
-          </button>
-        </div>
-      </nav>
+      <MobileNav
+        activePage="store"
+        onNavigate={(id) => {
+          if (id === "home") onBack && onBack();
+          else if (id === "connect") onOpenConnect && onOpenConnect();
+          else if (id === "promotions") onOpenPromotions && onOpenPromotions();
+        }}
+        showComposeMenu={showComposeMenu}
+        setShowComposeMenu={setShowComposeMenu}
+        onComposePost={() => setShowCompose(true)}
+        totalUnread={totalUnread}
+      />
 
       {/* ─── Compose Modal ─────────────────────────────────────────── */}
       {showCompose && (
