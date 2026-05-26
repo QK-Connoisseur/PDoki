@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 /* ─── Icon Definitions ──────────────────────────────────────────────── */
 
@@ -137,6 +137,32 @@ export default function Sidebar({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const sidebarTimeout = useRef(null);
+  const moreMenuRef = useRef(null);
+
+  /* Close More menu (and compose menu) on outside click or ESC */
+  useEffect(() => {
+    if (!showMoreMenu && !showComposeMenu) return;
+    const onMouseDown = (e) => {
+      if (showMoreMenu && moreMenuRef.current && !moreMenuRef.current.contains(e.target)) {
+        setShowMoreMenu(false);
+      }
+      if (showComposeMenu && !e.target.closest("[data-dropdown]")) {
+        setShowComposeMenu(false);
+      }
+    };
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setShowMoreMenu(false);
+        setShowComposeMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", onMouseDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onMouseDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [showMoreMenu, showComposeMenu, setShowComposeMenu]);
 
   return (
     <aside
@@ -236,7 +262,7 @@ export default function Sidebar({
       <div className="flex-[2]" />
 
       {/* ─── More Menu ─── */}
-      <div className="relative px-3 pb-4" data-dropdown>
+      <div ref={moreMenuRef} className="relative px-3 pb-4" data-dropdown>
         <button
           onClick={() => setShowMoreMenu(!showMoreMenu)}
           className={`flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden cursor-pointer ${

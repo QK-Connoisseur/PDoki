@@ -1035,7 +1035,7 @@ export default function HomePage({ onLogout, onViewProfile, onOpenOasis, onOpenC
                   <textarea
                     value={composeText}
                     onChange={e => setComposeText(e.target.value)}
-                    placeholder="Share a moment…"
+                    placeholder="Post a new drop..."
                     rows={4}
                     className="flex-1 resize-none rounded-2xl outline-none transition-all duration-300"
                     style={{
@@ -1251,7 +1251,7 @@ export default function HomePage({ onLogout, onViewProfile, onOpenOasis, onOpenC
                       letterSpacing: "0.03em",
                     }}
                   >
-                    {composeLocked ? "Post · Locked" : "Post"}
+                    {composeLocked ? "Post - Locked" : "Post"}
                   </button>
                 </div>
               </div>

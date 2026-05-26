@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Sidebar, { MobileNav } from "../components/Sidebar";
 import ChatSidebar from "../components/ChatSidebar";
 import { StatusMenuRow } from "../components/UserStatusSwitcher";
+import CreatePostModal from "../components/CreatePostModal";
 
 /* ─── Mock Data ──────────────────────────────────────────────────────── */
 
@@ -414,6 +415,9 @@ export default function PromotionsPage({ onBack, onLogout, onViewProfile, onOpen
   const [composeFontColor, setComposeFontColor] = useState("#4a3340");
   const [composeBold, setComposeBold] = useState(false);
   const [composeItalic, setComposeItalic] = useState(false);
+  const [composeLocked, setComposeLocked] = useState(false);
+  const [composeText, setComposeText] = useState("");
+  const [composeVesoPrice, setComposeVesoPrice] = useState("");
 
   useEffect(() => {
     const handler = (e) => {
@@ -458,7 +462,7 @@ export default function PromotionsPage({ onBack, onLogout, onViewProfile, onOpen
             <div className="relative" data-dropdown>
               <button
                 onClick={() => { setShowSearch(!showSearch); setShowNotifications(false); setShowProfileMenu(false); }}
-                className="flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]"
+                className="flex h-10 w-10 items-center justify-center rounded-xl cursor-pointer text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]"
                 aria-label="Search"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -483,7 +487,7 @@ export default function PromotionsPage({ onBack, onLogout, onViewProfile, onOpen
             <div className="relative" data-dropdown>
               <button
                 onClick={() => { setShowNotifications(!showNotifications); setShowSearch(false); setShowProfileMenu(false); }}
-                className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]"
+                className="relative flex h-10 w-10 items-center justify-center rounded-xl cursor-pointer text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]"
                 aria-label="Notifications"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -518,7 +522,7 @@ export default function PromotionsPage({ onBack, onLogout, onViewProfile, onOpen
             <div className="relative" data-dropdown>
               <button
                 onClick={() => { setShowProfileMenu(!showProfileMenu); setShowSearch(false); setShowNotifications(false); }}
-                className="ml-1 flex h-10 w-10 items-center justify-center"
+                className="ml-1 flex h-10 w-10 items-center justify-center cursor-pointer"
                 aria-label="Profile menu"
               >
                 <img
@@ -756,141 +760,24 @@ export default function PromotionsPage({ onBack, onLogout, onViewProfile, onOpen
       />
 
       {/* ─── Compose Modal ─────────────────────────────────────────── */}
-      {showCompose && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg rounded-3xl border border-pink-100 bg-white shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between border-b border-pink-50 px-5 py-4">
-              <h2 className="text-lg font-semibold text-[#241a22]">Create Post</h2>
-              <button
-                onClick={() => setShowCompose(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#e8384f]"
-                aria-label="Close"
-              >
-                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-5">
-              <div className="flex items-start gap-3">
-                <img
-                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80"
-                  alt="Your avatar"
-                  className="h-10 w-10 rounded-full object-cover border border-pink-100"
-                />
-                <textarea
-                  placeholder="What's on your mind?"
-                  rows={4}
-                  className="flex-1 resize-none rounded-xl border border-pink-100 bg-[#fffafc] px-4 py-3 outline-none placeholder:text-[#c59aae] focus:border-pink-300"
-                  style={{
-                    fontSize: composeFontSize === "small" ? "13px" : composeFontSize === "large" ? "18px" : "14px",
-                    fontWeight: composeBold ? "700" : "400",
-                    fontStyle: composeItalic ? "italic" : "normal",
-                    color: composeFontColor,
-                  }}
-                />
-              </div>
-              <div className="mt-3 flex items-center gap-2 flex-wrap border-t border-pink-50 pt-3">
-                <div className="flex items-center rounded-lg border border-pink-100 overflow-hidden">
-                  {[
-                    { id: "small", label: "S", title: "Small" },
-                    { id: "normal", label: "M", title: "Medium" },
-                    { id: "large", label: "L", title: "Large" },
-                  ].map((size) => (
-                    <button
-                      key={size.id}
-                      onClick={() => setComposeFontSize(size.id)}
-                      className={`px-2.5 py-1.5 text-xs font-semibold transition ${
-                        composeFontSize === size.id
-                          ? "bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] text-white"
-                          : "text-[#8c6d7f] hover:bg-pink-50"
-                      }`}
-                      title={size.title}
-                    >
-                      {size.label}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setComposeBold(!composeBold)}
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-bold transition ${
-                    composeBold
-                      ? "border-[#f472b6] bg-pink-50 text-[#f472b6]"
-                      : "border-pink-100 text-[#8c6d7f] hover:bg-pink-50"
-                  }`}
-                  title="Bold"
-                >
-                  B
-                </button>
-                <button
-                  onClick={() => setComposeItalic(!composeItalic)}
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg border text-xs transition ${
-                    composeItalic
-                      ? "border-[#f472b6] bg-pink-50 text-[#f472b6]"
-                      : "border-pink-100 text-[#8c6d7f] hover:bg-pink-50"
-                  }`}
-                  title="Italic"
-                >
-                  <span className="italic font-serif">I</span>
-                </button>
-                <div className="flex items-center gap-1 ml-1">
-                  {[
-                    { color: "#4a3340", name: "Default" },
-                    { color: "#8b2252", name: "Berry" },
-                    { color: "#c2185b", name: "Rose" },
-                    { color: "#f472b6", name: "Sakura" },
-                    { color: "#7c3aed", name: "Violet" },
-                    { color: "#2563eb", name: "Ocean" },
-                  ].map((c) => (
-                    <button
-                      key={c.color}
-                      onClick={() => setComposeFontColor(c.color)}
-                      className={`h-6 w-6 rounded-full border-2 transition ${
-                        composeFontColor === c.color
-                          ? "border-[#241a22] scale-110"
-                          : "border-transparent hover:border-pink-200"
-                      }`}
-                      style={{ backgroundColor: c.color }}
-                      title={c.name}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="mt-3 flex items-center gap-2 border-t border-pink-50 pt-3">
-                <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
-                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                    <circle cx="8.5" cy="8.5" r="1.5" />
-                    <path d="M21 15l-5-5L5 21" />
-                  </svg>
-                  Photo
-                </button>
-                <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
-                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="23 7 16 12 23 17 23 7" />
-                    <rect x="1" y="5" width="15" height="14" rx="2" />
-                  </svg>
-                  Video
-                </button>
-                <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
-                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" />
-                    <path d="M7 11V7a5 5 0 0110 0v4" />
-                  </svg>
-                  Price
-                </button>
-                <div className="flex-1" />
-                <button
-                  onClick={() => setShowCompose(false)}
-                  className="rounded-xl bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-pink-200/50 transition hover:shadow-lg"
-                >
-                  Post
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <CreatePostModal
+        open={showCompose}
+        onClose={() => setShowCompose(false)}
+        text={composeText}
+        setText={setComposeText}
+        fontSize={composeFontSize}
+        setFontSize={setComposeFontSize}
+        bold={composeBold}
+        setBold={setComposeBold}
+        italic={composeItalic}
+        setItalic={setComposeItalic}
+        fontColor={composeFontColor}
+        setFontColor={setComposeFontColor}
+        locked={composeLocked}
+        setLocked={setComposeLocked}
+        vesoPrice={composeVesoPrice}
+        setVesoPrice={setComposeVesoPrice}
+      />
     </div>
   );
 }

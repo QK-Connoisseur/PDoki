@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { DokiTierBadgeRow } from "../components/DokiTierBadge";
 import Sidebar, { MobileNav } from "../components/Sidebar";
 import ChatSidebar from "../components/ChatSidebar";
+import CreatePostModal from "../components/CreatePostModal";
 import FollowButton from "../components/FollowButton";
 import { StaticStatusBadge, StatusMenuRow } from "../components/UserStatusSwitcher";
 import MomentAvatar from "../components/MomentAvatar";
@@ -343,8 +344,7 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
   const [mediaFilter, setMediaFilter] = useState("all");
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [serviceSearch, setServiceSearch] = useState("");
-  const [feedSubView, setFeedSubView] = useState("posts");
-  const [showFeedMenu, setShowFeedMenu] = useState(false);
+  const [showFreeOnly, setShowFreeOnly] = useState(false);
   const [storeFilter, setStoreFilter] = useState("all");
   const [storeSearch, setStoreSearch] = useState("");
   const [storeLayout, setStoreLayout] = useState("grid");
@@ -368,6 +368,9 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
   const [composeFontColor, setComposeFontColor] = useState("#4a3340");
   const [composeBold, setComposeBold] = useState(false);
   const [composeItalic, setComposeItalic] = useState(false);
+  const [composeLocked, setComposeLocked] = useState(false);
+  const [composeText, setComposeText] = useState("");
+  const [composeVesoPrice, setComposeVesoPrice] = useState("");
 
   const profile = profileData;
 
@@ -397,7 +400,8 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
   const filteredStoreItems = mediaStoreItems.filter((item) => {
     const matchesFilter = storeFilter === "all" || item.type === storeFilter;
     const matchesSearch = item.title.toLowerCase().includes(storeSearch.toLowerCase());
-    return matchesFilter && matchesSearch;
+    const matchesFree = !showFreeOnly || item.price === 0 || item.price === "0.00";
+    return matchesFilter && matchesSearch && matchesFree;
   });
 
   const selectedService = selectedServiceId
@@ -419,7 +423,6 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
         setShowNotifications(false);
         setShowSearch(false);
         setShowMoreOptions(false);
-        setShowFeedMenu(false);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -429,7 +432,7 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
   const totalUnread = chatContacts.reduce((sum, c) => sum + c.unread, 0);
 
   return (
-    <div className="min-h-screen bg-[#fff8fb] text-[#5b4153]">
+    <div className="min-h-screen bg-[#F8F9FA] text-[#5b4153]">
       <style>{`
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -776,7 +779,7 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
           </div>
 
           {/* ─── Moments (under banner, ePal-style semi-transparent boxes) ── */}
-          <div className="bg-[#fff8fb] py-4">
+          <div className="bg-white py-4 border-b border-pink-50">
             <div
               ref={momentsRef}
               className="flex gap-3 overflow-x-auto hide-scrollbar justify-center max-w-[1500px] mx-auto px-4"
@@ -817,94 +820,23 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
           <div className="px-4 sm:px-6 border-b border-pink-100">
             <div className="flex gap-1 max-w-[1500px] mx-auto">
               {tabs.map((tab) => (
-                tab.id === "feed" ? (
-                  /* Feed tab with dropdown arrow */
-                  <div key={tab.id} className="relative" data-dropdown>
-                    <div className="flex items-center">
-                      <button
-                        onClick={() => {
-                          setActiveTab("feed");
-                          setSelectedServiceId(null);
-                          setFeedSubView("posts");
-                        }}
-                        className={`px-4 py-3 text-sm font-medium transition relative ${
-                          activeTab === "feed"
-                            ? "text-[#241a22]"
-                            : "text-[#b89aa8] hover:text-[#8c6d7f]"
-                        }`}
-                      >
-                        {feedSubView === "posts" ? "Feed" : "Media"}
-                        {activeTab === "feed" && (
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 rounded-full bg-gradient-to-r from-[#f9a8c8] to-[#f472b6]" />
-                        )}
-                      </button>
-                      <button
-                        onClick={() => setShowFeedMenu(!showFeedMenu)}
-                        className={`-ml-1 py-3 pr-3 transition ${
-                          activeTab === "feed" ? "text-[#241a22]" : "text-[#b89aa8] hover:text-[#8c6d7f]"
-                        }`}
-                        aria-label="Feed options"
-                      >
-                        <svg viewBox="0 0 24 24" className={`w-3.5 h-3.5 transition-transform ${showFeedMenu ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M6 9l6 6 6-6" />
-                        </svg>
-                      </button>
-                    </div>
-                    {showFeedMenu && (
-                      <div className="absolute left-0 top-full mt-1 w-36 rounded-xl border border-pink-100 bg-white py-1 shadow-xl overflow-hidden z-50">
-                        <button
-                          onClick={() => { setActiveTab("feed"); setFeedSubView("posts"); setShowFeedMenu(false); }}
-                          className={`flex w-full items-center gap-2.5 px-4 py-2.5 text-sm transition ${
-                            feedSubView === "posts" && activeTab === "feed"
-                              ? "bg-pink-50/60 text-[#f472b6] font-semibold"
-                              : "text-[#5b4153] hover:bg-pink-50/40"
-                          }`}
-                        >
-                          <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="3" y="3" width="7" height="7" />
-                            <rect x="14" y="3" width="7" height="7" />
-                            <rect x="3" y="14" width="7" height="7" />
-                            <rect x="14" y="14" width="7" height="7" />
-                          </svg>
-                          Posts
-                        </button>
-                        <button
-                          onClick={() => { setActiveTab("feed"); setFeedSubView("media"); setShowFeedMenu(false); }}
-                          className={`flex w-full items-center gap-2.5 px-4 py-2.5 text-sm transition ${
-                            feedSubView === "media" && activeTab === "feed"
-                              ? "bg-pink-50/60 text-[#f472b6] font-semibold"
-                              : "text-[#5b4153] hover:bg-pink-50/40"
-                          }`}
-                        >
-                          <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="3" y="3" width="18" height="18" rx="2" />
-                            <circle cx="8.5" cy="8.5" r="1.5" />
-                            <path d="M21 15l-5-5L5 21" />
-                          </svg>
-                          Media
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <button
-                    key={tab.id}
-                    onClick={() => {
-                      setActiveTab(tab.id);
-                      if (tab.id !== "services") setSelectedServiceId(null);
-                    }}
-                    className={`px-6 py-3 text-sm font-medium transition relative ${
-                      activeTab === tab.id
-                        ? "text-[#241a22]"
-                        : "text-[#b89aa8] hover:text-[#8c6d7f]"
-                    }`}
-                  >
-                    {tab.label}
-                    {activeTab === tab.id && (
-                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 rounded-full bg-gradient-to-r from-[#f9a8c8] to-[#f472b6]" />
-                    )}
-                  </button>
-                )
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    if (tab.id !== "services") setSelectedServiceId(null);
+                  }}
+                  className={`px-6 py-3 text-sm font-medium transition relative ${
+                    activeTab === tab.id
+                      ? "text-[#241a22]"
+                      : "text-[#b89aa8] hover:text-[#8c6d7f]"
+                  }`}
+                >
+                  {tab.label}
+                  {activeTab === tab.id && (
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 rounded-full bg-gradient-to-r from-[#f9a8c8] to-[#f472b6]" />
+                  )}
+                </button>
               ))}
             </div>
           </div>
@@ -917,7 +849,7 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
                 <div className="flex flex-col lg:flex-row gap-5">
                   {/* ── Left: Service Sidebar ────────────────────────── */}
                   <div className="w-[280px] shrink-0 hidden lg:block">
-                    <div className="sticky top-20 space-y-2">
+                    <div className="sticky top-20 space-y-2 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                       {/* Search */}
                       <div className="relative mb-3">
                         <svg viewBox="0 0 24 24" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b89aa8]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -972,9 +904,8 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
                           </div>
                           <div className="text-left min-w-0 flex-1">
                             <p className={`text-sm font-semibold truncate ${selectedServiceId === service.id ? "text-[#241a22]" : "text-[#5b4153]"}`}>{service.title}</p>
-                            <p className="text-xs text-[#8c6d7f] flex items-center gap-1 mt-0.5">
-                              <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
-                              ${service.price} /{service.duration}
+                            <p className="mt-1">
+                              <span className="bg-pink-100 text-pink-700 px-2.5 py-0.5 rounded-full text-xs font-medium">${service.price} / {service.duration}</span>
                             </p>
                           </div>
                         </button>
@@ -1021,29 +952,41 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
                           {/* Title */}
                           <h2 className="text-xl font-bold text-[#241a22]">About Me</h2>
                           {/* Rating & Served */}
-                          <div className="flex items-center gap-2 mt-2">
-                            <svg viewBox="0 0 20 20" className="w-4 h-4" fill="#fbbf24">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <span className="font-bold text-[#241a22]">{avgRating}</span>
-                            <span className="text-[#8c6d7f]">&middot;</span>
-                            <span className="text-sm text-[#8c6d7f]">{totalServed} Served</span>
+                          <div className="flex items-center gap-3 mt-3">
+                            <div className="flex items-center gap-1.5 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full">
+                              <svg viewBox="0 0 20 20" className="w-4 h-4 text-amber-400" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                              <span className="text-lg font-bold">{avgRating}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 bg-pink-50 text-pink-600 px-3 py-1.5 rounded-full">
+                              <span className="text-lg font-bold">{totalServed}</span>
+                              <span className="text-sm font-medium">Served</span>
+                            </div>
                           </div>
 
                           {/* Long Bio */}
-                          <div className="mt-5 text-sm text-[#4a3340] leading-relaxed whitespace-pre-line">
+                          <div className="mt-5 text-sm text-[#4a3340] leading-loose whitespace-pre-line">
                             {profileLongBio}
                           </div>
 
                           {/* Styles & Interests */}
-                          <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-2">
+                          <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-4">
                             <div>
                               <span className="text-sm font-semibold text-[#5b4153]">Styles</span>
-                              <p className="text-sm text-[#8c6d7f] mt-0.5">Friendly, Talkative, Sweet</p>
+                              <div className="flex flex-wrap gap-1.5 mt-1.5">
+                                {["Friendly", "Talkative", "Sweet"].map((tag) => (
+                                  <span key={tag} className="inline-block bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm font-medium">{tag}</span>
+                                ))}
+                              </div>
                             </div>
                             <div>
                               <span className="text-sm font-semibold text-[#5b4153]">Platforms</span>
-                              <p className="text-sm text-[#8c6d7f] mt-0.5">Discord, Zoom, Messaging</p>
+                              <div className="flex flex-wrap gap-1.5 mt-1.5">
+                                {["Discord", "Zoom", "Messaging"].map((tag) => (
+                                  <span key={tag} className="inline-block bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm font-medium">{tag}</span>
+                                ))}
+                              </div>
                             </div>
                           </div>
 
@@ -1142,14 +1085,22 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
                           <p className="mt-4 text-sm text-[#4a3340] leading-relaxed">{selectedService.description}</p>
 
                           {/* Styles & Platforms */}
-                          <div className="mt-5 grid grid-cols-2 gap-x-8 gap-y-3">
+                          <div className="mt-5 grid grid-cols-2 gap-x-8 gap-y-4">
                             <div>
                               <span className="text-sm font-semibold text-[#5b4153]">Styles</span>
-                              <p className="text-sm text-[#8c6d7f] mt-0.5">{selectedService.styles || "N/A"}</p>
+                              <div className="flex flex-wrap gap-1.5 mt-1.5">
+                                {(selectedService.styles || "N/A").split(", ").map((tag) => (
+                                  <span key={tag} className="inline-block bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm font-medium">{tag}</span>
+                                ))}
+                              </div>
                             </div>
                             <div>
                               <span className="text-sm font-semibold text-[#5b4153]">Platforms</span>
-                              <p className="text-sm text-[#8c6d7f] mt-0.5">{selectedService.platforms || "N/A"}</p>
+                              <div className="flex flex-wrap gap-1.5 mt-1.5">
+                                {(selectedService.platforms || "N/A").split(", ").map((tag) => (
+                                  <span key={tag} className="inline-block bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm font-medium">{tag}</span>
+                                ))}
+                              </div>
                             </div>
                           </div>
 
@@ -1252,7 +1203,7 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
 
                   {/* ── Right: Creator Card ───────────────────────────── */}
                   <div className="w-[260px] shrink-0 hidden xl:block">
-                    <div className="sticky top-20">
+                    <div className="sticky top-20 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                       <img
                         src={profile.avatar}
                         alt={profile.name}
@@ -1272,8 +1223,8 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
               </div>
             )}
 
-            {/* ═══ Feed Tab (Posts + Media sub-views) ═══ */}
-            {activeTab === "feed" && feedSubView === "posts" && (
+            {/* ═══ Feed Tab ═══ */}
+            {activeTab === "feed" && (
               <div className="max-w-[650px] mx-auto px-4 pt-5 pb-12 space-y-5">
                 {profileFeedPosts.map((post) => {
                   const isKokoro = kokoroStates[post.id] || false;
@@ -1367,58 +1318,6 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
               </div>
             )}
 
-            {/* ═══ Feed > Media Sub-View ═══ */}
-            {activeTab === "feed" && feedSubView === "media" && (
-              <div className="max-w-[650px] mx-auto px-4 pt-5 pb-12">
-                <div className="flex gap-2 mb-4 overflow-x-auto hide-scrollbar">
-                  {[
-                    { id: "all", label: "All" },
-                    { id: "photos", label: "Photos" },
-                    { id: "videos", label: "Videos" },
-                    { id: "ptv", label: "Pay to View" },
-                  ].map((filter) => (
-                    <button
-                      key={filter.id}
-                      onClick={() => setMediaFilter(filter.id)}
-                      className={`shrink-0 rounded-xl px-4 py-2 text-xs font-semibold transition ${
-                        mediaFilter === filter.id
-                          ? "bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] text-white shadow-sm shadow-pink-200/50"
-                          : "border border-pink-100 bg-white text-[#8c6d7f] hover:border-pink-200 hover:text-[#df5f97]"
-                      }`}
-                    >
-                      {filter.label}
-                    </button>
-                  ))}
-                </div>
-                <div className="grid grid-cols-3 gap-1 rounded-2xl overflow-hidden">
-                  {filteredMedia.map((item) => (
-                    <button key={item.id} className="relative aspect-square group overflow-hidden">
-                      <img src={item.src} alt="" className={`h-full w-full object-cover transition group-hover:scale-105 ${item.locked ? "blur-sm" : ""}`} loading="lazy" />
-                      {!item.locked && (
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
-                          <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" /></svg>
-                        </div>
-                      )}
-                      {item.type === "video" && !item.locked && (
-                        <div className="absolute top-2 right-2">
-                          <svg viewBox="0 0 24 24" className="w-5 h-5 text-white drop-shadow-md" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-                        </div>
-                      )}
-                      {item.locked && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm">
-                          <svg viewBox="0 0 24 24" className="w-6 h-6 text-white/80" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></svg>
-                          <span className="mt-1 text-[11px] font-semibold text-white">${item.price}</span>
-                        </div>
-                      )}
-                    </button>
-                  ))}
-                </div>
-                {filteredMedia.length === 0 && (
-                  <div className="py-16 text-center"><p className="text-sm text-[#b89aa8]">No media found for this filter.</p></div>
-                )}
-              </div>
-            )}
-
             {/* ═══ Media Store Tab (LoyalFans-style PTV Grid) ═══ */}
             {activeTab === "store" && (
               <div className="max-w-[1500px] mx-auto px-4 pt-5 pb-12">
@@ -1460,6 +1359,22 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
                     ))}
                   </div>
 
+                  {/* Free Content Toggle */}
+                  <button
+                    onClick={() => setShowFreeOnly(!showFreeOnly)}
+                    className={`shrink-0 flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition border ${
+                      showFreeOnly
+                        ? "bg-green-100 text-green-700 border-green-200 shadow-sm"
+                        : "border-pink-100 bg-white text-[#8c6d7f] hover:border-pink-200 hover:text-[#df5f97]"
+                    }`}
+                    aria-pressed={showFreeOnly}
+                  >
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                    </svg>
+                    Free Content
+                  </button>
+
                   {/* Layout Toggle */}
                   <div className="flex items-center gap-1 border border-pink-100 rounded-xl p-1 bg-white shrink-0">
                     <button
@@ -1494,15 +1409,6 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
                         {/* Thumbnail */}
                         <div className="relative aspect-video overflow-hidden bg-[#f5e6ed]">
                           <img src={item.thumb} alt={item.title} className="h-full w-full object-cover transition group-hover:scale-105" loading="lazy" />
-                          {/* Tags */}
-                          <div className="absolute top-2 left-2 flex items-center gap-1.5">
-                            {item.isNew && (
-                              <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#f472b6] text-white">New</span>
-                            )}
-                            {item.downloadable && (
-                              <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#34d399] text-white">Download</span>
-                            )}
-                          </div>
                           {/* Duration / Photo Count badge */}
                           <div className="absolute bottom-2 left-2">
                             {item.type === "video" && (
@@ -1573,10 +1479,6 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
                         {/* Thumbnail */}
                         <div className="relative w-48 shrink-0 aspect-video rounded-xl overflow-hidden bg-[#f5e6ed]">
                           <img src={item.thumb} alt={item.title} className="h-full w-full object-cover" loading="lazy" />
-                          <div className="absolute top-1.5 left-1.5 flex items-center gap-1">
-                            {item.isNew && <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-[#f472b6] text-white">New</span>}
-                            {item.downloadable && <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-[#34d399] text-white">Download</span>}
-                          </div>
                           <div className="absolute bottom-1.5 left-1.5">
                             {item.type === "video" && <span className="px-1.5 py-0.5 rounded bg-black/70 text-[10px] font-medium text-white">{item.duration}</span>}
                             {item.type === "photo" && <span className="px-1.5 py-0.5 rounded bg-black/70 text-[10px] font-medium text-white">{item.photoCount} photos</span>}
@@ -1640,141 +1542,24 @@ export default function ProfilePage({ onBack, onLogout, onViewProfile, onOpenOas
       />
 
       {/* ─── Compose Modal ─────────────────────────────────────────── */}
-      {showCompose && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg rounded-3xl border border-pink-100 bg-white shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between border-b border-pink-50 px-5 py-4">
-              <h2 className="text-lg font-semibold text-[#241a22]">Create Post</h2>
-              <button
-                onClick={() => setShowCompose(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#e8384f]"
-                aria-label="Close"
-              >
-                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-5">
-              <div className="flex items-start gap-3">
-                <img
-                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80"
-                  alt="Your avatar"
-                  className="h-10 w-10 rounded-full object-cover border border-pink-100"
-                />
-                <textarea
-                  placeholder="What's on your mind?"
-                  rows={4}
-                  className="flex-1 resize-none rounded-xl border border-pink-100 bg-[#fffafc] px-4 py-3 outline-none placeholder:text-[#c59aae] focus:border-pink-300"
-                  style={{
-                    fontSize: composeFontSize === "small" ? "13px" : composeFontSize === "large" ? "18px" : "14px",
-                    fontWeight: composeBold ? "700" : "400",
-                    fontStyle: composeItalic ? "italic" : "normal",
-                    color: composeFontColor,
-                  }}
-                />
-              </div>
-              <div className="mt-3 flex items-center gap-2 flex-wrap border-t border-pink-50 pt-3">
-                <div className="flex items-center rounded-lg border border-pink-100 overflow-hidden">
-                  {[
-                    { id: "small", label: "S", title: "Small" },
-                    { id: "normal", label: "M", title: "Medium" },
-                    { id: "large", label: "L", title: "Large" },
-                  ].map((size) => (
-                    <button
-                      key={size.id}
-                      onClick={() => setComposeFontSize(size.id)}
-                      className={`px-2.5 py-1.5 text-xs font-semibold transition ${
-                        composeFontSize === size.id
-                          ? "bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] text-white"
-                          : "text-[#8c6d7f] hover:bg-pink-50"
-                      }`}
-                      title={size.title}
-                    >
-                      {size.label}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setComposeBold(!composeBold)}
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-bold transition ${
-                    composeBold
-                      ? "border-[#f472b6] bg-pink-50 text-[#f472b6]"
-                      : "border-pink-100 text-[#8c6d7f] hover:bg-pink-50"
-                  }`}
-                  title="Bold"
-                >
-                  B
-                </button>
-                <button
-                  onClick={() => setComposeItalic(!composeItalic)}
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg border text-xs transition ${
-                    composeItalic
-                      ? "border-[#f472b6] bg-pink-50 text-[#f472b6]"
-                      : "border-pink-100 text-[#8c6d7f] hover:bg-pink-50"
-                  }`}
-                  title="Italic"
-                >
-                  <span className="italic font-serif">I</span>
-                </button>
-                <div className="flex items-center gap-1 ml-1">
-                  {[
-                    { color: "#4a3340", name: "Default" },
-                    { color: "#8b2252", name: "Berry" },
-                    { color: "#c2185b", name: "Rose" },
-                    { color: "#f472b6", name: "Sakura" },
-                    { color: "#7c3aed", name: "Violet" },
-                    { color: "#2563eb", name: "Ocean" },
-                  ].map((c) => (
-                    <button
-                      key={c.color}
-                      onClick={() => setComposeFontColor(c.color)}
-                      className={`h-6 w-6 rounded-full border-2 transition ${
-                        composeFontColor === c.color
-                          ? "border-[#241a22] scale-110"
-                          : "border-transparent hover:border-pink-200"
-                      }`}
-                      style={{ backgroundColor: c.color }}
-                      title={c.name}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="mt-3 flex items-center gap-2 border-t border-pink-50 pt-3">
-                <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
-                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                    <circle cx="8.5" cy="8.5" r="1.5" />
-                    <path d="M21 15l-5-5L5 21" />
-                  </svg>
-                  Photo
-                </button>
-                <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
-                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="23 7 16 12 23 17 23 7" />
-                    <rect x="1" y="5" width="15" height="14" rx="2" />
-                  </svg>
-                  Video
-                </button>
-                <button className="flex items-center gap-2 rounded-xl border border-pink-100 px-3 py-2 text-xs font-medium text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97]">
-                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" />
-                    <path d="M7 11V7a5 5 0 0110 0v4" />
-                  </svg>
-                  Price
-                </button>
-                <div className="flex-1" />
-                <button
-                  onClick={() => setShowCompose(false)}
-                  className="rounded-xl bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-pink-200/50 transition hover:shadow-lg"
-                >
-                  Post
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <CreatePostModal
+        open={showCompose}
+        onClose={() => setShowCompose(false)}
+        text={composeText}
+        setText={setComposeText}
+        fontSize={composeFontSize}
+        setFontSize={setComposeFontSize}
+        bold={composeBold}
+        setBold={setComposeBold}
+        italic={composeItalic}
+        setItalic={setComposeItalic}
+        fontColor={composeFontColor}
+        setFontColor={setComposeFontColor}
+        locked={composeLocked}
+        setLocked={setComposeLocked}
+        vesoPrice={composeVesoPrice}
+        setVesoPrice={setComposeVesoPrice}
+      />
 
       {/* ─── Moment Composer ───────────────────────────────────────── */}
       {showMomentComposer && (
