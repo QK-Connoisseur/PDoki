@@ -1,0 +1,90 @@
+import { test, expect } from "@playwright/test";
+
+// Phase 1 browser coverage: real URLs must resolve on a cold load (not just via
+// in-app navigation), unknown paths fall back, browser Back/Forward works across
+// the shared shell, and core pages expose real loading / empty / error states.
+
+test.describe("routing", () => {
+  test("root redirects to /login and renders the login screen", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.getByText("Welcome back")).toBeVisible();
+  });
+
+  test("deep-linking /store loads directly on refresh", async ({ page }) => {
+    await page.goto("/store");
+    await expect(page).toHaveURL(/\/store$/);
+    await expect(page.getByText("Trending")).toBeVisible();
+  });
+
+  test("deep-linking /connect renders the Connect screen", async ({ page }) => {
+    await page.goto("/connect");
+    await expect(page).toHaveURL(/\/connect$/);
+    await expect(
+      page.getByRole("heading", { name: "Connect", exact: true })
+    ).toBeVisible();
+  });
+
+  test("unknown routes fall back to /login", async ({ page }) => {
+    await page.goto("/does-not-exist");
+    await expect(page).toHaveURL(/\/login$/);
+  });
+});
+
+test.describe("browser history", () => {
+  test("Back/Forward navigate between shared-shell member routes", async ({
+    page,
+  }) => {
+    await page.goto("/home");
+    await expect(page.getByText("For You")).toBeVisible();
+
+    // In-app navigation through the shared sidebar pushes SPA history entries.
+    await page.getByRole("button", { name: "Store", exact: true }).first().click();
+    await expect(page).toHaveURL(/\/store$/);
+    await expect(page.getByText("Trending")).toBeVisible();
+
+    await page
+      .getByRole("button", { name: "Connect", exact: true })
+      .first()
+      .click();
+    await expect(page).toHaveURL(/\/connect$/);
+
+    // Browser Back returns to Store, Forward returns to Connect.
+    await page.goBack();
+    await expect(page).toHaveURL(/\/store$/);
+    await expect(page.getByText("Trending")).toBeVisible();
+
+    await page.goForward();
+    await expect(page).toHaveURL(/\/connect$/);
+    await expect(
+      page.getByRole("heading", { name: "Connect", exact: true })
+    ).toBeVisible();
+  });
+});
+
+test.describe("core page async states", () => {
+  test("loading state is shown while data resolves", async ({ page }) => {
+    await page.goto("/store?state=loading");
+    await expect(page.getByRole("status")).toBeVisible();
+    await expect(page.getByText("Loading the store…")).toBeVisible();
+  });
+
+  test("empty state is shown when there is no data", async ({ page }) => {
+    await page.goto("/store?state=empty");
+    await expect(page.getByText("No items found")).toBeVisible();
+  });
+
+  test("error state shows a retry that recovers the page", async ({ page }) => {
+    await page.goto("/store?state=error");
+    await expect(page.getByRole("alert")).toBeVisible();
+    await expect(page.getByText("We couldn’t load the store.")).toBeVisible();
+
+    await page.getByRole("button", { name: "Try again" }).click();
+
+    // Retry clears the forced failure and resolves to real content.
+    await expect(page.getByText("Trending")).toBeVisible();
+    await expect(page.getByRole("alert")).toHaveCount(0);
+  });
+});

@@ -1,0 +1,941 @@
+# Pumdoki Detailed Implementation Plan
+
+@CLAUDE.md
+
+Last updated: June 28, 2026
+
+## 1. Purpose
+
+This plan turns the current frontend prototype into a secure, launchable adult creator platform. It is dependency-ordered: later phases should not be treated as complete until their prerequisites and exit criteria are satisfied.
+
+The plan distinguishes:
+
+- **Decision locked:** A product or vendor direction has been selected.
+- **UI prototype:** A screen or interaction exists with mock data.
+- **Backend implemented:** Server logic and persistence exist.
+- **Integrated:** Frontend and backend complete the user flow.
+- **Production-ready:** Security, compliance, tests, monitoring, and operational procedures are verified.
+
+### Phase completion verification rule
+
+`PLAN.md`, `CLAUDE.md`, and the current session handoff must be read together
+before starting or resuming a phase.
+
+A phase must not be described as **finished**, **complete**, or **verified**
+until all of the following are true:
+
+1. Every task required by that phase, or an explicitly documented and
+   founder-approved reduced scope, is complete.
+2. Every exit criterion for the phase is satisfied.
+3. The relevant automated checks have been run after the final changes. At
+   minimum, run the repository's lint, unit-test, and production-build commands
+   when those commands apply. Run browser/E2E, API integration, database
+   migration/seed, security, or infrastructure checks whenever the phase
+   touches those areas.
+4. The handoff records the exact commands run, their results, any warnings, and
+   any tests that could not be run.
+5. A failed, skipped, unavailable, or environment-blocked required check means
+   the phase is not yet verified. Environment-specific failures must be clearly
+   distinguished from product failures and rerun in a suitable environment.
+6. Manual visual inspection may supplement automated tests, but it does not
+   replace required automated verification.
+
+If work is intentionally deferred, the phase must be labeled **partially
+complete** or given a narrower name such as **foundation complete**. It must not
+be reported as fully complete against the original phase definition.
+
+## 2. Confirmed scope and assumptions
+
+### Launch scope
+
+- Store and Connect are launch-critical.
+- Tipping, PPV content, and Send Love are launch scope.
+- Oasis is launch scope and must be functional.
+- Real-time messaging uses WebSockets.
+- Veso is prepaid value at 1 Veso = 1 USD.
+- Store and Connect transactions use Veso.
+- Membership tiers are standardized across creators.
+- Explicit content can be hidden or shown based on an adult member's preference.
+- International creators, especially Latin American creators, are a core audience.
+- Live streaming is post-MVP.
+- The platform will begin with a small group of known creators but should accept public member registration.
+
+### Current external dependencies
+
+- CCBill is the intended primary adult payment processor.
+- Epoch is the intended fallback/cascade processor.
+- Neither merchant application has started.
+- Cascade behavior has not been confirmed with either provider.
+- The LLC has not been formed.
+- Legal policies have not been approved by counsel.
+- Real support/compliance email mailboxes do not yet exist.
+
+## 3. Recommended technical decisions
+
+### 3.1 Language and framework
+
+Recommendation:
+
+- Keep the existing frontend in JavaScript while the structure is stabilized.
+- Write all new backend and shared-contract code in TypeScript.
+- Convert frontend files gradually when they are touched for backend integration.
+- Use Node.js, Express, PostgreSQL, and Prisma unless a later proof-of-concept reveals a concrete blocker.
+
+Why:
+
+- TypeScript provides the most value at API, payment, entitlement, and ledger boundaries.
+- A gradual conversion avoids pausing product work for a large rewrite.
+- Express and Prisma match the proposed architecture and are approachable for a solo developer.
+
+Decision gate:
+
+- Confirm this stack before Phase 2 begins.
+
+### 3.2 Authentication
+
+Recommendation:
+
+- Use one Pumdoki-owned authentication system as the source of truth.
+- Support email/password first.
+- Store sessions in secure, HTTP-only, SameSite cookies.
+- Add Google or other OAuth providers as optional login methods later.
+- Do not run two independent account systems.
+
+Required capabilities:
+
+- Registration.
+- Email verification.
+- Login/logout.
+- Password reset.
+- Session renewal.
+- Session revocation.
+- Role-based authorization.
+- Accepted-policy version records.
+- Age-attestation records.
+- Admin-enforced suspension and logout.
+
+Decision gate:
+
+- Confirm whether optional Google login is required for the first beta.
+
+### 3.3 Admin architecture
+
+Recommendation:
+
+- Keep Admin inside `apps/web` for MVP at protected `/admin` routes.
+- Build Admin as an isolated feature area with separate layouts, permissions, API endpoints, and audit logging.
+- Do not create a separately deployed admin application until operational needs justify it.
+
+Why:
+
+- One frontend deployment is simpler and cheaper for a solo founder.
+- Authorization must still be enforced by the API; hiding links is never sufficient.
+- The feature can later be extracted into `apps/admin` without changing the database model.
+
+### 3.4 Email
+
+Recommendation:
+
+- Evaluate Amazon SES first because the planned infrastructure already uses AWS.
+- Use a local mail-capture tool in development.
+- Verify that the final provider supports the platform's lawful adult-content business model and expected complaint volume.
+- Use `.example` addresses in prototypes until domains and real inboxes are configured.
+
+Required transactional messages:
+
+- Email verification.
+- Password reset.
+- Login/security alerts.
+- Subscription receipt and renewal.
+- Cancellation and failed payment.
+- Veso recharge receipt.
+- Creator application received/approved/rejected.
+- Content moderation and appeal notices.
+- Booking confirmation/reminder/cancellation.
+- Payout and tax-document notices.
+
+### 3.5 Identity verification
+
+Recommendation:
+
+- Price specialist identity/age-verification providers before choosing manual verification.
+- For a tightly controlled private beta, a manual workflow may be used only after a documented security and legal design exists.
+- Design the database and API so a third-party provider can replace manual review without changing creator accounts.
+
+Manual beta requirements:
+
+- Dedicated encrypted storage separate from public media.
+- Strict admin roles.
+- Access audit logs.
+- No identity documents in application logs.
+- Defined retention and deletion rules.
+- File signature and malware validation.
+- Review decision, reason, reviewer, and timestamp.
+- Escalation process for mismatches or suspected fraud.
+
+### 3.6 International rollout
+
+Recommendation:
+
+- Do not enable every country on day one.
+- Start with a controlled country allowlist.
+- Prioritize the United States and selected Latin American countries supported by identity verification, payments, payouts, tax collection, and legal review.
+- Add the EU/EEA only after GDPR, DSA, cookie-consent, data-request, and consumer-rights workflows are production-ready.
+
+Country-enablement checklist:
+
+- Adult content is lawful for the intended service.
+- Processor accepts members from the country.
+- Creator payout method is available.
+- Identity verification supports local documents.
+- Tax forms and withholding are understood.
+- Privacy and deletion requests are operational.
+- Sanctions screening is supported.
+- Support language and policy translations exist.
+
+### 3.7 Provisional upload limits
+
+Initial cost-conscious recommendation:
+
+- Images: JPEG, PNG, or WebP; 20 MB per image.
+- Image sets: maximum 50 images per post during beta.
+- Video: MP4 or WebM; 1 GB and 30 minutes per file during beta.
+- Audio: MP3, AAC, M4A, or WAV; 250 MB per file.
+- Creator avatar: 10 MB.
+- Banner: 20 MB.
+- Identity documents: JPEG, PNG, or PDF; 10 MB each.
+
+Implementation principles:
+
+- Upload media directly to Cloudflare R2 with short-lived signed requests.
+- Never proxy large media through the main API process.
+- Keep original protected media private.
+- Generate thumbnails and delivery variants asynchronously.
+- Revisit limits after measuring storage and processing costs in beta.
+
+### 3.8 Commission and payout model
+
+Do not lock a final percentage until CCBill and Epoch provide actual pricing.
+
+The model must specify whether the creator percentage is calculated from:
+
+1. Gross member price.
+2. Gross price after taxes and refunds.
+3. Net processor proceeds after direct payment costs.
+
+Recommended modeling exercise:
+
+- Compare platform fees of 20%, 25%, and 30%.
+- Model processor fees at 10%, 12%, and 15%.
+- Include chargebacks, refunds, storage, support, verification, and taxes.
+- Model a Founding Creator discount of five percentage points.
+- Define whether the Founding rate is permanent or time-limited.
+
+Provisional recommendation:
+
+- Avoid promising an 80/20 gross split until processor economics are known.
+- Prefer a clearly disclosed creator share of net eligible receipts if high-risk processor fees make gross accounting unsustainable.
+- Keep member Veso, creator earnings, and platform revenue in separate ledgers.
+
+## 4. Phase 0 — Baseline, tracker, and scope control
+
+### Tasks
+
+1. Preserve the current frontend state in a clean Git commit.
+2. Review all existing uncommitted legal/profile work.
+3. Reclassify tracker rows using the five implementation states.
+4. Mark processor selection separately from processor integration.
+5. Mark existing Wallet, legal, onboarding, and Oasis screens as UI prototypes.
+6. Confirm the exact MVP list in writing.
+7. Add Store, Connect, tipping, PPV, Send Love, WebSockets, Veso recharge, explicit-content controls, and launch Oasis to MVP.
+8. Keep live streaming in post-MVP backlog.
+9. Create an open-decision register for:
+   - Commission.
+   - Founding Creator economics.
+   - Payout cadence.
+   - LLC state.
+   - Identity provider.
+   - Email provider.
+   - Launch country allowlist.
+   - Refund and Veso policies.
+10. Replace fake production claims with clearly marked prototype copy before any public deployment.
+
+### Exit criteria
+
+- Clean Git baseline.
+- No accidental prompt Markdown files.
+- Tracker reflects product reality.
+- MVP scope approved.
+- Every unresolved business/legal decision has an owner and due date.
+
+## 5. Phase 1 — Repository and frontend foundation
+
+### Tasks
+
+1. Use npm workspaces for `apps/*` and `packages/*`.
+2. Keep the existing React application in `apps/web`.
+3. Create the `apps/api` backend workspace.
+4. Add React Router.
+5. Replace `currentPage` navigation with stable routes.
+6. Support refresh and browser Back/Forward on every page.
+7. Introduce route groups:
+   - Public/auth.
+   - Member.
+   - Creator.
+   - Admin.
+   - Legal.
+8. Create a shared application shell.
+9. Extract shared header, sidebar, mobile navigation, profile menu, notifications, and chat rail.
+10. Move mock data to development fixtures.
+11. Add an API client with:
+    - Base URL configuration.
+    - Credentials.
+    - Typed errors.
+    - Request IDs.
+    - Unauthorized-session handling.
+12. Add ESLint and Prettier.
+13. Add Vitest and React Testing Library.
+14. Add Playwright.
+15. Add environment validation.
+16. Add `.env.example`.
+17. Add GitHub Actions for install, lint, test, and build.
+18. Add error boundaries and route error states.
+19. Add loading, empty, and retry states to core pages.
+
+### Exit criteria
+
+- Root install and build succeed.
+- Real URL routes work.
+- Shared layout duplication is reduced.
+- CI validates every branch.
+- Frontend is ready to consume APIs.
+- Run `npm run lint` with zero errors and record any warnings.
+- Run `npm run test` with all unit tests passing.
+- Run `npm run build` successfully.
+- Run `npm run test:e2e` with all Phase 1 browser tests passing. The browser
+  suite must cover direct URL loads, refresh/deep links, unknown-route
+  handling, and browser Back/Forward behavior on representative routes.
+- Manually smoke-test the public, member, creator, legal, Store, Connect,
+  Wallet, Oasis, and dashboard routes in the development server.
+- Record the verification commands and results in the current handoff before
+  marking Phase 1 complete.
+
+## 6. Phase 2 — Backend and database foundation
+
+### Tasks
+
+1. Initialize TypeScript in `apps/api`.
+2. Add Express and production middleware.
+3. Add PostgreSQL and Prisma under `packages/database`.
+4. Create shared schemas in `packages/contracts`.
+5. Define `/api/v1`.
+6. Implement consistent API errors.
+7. Add request validation.
+8. Add request IDs and structured logging.
+9. Add health/readiness endpoints.
+10. Add rate limiting and brute-force protection.
+11. Add a background-job queue.
+12. Add an idempotency framework.
+13. Add database migrations and development seeds.
+14. Define local, staging, and production environments.
+15. Deploy staging API and RDS.
+16. Configure automated backups.
+17. Test one database restoration.
+18. Add Sentry or an equivalent error tracker.
+
+### Initial data domains
+
+- Users.
+- Sessions.
+- Roles and permissions.
+- Creator profiles.
+- Creator applications.
+- Agreements and policy versions.
+- Membership tiers.
+- Posts and media.
+- Follows.
+- Reactions, comments, and bookmarks.
+- Subscriptions and entitlements.
+- Veso accounts and ledger entries.
+- Store purchases.
+- Connect services and bookings.
+- Conversations and messages.
+- Reports, moderation actions, and appeals.
+- Admin audit events.
+- Oasis creatures, inventory, tasks, and rewards.
+
+### Exit criteria
+
+- Staging API is available over HTTPS.
+- Migrations are repeatable.
+- Backups and restoration are tested.
+- Logging and monitoring work.
+
+## 7. Phase 3 — Authentication, roles, and settings
+
+### Tasks
+
+1. Register member accounts.
+2. Hash passwords using a modern password-hashing algorithm.
+3. Create secure server sessions.
+4. Implement email verification.
+5. Implement password reset.
+6. Implement logout and revoke-all-sessions.
+7. Create Member, Creator, Moderator, and Admin roles.
+8. Enforce permissions in the API.
+9. Record age attestation.
+10. Record accepted Terms and Privacy versions.
+11. Add account suspension and ban states.
+12. Build Settings:
+    - Profile.
+    - Email.
+    - Password.
+    - Active sessions.
+    - Notifications.
+    - Theme.
+    - Explicit-content preference.
+    - Billing.
+    - Data export.
+    - Account deletion.
+13. Default explicit content to hidden.
+14. Add an explicit-content opt-in gate for adults.
+15. Add optional OAuth only after core auth is stable.
+
+### Exit criteria
+
+- Authentication persists across refresh.
+- Protected pages reject unauthorized users.
+- Admin permissions are server-enforced.
+- Explicit-content preference works throughout the frontend.
+
+## 8. Phase 4 — Legal, trust, and creator onboarding
+
+### Legal workstream
+
+1. Form the legal entity before merchant onboarding.
+2. Evaluate Wyoming and other states with a privacy-focused attorney and CPA.
+3. Understand foreign qualification in the founder's operating state.
+4. Secure a registered agent.
+5. Decide whether Pumdoki is a DBA/trade name.
+6. Hire counsel experienced with adult creator platforms or high-risk marketplaces.
+7. Draft and approve:
+   - Terms of Service.
+   - Privacy Policy.
+   - Cookie Policy.
+   - Creator Agreement.
+   - Payout Terms.
+   - Acceptable Use Policy.
+   - Community Guidelines.
+   - DMCA Policy.
+   - NCII/TAKE IT DOWN process.
+   - Anti-trafficking policy.
+   - Appeals policy.
+   - Complaint policy.
+   - Law-enforcement request policy.
+   - Refund and Veso terms.
+8. Configure real operational mailboxes only after ownership and workflows exist.
+
+### Creator onboarding implementation
+
+1. Version creator agreements.
+2. Record acceptance timestamp, IP, user, and document version.
+3. Collect creator profile information.
+4. Collect tax residency and required forms.
+5. Collect government ID and verification selfie.
+6. Review or submit to identity provider.
+7. Approve, reject, or request more information.
+8. Record reviewer and reason.
+9. Add sanctions and prohibited-region screening.
+10. Block publishing until approval.
+11. Add performer records and releases.
+12. Support more than one performer per media item without creating a complicated public UI.
+13. Link every explicit media item to required performer records.
+
+### Reporting and compliance operations
+
+1. Content report form.
+2. Account report form.
+3. NCII notice form.
+4. DMCA notice and counter-notice.
+5. TAKE IT DOWN intake and 48-hour workflow.
+6. Trafficking escalation.
+7. CSAM escalation and required reporting.
+8. Appeal intake.
+9. Evidence preservation.
+10. Immutable admin audit log.
+
+### Exit criteria
+
+- Counsel-approved launch policies exist.
+- Creator identity and agreement records are secure.
+- No unapproved creator can publish.
+- Reports can be received, triaged, actioned, and audited.
+
+## 9. Phase 5 — Media pipeline and content model
+
+### Upload lifecycle
+
+1. Creator requests a signed upload.
+2. API checks role, creator status, and quota.
+3. API creates a pending media record.
+4. Browser uploads directly to an R2 quarantine bucket/prefix.
+5. Browser confirms completion.
+6. Background worker validates the actual file.
+7. Worker creates thumbnails and optimized variants.
+8. Content enters moderation.
+9. Approved content moves to a publishable protected location.
+10. Member requests access.
+11. API checks entitlement or purchase.
+12. API returns a short-lived signed media URL.
+
+### Content visibility
+
+- Public.
+- Followers.
+- Any subscriber.
+- Specific standardized tier.
+- PPV/Veso purchase.
+- Scheduled.
+- Draft.
+- Removed.
+- Quarantined.
+
+### Required protections
+
+- Private R2 originals.
+- Short signed URL lifetimes.
+- No protected URL in public feed payloads.
+- Server-side entitlement checks.
+- File signature verification.
+- Malware scanning.
+- Thumbnail separation.
+- Optional visible watermarking.
+- Takedown invalidates active access.
+
+### Exit criteria
+
+- Approved creator can publish.
+- Unauthorized member cannot access protected originals.
+- Subscriber and PPV access are enforced by the API.
+- Removed content is no longer deliverable.
+
+## 10. Phase 6 — Veso, payments, subscriptions, tipping, and PPV
+
+### Veso product rules to finalize
+
+1. Minimum recharge.
+2. Maximum account balance.
+3. Recharge packages and optional bonuses.
+4. Refund eligibility.
+5. Expiration policy.
+6. Regional restrictions.
+7. Transfer rules.
+8. Treatment of promotional Vesos.
+9. Chargeback handling.
+10. Account closure handling.
+11. Creator conversion from earned Vesos to payable balance.
+12. Whether taxes are included or added.
+
+### Recommended ledger model
+
+- Store all values in integer cents or integer Veso units.
+- Never update a balance without a ledger transaction.
+- Use separate accounts for:
+  - Member purchased Veso.
+  - Member promotional Veso.
+  - Creator pending earnings.
+  - Creator available earnings.
+  - Platform revenue.
+  - Processor clearing.
+  - Refund and chargeback reserves.
+- Every payment webhook is idempotent.
+- Every purchase references immutable ledger entries.
+
+### Processor work
+
+1. Begin CCBill merchant application in parallel with product work.
+2. Begin Epoch discussion after core policies and entity details are ready.
+3. Confirm cascade support in writing.
+4. Implement CCBill checkout.
+5. Store raw webhook events.
+6. Verify webhook authenticity.
+7. Handle sale, rebill, failure, cancel, expiration, refund, and chargeback.
+8. Add webhook retry and replay.
+9. Implement Epoch only after the integration model is confirmed.
+10. Add reconciliation reports.
+
+### Subscription work
+
+1. Standardized tier catalog.
+2. Creator activates permitted tiers.
+3. Member checks out.
+4. Webhook activates subscription.
+5. Entitlement grants access.
+6. Renewal extends access.
+7. Failed renewal enters grace state.
+8. Cancellation stops future rebilling.
+9. Expiration revokes access.
+10. Refund/chargeback applies business rules and audit events.
+
+### Veso recharge UI
+
+1. Current balance.
+2. Recharge presets.
+3. Custom amount if processor permits.
+4. Clear 1 Veso = 1 USD explanation.
+5. Recharge total and fees/taxes.
+6. Payment method.
+7. Terms/refund link.
+8. Purchase confirmation.
+9. Receipt.
+10. Recharge history.
+
+### Tipping and PPV
+
+- Send Love creates a Veso transfer from member balance to creator pending earnings.
+- PPV purchase creates a permanent or policy-defined entitlement.
+- Insufficient Veso opens the recharge flow.
+- Repeated clicks use idempotency keys.
+- Refunds update both entitlement and ledger state.
+
+### Exit criteria
+
+- Test recharge updates the ledger.
+- Store, Connect, Send Love, and PPV consume Veso correctly.
+- Subscription lifecycle is webhook-driven.
+- Refunds and chargebacks reconcile.
+
+## 11. Phase 7 — Core end-to-end vertical slice
+
+Complete this before broad feature expansion:
+
+1. Member registers.
+2. Member verifies email.
+3. Creator registers.
+4. Creator accepts agreements.
+5. Creator completes identity verification.
+6. Admin approves creator.
+7. Creator configures standardized tiers.
+8. Creator uploads protected media.
+9. Moderator approves media.
+10. Member recharges Veso.
+11. Member subscribes or buys PPV.
+12. Trusted processor event confirms payment.
+13. Member receives the correct entitlement.
+14. Member accesses protected media.
+15. Member sends a Veso tip.
+16. Creator sees pending earnings.
+17. Cancellation or expiration changes access correctly.
+18. Admin can inspect the full audit trail.
+
+### Exit criteria
+
+- The complete flow passes automated integration and E2E tests.
+- No manual database edits are required.
+
+## 12. Phase 8 — Feed, social actions, Store, and Connect
+
+### Feed
+
+1. Following feed from real followed creators.
+2. Simple For You ranking using recency, follows, engagement, and safety eligibility.
+3. Pagination.
+4. Reactions/Kokoros.
+5. Comments.
+6. Bookmarks.
+7. Follow/unfollow.
+8. Locked previews.
+9. Explicit-content filtering.
+10. Report and block actions.
+
+### Store
+
+1. Four medium cards at common large-desktop widths.
+2. More columns only on genuinely wider screens.
+3. Minimum practical thumbnail width.
+4. 16:9 thumbnails.
+5. Video duration and photo/audio type badges.
+6. Search.
+7. Price filters.
+8. Content-type filters.
+9. Creator filters.
+10. Trending and Recent sorting.
+11. Purchased.
+12. Favorites.
+13. Liked.
+14. History.
+15. Product-detail view.
+16. Buy with Veso.
+17. Recharge fallback.
+18. Responsive mobile layout.
+
+### Connect
+
+1. Standard service types.
+2. Creator service configuration.
+3. Pricing in Veso.
+4. Availability calendar.
+5. Time-zone handling.
+6. Booking.
+7. Payment hold.
+8. Confirmation.
+9. Reminder.
+10. Completion.
+11. Cancellation and refund rules.
+12. Dispute workflow.
+13. Reviews.
+
+### Exit criteria
+
+- Store tabs contain real account data.
+- Connect booking lifecycle works.
+- Feed actions persist.
+
+## 13. Phase 9 — Real-time messaging and notifications
+
+### WebSocket architecture
+
+1. Authenticate the WebSocket handshake.
+2. Authorize each conversation.
+3. Persist messages before acknowledgment.
+4. Support reconnect and missed-message synchronization.
+5. Add typing indicators.
+6. Add delivered/read states.
+7. Add online, busy, resting, and offline presence.
+8. Apply rate limits.
+9. Block prohibited attachments until media safety is ready.
+10. Add report and block controls.
+11. Retain moderation access according to approved policy.
+
+### Notifications
+
+- New message.
+- New subscriber.
+- Renewal/cancellation.
+- Veso tip.
+- PPV purchase.
+- Booking and reminder.
+- Creator approval.
+- Moderation action.
+- Report outcome.
+- Payout status.
+
+### Exit criteria
+
+- Messages survive reconnects and refresh.
+- Unauthorized users cannot subscribe to another conversation.
+- Notifications are persisted and marked read.
+
+## 14. Phase 10 — Creator dashboard
+
+Connect the existing UI to:
+
+- Earnings.
+- Subscriber list.
+- Content management.
+- Message queue.
+- Standardized tiers.
+- Connect services and bookings.
+- Store items.
+- Fan CRM.
+- Promotions.
+- Payout status.
+- Settings.
+
+Keep live-streaming controls hidden behind a disabled feature flag until post-MVP.
+
+### Exit criteria
+
+- Dashboard figures come from real data.
+- Every visible launch button has a working action.
+- Financial totals reconcile with ledger data.
+
+## 15. Phase 11 — Admin and moderation
+
+Build in this order:
+
+1. Protected `/admin`.
+2. Operations overview.
+3. User and creator search.
+4. Creator verification queue.
+5. Content moderation queue.
+6. Reports and complaints.
+7. NCII/TAKE IT DOWN queue with deadlines.
+8. DMCA workflow.
+9. Appeals.
+10. Subscriptions and payment events.
+11. Veso ledger inspection.
+12. Creator earnings and payouts.
+13. Chargeback monitoring.
+14. Performer/compliance records.
+15. Founding badge management.
+16. Feature flags.
+17. Platform configuration.
+18. Immutable audit log.
+
+### Security rules
+
+- Admin permissions are API-enforced.
+- Sensitive document access is separately permissioned.
+- Every sensitive view and action is logged.
+- Destructive actions require confirmation and reason.
+- Audit records cannot be edited or deleted by ordinary admins.
+
+### Exit criteria
+
+- Founder can operate the platform without database access.
+- Reports, payments, and creator verification are manageable.
+- Sensitive access is auditable.
+
+## 16. Phase 12 — Oasis/Drimy launch implementation
+
+### Product loop
+
+1. Member receives or chooses a starter Drimy.
+2. Daily login creates a task set.
+3. Member earns Orbs through approved platform activity.
+4. Member bonds with the Drimy.
+5. Drimy gains XP and evolves.
+6. Member unlocks cosmetics and collectibles.
+7. Collections and streaks encourage return visits.
+
+### Backend domains
+
+- Drimy species.
+- User-owned Drimys.
+- Evolution stages.
+- XP ledger.
+- Orb ledger.
+- Daily task definitions.
+- User task progress.
+- Inventory.
+- Cosmetics.
+- Equipped background/skin/frame.
+- Achievements.
+- League seasons.
+- Leaderboard snapshots.
+- Store purchases.
+- Reward claims.
+
+### Rules
+
+- Server time controls cooldowns and daily resets.
+- Reward claims are idempotent.
+- Client cannot directly update XP, Orbs, stage, or inventory.
+- Tasks react to real platform events.
+- Lucky Catch results update inventory.
+- Duplicate rewards have a defined conversion rule.
+- Store purchases deduct Orbs or Vesos through the appropriate ledger.
+- Fixed-price cosmetics are safer for launch.
+- Paid randomized rewards require separate legal and processor approval.
+
+### Launch content target
+
+- At least three Drimy species.
+- Three evolution stages for each launch Drimy.
+- A meaningful starter cosmetic collection.
+- Daily task variety.
+- Achievement set.
+- Backgrounds, skins, frames, and badges.
+- Clear empty, locked, earned, and equipped states.
+
+### Exit criteria
+
+- Progress survives devices and refreshes.
+- Daily reset is reliable.
+- Purchases and rewards cannot be duplicated.
+- Inventory and equipped cosmetics render correctly.
+
+## 17. Phase 13 — Internationalization and accessibility
+
+### Tasks
+
+1. Extract UI text from large components.
+2. Add English and Spanish.
+3. Support locale-aware dates, times, currency, and numbers.
+4. Define timezone behavior for Connect.
+5. Translate approved legal documents only after source text is final.
+6. Audit keyboard navigation.
+7. Add visible focus.
+8. Verify color contrast.
+9. Add screen-reader labels.
+10. Support reduced motion.
+11. Test responsive layouts.
+12. Test low-bandwidth media behavior.
+
+### Exit criteria
+
+- Core member and creator flows work in English and Spanish.
+- Accessibility audit has no critical failures.
+
+## 18. Phase 14 — QA, security, private beta, and launch
+
+### Automated testing
+
+- Unit tests for pricing, entitlement, ledger, Oasis, and permissions.
+- Integration tests for auth, media, payments, and moderation.
+- E2E tests for member and creator vertical slices.
+- Webhook duplicate and out-of-order tests.
+- WebSocket authorization and reconnect tests.
+- Signed-media URL tests.
+
+### Operational testing
+
+1. Database restore drill.
+2. Lost-secret rotation drill.
+3. Processor webhook outage drill.
+4. Content-takedown drill.
+5. Account-compromise drill.
+6. Chargeback handling drill.
+7. Identity-document access review.
+8. Support inbox test.
+9. Data export and deletion test.
+10. Load test feeds, messaging, and signed media.
+
+### Beta sequence
+
+1. Internal accounts.
+2. Existing trusted creators.
+3. Small invited member group.
+4. Processor sandbox/test transactions.
+5. Limited real transactions after approval.
+6. Fix critical and high-severity issues.
+7. Expand public member access.
+8. Add creators through controlled onboarding.
+
+### Launch gates
+
+- Entity and bank account ready.
+- Merchant account approved.
+- Counsel-approved policies live.
+- Identity and moderation workflows operational.
+- Backup restoration tested.
+- Core E2E tests passing.
+- No critical security findings.
+- Support and incident processes staffed.
+- Chargeback and report monitoring active.
+
+## 19. Post-MVP
+
+- Live streaming.
+- Advanced recommendation engine.
+- Native mobile applications.
+- Crypto payments.
+- Additional themes beyond Sakura and Dark Knight.
+- Advanced creator analytics.
+- Larger group-chat features.
+- External affiliate program.
+- Paid randomized Oasis mechanics only if approved.
+
+## 20. Immediate next actions
+
+1. Review and commit the repository restructuring.
+2. Review the updated tracker.
+3. Confirm Node/TypeScript/Express/Prisma.
+4. Decide whether Google login is beta scope.
+5. Start LLC attorney/CPA research.
+6. Obtain CCBill and Epoch application requirements and fee quotes.
+7. Create the commission-model spreadsheet.
+8. Identify two or three identity-verification options and compare cost/AUP.
+9. Define the initial country allowlist.
+10. Begin Phase 1 routing, quality tooling, and shared shell work.

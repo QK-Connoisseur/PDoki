@@ -1,0 +1,156 @@
+/**
+ * Sample Store catalogue items.
+ *
+ * Dev/test only — not production data. Extracted from the page body so it can
+ * be swapped for a real `/api/v1` response during backend integration.
+ */
+
+export const storeContent = [
+  {
+    id: 1, title: "Sakura Dreams Unboxing", creator: "Luna Bloom", username: "lunabloom",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 11.99, duration: "12:34", level: "star", date: "March 12, 2026",
+    isNew: true, downloadable: true, type: "video", bookmarked: false, kokoros: 1842,
+  },
+  {
+    id: 2, title: "Late Night Whisper Session", creator: "Mika Rose", username: "mikarose",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 10.99, duration: "11:53", level: "legend", date: "March 10, 2026",
+    isNew: true, downloadable: true, type: "video", bookmarked: false, kokoros: 2310,
+  },
+  {
+    id: 3, title: "Cozy ASMR Rain & Taps", creator: "Airi Vale", username: "airivale",
+    avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1590650153855-d9e808231d41?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 8.99, duration: "17:30", level: "gold", date: "March 08, 2026",
+    isNew: true, downloadable: true, type: "audio", bookmarked: false, kokoros: 987,
+  },
+  {
+    id: 4, title: "Exclusive Photo Collection", creator: "Sora Nyx", username: "soranyx",
+    avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 7.99, duration: null, level: "gold", date: "March 06, 2026",
+    isNew: false, downloadable: true, type: "photo", bookmarked: true, kokoros: 756,
+  },
+  {
+    id: 5, title: "Morning Routine Vlog", creator: "Naomi Hart", username: "naomihart",
+    avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 8.99, duration: "07:42", level: "silver", date: "March 06, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: false, kokoros: 423,
+  },
+  {
+    id: 6, title: "Custom Dance Freestyle", creator: "Reina Noir", username: "reinanoir",
+    avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 10.99, duration: "10:17", level: "star", date: "February 28, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: false, kokoros: 1654,
+  },
+  {
+    id: 7, title: "Behind the Scenes Photoshoot", creator: "Kira Dawn", username: "kiradawn",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 6.99, duration: "08:14", level: "gold", date: "February 25, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: false, kokoros: 531,
+  },
+  {
+    id: 8, title: "Relaxation Breathing Guide", creator: "Yuki Star", username: "yukistar",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 10.99, duration: "10:42", level: "silver", date: "February 22, 2026",
+    isNew: false, downloadable: false, type: "video", bookmarked: false, kokoros: 298,
+  },
+  {
+    id: 9, title: "Gaming Stream Highlights", creator: "Luna Bloom", username: "lunabloom",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 10.99, duration: "10:32", level: "star", date: "February 20, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: false, kokoros: 1123,
+  },
+  {
+    id: 10, title: "Polaroid-Style Exclusives", creator: "Mika Rose", username: "mikarose",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 11.99, duration: null, level: "legend", date: "February 18, 2026",
+    isNew: false, downloadable: true, type: "photo", bookmarked: false, kokoros: 889,
+  },
+  {
+    id: 11, title: "Sunset Yoga Flow", creator: "Airi Vale", username: "airivale",
+    avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 9.99, duration: "05:26", level: "gold", date: "February 14, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: true, kokoros: 612,
+  },
+  {
+    id: 12, title: "Valentine Voice Message", creator: "Sora Nyx", username: "soranyx",
+    avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 6.99, duration: "03:18", level: "gold", date: "February 12, 2026",
+    isNew: false, downloadable: false, type: "audio", bookmarked: false, kokoros: 445,
+  },
+  {
+    id: 13, title: "Cooking With Me: Matcha Latte", creator: "Kira Dawn", username: "kiradawn",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 12.99, duration: "15:07", level: "gold", date: "February 10, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: false, kokoros: 1987,
+  },
+  {
+    id: 14, title: "ASMR Ear-to-Ear Tingles", creator: "Reina Noir", username: "reinanoir",
+    avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 10.99, duration: "11:09", level: "star", date: "February 06, 2026",
+    isNew: false, downloadable: true, type: "audio", bookmarked: false, kokoros: 2750,
+  },
+  {
+    id: 15, title: "Travel Diary: Cherry Blossom", creator: "Naomi Hart", username: "naomihart",
+    avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 8.99, duration: "09:01", level: "silver", date: "February 05, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: false, kokoros: 374,
+  },
+  {
+    id: 16, title: "Graduation Celebration Zing", creator: "Yuki Star", username: "yukistar",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1523050854058-8df90110c476?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 5.99, duration: "05:52", level: "silver", date: "February 01, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: false, kokoros: 210,
+  },
+  {
+    id: 17, title: "Midnight ASMR Whispers", creator: "Luna Bloom", username: "lunabloom",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 13.99, duration: "22:10", level: "star", date: "January 28, 2026",
+    isNew: false, downloadable: true, type: "audio", bookmarked: false, kokoros: 1432,
+  },
+  {
+    id: 18, title: "Dance Challenge Compilation", creator: "Mika Rose", username: "mikarose",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 14.99, duration: "18:44", level: "legend", date: "January 24, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: false, kokoros: 3210,
+  },
+  {
+    id: 19, title: "Exclusive BTS Bloopers", creator: "Kira Dawn", username: "kiradawn",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 7.99, duration: "06:22", level: "gold", date: "January 22, 2026",
+    isNew: false, downloadable: true, type: "video", bookmarked: false, kokoros: 678,
+  },
+  {
+    id: 20, title: "Premium Photo Set Vol. 3", creator: "Reina Noir", username: "reinanoir",
+    avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 15.99, duration: null, level: "star", date: "January 20, 2026",
+    isNew: false, downloadable: true, type: "photo", bookmarked: false, kokoros: 1245,
+  },
+  {
+    id: 21, title: "Bedroom Singing Session", creator: "Naomi Hart", username: "naomihart",
+    avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 9.99, duration: "12:22", level: "silver", date: "January 18, 2026",
+    isNew: false, downloadable: false, type: "video", bookmarked: false, kokoros: 559,
+  },
+];

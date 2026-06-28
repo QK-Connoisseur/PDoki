@@ -1,259 +1,234 @@
-# Pumdoki Home/Login Page
+# Pumdoki
 
-This package contains the current final React/Vite version of the Pumdoki home/login page.
+Pumdoki is an adult creator platform focused on subscriptions, paid content, creator services, social interaction, and a collectible companion system called Oasis.
 
-## What is included
+The repository currently contains a broad React frontend prototype. Most screens are visually developed, but the backend, database, real authentication, media pipeline, payments, compliance operations, moderation, and production infrastructure still need to be implemented.
 
-- React + Vite project
-- Tailwind CSS already wired into Vite
-- The current page exactly as packaged in `src/App.jsx`
-- One README only
+The detailed delivery roadmap is maintained in [PLAN.md](./PLAN.md).
 
-## Important note about exact visual matching
+## Product direction
 
-This project is designed to reproduce the same layout, spacing, colors, animations, and interactions you approved. Minor differences can still happen across browsers and operating systems because of font rendering, GPU acceleration, browser zoom, and image CDN delivery.
+Pumdoki's current positioning is:
 
-For the closest match:
+> A space for creators, members, and real interaction.
 
-- Use Chrome or Edge
-- Keep browser zoom at 100%
-- Use a normal desktop viewport first
+The visual identity uses a soft sakura-pink, pearl, and off-white palette with rounded, premium interfaces. Dark Knight will be the second free launch theme.
 
-## Requirements
+## Confirmed launch scope
 
-Vite currently requires Node.js 20.19+ or 22.12+. citeturn0search0
+The following are intended to work at launch:
 
-## Tailwind setup in this package
+- Member and creator accounts.
+- Creator profiles and standardized membership tiers.
+- The Home feed with Following and For You views.
+- Public, subscriber-only, tier-restricted, and individually paid content.
+- Store browsing, purchases, favorites, history, and responsive YouTube-like thumbnails.
+- Connect creator services and bookings.
+- Real-time direct messages using WebSockets.
+- Creator tipping through Send Love.
+- Veso prepaid credits, where 1 Veso equals 1 USD.
+- Veso wallet recharge and spending.
+- Creator dashboard and protected admin operations.
+- Explicit-content preference controls.
+- Creator verification, consent, moderation, reporting, and required compliance workflows.
+- Oasis/Drimy daily-retention gameplay, collectibles, backgrounds, and skins.
 
-This project already includes Tailwind configured the modern Vite-plugin way:
+Live streaming remains post-MVP.
 
-- `tailwindcss`
-- `@tailwindcss/vite`
-- `vite.config.js` includes the Tailwind plugin
-- `src/index.css` includes `@import "tailwindcss";`
+## Important product decisions
 
-That means you do **not** need to separately run the older Tailwind v3-style steps like:
+### Veso
 
-- `npm install -D tailwindcss postcss autoprefixer`
-- `npx tailwindcss init -p`
-- adding manual `content` scan paths in `tailwind.config.js`
+Veso is a prepaid platform credit:
 
-Those older steps are valid for older setups, but they are **not** how this packaged project is configured. Tailwind’s current Vite guide recommends the Vite plugin approach. citeturn0search2turn0search21turn0search17
+- 1 Veso represents 1 USD of purchasing value.
+- Members recharge Vesos before spending them.
+- Store content, Connect services, and Send Love may be paid with Vesos.
+- Member Veso balances and creator payable earnings must be separate accounting systems.
+- Veso must use an auditable transaction ledger rather than a directly editable balance.
+- The recharge experience should be visually comparable to E-Pal's Buff recharge flow.
+- E-Pal may be used as a product reference, but Pumdoki's financial, refund, expiration, transfer, and redemption policies require independent processor and legal review.
 
-## Folder structure
+### Explicit content
+
+- New members must be able to choose whether explicit 18+ content is displayed.
+- Explicit content should be hidden by default until the member opts in.
+- The preference belongs in onboarding, Settings, and relevant feed controls.
+- The choice does not replace age verification or legal compliance requirements.
+
+### Store
+
+- Use noticeable 16:9 thumbnails with clear duration/type badges.
+- Target four medium cards on a typical large desktop.
+- Add more columns only as screen width genuinely allows.
+- Avoid reducing thumbnails to tiny cards to maximize column count.
+- Mobile should use a prominent single-column presentation.
+- Purchased, Favorites, Liked, and History must be backed by real account data.
+
+### Oasis
+
+- Oasis is launch scope, not a post-launch experiment.
+- Its primary purpose is daily retention.
+- Members collect and evolve Drimys.
+- Rewards include collectible backgrounds, skins, frames, badges, and related cosmetics.
+- Progress, inventory, tasks, cooldowns, purchases, and rewards must be server-authoritative.
+- Paid randomized rewards should not launch without legal and payment-provider review.
+
+### International direction
+
+Pumdoki ultimately intends to support the United States, Latin America, Europe, and other eligible regions. Rollout should be phased based on:
+
+- Payment and payout support.
+- Adult-content legality.
+- Identity-verification availability.
+- Privacy and consumer-protection requirements.
+- Tax and reporting obligations.
+- Sanctions and prohibited-region screening.
+
+Latin American creator support is a core requirement, including localization and international tax/payout onboarding.
+
+## Preserved frontend requirements
+
+These requirements were extracted from temporary implementation-prompt files before those files were removed.
+
+### Profile
+
+- The profile avatar should not use a story ring or attached online-status dot.
+- The textual status badge under the username remains.
+- Profile sections should use clear card separation and readable spacing.
+- Service selection must have an obvious active state and clear price badges.
+- Selected service content is separated into Service Description, Pricing and Details, and Reviews.
+- Feed is a direct tab without a nested Media submenu.
+- Media Store includes filters, search, grid/list views, and a Free Content filter.
+- About Me should not duplicate Service Types or Reviews.
+- About Me includes a sakura-themed external-links section with an empty state.
+- Styles and platforms should be rendered as chips.
+
+### Legal and compliance UI
+
+- A global footer exposes Terms, Privacy, Cookies, DMCA, 18 USC §2257, Acceptable Use, Appeals, Law Enforcement, and Contact links.
+- Signup requires an unchecked 18+ and terms/privacy clickwrap.
+- Cookie controls include Accept All, Reject Non-Essential, and Manage Preferences.
+- Creator onboarding includes agreement acceptance, identity-document UI, a verification selfie, and policy acknowledgements.
+- Content publishing includes a mandatory rights and policy confirmation.
+- Legal copy currently in the frontend is placeholder material and is not approved for production.
+- Prototype contact details must use reserved sample addresses such as `support@pumdoki.example` until real mailboxes exist.
+- No interface may claim that encryption, moderation vendors, response times, legal programs, or compliance processes exist until they are actually operational.
+
+## Repository structure
 
 ```text
-pumdoki-home-final-v2/
-├─ index.html
-├─ package.json
-├─ vite.config.js
-├─ README.md
-└─ src/
-   ├─ App.jsx
-   ├─ index.css
-   └─ main.jsx
+pumdoki/
+├── apps/
+│   ├── web/                 # React 19 + Vite + Tailwind frontend
+│   └── api/                 # Planned Node/TypeScript API
+├── packages/
+│   ├── contracts/           # Shared API schemas and types
+│   ├── database/            # Planned Prisma schema and migrations
+│   ├── ui/                  # Shared design-system components
+│   └── config/              # Shared lint, TypeScript, and formatting config
+├── docs/
+│   ├── architecture/
+│   ├── legal/
+│   ├── api/
+│   └── product/
+├── infra/
+│   ├── aws/
+│   └── cloudflare/
+├── tests/
+│   └── e2e/
+├── .github/workflows/
+├── PLAN.md
+└── README.md
 ```
 
-## Quick start
+The previous prompt-heavy AI folder proposal was intentionally not adopted. Product decisions belong in the README, PLAN, tracker, issues, and focused formal documentation—not in a growing collection of disposable prompts.
 
-From the project folder:
+## Current frontend
+
+The web prototype includes:
+
+- Landing/login and signup.
+- Home feed and moment rail.
+- Creator profiles and services.
+- Connect.
+- Store.
+- Promotions.
+- Wallet.
+- Creator dashboard.
+- Oasis.
+- Chat UI.
+- Legal hub and creator-onboarding UI.
+
+Current limitations:
+
+- Data is mostly hardcoded mock data (migrating to `apps/web/src/fixtures` per page).
+- Authentication is simulated; route guards are present but pass-through placeholders.
+- Financial buttons do not process real transactions.
+- Media is loaded from external demo URLs.
+- Many controls are visual placeholders.
+- No API or database is implemented yet.
+
+URL routing (React Router), ESLint/Prettier, Vitest + Testing Library unit
+tests, a Playwright E2E smoke suite, and GitHub Actions CI are now in place for
+the frontend foundation. The API, database, and real auth remain unimplemented.
+
+## Development
+
+### Requirements
+
+- Node.js 20.19 or newer.
+- npm.
+
+### Install
+
+From the repository root:
 
 ```bash
 npm install
-npm run dev
 ```
 
-Vite will print a local URL, usually:
-
-```text
-http://localhost:5173/
-```
-
-Open that URL in your browser.
-
-## Run it in VS Code
-
-1. Install Node.js first.
-2. Open VS Code.
-3. Go to **File > Open Folder**.
-4. Select the extracted project folder.
-5. Open the integrated terminal.
-6. Run:
-
-```bash
-npm install
-npm run dev
-```
-
-7. Open the local URL shown in the terminal.
-
-## Run it in PowerShell
-
-Open PowerShell in the extracted project folder and run:
-
-```powershell
-npm install
-npm run dev
-```
-
-If script execution policy causes unrelated environment issues on your machine, use Command Prompt instead for this project.
-
-## Run it in Command Prompt
-
-Open Command Prompt in the extracted project folder and run:
-
-```bat
-npm install
-npm run dev
-```
-
-## Run it in Git Bash
-
-Open Git Bash in the extracted project folder and run:
-
-```bash
-npm install
-npm run dev
-```
-
-## Run it on macOS Terminal or Linux terminal
-
-Open Terminal in the extracted project folder and run:
-
-```bash
-npm install
-npm run dev
-```
-
-## Run it in Antigravity
-
-The exact UI labels can vary by version, but the process is the same:
-
-1. Create or open a local project/workspace.
-2. Import or open the extracted folder.
-3. Make sure the workspace terminal is using the project root.
-4. Run:
-
-```bash
-npm install
-npm run dev
-```
-
-5. Use Antigravity’s browser preview, local web preview, or the printed localhost URL.
-
-If Antigravity asks how to start the app, use:
+### Run the web app
 
 ```bash
 npm run dev
 ```
 
-If it asks for the framework/runtime, use:
-
-- React
-- Vite
-- Node.js
-
-## Build for production
+### Production build
 
 ```bash
 npm run build
 ```
 
-Vite’s production build outputs into a `dist/` folder by default. citeturn0search9turn0search12
-
-## Preview the production build locally
+### Preview the build
 
 ```bash
 npm run preview
 ```
 
-## If you want to recreate this project manually from scratch
-
-React officially documents using a build tool such as Vite for React apps. citeturn0search1
-
-1. Create the app:
+### Quality checks
 
 ```bash
-npm create vite@latest pumdoki-home
+npm run lint          # ESLint across all workspaces
+npm run format        # Prettier write (format:check to verify only)
+npm run test          # Vitest unit tests (apps/web)
+npm run test:e2e      # Playwright E2E (run `npx playwright install` once first)
 ```
 
-Choose:
+The build/dev/preview root commands delegate to the `@pumdoki/web` workspace.
 
-- Framework: React
-- Variant: JavaScript + SWC
-- Vite 8 beta / experimental: No
+### Environment
 
-2. Enter the folder:
+Copy `.env.example` to `.env` (or `apps/web/.env.local`) for local overrides.
+Only `VITE_`-prefixed variables are exposed to the web client; `VITE_API_BASE_URL`
+points the frontend API client at the backend. Never commit a real `.env`.
 
-```bash
-cd pumdoki-home
-```
+## Documentation rules
 
-3. Install packages:
-
-```bash
-npm install
-npm install -D tailwindcss @tailwindcss/vite
-```
-
-4. Replace `vite.config.js` with:
-
-```js
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-})
-```
-
-5. Replace `src/index.css` with:
-
-```css
-@import "tailwindcss";
-```
-
-6. Replace `src/App.jsx` and `src/main.jsx` with the files in this package.
-
-7. Run:
-
-```bash
-npm run dev
-```
-
-## Troubleshooting
-
-### The page looks unstyled
-
-Possible causes:
-
-- you did not run `npm install`
-- you are not in the project root folder
-- `src/index.css` was changed or not imported in `src/main.jsx`
-- `vite.config.js` does not include `@tailwindcss/vite`
-
-### The local URL does not open
-
-Try:
-
-- stopping the server with `Ctrl + C`
-- running `npm run dev` again
-- checking whether another app is using the same port
-
-### `npm` is not recognized
-
-Node.js is not installed correctly or is not on your PATH.
-
-### Images load differently sometimes
-
-The creator images come from remote URLs. If those external image responses change, crop/quality behavior may vary slightly.
-
-## Commands reference
-
-```bash
-npm install
-npm run dev
-npm run build
-npm run preview
-```
+- `README.md` describes the product, repository, and stable requirements.
+- `PLAN.md` contains the phased implementation roadmap and open decisions.
+- The master tracker is the operational checklist.
+- Architecture decisions should later be recorded in focused ADRs under `docs/architecture`.
+- Counsel-approved policies may later live under `docs/legal`.
+- Temporary implementation prompts should not be committed.
+- Never place secrets, identity documents, processor credentials, or real `.env` files in Git.

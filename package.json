@@ -1,21 +1,36 @@
 {
-  "name": "pumdoki-home-final",
+  "name": "pumdoki",
   "private": true,
-  "version": "1.0.0",
-  "type": "module",
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "npm run dev --workspace @pumdoki/web",
+    "dev:web": "npm run dev --workspace @pumdoki/web",
+    "build": "npm run build --workspace @pumdoki/web",
+    "build:web": "npm run build --workspace @pumdoki/web",
+    "preview": "npm run preview --workspace @pumdoki/web",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "npm run test --workspace @pumdoki/web",
+    "test:web": "npm run test --workspace @pumdoki/web",
+    "test:e2e": "playwright test"
   },
-  "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+  "engines": {
+    "node": ">=20.19"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "tailwindcss": "^4.0.0",
-    "vite": "^7.0.0"
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.61.1",
+    "eslint": "^10.5.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "prettier": "^3.8.4"
   }
 }
