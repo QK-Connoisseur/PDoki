@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Pumdoki is an adult creator platform (subscriptions, paid content, creator services/bookings, real-time messaging, prepaid "Veso" credits, and a collectible "Oasis/Drimy" retention game). The repo today is a **React frontend prototype** mid-restructure into an npm-workspaces monorepo. Backend, database, auth, payments, and media pipeline are planned but **not yet implemented** — `apps/api`, `packages/{contracts,database,ui,config}`, `docs/*`, and `tests/e2e` are mostly empty scaffolding (`.gitkeep` placeholders).
+Pumdoki is an adult creator platform (subscriptions, paid content, creator services/bookings, real-time messaging, prepaid "Veso" credits, and a collectible "Oasis/Drimy" retention game). The repo is an npm-workspaces monorepo: a **React frontend prototype** in `apps/web` plus the **Phase 2 backend foundation** — a TypeScript Express API in `apps/api` (health/readiness only so far), shared Zod schemas in `packages/contracts`, and Prisma + PostgreSQL in `packages/database`. Auth, payments, media pipeline, and all product endpoints are **not yet implemented**; `packages/ui` is still empty scaffolding.
 
 Authoritative product/scope docs, read these before non-trivial work:
 
@@ -23,11 +23,28 @@ npm run build      # production build of the web app
 npm run preview    # preview the production build
 ```
 
-Quality tooling (root): `npm run lint` (ESLint flat config, pragmatic — noisy rules are warnings, `rules-of-hooks` is an error), `npm run format`/`format:check` (Prettier), `npm run test` (Vitest + Testing Library in `apps/web`), `npm run test:e2e` (Playwright; run `npx playwright install` once first). CI lives in `.github/workflows/ci.yml` (lint + unit test + build, plus a Playwright job). There is still **no typecheck** (frontend is plain JS) and **no backend test suite** (`apps/api` is empty).
+Backend/API (Phase 2 foundation; requires a root `.env` copied from `.env.example`):
+
+```bash
+npm run db:up      # start local Postgres 17 via Docker Compose (Docker Desktop required)
+npm run db:migrate # prisma migrate dev (root .env supplies DATABASE_URL)
+npm run db:seed    # idempotent dev seed (four .example users)
+npm run dev:api    # tsx watch server on :3000 (interactive terminal only)
+npm run build:api  # builds contracts -> database (incl. prisma generate) -> api
+npm run test:api   # Vitest + Supertest suite for apps/api
+```
+
+Quality tooling (root): `npm run lint` (ESLint flat config; the JS prototype is pragmatic — noisy rules are warnings, `rules-of-hooks` is an error — while `apps/api` and `packages/*` TypeScript is linted with typescript-eslint recommended and unused-vars as errors), `npm run format`/`format:check` (Prettier), `npm run test` (Vitest + Testing Library in `apps/web`), `npm run test:api` (Vitest + Supertest in `apps/api`), `npm run test:e2e` (Playwright; run `npx playwright install` once first). CI lives in `.github/workflows/ci.yml` (lint + unit test + build, an API job with a Postgres service that deploys migrations, seeds, tests, and builds the backend, plus a Playwright job). Backend TypeScript is typechecked by its `tsc` builds; the JS frontend still has **no typecheck**.
 
 ## Architecture
 
-The real code lives entirely in `apps/web/src`:
+Backend foundation (all TypeScript, ESM, strict; base tsconfig in `packages/config/tsconfig.base.json` — note each package declares its own `outDir`/`rootDir` because relative paths in an extended tsconfig resolve against the base file):
+
+- `apps/api/src` — Express 5 API. `createApp()` in `app.ts` is a dependency-injected factory (env, logger, `checkDatabase`, version) so tests stub the DB; `server.ts` wires the real Prisma check. Middleware chain: request IDs (`x-request-id`, echoed or generated), pino-http logging, helmet, CORS (`WEB_ORIGIN`, credentials), JSON body limit, global rate limit. Every non-2xx response uses the envelope `{ error: { code, message, requestId, details? } }` via `HttpError` + `errorHandler`. `validate()` middleware parses body/query/params with Zod into `req.validated` (Express 5 request properties are getter-only). Only `/api/v1/health` and `/api/v1/ready` exist. Env is validated at startup by `env.ts` (Zod).
+- `packages/contracts` — Zod schemas shared between API and future frontend integration (error envelope, health/ready, user, auth). Build before the API (`npm run build:api` handles ordering).
+- `packages/database` — Prisma 7 with the `prisma-client` generator (client generated into `src/generated/`, gitignored) and the `@prisma/adapter-pg` driver adapter. `prisma.config.ts` loads `DATABASE_URL` from the root `.env`; CLI commands run from the repo root via the `db:*` scripts. Models: `User` (role/status enums) and `Session`. `src/seed.ts` is idempotent. **Prisma 7's CLI blocks AI-invoked `migrate reset`**; recreate the Docker volume (`docker compose down -v && npm run db:up && npm run db:deploy`) instead.
+
+The frontend code lives in `apps/web/src`:
 
 - `App.jsx` — root. **Uses React Router (`BrowserRouter`).** Routes are organized into public/auth, member, creator, admin, and legal groups. The older `useNav` adapter remains for specialized pages that still expose callback navigation. Shared-shell pages navigate directly with React Router. Routes are wrapped in an `ErrorBoundary`; member/creator/admin routes use `ProtectedRoute` (currently a transparent seam until real auth exists). `userStatus` is lifted so it persists across routes.
 - `pages/` — one component per screen (Home, Profile, Store, Connect, Wallet, Promotions, CreatorDashboard, Oasis, Login, SignUp, LegalHub, CreatorOnboarding). Several prototype pages remain large, but backend-bound sample content is imported from `fixtures/` rather than being declared inside page components.
@@ -61,4 +78,4 @@ These are product invariants, not suggestions — violating them is a correctnes
 
 ## Repository state note
 
-The working tree is mid-migration: the legacy top-level `src/` files show as deleted in git status, with the new `apps/`, `packages/`, `infra/`, `docs/`, `tests/` tree added. Work against `apps/web`, not the old top-level paths.
+The monorepo migration is committed: work against `apps/web` and `apps/api`, never old top-level paths. Phase 2 is **partially complete (local foundation)** — staging deploy, RDS, backups, Sentry, job queue, and idempotency framework are deferred; see `HANDOFF.md` for exact status.
