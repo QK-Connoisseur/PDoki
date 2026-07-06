@@ -10,8 +10,10 @@ export const promotions = [
     id: 1,
     name: "Luna Bloom",
     username: "lunabloom",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "free-trial",
     promoLabel: "7 Days Free",
     promoDetail: "Free trial for new subscribers",
@@ -24,8 +26,10 @@ export const promotions = [
     id: 2,
     name: "Mika Rose",
     username: "mikarose",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "discount",
     promoLabel: "50% Off",
     promoDetail: "First month half price",
@@ -39,8 +43,10 @@ export const promotions = [
     id: 3,
     name: "Airi Vale",
     username: "airivale",
-    avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "free-trial",
     promoLabel: "14 Days Free",
     promoDetail: "Two weeks free access",
@@ -53,8 +59,10 @@ export const promotions = [
     id: 4,
     name: "Sora Nyx",
     username: "soranyx",
-    avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "discount",
     promoLabel: "30% Off",
     promoDetail: "Limited time discount",
@@ -68,8 +76,10 @@ export const promotions = [
     id: 5,
     name: "Naomi Hart",
     username: "naomihart",
-    avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "bundle",
     promoLabel: "3 for 2",
     promoDetail: "Subscribe 3 months, pay for 2",
@@ -82,8 +92,10 @@ export const promotions = [
     id: 6,
     name: "Reina Noir",
     username: "reinanoir",
-    avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "free-trial",
     promoLabel: "3 Days Free",
     promoDetail: "Quick free preview",
@@ -96,8 +108,10 @@ export const promotions = [
     id: 7,
     name: "Kira Dawn",
     username: "kiradawn",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "discount",
     promoLabel: "70% Off",
     promoDetail: "Massive first-month deal",
@@ -111,8 +125,10 @@ export const promotions = [
     id: 8,
     name: "Yuki Star",
     username: "yukistar",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "free-trial",
     promoLabel: "30 Days Free",
     promoDetail: "Full month free trial",
@@ -125,8 +141,10 @@ export const promotions = [
     id: 9,
     name: "Hana Mizu",
     username: "hanamizu",
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "bundle",
     promoLabel: "6 for 4",
     promoDetail: "Subscribe 6 months, pay for 4",
@@ -139,8 +157,10 @@ export const promotions = [
     id: 10,
     name: "Emi Skye",
     username: "emiskye",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "discount",
     promoLabel: "40% Off",
     promoDetail: "Spring sale discount",
@@ -154,8 +174,10 @@ export const promotions = [
     id: 11,
     name: "Rin Velvet",
     username: "rinvelvet",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "free-trial",
     promoLabel: "5 Days Free",
     promoDetail: "Try before you subscribe",
@@ -168,8 +190,10 @@ export const promotions = [
     id: 12,
     name: "Mei Soleil",
     username: "meisoleil",
-    avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=150&q=80",
-    cover: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=600&h=400&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=150&q=80",
+    cover:
+      "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=600&h=400&q=80",
     promoType: "discount",
     promoLabel: "60% Off",
     promoDetail: "Limited time mega deal",

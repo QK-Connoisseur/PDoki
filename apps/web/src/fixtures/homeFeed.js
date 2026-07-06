@@ -6,15 +6,85 @@
  */
 
 export const moments = [
-  { id: 0, name: "Add Moment", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80", type: "own" },
-  { id: 1, name: "Luna Bloom", username: "lunabloom", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80", type: "regular", createdAt: "2026-05-12T09:00:00Z" },
-  { id: 2, name: "Mika Rose", username: "mikarose", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80", type: "private", createdAt: "2026-05-12T08:00:00Z" },
-  { id: 3, name: "Airi Vale", username: "airivale", avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80", type: "regular", createdAt: "2026-05-12T05:00:00Z" },
-  { id: 4, name: "Sora Nyx", username: "soranyx", avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80", type: "private", createdAt: "2026-05-12T10:00:00Z" },
-  { id: 5, name: "Naomi Hart", username: "naomihart", avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80", type: "regular", createdAt: "2026-05-12T07:00:00Z" },
-  { id: 6, name: "Reina Noir", username: "reinanoir", avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80", type: "regular", createdAt: "2026-05-12T03:00:00Z" },
-  { id: 7, name: "Kira Dawn", username: "kiradawn", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80", type: "private", createdAt: "2026-05-12T06:00:00Z" },
-  { id: 8, name: "Yuki Star", username: "yukistar", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80", type: "regular", createdAt: "2026-05-12T01:00:00Z" },
+  {
+    id: 0,
+    name: "Add Moment",
+    avatar:
+      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+    type: "own",
+  },
+  {
+    id: 1,
+    name: "Luna Bloom",
+    username: "lunabloom",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+    type: "regular",
+    createdAt: "2026-05-12T09:00:00Z",
+  },
+  {
+    id: 2,
+    name: "Mika Rose",
+    username: "mikarose",
+    avatar:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+    type: "private",
+    createdAt: "2026-05-12T08:00:00Z",
+  },
+  {
+    id: 3,
+    name: "Airi Vale",
+    username: "airivale",
+    avatar:
+      "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
+    type: "regular",
+    createdAt: "2026-05-12T05:00:00Z",
+  },
+  {
+    id: 4,
+    name: "Sora Nyx",
+    username: "soranyx",
+    avatar:
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
+    type: "private",
+    createdAt: "2026-05-12T10:00:00Z",
+  },
+  {
+    id: 5,
+    name: "Naomi Hart",
+    username: "naomihart",
+    avatar:
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    type: "regular",
+    createdAt: "2026-05-12T07:00:00Z",
+  },
+  {
+    id: 6,
+    name: "Reina Noir",
+    username: "reinanoir",
+    avatar:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    type: "regular",
+    createdAt: "2026-05-12T03:00:00Z",
+  },
+  {
+    id: 7,
+    name: "Kira Dawn",
+    username: "kiradawn",
+    avatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    type: "private",
+    createdAt: "2026-05-12T06:00:00Z",
+  },
+  {
+    id: 8,
+    name: "Yuki Star",
+    username: "yukistar",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80",
+    type: "regular",
+    createdAt: "2026-05-12T01:00:00Z",
+  },
 ];
 
 export const feedPosts = [
@@ -22,10 +92,13 @@ export const feedPosts = [
     id: 1,
     creator: "Luna Bloom",
     username: "lunabloom",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
-    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&h=500&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&h=500&q=80",
     aspectRatio: "8/5",
-    caption: "Golden hour never disappoints. Moments like these are what I live for.",
+    caption:
+      "Golden hour never disappoints. Moments like these are what I live for.",
     kokoros: 1247,
     comments: 83,
     timeAgo: "2h",
@@ -38,10 +111,13 @@ export const feedPosts = [
     id: 2,
     creator: "Mika Rose",
     username: "mikarose",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
-    image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&h=1000&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&h=1000&q=80",
     aspectRatio: "4/5",
-    caption: "Lost in the wild. New exclusive set dropping this weekend for subscribers!",
+    caption:
+      "Lost in the wild. New exclusive set dropping this weekend for subscribers!",
     kokoros: 892,
     comments: 56,
     timeAgo: "4h",
@@ -56,8 +132,10 @@ export const feedPosts = [
     id: 3,
     creator: "Airi Vale",
     username: "airivale",
-    avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
-    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&h=800&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&h=800&q=80",
     aspectRatio: "1/1",
     caption: "Paradise found. Thank you for all the love on my latest drop!",
     kokoros: 2103,
@@ -72,10 +150,13 @@ export const feedPosts = [
     id: 4,
     creator: "Sora Nyx",
     username: "soranyx",
-    avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
-    image: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&h=600&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&h=600&q=80",
     aspectRatio: "4/3",
-    caption: "Behind the scenes from today's shoot. Members get the full uncut version!",
+    caption:
+      "Behind the scenes from today's shoot. Members get the full uncut version!",
     kokoros: 654,
     comments: 41,
     timeAgo: "8h",
@@ -93,46 +174,73 @@ export const fypPosts = [
     id: 101,
     creator: "Naomi Hart",
     username: "naomihart",
-    avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&h=500&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&h=500&q=80",
     aspectRatio: "8/5",
     caption: "Sunset vibes at the beach today! Who else loves the ocean?",
-    kokoros: 3421, comments: 198, timeAgo: "1h", locked: false,
-    verified: true, category: "lifestyle", style: {},
+    kokoros: 3421,
+    comments: 198,
+    timeAgo: "1h",
+    locked: false,
+    verified: true,
+    category: "lifestyle",
+    style: {},
   },
   {
     id: 102,
     creator: "Reina Noir",
     username: "reinanoir",
-    avatar: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&h=800&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&h=800&q=80",
     aspectRatio: "1/1",
     caption: "New look, who dis? Styled everything myself — drop is live now.",
-    kokoros: 5102, comments: 312, timeAgo: "3h", locked: false,
-    verified: true, category: "fashion",
+    kokoros: 5102,
+    comments: 312,
+    timeAgo: "3h",
+    locked: false,
+    verified: true,
+    category: "fashion",
     style: { fontSize: "15px", fontWeight: "600", color: "#7c3aed" },
   },
   {
     id: 103,
     creator: "Kira Dawn",
     username: "kiradawn",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-    image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&h=600&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&h=600&q=80",
     aspectRatio: "4/3",
     caption: "Nature therapy is the best therapy. This view healed my soul.",
-    kokoros: 2876, comments: 145, timeAgo: "5h", locked: false,
-    verified: false, category: "nature", style: {},
+    kokoros: 2876,
+    comments: 145,
+    timeAgo: "5h",
+    locked: false,
+    verified: false,
+    category: "nature",
+    style: {},
   },
   {
     id: 104,
     creator: "Yuki Star",
     username: "yukistar",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80",
-    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&h=1000&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&h=1000&q=80",
     aspectRatio: "4/5",
-    caption: "Morning hike turned into the best photo op ever. Can't believe this view is real!",
-    kokoros: 4210, comments: 267, timeAgo: "7h", locked: false,
-    verified: true, category: "travel",
+    caption:
+      "Morning hike turned into the best photo op ever. Can't believe this view is real!",
+    kokoros: 4210,
+    comments: 267,
+    timeAgo: "7h",
+    locked: false,
+    verified: true,
+    category: "travel",
     style: { fontSize: "14px", fontStyle: "italic", color: "#8b5e7d" },
   },
 ];

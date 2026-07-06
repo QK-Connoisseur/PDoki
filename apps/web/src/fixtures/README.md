@@ -20,8 +20,16 @@ Current fixtures:
 - `connectCreators.js` — Connect creators + spotlight slides.
 - `promotions.js` — promotional offers.
 - `profile.js` — creator profile header, services, reviews, posts, and media.
+- `login.js` — public login-page creator carousel and call-to-action cards.
+- `wallet.js` — wallet summary, transactions, subscriptions, payment methods,
+  withdrawals, love history, referrals, and spending chart.
+- `oasis.js` — Drimy profile, leagues, achievements, leaderboard, tasks,
+  DrimyDex, and store items.
+- `creatorDashboard.js` — creator earnings, subscribers, content, transactions,
+  payouts, tiers, promotions, bookings, services, shop, messages, activity, and
+  notification settings.
 
 Page-local UI config (filter tab definitions, colour constants) intentionally
-stays in the component; only content/mock *data* moves here. Only
+stays in the component; only content/mock _data_ moves here. Only
 sample/non-production data belongs here — never real user data, secrets, or
 identity documents.

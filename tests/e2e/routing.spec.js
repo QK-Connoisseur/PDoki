@@ -41,7 +41,10 @@ test.describe("browser history", () => {
     await expect(page.getByText("For You")).toBeVisible();
 
     // In-app navigation through the shared sidebar pushes SPA history entries.
-    await page.getByRole("button", { name: "Store", exact: true }).first().click();
+    await page
+      .getByRole("button", { name: "Store", exact: true })
+      .first()
+      .click();
     await expect(page).toHaveURL(/\/store$/);
     await expect(page.getByText("Trending")).toBeVisible();
 
@@ -87,4 +90,48 @@ test.describe("core page async states", () => {
     await expect(page.getByText("Trending")).toBeVisible();
     await expect(page.getByRole("alert")).toHaveCount(0);
   });
+});
+
+const featurePageStates = [
+  {
+    name: "wallet",
+    path: "/wallet",
+    empty: "Your wallet is empty",
+    error: "We couldn’t load your wallet.",
+    ready: "Wallet",
+  },
+  {
+    name: "Oasis",
+    path: "/oasis",
+    empty: "Your Oasis is waiting",
+    error: "We couldn’t load Oasis.",
+    ready: "Lumiveil",
+  },
+  {
+    name: "creator dashboard",
+    path: "/dashboard",
+    empty: "No creator activity yet",
+    error: "We couldn’t load your creator dashboard.",
+    ready: "Welcome back, Your Pumdoki",
+  },
+];
+
+test.describe("feature page async states", () => {
+  for (const feature of featurePageStates) {
+    test(`${feature.name} exposes an empty state`, async ({ page }) => {
+      await page.goto(`${feature.path}?state=empty`);
+      await expect(page.getByText(feature.empty)).toBeVisible();
+    });
+
+    test(`${feature.name} retries after an error`, async ({ page }) => {
+      await page.goto(`${feature.path}?state=error`);
+      await expect(page.getByRole("alert")).toBeVisible();
+      await expect(page.getByText(feature.error)).toBeVisible();
+
+      await page.getByRole("button", { name: "Try again" }).click();
+
+      await expect(page.getByText(feature.ready).first()).toBeVisible();
+      await expect(page.getByRole("alert")).toHaveCount(0);
+    });
+  }
 });

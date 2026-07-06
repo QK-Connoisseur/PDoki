@@ -63,7 +63,7 @@ export function createApiClient({
         },
         body: body !== undefined ? JSON.stringify(body) : undefined,
       });
-    } catch (cause) {
+    } catch {
       throw new ApiError("Network request failed", {
         status: 0,
         code: "network_error",

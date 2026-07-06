@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Pumdoki is an adult creator platform (subscriptions, paid content, creator services/bookings, real-time messaging, prepaid "Veso" credits, and a collectible "Oasis/Drimy" retention game). The repo today is a **React frontend prototype** mid-restructure into an npm-workspaces monorepo. Backend, database, auth, payments, and media pipeline are planned but **not yet implemented** — `apps/api`, `packages/{contracts,database,ui,config}`, `docs/*`, and `tests/e2e` are mostly empty scaffolding (`.gitkeep` placeholders).
 
 Authoritative product/scope docs, read these before non-trivial work:
+
 - `README.md` — product direction, confirmed launch scope, and stable UI requirements (Profile, Store, Veso, Oasis, legal/compliance UI).
 - `PLAN.md` — dependency-ordered, 14-phase delivery roadmap with exit criteria and open business/legal decisions.
 - `docs/product/Pumdoki_MasterTracker_V4.xlsx` — operational checklist ("master tracker").
@@ -27,22 +28,25 @@ Quality tooling (root): `npm run lint` (ESLint flat config, pragmatic — noisy 
 ## Architecture
 
 The real code lives entirely in `apps/web/src`:
-- `App.jsx` — root. **Uses React Router (`BrowserRouter`).** Pages were originally written against a `nav` object of `onOpen*`/`onBack`/`onNavigateLegal` callbacks; the `useNav` adapter hook reproduces that exact callback shape on top of `navigate()` so **page components were not rewritten**. When adding/changing navigation, extend `useNav` rather than reintroducing component-state routing. Routes are wrapped in an `ErrorBoundary`; member/creator routes are wrapped in `ProtectedRoute` (currently a transparent pass-through until auth exists). `userStatus` is lifted to the shell so it persists across routes.
-- `pages/` — one large component per screen (Home, Profile, Store, Connect, Wallet, Promotions, CreatorDashboard, Oasis, Login, SignUp, LegalHub, CreatorOnboarding). These are big (1000–1700 lines each) and self-contained, holding their own mock data and local state.
-- `components/` — shared widgets (Sidebar, ChatSidebar, Footer, CookieConsentBanner, MomentComposer, badges) plus foundation primitives: `ErrorBoundary`, `ProtectedRoute`, and `StateViews` (`LoadingState`/`EmptyState`/`ErrorState`). No shared app shell yet; layout (header/sidebar/chat rail) is still duplicated across pages.
-- `lib/` — `env.js` (validated `import.meta.env` access) and `apiClient.js` (fetch wrapper: base URL, `credentials: include`, `X-Request-Id`, typed `ApiError`, 401 → `onUnauthorized`). Backend doesn't exist yet, so the client is wired but unused.
-- `fixtures/` — sample data extracted from pages (worked example: `moments.js`); mock data migrates here per-page during API integration.
+
+- `App.jsx` — root. **Uses React Router (`BrowserRouter`).** Routes are organized into public/auth, member, creator, admin, and legal groups. The older `useNav` adapter remains for specialized pages that still expose callback navigation. Shared-shell pages navigate directly with React Router. Routes are wrapped in an `ErrorBoundary`; member/creator/admin routes use `ProtectedRoute` (currently a transparent seam until real auth exists). `userStatus` is lifted so it persists across routes.
+- `pages/` — one component per screen (Home, Profile, Store, Connect, Wallet, Promotions, CreatorDashboard, Oasis, Login, SignUp, LegalHub, CreatorOnboarding). Several prototype pages remain large, but backend-bound sample content is imported from `fixtures/` rather than being declared inside page components.
+- `components/` — shared widgets and foundation primitives. `MemberLayout` is the shared shell for Home, Profile, Store, Connect, and Promotions; it composes `AppHeader`, Sidebar/mobile navigation, and ChatSidebar. Specialized feature areas such as Wallet, Oasis, and Creator Dashboard intentionally retain their own layouts. `ErrorBoundary`, `ProtectedRoute`, and `StateViews` provide failure, authorization, loading, empty, and retry seams.
+- `lib/` — `env.js` (validated `import.meta.env` access), `apiClient.js` (fetch wrapper: base URL, credentials, request IDs, typed errors, 401 handling), and `useSimulatedFetch.js` (temporary async-state seam for prototype pages until real API calls replace it).
+- `fixtures/` — development-only sample content for public, social, Wallet, Oasis, and Creator Dashboard pages. These files are the replacement boundary for future `/api/v1` responses.
 - `utils/` — small pure helpers (e.g. `sortMomentRail.js`).
 - `test/setup.js` — Vitest setup (jest-dom). Tests are colocated as `*.test.{js,jsx}`.
 
 Conventions:
-- All data is **hardcoded mock data** inline in components; media is loaded from external demo URLs. Auth and all financial buttons are simulated — nothing persists.
+
+- Prototype content comes from `fixtures/`; media is loaded from external demo URLs. Page-local display configuration and interactive local state remain in components. Auth and all financial buttons are simulated — nothing persists.
 - Styling is **Tailwind CSS v4** via `@tailwindcss/vite` (config-less; `@import "tailwindcss"` in `index.css`). Custom keyframe animations are hand-written in `index.css`. Visual identity is sakura-pink/pearl/off-white with rounded "premium" surfaces; Dark Knight is a planned second theme.
 - Plain JavaScript + JSX (no TypeScript in the frontend). PLAN.md mandates **TypeScript for all new backend/shared-contract code**, converting frontend files only when touched for backend integration.
 
 ## Domain rules that affect implementation
 
 These are product invariants, not suggestions — violating them is a correctness bug:
+
 - **Veso** is prepaid credit (1 Veso = 1 USD). Member Veso balances and creator payable earnings are **separate ledgers**; never model a balance as a directly-editable number — it must be an append-only transaction ledger. Store, Connect, and Send Love (tipping) spend Veso.
 - **Explicit content is hidden by default**; adult members opt in. This is distinct from age verification.
 - **Oasis** progress, inventory, cooldowns, rewards, and purchases must be **server-authoritative** when the backend exists; the client never sets XP/Orbs/stage/inventory directly.

@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 export const RING_PRESETS = {
   sakuraGlow: ["#FF4D8D", "#FF73B5", "#FFA3D7", "#FFE1EF"],
   vibrantRuby: ["#B80F3A", "#E11D48", "#FF4D6D", "#FF9AAE"],

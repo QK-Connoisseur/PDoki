@@ -1,68 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
+import { featuredCreators, loginCtaCards } from "../fixtures/login";
 
 export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
-  const featuredCreators = useMemo(
-    () => [
-      {
-        name: "Luna Bloom",
-        tag: "Private livestreams · Late-night chats · Exclusive drops",
-        image:
-          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
-      },
-      {
-        name: "Mika Rose",
-        tag: "Gaming sessions · Personal posts · Premium content",
-        image:
-          "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80",
-      },
-      {
-        name: "Airi Vale",
-        tag: "Photo sets · Voice notes · Members-only moments",
-        image:
-          "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=900&q=80",
-      },
-      {
-        name: "Sora Nyx",
-        tag: "After-dark streams · VIP posts · Subscriber exclusives",
-        image:
-          "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
-      },
-      {
-        name: "Naomi Hart",
-        tag: "Direct messages · Premium sets · Members lounge access",
-        image:
-          "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=900&q=80",
-      },
-      {
-        name: "Reina Noir",
-        tag: "Exclusive clips · Priority replies · Curated private drops",
-        image:
-          "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
-      },
-    ],
-    []
-  );
-
-
-  const ctaCards = [
-    {
-      title: "Connect",
-      body: "Shared spaces for real interaction and lasting connection",
-      action: "Explore members",
-    },
-    {
-      title: "Promotions",
-      body: "Exclusive deals, free trials, and discounts from top creators",
-      action: "View deals",
-    },
-    {
-      title: "Create & Earn",
-      body: "Build your presence, grow your audience, and earn on your terms",
-      action: "Start creating",
-    },
-  ];
-
   const [currentSlide, setCurrentSlide] = useState(0);
   const [carouselHovered, setCarouselHovered] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -90,7 +30,7 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
     }, 7000);
 
     return () => window.clearInterval(interval);
-  }, [carouselHovered, featuredCreators.length, prefersReducedMotion]);
+  }, [carouselHovered, prefersReducedMotion]);
 
   const trackTranslate = `translateX(-${currentSlide * (100 / featuredCreators.length)}%)`;
 
@@ -163,12 +103,24 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
           role="img"
         >
           <defs>
-            <linearGradient id="logoHeartBase" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient
+              id="logoHeartBase"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
               <stop offset="0%" stopColor="#fff7fa" />
               <stop offset="48%" stopColor="#ffd8e5" />
               <stop offset="100%" stopColor="#f3a0bc" />
             </linearGradient>
-            <linearGradient id="logoHeartGloss" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient
+              id="logoHeartGloss"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
               <stop offset="0%" stopColor="#ffffff" stopOpacity="0.98" />
               <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
@@ -177,8 +129,20 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
               <stop offset="55%" stopColor="#f8b3ca" />
               <stop offset="100%" stopColor="#ef8fb1" />
             </linearGradient>
-            <filter id="logoSoftGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#f6bfd2" floodOpacity="0.35" />
+            <filter
+              id="logoSoftGlow"
+              x="-20%"
+              y="-20%"
+              width="140%"
+              height="140%"
+            >
+              <feDropShadow
+                dx="0"
+                dy="0"
+                stdDeviation="5"
+                floodColor="#f6bfd2"
+                floodOpacity="0.35"
+              />
             </filter>
           </defs>
 
@@ -204,7 +168,13 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
               opacity="0.6"
             />
             <circle cx="150" cy="32" r="5" fill="#ffffff" opacity="0.92" />
-            <path d="M150 22v6M150 36v6M140 32h6M154 32h6" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" opacity="0.8" />
+            <path
+              d="M150 22v6M150 36v6M140 32h6M154 32h6"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              opacity="0.8"
+            />
             <circle cx="24" cy="108" r="2.4" fill="#f4a2bf" opacity="0.9" />
             <circle cx="29" cy="116" r="1.8" fill="#f8c5d7" opacity="0.9" />
             <circle cx="177" cy="96" r="2.4" fill="#f4a2bf" opacity="0.9" />
@@ -257,7 +227,10 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
 
       <main className="relative z-10 grid min-h-screen lg:grid-cols-[1.1fr_0.9fr]">
         <section className="relative flex items-center overflow-hidden bg-gradient-to-br from-[#ffc8de] via-[#ffb6d5] to-[#f9a8c7] px-6 py-12 md:px-10 lg:px-14 xl:px-20">
-          <div className="pointer-events-none absolute inset-0 heart-rain opacity-95" aria-hidden="true">
+          <div
+            className="pointer-events-none absolute inset-0 heart-rain opacity-95"
+            aria-hidden="true"
+          >
             {Array.from({ length: 9 }).map((_, index) => (
               <span
                 key={`left-heart-${index}`}
@@ -280,21 +253,29 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
             </h1>
 
             <p className="fade-up mt-4 max-w-xl text-base leading-7 text-[#4a3340] md:text-lg">
-              Pumdoki brings creators and members into one space built for presence, interaction, and the kind of connection that feels worth your time.
+              Pumdoki brings creators and members into one space built for
+              presence, interaction, and the kind of connection that feels worth
+              your time.
             </p>
 
             <div className="fade-up mt-8 grid gap-4 sm:grid-cols-3">
-              {ctaCards.map((card) => (
+              {loginCtaCards.map((card) => (
                 <a
                   key={card.title}
                   href="#"
                   className="group rounded-3xl border border-white/60 bg-white/58 p-4 backdrop-blur-md shadow-lg shadow-pink-500/10 transition duration-300 hover:-translate-y-1 hover:border-white/80 hover:bg-white/72 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white/70"
                 >
-                  <p className="text-2xl font-semibold text-[#241a22]">{card.title}</p>
-                  <p className="mt-2 min-h-[72px] text-sm leading-6 text-[#5a3d4d]">{card.body}</p>
+                  <p className="text-2xl font-semibold text-[#241a22]">
+                    {card.title}
+                  </p>
+                  <p className="mt-2 min-h-[72px] text-sm leading-6 text-[#5a3d4d]">
+                    {card.body}
+                  </p>
                   <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-[#241a22]">
                     <span>{card.action}</span>
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">
+                      &rarr;
+                    </span>
                   </div>
                 </a>
               ))}
@@ -302,7 +283,9 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
 
             <div className="fade-up mt-10">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-[#241a22]">Featured creators</h2>
+                <h2 className="text-lg font-semibold text-[#241a22]">
+                  Featured creators
+                </h2>
                 <span className="text-sm text-[#6a4a5b]">Updated daily</span>
               </div>
 
@@ -335,8 +318,12 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
                           <span className="w-fit rounded-full bg-[#f36c9d] px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-white">
                             Featured
                           </span>
-                          <h3 className="mt-4 text-2xl font-semibold text-[#241a22]">{creator.name}</h3>
-                          <p className="mt-2 max-w-md text-sm leading-6 text-[#4a3340]">{creator.tag}</p>
+                          <h3 className="mt-4 text-2xl font-semibold text-[#241a22]">
+                            {creator.name}
+                          </h3>
+                          <p className="mt-2 max-w-md text-sm leading-6 text-[#4a3340]">
+                            {creator.tag}
+                          </p>
                           <button className="mt-5 w-fit rounded-full bg-[#241a22] px-5 py-2.5 text-sm font-semibold text-white transition hover:scale-[1.02]">
                             View profile
                           </button>
@@ -371,7 +358,10 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
         </section>
 
         <section className="relative flex items-center overflow-hidden px-6 py-12 md:px-10 lg:px-14 xl:px-20">
-          <div className="pointer-events-none absolute inset-0 heart-rain opacity-95" aria-hidden="true">
+          <div
+            className="pointer-events-none absolute inset-0 heart-rain opacity-95"
+            aria-hidden="true"
+          >
             {Array.from({ length: 9 }).map((_, index) => (
               <span
                 key={`right-heart-${index}`}
@@ -394,15 +384,21 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-200 to-pink-300 text-xl shadow-sm">
                   &#9825;
                 </div>
-                <h2 className="mt-4 text-3xl font-semibold text-[#6b475e]">Welcome back</h2>
+                <h2 className="mt-4 text-3xl font-semibold text-[#6b475e]">
+                  Welcome back
+                </h2>
                 <p className="mt-2 text-sm leading-6 text-[#8c6d7f]">
-                  Log in to continue exploring creators, communities, and exclusive moments on Pumdoki.
+                  Log in to continue exploring creators, communities, and
+                  exclusive moments on Pumdoki.
                 </p>
               </div>
 
               <form className="space-y-4" onSubmit={handleLogin}>
                 <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-[#7b5b6f]">
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block text-sm font-medium text-[#7b5b6f]"
+                  >
                     Email
                   </label>
                   <input
@@ -415,10 +411,16 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
 
                 <div>
                   <div className="mb-2 flex items-center justify-between">
-                    <label htmlFor="password" className="block text-sm font-medium text-[#7b5b6f]">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-[#7b5b6f]"
+                    >
                       Password
                     </label>
-                    <a href="#" className="text-sm font-medium text-[#df5f97] hover:underline">
+                    <a
+                      href="#"
+                      className="text-sm font-medium text-[#df5f97] hover:underline"
+                    >
                       Forgot password?
                     </a>
                   </div>
@@ -452,9 +454,14 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
 
                 <p className="mt-3 text-center text-xs leading-5 text-[#8c6d7f]">
                   By logging in and using Pumdoki, you agree to our{" "}
-                  <a href="#" className="text-[#df5f97] hover:underline">Terms of Service</a>{" "}
+                  <a href="#" className="text-[#df5f97] hover:underline">
+                    Terms of Service
+                  </a>{" "}
                   and{" "}
-                  <a href="#" className="text-[#df5f97] hover:underline">Privacy Policy</a>, and confirm that you are at least 18 years old.
+                  <a href="#" className="text-[#df5f97] hover:underline">
+                    Privacy Policy
+                  </a>
+                  , and confirm that you are at least 18 years old.
                 </p>
               </form>
 
@@ -466,10 +473,22 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
 
               <button className="flex w-full items-center justify-center gap-3 rounded-2xl border border-pink-100 bg-white px-4 py-3 text-sm font-medium text-[#6b475e] transition hover:bg-pink-50">
                 <svg className="h-5 w-5" viewBox="0 0 48 48" aria-hidden="true">
-                  <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.655 32.657 29.233 36 24 36c-6.627 0-12-5.373-12-12S17.373 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.27 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917Z" />
-                  <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 16.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.27 4 24 4c-7.682 0-14.347 4.337-17.694 10.691Z" />
-                  <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.143 35.091 26.715 36 24 36c-5.212 0-9.62-3.329-11.283-7.946l-6.522 5.025C9.5 39.556 16.227 44 24 44Z" />
-                  <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.05 12.05 0 0 1-4.084 5.57h.001l6.19 5.238C36.972 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917Z" />
+                  <path
+                    fill="#FFC107"
+                    d="M43.611 20.083H42V20H24v8h11.303C33.655 32.657 29.233 36 24 36c-6.627 0-12-5.373-12-12S17.373 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.27 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917Z"
+                  />
+                  <path
+                    fill="#FF3D00"
+                    d="M6.306 14.691l6.571 4.819C14.655 16.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.27 4 24 4c-7.682 0-14.347 4.337-17.694 10.691Z"
+                  />
+                  <path
+                    fill="#4CAF50"
+                    d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.143 35.091 26.715 36 24 36c-5.212 0-9.62-3.329-11.283-7.946l-6.522 5.025C9.5 39.556 16.227 44 24 44Z"
+                  />
+                  <path
+                    fill="#1976D2"
+                    d="M43.611 20.083H42V20H24v8h11.303a12.05 12.05 0 0 1-4.084 5.57h.001l6.19 5.238C36.972 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917Z"
+                  />
                 </svg>
                 Continue with Google
               </button>
@@ -477,9 +496,15 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
               <div className="mt-6 rounded-2xl bg-pink-50 p-4 text-sm leading-6 text-[#8a6a7c]">
                 <p className="font-medium text-[#6b475e]">New to Pumdoki?</p>
                 <p className="mt-1">
-                  Create an account to discover creators, support communities, and personalize your experience.
+                  Create an account to discover creators, support communities,
+                  and personalize your experience.
                 </p>
-                <button onClick={onOpenSignup} className="mt-3 font-semibold text-[#df5f97] hover:underline">Create account</button>
+                <button
+                  onClick={onOpenSignup}
+                  className="mt-3 font-semibold text-[#df5f97] hover:underline"
+                >
+                  Create account
+                </button>
               </div>
             </div>
           </div>

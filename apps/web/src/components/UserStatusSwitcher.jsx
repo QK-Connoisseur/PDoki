@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { useState } from "react";
 
 export const STATUS_OPTIONS = [
