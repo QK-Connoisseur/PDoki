@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import tseslint from "typescript-eslint";
 import prettier from "eslint-config-prettier";
 
 /**
@@ -22,6 +23,7 @@ export default [
       "**/playwright-report/**",
       "**/test-results/**",
       "**/.vite/**",
+      "packages/database/src/generated/**",
     ],
   },
 
@@ -73,6 +75,25 @@ export default [
       ecmaVersion: 2022,
       sourceType: "module",
       globals: { ...globals.node },
+    },
+  },
+
+  // TypeScript workspaces (apps/api, packages/*). New backend code is held
+  // to a stricter bar than the JS prototype: unused vars are errors here.
+  ...tseslint.configs.recommended.map((config) => ({
+    ...config,
+    files: ["apps/api/**/*.ts", "packages/**/*.ts"],
+  })),
+  {
+    files: ["apps/api/**/*.ts", "packages/**/*.ts"],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
     },
   },
 
