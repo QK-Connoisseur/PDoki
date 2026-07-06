@@ -1,4 +1,6 @@
+import cors from "cors";
 import express, { type Express, type Request } from "express";
+import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import { pinoHttp } from "pino-http";
 import type { Logger } from "pino";
@@ -7,6 +9,7 @@ import { HttpError } from "./errors.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { requestId } from "./middleware/requestId.js";
 import { healthRouter } from "./routes/health.js";
+import { readyRouter } from "./routes/ready.js";
 
 export interface AppDeps {
   env: Env;
@@ -21,8 +24,6 @@ export function createApp({
   checkDatabase,
   version,
 }: AppDeps): Express {
-  void env;
-  void checkDatabase;
   const app = express();
   app.disable("x-powered-by");
 
@@ -34,10 +35,29 @@ export function createApp({
     }),
   );
   app.use(helmet());
+  app.use(cors({ origin: env.WEB_ORIGIN, credentials: true }));
   app.use(express.json({ limit: "100kb" }));
+  app.use(
+    rateLimit({
+      windowMs: env.RATE_LIMIT_WINDOW_MS,
+      limit: env.RATE_LIMIT_MAX,
+      standardHeaders: "draft-8",
+      legacyHeaders: false,
+      handler: (req, res) => {
+        res.status(429).json({
+          error: {
+            code: "RATE_LIMITED",
+            message: "Too many requests, please try again later",
+            requestId: (req as Request).requestId,
+          },
+        });
+      },
+    }),
+  );
 
   const api = express.Router();
   api.use(healthRouter(version));
+  api.use(readyRouter(checkDatabase));
   app.use("/api/v1", api);
 
   app.use((req, _res, next) => {

@@ -33,3 +33,24 @@ describe("unknown routes", () => {
     expect(parsed.error.requestId).toBe(res.headers["x-request-id"]);
   });
 });
+
+describe("hardening middleware", () => {
+  it("allows the configured web origin via CORS", async () => {
+    const res = await request(testApp())
+      .get("/api/v1/health")
+      .set("Origin", "http://localhost:5173");
+    expect(res.headers["access-control-allow-origin"]).toBe(
+      "http://localhost:5173",
+    );
+    expect(res.headers["access-control-allow-credentials"]).toBe("true");
+  });
+
+  it("rate limits with the RATE_LIMITED envelope", async () => {
+    const app = testApp({ env: { RATE_LIMIT_MAX: "2" } });
+    await request(app).get("/api/v1/health");
+    await request(app).get("/api/v1/health");
+    const res = await request(app).get("/api/v1/health");
+    expect(res.status).toBe(429);
+    expect(res.body.error.code).toBe("RATE_LIMITED");
+  });
+});
