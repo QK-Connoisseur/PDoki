@@ -1,3 +1,5 @@
+import type { Session, User } from "@pumdoki/database";
+
 declare global {
   namespace Express {
     interface Request {
@@ -6,6 +8,10 @@ declare global {
         body?: unknown;
         query?: unknown;
         params?: unknown;
+      };
+      auth?: {
+        user: User;
+        session: Session;
       };
     }
   }

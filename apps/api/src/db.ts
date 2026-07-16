@@ -1,5 +1,7 @@
 import { prisma } from "@pumdoki/database";
 
+export { prisma };
+
 export async function checkDatabase(): Promise<boolean> {
   try {
     await prisma.$queryRaw`SELECT 1`;

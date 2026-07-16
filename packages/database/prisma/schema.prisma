@@ -24,26 +24,49 @@ enum UserStatus {
   BANNED
 }
 
+enum AcceptanceKind {
+  TERMS
+  PRIVACY
+  AGE_ATTESTATION
+}
+
 model User {
-  id           String     @id @default(uuid()) @db.Uuid
-  email        String     @unique
-  passwordHash String
-  displayName  String
-  role         UserRole   @default(MEMBER)
-  status       UserStatus @default(ACTIVE)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  sessions     Session[]
+  id                String             @id @default(uuid()) @db.Uuid
+  email             String             @unique
+  passwordHash      String
+  displayName       String
+  role              UserRole           @default(MEMBER)
+  status            UserStatus         @default(ACTIVE)
+  emailVerifiedAt   DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  sessions          Session[]
+  acceptanceRecords AcceptanceRecord[]
 }
 
 model Session {
-  id        String    @id @default(uuid()) @db.Uuid
-  userId    String    @db.Uuid
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tokenHash String    @unique
-  createdAt DateTime  @default(now())
-  expiresAt DateTime
-  revokedAt DateTime?
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String    @db.Uuid
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash      String    @unique
+  createdAt      DateTime  @default(now())
+  expiresAt      DateTime
+  revokedAt      DateTime?
+  ipAddress      String?   @db.VarChar(45)
+  userAgent      String?   @db.VarChar(512)
+  lastExtendedAt DateTime  @default(now())
 
   @@index([userId])
+}
+
+model AcceptanceRecord {
+  id         String         @id @default(uuid()) @db.Uuid
+  userId     String         @db.Uuid
+  user       User           @relation(fields: [userId], references: [id], onDelete: Restrict)
+  kind       AcceptanceKind
+  version    String?        @db.VarChar(100)
+  acceptedAt DateTime       @default(now())
+  ipAddress  String         @db.VarChar(45)
+
+  @@index([userId, kind, acceptedAt])
 }

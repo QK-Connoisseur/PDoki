@@ -4,10 +4,12 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import { pinoHttp } from "pino-http";
 import type { Logger } from "pino";
+import type { PrismaClient } from "@pumdoki/database";
 import type { Env } from "./env.js";
 import { HttpError } from "./errors.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { requestId } from "./middleware/requestId.js";
+import { authRouter } from "./routes/auth.js";
 import { healthRouter } from "./routes/health.js";
 import { readyRouter } from "./routes/ready.js";
 
@@ -16,6 +18,7 @@ export interface AppDeps {
   logger: Logger;
   checkDatabase: () => Promise<boolean>;
   version: string;
+  db: PrismaClient;
 }
 
 export function createApp({
@@ -23,6 +26,7 @@ export function createApp({
   logger,
   checkDatabase,
   version,
+  db,
 }: AppDeps): Express {
   const app = express();
   app.disable("x-powered-by");
@@ -32,7 +36,7 @@ export function createApp({
     pinoHttp({
       logger,
       customProps: (req) => ({ requestId: (req as Request).requestId }),
-    }),
+    })
   );
   app.use(helmet());
   app.use(cors({ origin: env.WEB_ORIGIN, credentials: true }));
@@ -52,17 +56,18 @@ export function createApp({
           },
         });
       },
-    }),
+    })
   );
 
   const api = express.Router();
   api.use(healthRouter(version));
   api.use(readyRouter(checkDatabase));
+  api.use(authRouter({ db, env }));
   app.use("/api/v1", api);
 
   app.use((req, _res, next) => {
     next(
-      new HttpError(404, "NOT_FOUND", `No route for ${req.method} ${req.path}`),
+      new HttpError(404, "NOT_FOUND", `No route for ${req.method} ${req.path}`)
     );
   });
   app.use(errorHandler(logger));
