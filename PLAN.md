@@ -2,7 +2,7 @@
 
 @CLAUDE.md
 
-Last updated: June 28, 2026
+Last updated: July 16, 2026
 
 ## 1. Purpose
 
@@ -407,6 +407,23 @@ Provisional recommendation:
 - Protected pages reject unauthorized users.
 - Admin permissions are server-enforced.
 - Explicit-content preference works throughout the frontend.
+
+### Current implementation status — July 16, 2026
+
+- Phase 3 is split into four separately specified and verified slices: core
+  auth backend, email flows, frontend auth integration, and Settings.
+- Slice 1, core auth backend, is implemented and locally verified: Argon2id
+  registration/login, opaque server sessions, logout/logout-all, `/me`,
+  runtime suspension checks, role middleware, age attestation, and versioned
+  Terms/Privacy acceptance records.
+- Acceptance records use restrictive deletion. A future account-deletion flow
+  must deactivate/pseudonymize according to a counsel-approved retention
+  schedule rather than cascade-delete legal evidence.
+- Email verification, password reset, frontend session persistence, Settings,
+  and the explicit-content preference remain incomplete. Phase 3 must not be
+  described as complete.
+- Phase 2 remains partially complete while its cloud/operations remainder is
+  tracked separately.
 
 ## 8. Phase 4 — Legal, trust, and creator onboarding
 
@@ -927,15 +944,35 @@ Build in this order:
 - External affiliate program.
 - Paid randomized Oasis mechanics only if approved.
 
-## 20. Immediate next actions
+## 20. Current dependency and decision register
 
-1. Review and commit the repository restructuring.
-2. Review the updated tracker.
-3. Confirm Node/TypeScript/Express/Prisma.
-4. Decide whether Google login is beta scope.
-5. Start LLC attorney/CPA research.
-6. Obtain CCBill and Epoch application requirements and fee quotes.
-7. Create the commission-model spreadsheet.
-8. Identify two or three identity-verification options and compare cost/AUP.
-9. Define the initial country allowlist.
-10. Begin Phase 1 routing, quality tooling, and shared shell work.
+These are working management targets, not legal or processor deadlines. The
+founder may revise them, but each item must retain an owner and a concrete
+follow-up date.
+
+| Dependency or decision                         | Owner                 | Target     | Current state / next action                                                                                                         |
+| ---------------------------------------------- | --------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| AWS staging shape and account access           | Founder + Engineering | 2026-07-23 | Decide deployment shape and credentials boundary; Phase 2 remains partial.                                                          |
+| Sentry or equivalent                           | Founder + Engineering | 2026-07-23 | Select account/provider and define environment separation.                                                                          |
+| Redis, queue, and idempotency approach         | Engineering           | 2026-07-23 | Decide whether beta uses managed Redis and document the local fallback.                                                             |
+| Transactional email provider and local Mailpit | Founder + Engineering | 2026-07-23 | Confirm adult-business support; implement provider-neutral mailer in Phase 3 slice 2.                                               |
+| LLC attorney/CPA shortlist and entity state    | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                  |
+| CCBill requirements and fee quote              | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                     |
+| Identity-verification shortlist                | Founder + Engineering | 2026-07-30 | Compare two or three providers for countries, AUP, security, and cost.                                                              |
+| Epoch terms and written cascade behavior       | Founder               | 2026-08-06 | Confirm commercial and technical fallback behavior in writing.                                                                      |
+| Initial country allowlist                      | Founder + Counsel     | 2026-08-06 | Start with the US and only supported Latin American countries.                                                                      |
+| Commission, payout, refund, and Veso economics | Founder + CPA/Counsel | 2026-08-13 | Model processor fees, chargebacks, taxes, reserves, and Founding discounts.                                                         |
+| Acceptance/evidence retention schedule         | Founder + Counsel     | 2026-08-13 | Define retention, pseudonymization, lawful deletion, and litigation-hold rules before account deletion or creator onboarding ships. |
+
+## 21. Immediate next actions
+
+1. Review and commit the Phase 3 slice 1 implementation and record CI results
+   after an explicit public-repository push is approved.
+2. Begin Phase 3 slice 2: Mailpit, provider-neutral mailer abstraction, email
+   verification, and password reset.
+3. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
+   decisions in the register above.
+4. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
+   workstreams in parallel.
+5. Build the commission and payout model using real processor quotes when
+   available.

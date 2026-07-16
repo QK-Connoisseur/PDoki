@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Pumdoki is an adult creator platform (subscriptions, paid content, creator services/bookings, real-time messaging, prepaid "Veso" credits, and a collectible "Oasis/Drimy" retention game). The repo is an npm-workspaces monorepo: a **React frontend prototype** in `apps/web` plus the **Phase 2 backend foundation** — a TypeScript Express API in `apps/api` (health/readiness only so far), shared Zod schemas in `packages/contracts`, and Prisma + PostgreSQL in `packages/database`. Auth, payments, media pipeline, and all product endpoints are **not yet implemented**; `packages/ui` is still empty scaffolding.
+Pumdoki is an adult creator platform (subscriptions, paid content, creator services/bookings, real-time messaging, prepaid "Veso" credits, and a collectible "Oasis/Drimy" retention game). The repo is an npm-workspaces monorepo: a **React frontend prototype** in `apps/web` plus a TypeScript Express API in `apps/api`, shared Zod schemas in `packages/contracts`, and Prisma + PostgreSQL in `packages/database`. The Phase 3 core-auth backend slice is implemented; email verification, password reset, frontend auth integration, Settings, payments, media, and other product APIs remain incomplete. `packages/ui` is still empty scaffolding.
 
 Authoritative product/scope docs, read these before non-trivial work:
 
@@ -28,10 +28,11 @@ Backend/API (Phase 2 foundation; requires a root `.env` copied from `.env.exampl
 ```bash
 npm run db:up      # start local Postgres 17 via Docker Compose (Docker Desktop required)
 npm run db:migrate # prisma migrate dev (root .env supplies DATABASE_URL)
+npm run db:deploy  # apply committed migrations (used by CI and clean environments)
 npm run db:seed    # idempotent dev seed (four .example users)
 npm run dev:api    # tsx watch server on :3000 (interactive terminal only)
 npm run build:api  # builds contracts -> database (incl. prisma generate) -> api
-npm run test:api   # Vitest + Supertest suite for apps/api
+npm run test:api   # Vitest + Supertest; auth suites require db:up + current migrations
 ```
 
 Quality tooling (root): `npm run lint` (ESLint flat config; the JS prototype is pragmatic — noisy rules are warnings, `rules-of-hooks` is an error — while `apps/api` and `packages/*` TypeScript is linted with typescript-eslint recommended and unused-vars as errors), `npm run format`/`format:check` (Prettier), `npm run test` (Vitest + Testing Library in `apps/web`), `npm run test:api` (Vitest + Supertest in `apps/api`), `npm run test:e2e` (Playwright; run `npx playwright install` once first). CI lives in `.github/workflows/ci.yml` (lint + unit test + build, an API job with a Postgres service that deploys migrations, seeds, tests, and builds the backend, plus a Playwright job). Backend TypeScript is typechecked by its `tsc` builds; the JS frontend still has **no typecheck**.
@@ -40,9 +41,10 @@ Quality tooling (root): `npm run lint` (ESLint flat config; the JS prototype is 
 
 Backend foundation (all TypeScript, ESM, strict; base tsconfig in `packages/config/tsconfig.base.json` — note each package declares its own `outDir`/`rootDir` because relative paths in an extended tsconfig resolve against the base file):
 
-- `apps/api/src` — Express 5 API. `createApp()` in `app.ts` is a dependency-injected factory (env, logger, `checkDatabase`, version) so tests stub the DB; `server.ts` wires the real Prisma check. Middleware chain: request IDs (`x-request-id`, echoed or generated), pino-http logging, helmet, CORS (`WEB_ORIGIN`, credentials), JSON body limit, global rate limit. Every non-2xx response uses the envelope `{ error: { code, message, requestId, details? } }` via `HttpError` + `errorHandler`. `validate()` middleware parses body/query/params with Zod into `req.validated` (Express 5 request properties are getter-only). Only `/api/v1/health` and `/api/v1/ready` exist. Env is validated at startup by `env.ts` (Zod).
+- `apps/api/src` — Express 5 API. `createApp()` in `app.ts` is a dependency-injected factory (env, logger, database, `checkDatabase`, version); `server.ts` wires real Prisma. Middleware: request IDs, pino-http logging, helmet, strict-origin credentialed CORS, JSON limits, and global rate limiting. Every non-2xx response uses `{ error: { code, message, requestId, details? } }`. `validate()` parses Zod contracts into `req.validated`. Endpoints: health/readiness plus `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, `POST /api/v1/auth/logout`, `POST /api/v1/auth/logout-all`, and `GET /api/v1/me`.
+- `apps/api/src/auth` + `middleware/auth.ts` — Argon2id password hashing, dev-scrypt compatibility/upgrade, opaque 32-byte session tokens with SHA-256 hashes at rest, secure HttpOnly SameSite cookies, 30-day sliding expiry renewed at most daily, runtime suspension/ban checks, role gates, and bounded instance-local login throttling. Redis-backed multi-instance throttling remains deferred.
 - `packages/contracts` — Zod schemas shared between API and future frontend integration (error envelope, health/ready, user, auth). Build before the API (`npm run build:api` handles ordering).
-- `packages/database` — Prisma 7 with the `prisma-client` generator (client generated into `src/generated/`, gitignored) and the `@prisma/adapter-pg` driver adapter. `prisma.config.ts` loads `DATABASE_URL` from the root `.env`; CLI commands run from the repo root via the `db:*` scripts. Models: `User` (role/status enums) and `Session`. `src/seed.ts` is idempotent. **Prisma 7's CLI blocks AI-invoked `migrate reset`**; recreate the Docker volume (`docker compose down -v && npm run db:up && npm run db:deploy`) instead.
+- `packages/database` — Prisma 7 with the `prisma-client` generator and `@prisma/adapter-pg`. Models: `User`, `Session`, and append-only `AcceptanceRecord`. Acceptance evidence uses restrictive deletion; account deletion must not cascade it. Sessions store only token hashes plus expiry/revocation/IP/user-agent metadata. `src/seed.ts` is idempotent; seed scrypt hashes upgrade to Argon2id after successful login. **Prisma 7's CLI blocks AI-invoked `migrate reset`**; recreate the Docker volume (`docker compose down -v && npm run db:up && npm run db:deploy`) instead.
 
 The frontend code lives in `apps/web/src`:
 
@@ -56,7 +58,7 @@ The frontend code lives in `apps/web/src`:
 
 Conventions:
 
-- Prototype content comes from `fixtures/`; media is loaded from external demo URLs. Page-local display configuration and interactive local state remain in components. Auth and all financial buttons are simulated — nothing persists.
+- Prototype content comes from `fixtures/`; media is loaded from external demo URLs. Page-local display configuration and interactive local state remain in components. Frontend auth and all financial buttons are still simulated; the new backend auth endpoints persist independently until Phase 3 frontend integration.
 - Styling is **Tailwind CSS v4** via `@tailwindcss/vite` (config-less; `@import "tailwindcss"` in `index.css`). Custom keyframe animations are hand-written in `index.css`. Visual identity is sakura-pink/pearl/off-white with rounded "premium" surfaces; Dark Knight is a planned second theme.
 - Plain JavaScript + JSX (no TypeScript in the frontend). PLAN.md mandates **TypeScript for all new backend/shared-contract code**, converting frontend files only when touched for backend integration.
 
@@ -74,8 +76,9 @@ These are product invariants, not suggestions — violating them is a correctnes
 - Legal copy in the frontend is **placeholder, not counsel-approved**. Do not present it as final.
 - Use reserved sample addresses (e.g. `support@pumdoki.example`) — never invent real contact details, and never claim that encryption, moderation vendors, response times, or compliance processes exist until they actually do.
 - Never commit secrets, identity documents, processor credentials, or real `.env` files.
+- Acceptance records are legal/compliance evidence: append new versions, never edit existing records, and never cascade-delete them with a user. Counsel must approve retention and pseudonymization rules before account deletion ships.
 - Do not commit temporary implementation-prompt Markdown files (the previous prompt-heavy `.agents`/AI-folder approach was deliberately rejected — product decisions belong in README/PLAN/tracker/docs).
 
 ## Repository state note
 
-The monorepo migration is committed: work against `apps/web` and `apps/api`, never old top-level paths. Phase 2 is **partially complete (local foundation)** — staging deploy, RDS, backups, Sentry, job queue, and idempotency framework are deferred; see `HANDOFF.md` for exact status.
+The monorepo migration is committed: work against `apps/web` and `apps/api`, never old top-level paths. Phase 2 is **partially complete (local foundation)** — staging deploy, RDS, backups, Sentry, job queue, and idempotency remain deferred. Phase 3 slice 1 (core auth backend) is locally implemented and verified; slices 2–4 remain. See `HANDOFF.md` for exact commands, counts, and publication status.
