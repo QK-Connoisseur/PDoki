@@ -5,7 +5,12 @@ import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import CreatePostModal from "../components/CreatePostModal";
 import InlineFollowButton from "../components/InlineFollowButton";
 import FollowButton from "../components/FollowButton";
-import { storeContent } from "../fixtures/storeContent";
+import {
+  storeContent,
+  subscribedUsernames,
+  followedUsernames as followedSeed,
+} from "../fixtures/storeContent";
+import { buildAllTabGroups } from "../utils/storeSections";
 
 /* ─── Mock Store Content Data ────────────────────────────────────────── */
 
@@ -15,15 +20,20 @@ const allCreators = [...new Map(storeContent.map((item) => [
   { name: item.creator, username: item.username, avatar: item.avatar },
 ])).values()];
 
-/* Initial followed usernames for state seed */
-const initialFollowedUsernames = new Set([
-  "lunabloom", "mikarose", "airivale", "soranyx", "reinanoir",
-]);
+/* Paid subscriptions are a separate member state from free follows. Static
+   until account-backed APIs exist; follows stay toggleable in-session. */
+const subscribedSet = new Set(subscribedUsernames);
+const initialFollowedUsernames = new Set(followedSeed);
+
+/* YouTube-scale discovery grid: ~4 medium cards at common large-desktop
+   widths (after nav, chat rail, and the filter column), with a practical
+   ≥290px card minimum. Narrower viewports collapse to 2 then 1 column. */
+const CARD_GRID = "store-card-grid";
 
 /* ─── Filter Config ──────────────────────────────────────────────────── */
 
 const storeTabs = [
-  { id: "following", label: "Following" },
+  { id: "all", label: "All" },
   { id: "recent", label: "Most Recent" },
   { id: "trending", label: "Trending" },
   { id: "purchased", label: "Purchased" },
@@ -173,6 +183,100 @@ function CheckboxBtn({ checked, onClick, label }) {
   );
 }
 
+/* ─── Radio Button ────────────────────────────────────────────────────── */
+
+function RadioBtn({ checked, onClick, label }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2.5 w-full text-left px-2 py-1.5 rounded-lg text-sm transition ${
+        checked ? "text-[#f472b6] font-semibold bg-pink-50/60" : "text-[#5b4153] hover:bg-pink-50/40"
+      }`}
+    >
+      <span
+        className={`flex items-center justify-center w-4 h-4 rounded-full border-2 transition ${
+          checked ? "border-[#f472b6]" : "border-[#d4b8c7]"
+        }`}
+      >
+        {checked && <span className="w-2 h-2 rounded-full bg-[#f472b6]" />}
+      </span>
+      {label}
+    </button>
+  );
+}
+
+/* ─── Filter Controls (shared by desktop sidebar and mobile drawer) ───── */
+
+function FilterControls({
+  priceFilter,
+  onPriceFilter,
+  lengthFilter,
+  onLengthFilter,
+  contentTypeFilters,
+  onToggleContentType,
+  downloadableOnly,
+  onToggleDownloadable,
+}) {
+  return (
+    <div className="space-y-6">
+      {/* PRICE */}
+      <div>
+        <h3 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] mb-3">Price</h3>
+        <div className="space-y-1.5">
+          {priceFilters.map((f) => (
+            <RadioBtn
+              key={f.id}
+              checked={priceFilter === f.id}
+              onClick={() => onPriceFilter(f.id)}
+              label={f.label}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* CONTENT TYPE */}
+      <div>
+        <h3 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] mb-3">Content Type</h3>
+        {/* Type checkboxes */}
+        <div className="space-y-1 mb-3">
+          <CheckboxBtn
+            checked={contentTypeFilters.videos}
+            onClick={() => onToggleContentType("videos")}
+            label="Videos"
+          />
+          <CheckboxBtn
+            checked={contentTypeFilters.photos}
+            onClick={() => onToggleContentType("photos")}
+            label="Photos"
+          />
+          <CheckboxBtn
+            checked={contentTypeFilters.audio}
+            onClick={() => onToggleContentType("audio")}
+            label="Audio"
+          />
+        </div>
+        {/* Duration radio buttons */}
+        <div className="space-y-1.5">
+          {lengthFilters.map((f) => (
+            <RadioBtn
+              key={f.id}
+              checked={lengthFilter === f.id}
+              onClick={() => onLengthFilter(f.id)}
+              label={f.label}
+            />
+          ))}
+        </div>
+        {/* Downloadable checkbox */}
+        <CheckboxBtn
+          checked={downloadableOnly}
+          onClick={onToggleDownloadable}
+          label="Downloadable"
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ─── Store Card ─────────────────────────────────────────────────────── */
 
 function StoreCard({ item, followedUsernames, onBookmark, toggleFollow }) {
@@ -274,7 +378,8 @@ export default function StorePage({ userStatus = 'online', onStatusChange }) {
   const [composeVesoPrice, setComposeVesoPrice] = useState("");
 
   /* ─── Store-specific state ─── */
-  const [activeTab, setActiveTab] = useState("following");
+  const [activeTab, setActiveTab] = useState("all");
+  const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   const [priceFilter, setPriceFilter] = useState("all");
   const [lengthFilter, setLengthFilter] = useState("all");
   const [downloadableOnly, setDownloadableOnly] = useState(false);
@@ -290,9 +395,8 @@ export default function StorePage({ userStatus = 'online', onStatusChange }) {
 
   /* ─── Filtering logic ─── */
   const filteredItems = contentItems.filter((item) => {
-    // Tab filtering
+    // Tab filtering ("all" mixes subscriptions, follows, and recommendations)
     if (activeTab === "favorites" && !item.bookmarked) return false;
-    if (activeTab === "following" && !followedUsernames.has(item.username)) return false;
     if (activeTab === "liked") return false;
     if (activeTab === "purchased") return false;
     if (activeTab === "history") return false;
@@ -362,8 +466,20 @@ export default function StorePage({ userStatus = 'online', onStatusChange }) {
     }, {})
   );
 
-  /* ─── Followed creators list for sidebar (dynamic) ─── */
-  const sidebarFollowedCreators = allCreators.filter((c) => followedUsernames.has(c.username));
+  /* ─── All-tab shelves: subscriptions → follows → recommendations ─── */
+  const allTabGroups =
+    activeTab === "all"
+      ? buildAllTabGroups(filteredItems, subscribedSet, followedUsernames)
+      : null;
+
+  /* ─── Sidebar creator lists ─── */
+  const sidebarSubscribedCreators = allCreators.filter((c) =>
+    subscribedSet.has(c.username)
+  );
+  /* Free follows only — subscribed creators live in the Subscriptions list */
+  const sidebarFollowedCreators = allCreators.filter(
+    (c) => followedUsernames.has(c.username) && !subscribedSet.has(c.username)
+  );
 
   // Toggle bookmark
   const toggleBookmark = (id) => {
@@ -452,7 +568,8 @@ export default function StorePage({ userStatus = 'online', onStatusChange }) {
             <EmptyState title="No items found" message="Try a different filter or check back soon." />
           ) : (
             <>
-          <div className="max-w-[1700px] mx-auto px-4 pt-4">
+          {/* Full-width discovery layout: use everything between the nav and chat rail */}
+          <div className="w-full px-4 pt-4">
 
             {/* ─── Page Header ─── */}
             <div className="mb-5">
@@ -502,12 +619,13 @@ export default function StorePage({ userStatus = 'online', onStatusChange }) {
               </div>
             )}
 
-            {/* ─── Store Tabs ─── */}
-            <div className="flex gap-1 mb-5 overflow-x-auto hide-scrollbar pb-1 border-b border-pink-100">
+            {/* ─── Store Tabs + mobile filter button ─── */}
+            <div className="flex items-center gap-1 mb-5 overflow-x-auto hide-scrollbar pb-1 border-b border-pink-100">
               {storeTabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
+                  aria-pressed={activeTab === tab.id}
                   className={`whitespace-nowrap px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${
                     activeTab === tab.id
                       ? "border-[#f472b6] text-[#f472b6]"
@@ -517,102 +635,100 @@ export default function StorePage({ userStatus = 'online', onStatusChange }) {
                   {tab.label}
                 </button>
               ))}
+              <div className="flex-1" />
+              <button
+                onClick={() => setShowFilterDrawer(true)}
+                aria-label="Open filters"
+                className="lg:hidden shrink-0 inline-flex items-center gap-1.5 rounded-full border border-pink-200 bg-white px-3.5 py-1.5 mb-1 text-xs font-semibold text-[#5b4153] shadow-sm transition hover:border-pink-300 hover:text-[#df5f97]"
+              >
+                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+                </svg>
+                Filters
+                {activeTags.length > 0 && (
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#f472b6] text-[9px] font-bold text-white">
+                    {activeTags.length}
+                  </span>
+                )}
+              </button>
             </div>
 
             {/* ─── Content Layout: Filters Sidebar + Feed ─── */}
             <div className="flex gap-6">
               {/* ─── Filter Sidebar ─── */}
-              <div className="hidden lg:block w-[220px] shrink-0">
-                <div className="sticky top-20 space-y-6">
+              <div className="hidden lg:block w-[230px] shrink-0" data-testid="store-sidebar">
+                <div className="sticky top-20 space-y-6 max-h-[calc(100vh-6rem)] overflow-y-auto pb-4 pr-1">
 
-                  {/* PRICE */}
+                  {/* SUBSCRIPTIONS — paid subs, YouTube-style creator list */}
                   <div>
-                    <h3 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] mb-3">Price</h3>
-                    <div className="space-y-1.5">
-                      {priceFilters.map((f) => (
+                    <h3 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] mb-3">Subscriptions</h3>
+                    {sidebarSubscribedCreators.length === 0 ? (
+                      <div className="px-2">
+                        <p className="text-xs text-[#b89aa8]">No subscriptions yet</p>
                         <button
-                          key={f.id}
-                          onClick={() => setPriceFilter(f.id)}
-                          className={`flex items-center gap-2.5 w-full text-left px-2 py-1.5 rounded-lg text-sm transition ${
-                            priceFilter === f.id
-                              ? "text-[#f472b6] font-semibold bg-pink-50/60"
-                              : "text-[#5b4153] hover:bg-pink-50/40"
-                          }`}
+                          onClick={() => setActiveTab("trending")}
+                          className="mt-2 text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition"
                         >
-                          <span
-                            className={`flex items-center justify-center w-4 h-4 rounded-full border-2 transition ${
-                              priceFilter === f.id ? "border-[#f472b6]" : "border-[#d4b8c7]"
+                          Discover creators ›
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        {sidebarSubscribedCreators.map((sc) => (
+                          <button
+                            key={sc.username}
+                            onClick={() => {
+                              setFollowedFilter(followedFilter === sc.username ? null : sc.username);
+                              scrollToCreator(sc.username);
+                            }}
+                            className={`flex items-center gap-2.5 w-full text-left px-2 py-1.5 rounded-lg text-sm transition ${
+                              followedFilter === sc.username
+                                ? "bg-pink-50/80 ring-1 ring-pink-200"
+                                : "hover:bg-pink-50/40"
                             }`}
                           >
-                            {priceFilter === f.id && (
-                              <span className="w-2 h-2 rounded-full bg-[#f472b6]" />
-                            )}
-                          </span>
-                          {f.label}
-                        </button>
-                      ))}
-                    </div>
+                            <img
+                              src={sc.avatar}
+                              alt={sc.name}
+                              className={`w-7 h-7 rounded-full object-cover border-2 transition ${
+                                followedFilter === sc.username ? "border-[#f472b6]" : "border-pink-100"
+                              }`}
+                            />
+                            <div className="min-w-0">
+                              <p className="text-xs font-medium text-[#241a22] truncate">{sc.name}</p>
+                              <p className="text-[10px] text-[#b89aa8]">@{sc.username}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
-                  {/* CONTENT TYPE (renamed from Video Length) */}
-                  <div>
-                    <h3 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] mb-3">Content Type</h3>
-                    {/* Type checkboxes */}
-                    <div className="space-y-1 mb-3">
-                      <CheckboxBtn
-                        checked={contentTypeFilters.videos}
-                        onClick={() => toggleContentType("videos")}
-                        label="Videos"
-                      />
-                      <CheckboxBtn
-                        checked={contentTypeFilters.photos}
-                        onClick={() => toggleContentType("photos")}
-                        label="Photos"
-                      />
-                      <CheckboxBtn
-                        checked={contentTypeFilters.audio}
-                        onClick={() => toggleContentType("audio")}
-                        label="Audio"
-                      />
-                    </div>
-                    {/* Duration radio buttons */}
-                    <div className="space-y-1.5">
-                      {lengthFilters.map((f) => (
-                        <button
-                          key={f.id}
-                          onClick={() => setLengthFilter(f.id)}
-                          className={`flex items-center gap-2.5 w-full text-left px-2 py-1.5 rounded-lg text-sm transition ${
-                            lengthFilter === f.id
-                              ? "text-[#f472b6] font-semibold bg-pink-50/60"
-                              : "text-[#5b4153] hover:bg-pink-50/40"
-                          }`}
-                        >
-                          <span
-                            className={`flex items-center justify-center w-4 h-4 rounded-full border-2 transition ${
-                              lengthFilter === f.id ? "border-[#f472b6]" : "border-[#d4b8c7]"
-                            }`}
-                          >
-                            {lengthFilter === f.id && (
-                              <span className="w-2 h-2 rounded-full bg-[#f472b6]" />
-                            )}
-                          </span>
-                          {f.label}
-                        </button>
-                      ))}
-                    </div>
-                    {/* Downloadable checkbox */}
-                    <CheckboxBtn
-                      checked={downloadableOnly}
-                      onClick={() => setDownloadableOnly(!downloadableOnly)}
-                      label="Downloadable"
-                    />
-                  </div>
+                  {/* FILTERS */}
+                  <FilterControls
+                    priceFilter={priceFilter}
+                    onPriceFilter={setPriceFilter}
+                    lengthFilter={lengthFilter}
+                    onLengthFilter={setLengthFilter}
+                    contentTypeFilters={contentTypeFilters}
+                    onToggleContentType={toggleContentType}
+                    downloadableOnly={downloadableOnly}
+                    onToggleDownloadable={() => setDownloadableOnly(!downloadableOnly)}
+                  />
 
-                  {/* FOLLOWED CREATORS */}
+                  {/* FOLLOWED CREATORS (free follows) */}
                   <div>
                     <h3 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] mb-3">Followed</h3>
                     {sidebarFollowedCreators.length === 0 ? (
-                      <p className="text-xs text-[#b89aa8] px-2">No followed creators yet</p>
+                      <div className="px-2">
+                        <p className="text-xs text-[#b89aa8]">No followed creators yet</p>
+                        <button
+                          onClick={() => setActiveTab("trending")}
+                          className="mt-2 text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition"
+                        >
+                          Discover creators ›
+                        </button>
+                      </div>
                     ) : (
                       <div className="space-y-1">
                         {sidebarFollowedCreators.map((fc) => (
@@ -649,27 +765,57 @@ export default function StorePage({ userStatus = 'online', onStatusChange }) {
 
               {/* ─── Feed ─── */}
               <div className="flex-1 min-w-0">
-                {activeTab === "following" && followedUsernames.size === 0 ? (
-                  /* Following empty state: no followed creators */
-                  <div className="flex flex-col items-center justify-center py-24 text-center">
-                    <svg viewBox="0 0 24 24" className="w-14 h-14 text-[#d4b8c7] mb-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                    </svg>
-                    <p className="text-sm font-semibold text-[#8c6d7f]">Start following creators to see content</p>
-                    <p className="mt-1 text-xs text-[#b89aa8]">Follow a creator to see their exclusive drops here</p>
-                    <button
-                      onClick={() => setActiveTab("trending")}
-                      className="mt-5 rounded-full bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] px-6 py-2.5 text-xs font-bold text-white uppercase tracking-wide shadow-md shadow-pink-200/50 transition hover:shadow-lg hover:from-[#f472b6] hover:to-[#ec4899]"
-                    >
-                      Discover Creators
-                    </button>
-                  </div>
+                {activeTab === "all" ? (
+                  /* ── All: subscriptions → follows → recommendations ── */
+                  (() => {
+                    const shelves = [
+                      { id: "subscriptions", label: "From your subscriptions", items: allTabGroups.subscriptions },
+                      { id: "followed", label: "From creators you follow", items: allTabGroups.followed },
+                      { id: "recommended", label: "Recommended for you", items: allTabGroups.recommended },
+                    ].filter((shelf) => shelf.items.length > 0);
+                    return shelves.length > 0 ? (
+                      <div className="space-y-10">
+                        {shelves.map((shelf) => (
+                          <section key={shelf.id} data-testid={`all-shelf-${shelf.id}`}>
+                            <h2 className="text-base font-bold text-[#241a22] mb-4">{shelf.label}</h2>
+                            <div className={CARD_GRID}>
+                              {shelf.items.map((item) => (
+                                <StoreCard
+                                  key={item.id}
+                                  item={item}
+                                  followedUsernames={followedUsernames}
+                                  onBookmark={toggleBookmark}
+                                  toggleFollow={toggleFollow}
+                                />
+                              ))}
+                            </div>
+                          </section>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <svg viewBox="0 0 24 24" className="w-14 h-14 text-[#d4b8c7] mb-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M6 2L3 7v13a1 1 0 001 1h16a1 1 0 001-1V7l-3-5H6z" />
+                          <path d="M3 7h18" />
+                          <path d="M16 11a4 4 0 01-8 0" />
+                        </svg>
+                        <p className="text-sm font-medium text-[#8c6d7f]">No content found</p>
+                        <p className="mt-1 text-xs text-[#b89aa8]">Try adjusting your filters or search</p>
+                        <button
+                          onClick={clearAllFilters}
+                          className="mt-4 rounded-full bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] px-5 py-2 text-xs font-semibold text-white shadow-md shadow-pink-200/50 transition hover:shadow-lg"
+                        >
+                          Clear All Filters
+                        </button>
+                      </div>
+                    );
+                  })()
                 ) : (activeTab === "recent" || activeTab === "trending") ? (
                   /* ── Flat discovery grid (Most Recent / Trending) ── */
                   (() => {
                     const items = activeTab === "recent" ? sortedByRecent : sortedByTrending;
                     return items.length > 0 ? (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+                      <div className={CARD_GRID}>
                         {items.map((item) => (
                           <StoreCard
                             key={item.id}
@@ -728,7 +874,7 @@ export default function StorePage({ userStatus = 'online', onStatusChange }) {
                         </div>
 
                         {/* Items grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+                        <div className={CARD_GRID}>
                           {group.items.map((item) => (
                             <StoreCard
                               key={item.id}
@@ -766,6 +912,59 @@ export default function StorePage({ userStatus = 'online', onStatusChange }) {
                     </>
           )}
         </main>
+
+      {/* ─── Mobile/Tablet Filter Drawer ───────────────────────────── */}
+      {showFilterDrawer && (
+        <div className="fixed inset-0 z-[70] lg:hidden" role="dialog" aria-label="Filters">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+            onClick={() => setShowFilterDrawer(false)}
+          />
+          <div className="absolute right-0 top-0 bottom-0 w-[300px] max-w-[85vw] bg-white shadow-2xl overflow-y-auto">
+            <div className="sticky top-0 z-10 flex items-center justify-between bg-white px-5 py-4 border-b border-pink-100">
+              <h2 className="text-sm font-bold text-[#241a22]">Filters</h2>
+              <div className="flex items-center gap-2">
+                {activeTags.length > 0 && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition"
+                  >
+                    Clear all
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowFilterDrawer(false)}
+                  aria-label="Close filters"
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-[#8c6d7f] hover:bg-pink-50 hover:text-[#241a22] transition"
+                >
+                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div className="px-5 py-4">
+              <FilterControls
+                priceFilter={priceFilter}
+                onPriceFilter={setPriceFilter}
+                lengthFilter={lengthFilter}
+                onLengthFilter={setLengthFilter}
+                contentTypeFilters={contentTypeFilters}
+                onToggleContentType={toggleContentType}
+                downloadableOnly={downloadableOnly}
+                onToggleDownloadable={() => setDownloadableOnly(!downloadableOnly)}
+              />
+              <button
+                onClick={() => setShowFilterDrawer(false)}
+                className="mt-6 w-full rounded-full bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] py-2.5 text-xs font-bold text-white uppercase tracking-wide shadow-md shadow-pink-200/50 transition hover:shadow-lg"
+              >
+                Show results
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ─── Compose Modal ─────────────────────────────────────────── */}
       <CreatePostModal
         open={showCompose}

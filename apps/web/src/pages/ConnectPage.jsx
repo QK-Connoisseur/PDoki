@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import MemberLayout from "../components/MemberLayout";
 import { useSimulatedFetch } from "../lib/useSimulatedFetch";
 import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
-import { MenuHeartIcon, STATUS_OPTIONS } from "../components/UserStatusSwitcher";
 import CreatePostModal from "../components/CreatePostModal";
+import ConnectCreatorCard from "../components/ConnectCreatorCard";
 import { creators, spotlightSlides } from "../fixtures/connectCreators";
+import { getCreatorServices } from "../utils/serviceOffers";
 
 /* ─── Mock Data ──────────────────────────────────────────────────────── */
 
@@ -20,47 +21,6 @@ const filterTabs = [
   { id: "game",     label: "Game With Me", description: "Play together"          },
   { id: "shoutout", label: "Shout out",    description: "Personalized shoutouts" },
 ];
-
-/* ─── Level Badge ────────────────────────────────────────────────────── */
-
-function LevelBadge({ level, size = 16 }) {
-  if (level === "bronze") return (
-    <span className="inline-flex items-center justify-center rounded-full" style={{ width: size, height: size, backgroundColor: "#cd7f32", border: "1.5px solid #a0522d" }} title="Bronze">
-      <span className="text-white text-[8px] font-bold">B</span>
-    </span>
-  );
-  if (level === "silver") return (
-    <span className="inline-flex items-center justify-center rounded-full" style={{ width: size, height: size, backgroundColor: "#c0c0c0", border: "1.5px solid #a8a8a8" }} title="Silver">
-      <span className="text-white text-[8px] font-bold">S</span>
-    </span>
-  );
-  if (level === "gold") return (
-    <span className="inline-flex items-center justify-center rounded-full" style={{ width: size, height: size, backgroundColor: "#ffd700", border: "1.5px solid #daa520" }} title="Gold">
-      <span className="text-white text-[8px] font-bold">G</span>
-    </span>
-  );
-  if (level === "star") return (
-    <svg width={size} height={size} viewBox="0 0 16 16" title="Star">
-      <polygon points="8,1 10,6 15.5,6.5 11.5,10 12.5,15.5 8,13 3.5,15.5 4.5,10 0.5,6.5 6,6" fill="#f9a8c8" stroke="#e882a8" strokeWidth="0.8" />
-    </svg>
-  );
-  if (level === "2stars") return (
-    <span className="inline-flex items-center gap-px" title="2 Stars">
-      <svg width={size * 0.8} height={size * 0.8} viewBox="0 0 16 16"><polygon points="8,1 10,6 15.5,6.5 11.5,10 12.5,15.5 8,13 3.5,15.5 4.5,10 0.5,6.5 6,6" fill="#f9a8c8" stroke="#e882a8" strokeWidth="0.8" /></svg>
-      <svg width={size * 0.8} height={size * 0.8} viewBox="0 0 16 16"><polygon points="8,1 10,6 15.5,6.5 11.5,10 12.5,15.5 8,13 3.5,15.5 4.5,10 0.5,6.5 6,6" fill="#f9a8c8" stroke="#e882a8" strokeWidth="0.8" /></svg>
-    </span>
-  );
-  if (level === "legend") return (
-    <svg width={size} height={size} viewBox="0 0 16 16" title="Legend">
-      <path d="M8 1L10.5 5H14L11 8L12.5 13L8 10.5L3.5 13L5 8L2 5H5.5L8 1Z" fill="#ffd700" stroke="#daa520" strokeWidth="0.6" />
-      <path d="M4 2L8 1L12 2" fill="none" stroke="#daa520" strokeWidth="1" strokeLinecap="round" />
-      <circle cx="5" cy="1.5" r="0.8" fill="#ffd700" stroke="#daa520" strokeWidth="0.4" />
-      <circle cx="8" cy="0.5" r="0.8" fill="#ffd700" stroke="#daa520" strokeWidth="0.4" />
-      <circle cx="11" cy="1.5" r="0.8" fill="#ffd700" stroke="#daa520" strokeWidth="0.4" />
-    </svg>
-  );
-  return null;
-}
 
 /* ─── Service Icon ───────────────────────────────────────────────────── */
 
@@ -111,16 +71,6 @@ function RailIcon({ type, size = 18 }) {
   return <ServiceIcon type={type} size={size} />;
 }
 
-/* ─── Play Icon ──────────────────────────────────────────────────────── */
-
-function PlayIcon({ size = 11 }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
-      <polygon points="5 3 19 12 5 21 5 3" />
-    </svg>
-  );
-}
-
 /* ─── Spotlight Carousel ─────────────────────────────────────────────── */
 
 function SpotlightCarousel() {
@@ -168,120 +118,9 @@ function SpotlightCarousel() {
   );
 }
 
-/* ─── Creator Card ───────────────────────────────────────────────────── */
-
-function CreatorCard({ creator }) {
-  const [isFlipped, setIsFlipped] = useState(false);
-
-  return (
-    <div
-      className="group cursor-pointer"
-      style={{ perspective: "1000px" }}
-      onMouseEnter={() => setIsFlipped(true)}
-      onMouseLeave={() => setIsFlipped(false)}
-    >
-      <div
-        className="relative w-full transition-transform duration-500 ease-in-out"
-        style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", aspectRatio: "3/4" }}
-      >
-        {/* ─── Front Face ─── */}
-        <div
-          className="absolute inset-0 rounded-2xl overflow-hidden border border-pink-100 shadow-sm"
-          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
-        >
-          <img src={creator.photo} alt={creator.name} className="w-full h-full object-cover" />
-
-          {/* Bottom gradient — name header with inline status heart */}
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pt-16 pb-3 px-3">
-            <div className="flex items-center gap-1.5">
-              <MenuHeartIcon status={creator.status} size={14} zzzColor="#d1d5db" />
-              <span className="text-white font-semibold text-sm truncate">{creator.name}</span>
-              <LevelBadge level={creator.level} size={14} />
-            </div>
-            <p className="text-white/70 text-xs mt-0.5">@{creator.username}</p>
-          </div>
-
-          {/* Play / audio button — top-right */}
-          <button
-            className="absolute top-2 right-2 flex items-center justify-center w-7 h-7 rounded-full cursor-pointer text-white transition hover:scale-110"
-            style={{ background: "rgba(0,0,0,0.28)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
-            onClick={(e) => e.stopPropagation()}
-            title="Play audio intro"
-          >
-            <PlayIcon size={10} />
-          </button>
-
-          {/* Service icons pill — bottom-right */}
-          <div
-            className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full px-2 py-1"
-            style={{ background: "rgba(0,0,0,0.42)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", border: "1px solid rgba(249,168,200,0.25)" }}
-          >
-            {creator.services.map((service) => (
-              <span key={service} className="flex items-center justify-center text-white/85">
-                <ServiceIcon type={service} size={11} />
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* ─── Back Face ───
-            The back face carries its own rotateY(180deg). When the parent is also
-            rotated 180deg (card flipped), the net is 0deg — content appears normal
-            to the viewer and CSS absolute positions map 1:1 (right-2 = viewer's right).
-        */}
-        <div
-          className="absolute inset-0 rounded-2xl overflow-hidden border border-pink-100 shadow-sm bg-white flex flex-col items-center justify-center px-4 py-5"
-          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-        >
-          {/* Play / audio button — top-right (right-2 = viewer's right after net-0 rotation) */}
-          <button
-            className="absolute top-2 right-2 flex items-center justify-center w-7 h-7 rounded-full cursor-pointer text-[#f472b6] transition hover:scale-110"
-            style={{ background: "rgba(249,168,200,0.14)", border: "1px solid rgba(249,168,200,0.4)" }}
-            onClick={(e) => e.stopPropagation()}
-            title="Play audio intro"
-          >
-            <PlayIcon size={10} />
-          </button>
-
-          {/* Avatar */}
-          <img src={creator.avatar} alt={creator.name} className="w-16 h-16 rounded-full object-cover border-2 border-pink-200" />
-
-          {/* Name header — inline status heart with tooltip, identical layout to front face */}
-          <div className="flex items-center gap-1.5 mt-3">
-            <div className="group/heart relative">
-              <MenuHeartIcon status={creator.status} size={14} zzzColor="#9ca3af" />
-              {/* Status tooltip — scoped to heart hover via named group, not the whole card group */}
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 px-2 py-0.5 bg-black/80 text-white text-[10px] font-medium rounded-md shadow-lg whitespace-nowrap pointer-events-none opacity-0 invisible group-hover/heart:opacity-100 group-hover/heart:visible transition-all duration-200 z-10">
-                <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 border-4 border-transparent" style={{ borderBottomColor: "rgba(0,0,0,0.8)" }} />
-                {STATUS_OPTIONS.find((s) => s.id === creator.status)?.label ?? creator.status}
-              </div>
-            </div>
-            <span className="text-[#241a22] font-semibold text-sm">{creator.name}</span>
-            <LevelBadge level={creator.level} size={14} />
-          </div>
-
-          <p className="text-[#b89aa8] text-xs mt-0.5">@{creator.username}</p>
-          <p className="text-[#8c6d7f] text-xs text-center mt-3 leading-relaxed line-clamp-2">{creator.description}</p>
-          <p className="text-[#241a22] font-bold text-sm mt-3">{creator.price}</p>
-
-          <div className="flex flex-col gap-2 w-full mt-3">
-            <button className="w-full rounded-full border-2 border-[#f9a8c8] py-2 text-xs font-semibold text-[#f472b6] transition hover:bg-pink-50">
-              View Profile
-            </button>
-            <button className="w-full rounded-full bg-gradient-to-r from-[#f9a8c8] to-[#f472b6] py-2 text-xs font-semibold text-white shadow-md shadow-pink-200/50 transition hover:shadow-lg hover:from-[#f472b6] hover:to-[#ec4899]">
-              Message
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
 /* ─── Section Header ─────────────────────────────────────────────────── */
 
-function SectionHeader({ icon, label }) {
+function SectionHeader({ icon, label, serviceType = null }) {
   return (
     <div className="flex items-center gap-2 mb-4">
       <h2 className="text-xs font-bold tracking-widest uppercase text-[#b89aa8] flex items-center gap-2">
@@ -290,7 +129,11 @@ function SectionHeader({ icon, label }) {
         </svg>
         {label}
       </h2>
-      <button className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition normal-case tracking-normal">
+      <button
+        className="text-xs font-semibold text-[#f472b6] hover:text-[#ec4899] transition normal-case tracking-normal"
+        aria-label={`Show all ${label} creators`}
+        data-service={serviceType ?? undefined}
+      >
         Show All ›
       </button>
     </div>
@@ -299,11 +142,15 @@ function SectionHeader({ icon, label }) {
 
 /* ─── Creator Grid ───────────────────────────────────────────────────── */
 
-function CreatorGrid({ creators: list, keyPrefix }) {
+function CreatorGrid({ creators: list, keyPrefix, serviceType = null }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
       {list.map((creator) => (
-        <CreatorCard key={`${keyPrefix}-${creator.id}`} creator={creator} />
+        <ConnectCreatorCard
+          key={`${keyPrefix}-${creator.id}`}
+          creator={creator}
+          serviceType={serviceType}
+        />
       ))}
     </div>
   );
@@ -328,13 +175,16 @@ export default function ConnectPage({ userStatus = 'online', onStatusChange }) {
 
   // When a specific category is selected, show only those creators in one unified grid.
   // When "all" is selected, derive per-category sets for the sectioned layout.
-  const filteredCreators = isAll ? creators : creators.filter((c) => c.services.includes(activeFilter));
+  // Service membership is derived from each creator's Veso offers.
+  const offersService = (c, service) => getCreatorServices(c).includes(service);
 
-  const eChatCreators     = isAll ? creators.filter((c) => c.services.includes("chat"))     : [];
-  const voiceCreators     = isAll ? creators.filter((c) => c.services.includes("voice"))    : [];
-  const videoCreators     = isAll ? creators.filter((c) => c.services.includes("video"))    : [];
-  const gameCreators      = isAll ? creators.filter((c) => c.services.includes("game"))     : [];
-  const shoutoutCreators  = isAll ? creators.filter((c) => c.services.includes("shoutout")) : [];
+  const filteredCreators = isAll ? creators : creators.filter((c) => offersService(c, activeFilter));
+
+  const eChatCreators     = isAll ? creators.filter((c) => offersService(c, "chat"))     : [];
+  const voiceCreators     = isAll ? creators.filter((c) => offersService(c, "voice"))    : [];
+  const videoCreators     = isAll ? creators.filter((c) => offersService(c, "video"))    : [];
+  const gameCreators      = isAll ? creators.filter((c) => offersService(c, "game"))     : [];
+  const shoutoutCreators  = isAll ? creators.filter((c) => offersService(c, "shoutout")) : [];
 
 
   return (
@@ -396,6 +246,7 @@ export default function ConnectPage({ userStatus = 'online', onStatusChange }) {
               <div className="mb-8">
                 <SectionHeader
                   label={filterTabs.find((t) => t.id === activeFilter)?.label ?? "Results"}
+                  serviceType={activeFilter}
                   icon={
                     activeFilter === "chat"     ? <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /> :
                     activeFilter === "voice"    ? <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /> :
@@ -405,7 +256,7 @@ export default function ConnectPage({ userStatus = 'online', onStatusChange }) {
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   }
                 />
-                <CreatorGrid creators={filteredCreators} keyPrefix={activeFilter} />
+                <CreatorGrid creators={filteredCreators} keyPrefix={activeFilter} serviceType={activeFilter} />
               </div>
             )}
 
@@ -415,40 +266,40 @@ export default function ConnectPage({ userStatus = 'online', onStatusChange }) {
                 {/* E-Chat */}
                 {eChatCreators.length > 0 && (
                   <div className="mb-8">
-                    <SectionHeader label="E-Chat" icon={<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />} />
-                    <CreatorGrid creators={eChatCreators} keyPrefix="chat" />
+                    <SectionHeader label="E-Chat" serviceType="chat" icon={<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />} />
+                    <CreatorGrid creators={eChatCreators} keyPrefix="chat" serviceType="chat" />
                   </div>
                 )}
 
                 {/* Voice Call */}
                 {voiceCreators.length > 0 && (
                   <div className="mb-8">
-                    <SectionHeader label="Voice Call Ready" icon={<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />} />
-                    <CreatorGrid creators={voiceCreators} keyPrefix="voice" />
+                    <SectionHeader label="Voice Call Ready" serviceType="voice" icon={<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />} />
+                    <CreatorGrid creators={voiceCreators} keyPrefix="voice" serviceType="voice" />
                   </div>
                 )}
 
                 {/* Video Call */}
                 {videoCreators.length > 0 && (
                   <div className="mb-8">
-                    <SectionHeader label="Video Call" icon={<><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" /></>} />
-                    <CreatorGrid creators={videoCreators} keyPrefix="video" />
+                    <SectionHeader label="Video Call" serviceType="video" icon={<><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" /></>} />
+                    <CreatorGrid creators={videoCreators} keyPrefix="video" serviceType="video" />
                   </div>
                 )}
 
                 {/* Game With Me */}
                 {gameCreators.length > 0 && (
                   <div className="mb-8">
-                    <SectionHeader label="Game With Me" icon={<><line x1="6" y1="11" x2="10" y2="11" /><line x1="8" y1="9" x2="8" y2="13" /><line x1="15" y1="12" x2="15.01" y2="12" /><line x1="18" y1="10" x2="18.01" y2="10" /><path d="M17.32 5H6.68a4 4 0 00-3.978 3.59C2.166 12.4 2 16.29 2 18a2 2 0 002 2c1.105 0 2-.672 2.5-1.5L8 16h8l1.5 2.5c.5.828 1.395 1.5 2.5 1.5a2 2 0 002-2c0-1.71-.166-5.6-.703-9.41A4 4 0 0017.32 5z" /></>} />
-                    <CreatorGrid creators={gameCreators} keyPrefix="game" />
+                    <SectionHeader label="Game With Me" serviceType="game" icon={<><line x1="6" y1="11" x2="10" y2="11" /><line x1="8" y1="9" x2="8" y2="13" /><line x1="15" y1="12" x2="15.01" y2="12" /><line x1="18" y1="10" x2="18.01" y2="10" /><path d="M17.32 5H6.68a4 4 0 00-3.978 3.59C2.166 12.4 2 16.29 2 18a2 2 0 002 2c1.105 0 2-.672 2.5-1.5L8 16h8l1.5 2.5c.5.828 1.395 1.5 2.5 1.5a2 2 0 002-2c0-1.71-.166-5.6-.703-9.41A4 4 0 0017.32 5z" /></>} />
+                    <CreatorGrid creators={gameCreators} keyPrefix="game" serviceType="game" />
                   </div>
                 )}
 
                 {/* Shout out */}
                 {shoutoutCreators.length > 0 && (
                   <div className="mb-8">
-                    <SectionHeader label="Shout out" icon={<><path d="M3 8h6l8-4v16l-8-4H3V8z" /><path d="M9 8v8" /><path d="M9 16l-2 5" /></>} />
-                    <CreatorGrid creators={shoutoutCreators} keyPrefix="shoutout" />
+                    <SectionHeader label="Shout out" serviceType="shoutout" icon={<><path d="M3 8h6l8-4v16l-8-4H3V8z" /><path d="M9 8v8" /><path d="M9 16l-2 5" /></>} />
+                    <CreatorGrid creators={shoutoutCreators} keyPrefix="shoutout" serviceType="shoutout" />
                   </div>
                 )}
 
@@ -473,7 +324,8 @@ export default function ConnectPage({ userStatus = 'online', onStatusChange }) {
                             NEW
                           </span>
                         </div>
-                        <CreatorCard creator={creator} />
+                        {/* No category context here: show the lowest offer overall with "From". */}
+                        <ConnectCreatorCard creator={creator} serviceType={null} />
                       </div>
                     ))}
                   </div>

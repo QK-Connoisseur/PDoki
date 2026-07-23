@@ -4,6 +4,8 @@ import MemberLayout from "../components/MemberLayout";
 import { useSimulatedFetch } from "../lib/useSimulatedFetch";
 import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import FollowButton from "../components/FollowButton";
+import FeedMedia from "../components/FeedMedia";
+import VesoIcon from "../components/VesoIcon";
 import MomentAvatar from "../components/MomentAvatar";
 import MomentComposer from "../components/MomentComposer";
 import { sortMomentRail } from "../utils/sortMomentRail";
@@ -392,33 +394,12 @@ export default function HomePage({ userStatus = 'online', onStatusChange }) {
                       {post.caption}
                     </p>
 
-                    {/* Post Image (blurred if locked, contained so blur doesn't overflow) */}
-                    {showLocked ? (
-                      <div className="mx-4 rounded-xl overflow-hidden">
-                        <img
-                          src={post.image}
-                          alt={`Post by ${post.creator}`}
-                          className="w-full object-cover blur-sm scale-105"
-                          style={{ aspectRatio: post.aspectRatio || "4/3" }}
-                          loading="lazy"
-                        />
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setLightboxPost(post)}
-                        className="mx-4 block rounded-xl overflow-hidden cursor-pointer"
-                        aria-label={`View media by ${post.creator}`}
-                      >
-                        <img
-                          src={post.image}
-                          alt={`Post by ${post.creator}`}
-                          className="w-full object-cover"
-                          style={{ aspectRatio: post.aspectRatio || "4/3" }}
-                          loading="lazy"
-                        />
-                      </button>
-                    )}
+                    {/* Post media (image or video; blurred safe poster when locked) */}
+                    <FeedMedia
+                      post={post}
+                      locked={showLocked}
+                      onExpand={() => setLightboxPost(post)}
+                    />
 
                     {/* ─── Locked Post: Media count bar + Unlock button ─── */}
                     {showLocked && (
@@ -766,9 +747,7 @@ export default function HomePage({ userStatus = 'online', onStatusChange }) {
                     </div>
                     <div className="flex-1 flex items-center rounded-2xl overflow-hidden" style={{ border: "1.5px solid rgba(245,182,59,0.35)", background: "rgba(255,252,240,0.8)" }}>
                       <span className="pl-3 pr-1 text-sm font-bold" style={{ color: "#b8860b" }}>
-                        <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 inline-block mr-0.5" fill="none">
-                          <path d="M8 12c-1-.7-2.7-1.7-3.7-3C3 7.5 3 6.5 4.4 5.7c.7-.4 1.5-.2 2 .4.2.2.3.5.3.8 0-.3.1-.6.3-.8.5-.6 1.3-.8 2-.4C10.4 6.5 10.4 7.5 9 9c-1 1.3-2.7 2.3-3.7 3z" fill="#f5b63b" />
-                        </svg>
+                        <VesoIcon size={14} className="inline-block mr-0.5" />
                       </span>
                       <input
                         type="number"
@@ -978,11 +957,23 @@ export default function HomePage({ userStatus = 'online', onStatusChange }) {
                 </svg>
               </button>
             </div>
-            <img
-              src={lightboxPost.image}
-              alt={`Post by ${lightboxPost.creator}`}
-              className="w-full rounded-2xl object-contain max-h-[80vh]"
-            />
+            {lightboxPost.mediaType === "video" &&
+            !lightboxPost.locked &&
+            lightboxPost.videoSrc ? (
+              <video
+                src={lightboxPost.videoSrc}
+                poster={lightboxPost.poster}
+                controls
+                playsInline
+                className="w-full rounded-2xl object-contain max-h-[80vh] bg-black"
+              />
+            ) : (
+              <img
+                src={lightboxPost.image || lightboxPost.poster}
+                alt={`Post by ${lightboxPost.creator}`}
+                className="w-full rounded-2xl object-contain max-h-[80vh]"
+              />
+            )}
           </div>
         </div>
       )}

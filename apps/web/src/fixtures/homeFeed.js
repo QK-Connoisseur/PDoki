@@ -167,6 +167,30 @@ export const feedPosts = [
     category: "fashion",
     style: { fontSize: "16px", fontWeight: "700", color: "#c2185b" },
   },
+  {
+    id: 5,
+    creator: "Airi Vale",
+    username: "airivale",
+    avatar:
+      "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
+    mediaType: "video",
+    // Public demo clip — safe, non-PPV sample media.
+    videoSrc:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    poster:
+      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&h=450&q=80",
+    image:
+      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&h=450&q=80",
+    aspectRatio: "16/9",
+    caption: "Little escape from the city — sound on if you dare!",
+    kokoros: 1580,
+    comments: 94,
+    timeAgo: "9h",
+    locked: false,
+    verified: true,
+    category: "travel",
+    style: {},
+  },
 ];
 
 export const fypPosts = [
@@ -242,5 +266,54 @@ export const fypPosts = [
     verified: true,
     category: "travel",
     style: { fontSize: "14px", fontStyle: "italic", color: "#8b5e7d" },
+  },
+  {
+    id: 105,
+    creator: "Naomi Hart",
+    username: "naomihart",
+    avatar:
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    mediaType: "video",
+    // Public demo clip — safe, non-PPV sample media.
+    videoSrc:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+    poster:
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&h=450&q=80",
+    image:
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&h=450&q=80",
+    aspectRatio: "16/9",
+    caption: "Beach day highlights — full vlog coming this weekend!",
+    kokoros: 2940,
+    comments: 171,
+    timeAgo: "2h",
+    locked: false,
+    verified: true,
+    category: "lifestyle",
+    style: {},
+  },
+  {
+    id: 106,
+    creator: "Reina Noir",
+    username: "reinanoir",
+    avatar:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    mediaType: "video",
+    // PPV video: safe poster only. The protected source is never present in
+    // public fixture payloads — playback requires server-side entitlement.
+    poster:
+      "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&h=450&q=80",
+    image:
+      "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&h=450&q=80",
+    aspectRatio: "16/9",
+    caption: "My most requested dance routine — unlock the full performance.",
+    kokoros: 3860,
+    comments: 240,
+    timeAgo: "4h",
+    locked: true,
+    price: 12,
+    mediaCount: { videos: 1 },
+    verified: true,
+    category: "fashion",
+    style: {},
   },
 ];

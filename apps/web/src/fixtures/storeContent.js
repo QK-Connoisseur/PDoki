@@ -3,7 +3,15 @@
  *
  * Dev/test only — not production data. Extracted from the page body so it can
  * be swapped for a real `/api/v1` response during backend integration.
+ *
+ * Paid subscriptions and free follows are distinct member states. These
+ * explicit username seeds stand in for account-backed data until the real
+ * subscription/follow APIs exist.
  */
+
+export const subscribedUsernames = ["lunabloom", "soranyx"];
+
+export const followedUsernames = ["mikarose", "airivale", "reinanoir"];
 
 export const storeContent = [
   {
