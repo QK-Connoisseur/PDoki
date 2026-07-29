@@ -46,10 +46,10 @@ export default function InlineFollowButton({
         showUnfollow
           ? "border-[#e8384f]/50 bg-[#e8384f]/10 text-[#e8384f]/80"
           : isFollowing
-          ? "border-[#df5f97]/40 bg-[#df5f97]/10 text-[#df5f97]"
-          : isHovering
-          ? "border-[#e8384f] bg-[#e8384f]/15 text-[#e8384f] shadow-[0_0_8px_rgba(232,56,79,0.30)]"
-          : "border-[#e8384f]/55 bg-transparent text-[#e8384f]",
+            ? "border-[#df5f97]/40 bg-[#df5f97]/10 text-[#df5f97]"
+            : isHovering
+              ? "border-[#e8384f] bg-[#e8384f]/15 text-[#e8384f] shadow-[0_0_8px_rgba(232,56,79,0.30)]"
+              : "border-[#e8384f]/55 bg-transparent text-[#e8384f]",
       ].join(" ")}
     >
       <span
@@ -58,12 +58,28 @@ export default function InlineFollowButton({
       >
         {showUnfollow ? (
           /* minus — signals "click to unfollow" */
-          <svg viewBox="0 0 24 24" className={iconCls} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            className={iconCls}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
         ) : (
           /* plus — used for both follow and following states; color/bg conveys active state */
-          <svg viewBox="0 0 24 24" className={iconCls} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            className={iconCls}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>

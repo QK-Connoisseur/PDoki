@@ -12,7 +12,11 @@ import {
   SESSION_DURATION_MS,
 } from "./auth/session.js";
 import { errorHandler } from "./middleware/errorHandler.js";
-import { requireAuth, requireRole } from "./middleware/auth.js";
+import {
+  requireAuth,
+  requireRole,
+  requireVerifiedEmail,
+} from "./middleware/auth.js";
 import { requestId } from "./middleware/requestId.js";
 import { loadTestDatabase } from "./test/database.js";
 import { testApp } from "./test/testApp.js";
@@ -428,5 +432,34 @@ describe("core auth backend", () => {
       (await request(app).get("/moderator").set("Cookie", moderator.cookie))
         .status
     ).toBe(200);
+  });
+});
+
+describe("requireVerifiedEmail", () => {
+  it("rejects an unverified user and admits a verified one", async () => {
+    await createUser("gate");
+    const login = await request(testApp({ db }))
+      .post("/api/v1/auth/login")
+      .send({ email: email("gate"), password: PASSWORD });
+    const cookie = sessionCookie(login);
+
+    const app = express();
+    app.use(requestId);
+    app.get("/gated", requireAuth(db), requireVerifiedEmail(), (_req, res) =>
+      res.json({ ok: true })
+    );
+    app.use(errorHandler(pino({ level: "silent" })));
+
+    const blocked = await request(app).get("/gated").set("Cookie", cookie);
+    expect(blocked.status).toBe(403);
+    expect(blocked.body.error.code).toBe("EMAIL_UNVERIFIED");
+
+    await db.user.update({
+      where: { email: email("gate") },
+      data: { emailVerifiedAt: new Date() },
+    });
+
+    const allowed = await request(app).get("/gated").set("Cookie", cookie);
+    expect(allowed.status).toBe(200);
   });
 });

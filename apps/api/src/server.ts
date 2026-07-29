@@ -3,6 +3,7 @@ import { createApp } from "./app.js";
 import { checkDatabase, prisma } from "./db.js";
 import { loadEnv } from "./env.js";
 import { createLogger } from "./logger.js";
+import { createMailer } from "./mail/index.js";
 
 const pkg = createRequire(import.meta.url)("../package.json") as {
   version: string;
@@ -16,6 +17,7 @@ const app = createApp({
   checkDatabase,
   version: pkg.version,
   db: prisma,
+  mailer: createMailer(env, logger),
 });
 
 const server = app.listen(env.PORT, () => {

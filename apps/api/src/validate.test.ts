@@ -17,7 +17,7 @@ function appWithValidatedRoute() {
     validate({ body: z.object({ name: z.string().min(1) }) }),
     (req, res) => {
       res.json({ received: req.validated?.body });
-    },
+    }
   );
   app.use(errorHandler(pino({ level: "silent" })));
   return app;

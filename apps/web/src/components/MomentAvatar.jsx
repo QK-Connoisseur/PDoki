@@ -3,7 +3,14 @@
 export const RING_PRESETS = {
   sakuraGlow: ["#FF4D8D", "#FF73B5", "#FFA3D7", "#FFE1EF"],
   vibrantRuby: ["#B80F3A", "#E11D48", "#FF4D6D", "#FF9AAE"],
-  premiumLiquidGold: ["#6B3A00", "#C08815", "#ECC040", "#FFF5D5", "#C89018", "#805200"],
+  premiumLiquidGold: [
+    "#6B3A00",
+    "#C08815",
+    "#ECC040",
+    "#FFF5D5",
+    "#C89018",
+    "#805200",
+  ],
 };
 
 export function gradientForType(type) {
@@ -40,11 +47,7 @@ export default function MomentAvatar({
   const clipId = `mc-${uid}`;
 
   const useGrad = !isOwn && !viewed && grad;
-  const ringFill = useGrad
-    ? `url(#${gradId})`
-    : isOwn
-    ? "#e0dade"
-    : "#c5b8c0";
+  const ringFill = useGrad ? `url(#${gradId})` : isOwn ? "#e0dade" : "#c5b8c0";
 
   return (
     <svg
@@ -71,11 +74,7 @@ export default function MomentAvatar({
       </defs>
 
       {/* Outer gradient or muted ring */}
-      <path
-        d={heartPath(size)}
-        fill={ringFill}
-        opacity={viewed ? 0.45 : 1}
-      />
+      <path d={heartPath(size)} fill={ringFill} opacity={viewed ? 0.45 : 1} />
 
       {/* White spacer — creates the negative gap between ring and photo */}
       <g transform={`translate(${ringWidth},${ringWidth})`}>

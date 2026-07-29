@@ -4,9 +4,11 @@ import { UserSchema } from "./user.js";
 const EmailSchema = z.string().trim().toLowerCase().pipe(z.email());
 const PolicyVersionSchema = z.string().trim().min(1).max(100);
 
+export const PasswordSchema = z.string().min(10).max(128);
+
 export const RegisterRequestSchema = z.object({
   email: EmailSchema,
-  password: z.string().min(10).max(128),
+  password: PasswordSchema,
   displayName: z.string().trim().min(1).max(50),
   ageAttested: z.literal(true),
   acceptedTermsVersion: PolicyVersionSchema,
@@ -41,3 +43,28 @@ export const SessionSchema = z.object({
 });
 
 export type Session = z.infer<typeof SessionSchema>;
+
+const VerificationTokenSchema = z.string().trim().min(1).max(256);
+
+export const VerifyEmailConfirmSchema = z.object({
+  token: VerificationTokenSchema,
+});
+
+export type VerifyEmailConfirmRequest = z.infer<
+  typeof VerifyEmailConfirmSchema
+>;
+
+export const PasswordResetRequestSchema = z.object({
+  email: EmailSchema,
+});
+
+export type PasswordResetRequest = z.infer<typeof PasswordResetRequestSchema>;
+
+export const PasswordResetConfirmSchema = z.object({
+  token: VerificationTokenSchema,
+  password: PasswordSchema,
+});
+
+export type PasswordResetConfirmRequest = z.infer<
+  typeof PasswordResetConfirmSchema
+>;

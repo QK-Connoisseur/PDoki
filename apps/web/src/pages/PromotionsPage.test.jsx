@@ -9,7 +9,7 @@ vi.mock("../lib/useSimulatedFetch", () => ({
 }));
 
 beforeEach(() => {
-  vi.useFakeTimers();
+  vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-07-23T12:00:00Z"));
   window.matchMedia = vi.fn().mockReturnValue({
     matches: false,
@@ -57,7 +57,6 @@ describe("PromotionsPage", () => {
   });
 
   it("filters by offer type and sorts by biggest savings", async () => {
-    vi.useRealTimers();
     const user = userEvent.setup();
     renderPromotions();
 

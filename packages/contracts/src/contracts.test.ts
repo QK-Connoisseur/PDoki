@@ -116,3 +116,47 @@ describe("user and auth schemas", () => {
     expect(result.success).toBe(false);
   });
 });
+
+import {
+  apiErrorCodes,
+  PasswordResetConfirmSchema,
+  PasswordResetRequestSchema,
+  VerifyEmailConfirmSchema,
+} from "./index.js";
+
+describe("slice 2 auth contracts", () => {
+  it("includes the new error codes", () => {
+    expect(apiErrorCodes).toContain("INVALID_TOKEN");
+    expect(apiErrorCodes).toContain("TOKEN_EXPIRED");
+    expect(apiErrorCodes).toContain("EMAIL_UNVERIFIED");
+  });
+
+  it("requires a non-empty verification token", () => {
+    expect(VerifyEmailConfirmSchema.safeParse({ token: "abc" }).success).toBe(
+      true
+    );
+    expect(VerifyEmailConfirmSchema.safeParse({ token: "" }).success).toBe(
+      false
+    );
+  });
+
+  it("normalizes the reset request email", () => {
+    const parsed = PasswordResetRequestSchema.parse({
+      email: "  Alice@Example.COM ",
+    });
+    expect(parsed.email).toBe("alice@example.com");
+  });
+
+  it("enforces the registration password rules on reset", () => {
+    expect(
+      PasswordResetConfirmSchema.safeParse({ token: "t", password: "short" })
+        .success
+    ).toBe(false);
+    expect(
+      PasswordResetConfirmSchema.safeParse({
+        token: "t",
+        password: "a-long-enough-password",
+      }).success
+    ).toBe(true);
+  });
+});

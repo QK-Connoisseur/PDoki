@@ -27,7 +27,25 @@ describe("loadEnv", () => {
 
   it("rejects an invalid WEB_ORIGIN", () => {
     expect(() => loadEnv({ ...validEnv, WEB_ORIGIN: "not-a-url" })).toThrow(
-      /WEB_ORIGIN/,
+      /WEB_ORIGIN/
     );
+  });
+
+  it("defaults mail configuration to the console transport", () => {
+    const env = loadEnv({
+      DATABASE_URL: "postgresql://test:test@localhost:5432/pumdoki_test",
+    } as NodeJS.ProcessEnv);
+    expect(env.MAIL_TRANSPORT).toBe("console");
+    expect(env.SMTP_PORT).toBe(1025);
+    expect(env.MAIL_FROM).toBe("no-reply@pumdoki.example");
+  });
+
+  it("rejects an unknown mail transport", () => {
+    expect(() =>
+      loadEnv({
+        DATABASE_URL: "postgresql://test:test@localhost:5432/pumdoki_test",
+        MAIL_TRANSPORT: "carrier-pigeon",
+      } as NodeJS.ProcessEnv)
+    ).toThrow(/MAIL_TRANSPORT/);
   });
 });

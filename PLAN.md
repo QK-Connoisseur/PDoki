@@ -2,7 +2,7 @@
 
 @CLAUDE.md
 
-Last updated: July 16, 2026
+Last updated: July 28, 2026
 
 ## 1. Purpose
 
@@ -153,6 +153,14 @@ Required transactional messages:
 - Content moderation and appeal notices.
 - Booking confirmation/reminder/cancellation.
 - Payout and tax-document notices.
+
+Local implementation status:
+
+- A provider-neutral mailer with console and SMTP transports is implemented.
+- Mailpit is part of the local Docker Compose stack and receives verification
+  and password-reset mail.
+- No production provider is selected. Adult-business support, production
+  deliverability, TLS, DKIM, SPF, and DMARC remain open.
 
 ### 3.5 Identity verification
 
@@ -408,7 +416,7 @@ Provisional recommendation:
 - Admin permissions are server-enforced.
 - Explicit-content preference works throughout the frontend.
 
-### Current implementation status — July 16, 2026
+### Current implementation status — July 28, 2026
 
 - Phase 3 is split into four separately specified and verified slices: core
   auth backend, email flows, frontend auth integration, and Settings.
@@ -416,12 +424,19 @@ Provisional recommendation:
   registration/login, opaque server sessions, logout/logout-all, `/me`,
   runtime suspension checks, role middleware, age attestation, and versioned
   Terms/Privacy acceptance records.
+- Slice 2, email verification and password reset, is implemented and locally
+  verified: provider-neutral mail, Mailpit, hashed and expiring single-use
+  tokens, reissue invalidation, verification/reset endpoints, session
+  revocation after reset, request throttling, and the verified-email middleware
+  seam.
 - Acceptance records use restrictive deletion. A future account-deletion flow
   must deactivate/pseudonymize according to a counsel-approved retention
   schedule rather than cascade-delete legal evidence.
-- Email verification, password reset, frontend session persistence, Settings,
-  and the explicit-content preference remain incomplete. Phase 3 must not be
-  described as complete.
+- Frontend session persistence, real Login/SignUp integration, verification and
+  reset screens, Settings, and the explicit-content preference remain
+  incomplete. Phase 3 must not be described as complete.
+- Durable slice designs live in `docs/architecture/`; the next design is
+  `phase3-slice3-frontend-auth-integration.md`.
 - Phase 2 remains partially complete while its cloud/operations remainder is
   tracked separately.
 
@@ -952,10 +967,10 @@ follow-up date.
 
 | Dependency or decision                         | Owner                 | Target     | Current state / next action                                                                                                         |
 | ---------------------------------------------- | --------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| AWS staging shape and account access           | Founder + Engineering | 2026-07-23 | Decide deployment shape and credentials boundary; Phase 2 remains partial.                                                          |
-| Sentry or equivalent                           | Founder + Engineering | 2026-07-23 | Select account/provider and define environment separation.                                                                          |
-| Redis, queue, and idempotency approach         | Engineering           | 2026-07-23 | Decide whether beta uses managed Redis and document the local fallback.                                                             |
-| Transactional email provider and local Mailpit | Founder + Engineering | 2026-07-23 | Confirm adult-business support; implement provider-neutral mailer in Phase 3 slice 2.                                               |
+| AWS staging shape and account access           | Founder + Engineering | 2026-07-23 | Overdue: decide deployment shape and credentials boundary; Phase 2 remains partial.                                                 |
+| Sentry or equivalent                           | Founder + Engineering | 2026-07-23 | Overdue: select account/provider and define environment separation.                                                                 |
+| Redis, queue, and idempotency approach         | Engineering           | 2026-07-23 | Overdue: decide whether beta uses managed Redis and document the local fallback.                                                    |
+| Transactional email provider and local Mailpit | Founder + Engineering | 2026-07-23 | Local Mailpit and provider-neutral mail are complete; production-provider adult-business fit and deliverability remain overdue.     |
 | LLC attorney/CPA shortlist and entity state    | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                  |
 | CCBill requirements and fee quote              | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                     |
 | Identity-verification shortlist                | Founder + Engineering | 2026-07-30 | Compare two or three providers for countries, AUP, security, and cost.                                                              |
@@ -966,10 +981,13 @@ follow-up date.
 
 ## 21. Immediate next actions
 
-1. Review and commit the Phase 3 slice 1 implementation and record CI results
-   after an explicit public-repository push is approved.
-2. Begin Phase 3 slice 2: Mailpit, provider-neutral mailer abstraction, email
-   verification, and password reset.
+1. Commit the completed Phase 3 slice 2 closure work, publish it to the
+   confirmed public repository once the GitHub CLI/authentication prerequisite
+   is available, and record CI results.
+2. Begin Phase 3 slice 3 from
+   `docs/architecture/phase3-slice3-frontend-auth-integration.md`: correct the
+   API error-envelope adapter, add persistent auth state, connect Login/SignUp,
+   enforce protected routes, and build verification/reset screens.
 3. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
    decisions in the register above.
 4. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist

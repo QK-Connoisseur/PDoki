@@ -42,8 +42,15 @@ export default function FollowButton({
   };
 
   const isUnfollowHover = isFollowing && isHovering;
-  const label = isFollowing ? (isHovering ? "Unfollow" : "Following") : "Follow";
-  const heartVisible = heartPop || (isFollowing && !isUnfollowHover) || (!isFollowing && isHovering);
+  const label = isFollowing
+    ? isHovering
+      ? "Unfollow"
+      : "Following"
+    : "Follow";
+  const heartVisible =
+    heartPop ||
+    (isFollowing && !isUnfollowHover) ||
+    (!isFollowing && isHovering);
   const heartFilled = isFollowing && !isUnfollowHover;
 
   if (variant === "hero") {
@@ -63,8 +70,8 @@ export default function FollowButton({
           isUnfollowHover
             ? "text-[#e8384f]/55"
             : isFollowing
-            ? "text-[#e8384f]/70"
-            : "text-[#e8384f]",
+              ? "text-[#e8384f]/70"
+              : "text-[#e8384f]",
         ].join(" ")}
       >
         <span
@@ -73,8 +80,8 @@ export default function FollowButton({
             !isFollowing && isHovering
               ? "underline underline-offset-4 decoration-[#e8384f]/70"
               : isUnfollowHover
-              ? "line-through decoration-[#e8384f]/40"
-              : "",
+                ? "line-through decoration-[#e8384f]/40"
+                : "",
           ].join(" ")}
         >
           {label}
@@ -107,8 +114,8 @@ export default function FollowButton({
         isUnfollowHover
           ? "text-[#e8384f]/55"
           : isFollowing
-          ? "text-[#e8384f]/65"
-          : "text-[#e8384f]",
+            ? "text-[#e8384f]/65"
+            : "text-[#e8384f]",
       ].join(" ")}
     >
       <span
@@ -117,8 +124,8 @@ export default function FollowButton({
           !isFollowing && isHovering
             ? "underline underline-offset-2 decoration-[#e8384f]/60"
             : isUnfollowHover
-            ? "line-through decoration-[#e8384f]/40"
-            : "",
+              ? "line-through decoration-[#e8384f]/40"
+              : "",
         ].join(" ")}
       >
         {label}

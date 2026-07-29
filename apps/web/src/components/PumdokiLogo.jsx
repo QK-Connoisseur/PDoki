@@ -6,9 +6,20 @@
  */
 export default function PumdokiLogo() {
   return (
-    <svg viewBox="0 0 520 120" className="h-9 w-auto" aria-label="Pumdoki" role="img">
+    <svg
+      viewBox="0 0 520 120"
+      className="h-9 w-auto"
+      aria-label="Pumdoki"
+      role="img"
+    >
       <defs>
-        <linearGradient id="pumdokiLogoHeart" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient
+          id="pumdokiLogoHeart"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="100%"
+        >
           <stop offset="0%" stopColor="#fff7fa" />
           <stop offset="48%" stopColor="#ffd8e5" />
           <stop offset="100%" stopColor="#f3a0bc" />

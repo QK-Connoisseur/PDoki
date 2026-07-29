@@ -23,8 +23,8 @@ export function validate(schemas: ValidationSchemas) {
             400,
             "BAD_REQUEST",
             `Invalid request ${key}`,
-            result.error.issues,
-          ),
+            result.error.issues
+          )
         );
         return;
       }

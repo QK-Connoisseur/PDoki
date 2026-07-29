@@ -7,6 +7,9 @@ export const apiErrorCodes = [
   "NOT_FOUND",
   "CONFLICT",
   "RATE_LIMITED",
+  "INVALID_TOKEN",
+  "TOKEN_EXPIRED",
+  "EMAIL_UNVERIFIED",
   "INTERNAL",
 ] as const;
 

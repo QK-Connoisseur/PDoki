@@ -6,7 +6,7 @@ const REQUEST_ID_PATTERN = /^[\w.-]{1,64}$/;
 export function requestId(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): void {
   const incoming = req.header("x-request-id");
   const id =

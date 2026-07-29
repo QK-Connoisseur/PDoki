@@ -1,4 +1,4 @@
-# Phase 3 · Sub-project 1: Core Auth Backend — Design
+# Phase 3 · Slice 1: Core Auth Backend
 
 Date: 2026-07-07 · Status: approved by founder · Branch: `dev`
 
@@ -41,13 +41,13 @@ YAGNI; revisit only if DB-backed test speed becomes a problem).
 
 All under `/api/v1`:
 
-| Endpoint | Behavior |
-| --- | --- |
-| `POST /auth/register` | Validate extended register contract; create user with argon2id hash; write age-attestation + Terms + Privacy acceptance records **in the same transaction**; create session; set cookie; `201` with public user. Duplicate email → `409 CONFLICT` (accepted enumeration trade-off for MVP; revisit in slice 2 when email sending exists). |
-| `POST /auth/login` | Verify credentials; `SUSPENDED`/`BANNED` → `403 FORBIDDEN`; create session; set cookie; return public user. Any credential failure → generic `401 UNAUTHORIZED` (same for unknown email vs wrong password), with a dummy-hash verify to level timing. |
-| `POST /auth/logout` | Revoke current session (`revokedAt`); clear cookie. |
-| `POST /auth/logout-all` | Revoke all of the user's sessions (PLAN's revoke-all; the seam admin-enforced suspension reuses). |
-| `GET /me` | Return the authenticated user. Slice 3's session-persistence endpoint. |
+| Endpoint                | Behavior                                                                                                                                                                                                                                                                                                                                  |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /auth/register`   | Validate extended register contract; create user with argon2id hash; write age-attestation + Terms + Privacy acceptance records **in the same transaction**; create session; set cookie; `201` with public user. Duplicate email → `409 CONFLICT` (accepted enumeration trade-off for MVP; revisit in slice 2 when email sending exists). |
+| `POST /auth/login`      | Verify credentials; `SUSPENDED`/`BANNED` → `403 FORBIDDEN`; create session; set cookie; return public user. Any credential failure → generic `401 UNAUTHORIZED` (same for unknown email vs wrong password), with a dummy-hash verify to level timing.                                                                                     |
+| `POST /auth/logout`     | Revoke current session (`revokedAt`); clear cookie.                                                                                                                                                                                                                                                                                       |
+| `POST /auth/logout-all` | Revoke all of the user's sessions (PLAN's revoke-all; the seam admin-enforced suspension reuses).                                                                                                                                                                                                                                         |
+| `GET /me`               | Return the authenticated user. Slice 3's session-persistence endpoint.                                                                                                                                                                                                                                                                    |
 
 ## Schema changes (one migration)
 

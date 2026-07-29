@@ -30,18 +30,24 @@ enum AcceptanceKind {
   AGE_ATTESTATION
 }
 
+enum VerificationTokenKind {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
 model User {
-  id                String             @id @default(uuid()) @db.Uuid
-  email             String             @unique
-  passwordHash      String
-  displayName       String
-  role              UserRole           @default(MEMBER)
-  status            UserStatus         @default(ACTIVE)
-  emailVerifiedAt   DateTime?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  sessions          Session[]
-  acceptanceRecords AcceptanceRecord[]
+  id                 String               @id @default(uuid()) @db.Uuid
+  email              String               @unique
+  passwordHash       String
+  displayName        String
+  role               UserRole             @default(MEMBER)
+  status             UserStatus           @default(ACTIVE)
+  emailVerifiedAt    DateTime?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  sessions           Session[]
+  acceptanceRecords  AcceptanceRecord[]
+  verificationTokens VerificationToken[]
 }
 
 model Session {
@@ -69,4 +75,18 @@ model AcceptanceRecord {
   ipAddress  String         @db.VarChar(45)
 
   @@index([userId, kind, acceptedAt])
+}
+
+model VerificationToken {
+  id          String                @id @default(uuid()) @db.Uuid
+  userId      String                @db.Uuid
+  user        User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind        VerificationTokenKind
+  tokenHash   String                @unique
+  createdAt   DateTime              @default(now())
+  expiresAt   DateTime
+  consumedAt  DateTime?
+  requestedIp String?               @db.VarChar(45)
+
+  @@index([userId, kind])
 }

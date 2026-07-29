@@ -47,11 +47,29 @@ export default function AppHeader({
   };
 
   const profileItems = [
-    { label: "My Profile", icon: "M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z", action: () => navigate("/profile") },
-    { label: "Creator Dashboard", icon: "M4 6h16M4 12h16M4 18h7", action: () => navigate("/dashboard") },
-    { label: "Wallet", icon: "M21 4H3a1 1 0 00-1 1v14a1 1 0 001 1h18a1 1 0 001-1V5a1 1 0 00-1-1zM1 10h22M16 15h2", action: () => navigate("/wallet") },
-    { label: "Settings", icon: "M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2zM12 9a3 3 0 100 6 3 3 0 000-6z" },
-    { label: "Help & Support", icon: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01" },
+    {
+      label: "My Profile",
+      icon: "M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z",
+      action: () => navigate("/profile"),
+    },
+    {
+      label: "Creator Dashboard",
+      icon: "M4 6h16M4 12h16M4 18h7",
+      action: () => navigate("/dashboard"),
+    },
+    {
+      label: "Wallet",
+      icon: "M21 4H3a1 1 0 00-1 1v14a1 1 0 001 1h18a1 1 0 001-1V5a1 1 0 00-1-1zM1 10h22M16 15h2",
+      action: () => navigate("/wallet"),
+    },
+    {
+      label: "Settings",
+      icon: "M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2zM12 9a3 3 0 100 6 3 3 0 000-6z",
+    },
+    {
+      label: "Help & Support",
+      icon: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01",
+    },
   ];
 
   return (
@@ -59,7 +77,12 @@ export default function AppHeader({
       <div className="flex h-full items-center justify-between px-4">
         {/* Left: Logo */}
         <div className="flex items-center shrink-0">
-          <button type="button" onClick={handleLogoClick} className="cursor-pointer" aria-label="Pumdoki — home">
+          <button
+            type="button"
+            onClick={handleLogoClick}
+            className="cursor-pointer"
+            aria-label="Pumdoki — home"
+          >
             <PumdokiLogo />
           </button>
         </div>
@@ -69,11 +92,23 @@ export default function AppHeader({
           {/* Search */}
           <div className="relative" data-dropdown>
             <button
-              onClick={() => { setShowSearch(!showSearch); setShowNotifications(false); setShowProfileMenu(false); }}
+              onClick={() => {
+                setShowSearch(!showSearch);
+                setShowNotifications(false);
+                setShowProfileMenu(false);
+              }}
               className="flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
               aria-label="Search"
             >
-              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <circle cx="11" cy="11" r="8" />
                 <path d="M21 21l-4.35-4.35" />
               </svg>
@@ -86,7 +121,9 @@ export default function AppHeader({
                   placeholder="Search creators, posts, tags..."
                   className="w-full rounded-xl border border-pink-100 bg-[#fffafc] px-4 py-2.5 text-sm outline-none placeholder:text-[#c59aae] focus:border-pink-300"
                 />
-                <div className="mt-3 text-xs text-[#b89aa8]">Try searching for a creator or hashtag</div>
+                <div className="mt-3 text-xs text-[#b89aa8]">
+                  Try searching for a creator or hashtag
+                </div>
               </div>
             )}
           </div>
@@ -94,11 +131,23 @@ export default function AppHeader({
           {/* Notifications */}
           <div className="relative" data-dropdown>
             <button
-              onClick={() => { setShowNotifications(!showNotifications); setShowSearch(false); setShowProfileMenu(false); }}
+              onClick={() => {
+                setShowNotifications(!showNotifications);
+                setShowSearch(false);
+                setShowProfileMenu(false);
+              }}
               className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
               aria-label="Notifications"
             >
-              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
                 <path d="M13.73 21a2 2 0 01-3.46 0" />
               </svg>
@@ -111,15 +160,28 @@ export default function AppHeader({
             {showNotifications && (
               <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl border border-pink-100 bg-white shadow-xl overflow-hidden">
                 <div className="border-b border-pink-50 px-4 py-3">
-                  <h3 className="text-sm font-semibold text-[#241a22]">Notifications</h3>
+                  <h3 className="text-sm font-semibold text-[#241a22]">
+                    Notifications
+                  </h3>
                 </div>
                 <div className="max-h-80 overflow-y-auto">
                   {notifications.map((n) => (
-                    <button key={n.id} className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-pink-50/60 cursor-pointer">
-                      <img src={n.avatar} alt="" className="h-10 w-10 shrink-0 rounded-full object-cover" />
+                    <button
+                      key={n.id}
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-pink-50/60 cursor-pointer"
+                    >
+                      <img
+                        src={n.avatar}
+                        alt=""
+                        className="h-10 w-10 shrink-0 rounded-full object-cover"
+                      />
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm text-[#4a3340] leading-snug">{n.text}</p>
-                        <p className="mt-0.5 text-xs text-[#b89aa8]">{n.time}</p>
+                        <p className="text-sm text-[#4a3340] leading-snug">
+                          {n.text}
+                        </p>
+                        <p className="mt-0.5 text-xs text-[#b89aa8]">
+                          {n.time}
+                        </p>
                       </div>
                     </button>
                   ))}
@@ -135,15 +197,67 @@ export default function AppHeader({
             aria-label="Oasis"
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
-              <path d="M12 22V13" stroke="#6b9a5b" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M12 17C9.5 17 7.5 15.5 8 13.5C8.5 11.5 10.5 11 12 12" stroke="#6b9a5b" strokeWidth="1" fill="#a8d5a2" fillOpacity="0.5" />
-              <path d="M12 15C14.5 15 16 13.5 15.5 11.5C15 9.5 13 9 12 10" stroke="#6b9a5b" strokeWidth="1" fill="#a8d5a2" fillOpacity="0.5" />
+              <path
+                d="M12 22V13"
+                stroke="#6b9a5b"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+              <path
+                d="M12 17C9.5 17 7.5 15.5 8 13.5C8.5 11.5 10.5 11 12 12"
+                stroke="#6b9a5b"
+                strokeWidth="1"
+                fill="#a8d5a2"
+                fillOpacity="0.5"
+              />
+              <path
+                d="M12 15C14.5 15 16 13.5 15.5 11.5C15 9.5 13 9 12 10"
+                stroke="#6b9a5b"
+                strokeWidth="1"
+                fill="#a8d5a2"
+                fillOpacity="0.5"
+              />
               <g transform="translate(12, 7)">
-                <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(0)" />
-                <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(72)" />
-                <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(144)" />
-                <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(216)" />
-                <ellipse cx="0" cy="-4" rx="2.2" ry="3" fill="#f9a8c8" transform="rotate(288)" />
+                <ellipse
+                  cx="0"
+                  cy="-4"
+                  rx="2.2"
+                  ry="3"
+                  fill="#f9a8c8"
+                  transform="rotate(0)"
+                />
+                <ellipse
+                  cx="0"
+                  cy="-4"
+                  rx="2.2"
+                  ry="3"
+                  fill="#f9a8c8"
+                  transform="rotate(72)"
+                />
+                <ellipse
+                  cx="0"
+                  cy="-4"
+                  rx="2.2"
+                  ry="3"
+                  fill="#f9a8c8"
+                  transform="rotate(144)"
+                />
+                <ellipse
+                  cx="0"
+                  cy="-4"
+                  rx="2.2"
+                  ry="3"
+                  fill="#f9a8c8"
+                  transform="rotate(216)"
+                />
+                <ellipse
+                  cx="0"
+                  cy="-4"
+                  rx="2.2"
+                  ry="3"
+                  fill="#f9a8c8"
+                  transform="rotate(288)"
+                />
                 <circle cx="0" cy="0" r="1.8" fill="#f472b6" />
                 <circle cx="0.8" cy="-0.8" r="0.5" fill="#fbbf24" />
                 <circle cx="-0.8" cy="-0.5" r="0.5" fill="#fbbf24" />
@@ -155,7 +269,11 @@ export default function AppHeader({
           {/* Profile */}
           <div className="relative" data-dropdown>
             <button
-              onClick={() => { setShowProfileMenu(!showProfileMenu); setShowSearch(false); setShowNotifications(false); }}
+              onClick={() => {
+                setShowProfileMenu(!showProfileMenu);
+                setShowSearch(false);
+                setShowNotifications(false);
+              }}
               className="ml-1 flex h-10 w-10 items-center justify-center cursor-pointer"
               aria-label="Profile menu"
             >
@@ -167,7 +285,10 @@ export default function AppHeader({
             </button>
             {showProfileMenu && (
               <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden">
-                <StatusMenuRow status={userStatus} onStatusChange={onStatusChange} />
+                <StatusMenuRow
+                  status={userStatus}
+                  onStatusChange={onStatusChange}
+                />
                 <hr className="my-1 border-pink-100" />
                 {profileItems.map((item) => (
                   <button
@@ -175,7 +296,15 @@ export default function AppHeader({
                     onClick={item.action || undefined}
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97] cursor-pointer"
                   >
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="h-4 w-4 shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d={item.icon} />
                     </svg>
                     {item.label}
@@ -186,7 +315,15 @@ export default function AppHeader({
                   onClick={() => navigate("/login")}
                   className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8384f] transition hover:bg-red-50/60 cursor-pointer"
                 >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-4 w-4 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
                   </svg>
                   Log out

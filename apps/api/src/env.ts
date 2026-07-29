@@ -12,6 +12,10 @@ const EnvSchema = z.object({
     .default("info"),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60000),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(300),
+  MAIL_TRANSPORT: z.enum(["console", "smtp"]).default("console"),
+  SMTP_HOST: z.string().min(1).default("localhost"),
+  SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(1025),
+  MAIL_FROM: z.string().min(1).default("no-reply@pumdoki.example"),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

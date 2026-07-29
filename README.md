@@ -2,7 +2,11 @@
 
 Pumdoki is an adult creator platform focused on subscriptions, paid content, creator services, social interaction, and a collectible companion system called Oasis.
 
-The repository currently contains a broad React frontend prototype. Most screens are visually developed, but the backend, database, real authentication, media pipeline, payments, compliance operations, moderation, and production infrastructure still need to be implemented.
+The repository contains a broad React frontend prototype plus a local
+TypeScript/Express/PostgreSQL backend foundation. Core authentication, secure
+sessions, email verification, password reset, and their database models are
+implemented locally. Frontend auth integration, media, payments, compliance
+operations, moderation, and production infrastructure remain incomplete.
 
 The detailed delivery roadmap is maintained in [PLAN.md](./PLAN.md).
 
@@ -121,10 +125,10 @@ These requirements were extracted from temporary implementation-prompt files bef
 pumdoki/
 ├── apps/
 │   ├── web/                 # React 19 + Vite + Tailwind frontend
-│   └── api/                 # Planned Node/TypeScript API
+│   └── api/                 # Node/TypeScript Express API
 ├── packages/
 │   ├── contracts/           # Shared API schemas and types
-│   ├── database/            # Planned Prisma schema and migrations
+│   ├── database/            # Prisma schema, migrations, and seed
 │   ├── ui/                  # Shared design-system components
 │   └── config/              # Shared lint, TypeScript, and formatting config
 ├── docs/
@@ -163,15 +167,18 @@ The web prototype includes:
 Current limitations:
 
 - Data is mostly hardcoded mock data (migrating to `apps/web/src/fixtures` per page).
-- Authentication is simulated; route guards are present but pass-through placeholders.
+- Frontend authentication is simulated; route guards are present but
+  pass-through placeholders. The backend auth and email-flow endpoints are
+  implemented independently and are the next frontend integration target.
 - Financial buttons do not process real transactions.
 - Media is loaded from external demo URLs.
 - Many controls are visual placeholders.
-- No API or database is implemented yet.
 
 URL routing (React Router), ESLint/Prettier, Vitest + Testing Library unit
 tests, a Playwright E2E smoke suite, and GitHub Actions CI are now in place for
-the frontend foundation. The API, database, and real auth remain unimplemented.
+the frontend foundation. The API/database foundation and Phase 3 auth backend
+slices are implemented locally; production infrastructure and the remaining
+product domains are not.
 
 ## Development
 
@@ -194,6 +201,20 @@ npm install
 npm run dev
 ```
 
+### Run the local API stack
+
+Copy `.env.example` to `.env`, then:
+
+```bash
+npm run db:up
+npm run db:deploy
+npm run db:seed
+npm run dev:api
+```
+
+`db:up` starts PostgreSQL and Mailpit. Mailpit's development inbox is available
+at `http://localhost:8025`.
+
 ### Production build
 
 ```bash
@@ -212,6 +233,7 @@ npm run preview
 npm run lint          # ESLint across all workspaces
 npm run format        # Prettier write (format:check to verify only)
 npm run test          # Vitest unit tests (apps/web)
+npm run test:api      # DB-backed API tests; requires the local database
 npm run test:e2e      # Playwright E2E (run `npx playwright install` once first)
 ```
 
@@ -228,7 +250,7 @@ points the frontend API client at the backend. Never commit a real `.env`.
 - `README.md` describes the product, repository, and stable requirements.
 - `PLAN.md` contains the phased implementation roadmap and open decisions.
 - The master tracker is the operational checklist.
-- Architecture decisions should later be recorded in focused ADRs under `docs/architecture`.
+- Architecture decisions and durable slice designs live under `docs/architecture`.
 - Counsel-approved policies may later live under `docs/legal`.
 - Temporary implementation prompts should not be committed.
 - Never place secrets, identity documents, processor credentials, or real `.env` files in Git.

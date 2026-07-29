@@ -10,10 +10,26 @@ function devHash(password: string): string {
 }
 
 const seedUsers = [
-  { email: "admin@pumdoki.example", displayName: "Pumdoki Admin", role: "ADMIN" },
-  { email: "moderator@pumdoki.example", displayName: "Pumdoki Moderator", role: "MODERATOR" },
-  { email: "creator@pumdoki.example", displayName: "Sample Creator", role: "CREATOR" },
-  { email: "member@pumdoki.example", displayName: "Sample Member", role: "MEMBER" },
+  {
+    email: "admin@pumdoki.example",
+    displayName: "Pumdoki Admin",
+    role: "ADMIN",
+  },
+  {
+    email: "moderator@pumdoki.example",
+    displayName: "Pumdoki Moderator",
+    role: "MODERATOR",
+  },
+  {
+    email: "creator@pumdoki.example",
+    displayName: "Sample Creator",
+    role: "CREATOR",
+  },
+  {
+    email: "member@pumdoki.example",
+    displayName: "Sample Member",
+    role: "MEMBER",
+  },
 ] as const;
 
 async function main(): Promise<void> {

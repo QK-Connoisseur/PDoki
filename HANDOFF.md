@@ -1,141 +1,160 @@
 # Session Handoff
 
-Last updated: 2026-07-16 · Branch: `dev`
+Last updated: 2026-07-28 · Branch: `dev`
 
 ## Current phase
 
-**Phase 3 slice 1 — core authentication backend — is locally complete and
-verified.** Phase 3 as a whole is not complete: email verification/password
-reset, frontend auth integration, and Settings remain slices 2–4.
+**Phase 3 slice 2 — email verification and password reset — is locally
+complete and verified.**
+
+Phase 3 as a whole is not complete:
+
+1. Core auth backend — complete locally and published.
+2. Email verification and password reset — complete locally; publication and
+   GitHub CI verification remain pending.
+3. Frontend auth integration — next; design is ready in
+   `docs/architecture/phase3-slice3-frontend-auth-integration.md`.
+4. Settings and explicit-content preference — not started.
 
 Phase 2 remains **partially complete (local foundation)**. Staging/RDS,
 backups and a restore drill, Sentry/equivalent monitoring, a background-job
 queue, and the full idempotency framework remain deferred.
 
-Local commits created this session:
+## Publication status
 
-- `04e4fb1` — corrected and approved Phase 3 slice 1 design. Acceptance
-  evidence now uses restrictive deletion rather than a contradictory cascade.
-- `68a38cf` — Phase 3 slice 1 implementation, migration, contracts, tests,
-  Argon2 dependency, and non-breaking npm audit updates.
-- Current `HEAD` — reconciled `PLAN.md`, `CLAUDE.md`, this handoff, and the
-  visually verified master tracker.
+- The confirmed `origin` is a public GitHub repository.
+- The founder approved proceeding with the disclosed public publication on
+  2026-07-28.
+- Publication is currently blocked because the GitHub publishing workflow
+  requires the `gh` CLI and an authenticated `gh auth login`; `gh` is not
+  installed in this environment.
+- The local unpushed history contains the temporary slice 2 execution-plan
+  commit even though the file is removed from the current tree and durable
+  designs now live in `docs/architecture/`. Rewriting/squashing that unpushed
+  history would be destructive and still requires an explicit decision before
+  publication.
 
-The commits are not on `origin/dev`. The remote is a confirmed public GitHub
-repository, so the push was stopped pending fresh, explicit approval after
-that disclosure. Do not route around this approval requirement.
+Do not route around either publication prerequisite.
 
 ## Decisions locked
 
 - Phase 3 proceeds on the local stack while Phase 2 stays labeled partially
   complete.
 - First beta uses email/password only; Google OAuth is not beta scope.
-- Phase 3 has four separately verified slices:
-  1. Core auth backend — complete locally.
-  2. Email verification and password reset — next.
-  3. Frontend auth integration.
-  4. Settings and explicit-content preference.
+- Unverified users may log in and browse. Future money and creator actions use
+  `requireVerifiedEmail`.
+- Registration retains the deliberate duplicate-email `409 CONFLICT`; password
+  reset remains enumeration-neutral.
+- No production email provider has been selected.
 - Sessions use opaque 32-byte tokens, 30-day sliding expiry, and renewal at
   most once per 24 hours.
-- Acceptance records are append-only and use restrictive deletion. Future
-  account deletion must deactivate/pseudonymize according to a
-  counsel-approved retention schedule; it must not cascade-delete evidence.
+- Acceptance records remain append-only with restrictive deletion.
+- Verification and reset tokens are transient credentials and cascade with the
+  user; only hashes are stored.
 
-## What was built
+## What is implemented
 
-### Database and contracts
+### Contracts, database, and mail
 
-- Migration `20260716211419_add_core_auth`:
-  - `User.emailVerifiedAt`.
-  - `Session.ipAddress`, `userAgent`, and `lastExtendedAt`.
-  - `AcceptanceKind` enum and `AcceptanceRecord` with restrictive FK delete.
-- Registration contract now requires literal `ageAttested: true`, Terms and
-  Privacy versions, normalized email, and trimmed display name.
-- Added `AuthUserSchema` and `AuthResponseSchema`.
-- Added Argon2id (`argon2@0.44.0`). Existing dev-only scrypt seed hashes are
-  accepted once and upgraded to Argon2id after successful login.
+- Shared schemas for verification confirmation and password-reset
+  request/confirmation.
+- Error codes for invalid/expired tokens and unverified email.
+- Migration `20260727104556_add_verification_tokens` with
+  `VerificationTokenKind` and `VerificationToken`.
+- Provider-neutral mailer with console, Nodemailer SMTP, and in-memory
+  transports.
+- Pure verification and reset templates using `WEB_ORIGIN`.
+- Mailpit in Docker Compose on SMTP `1025` and inbox `8025`.
+- Root `db:up` starts both PostgreSQL and Mailpit.
 
-### API
+### API behavior
 
-- `POST /api/v1/auth/register` — user, three acceptance records, and session
-  created atomically; duplicate email returns `409 CONFLICT`.
-- `POST /api/v1/auth/login` — generic credential failure, dummy-hash timing
-  path, suspension/ban enforcement, scrypt upgrade, and session creation.
-- `POST /api/v1/auth/logout` — revokes current session and clears cookie.
-- `POST /api/v1/auth/logout-all` — revokes all active sessions for the user.
-- `GET /api/v1/me` — authenticated public-user response and session renewal.
-- `requireAuth` rejects missing, garbage, expired, revoked, suspended, and
-  banned sessions at request time.
-- `requireRole` enforces API roles.
-- Login failures are limited per normalized-email + IP: ten failures in 15
-  minutes, with a bounded in-memory key store. This remains instance-local
-  until the deferred Redis decision.
-- Session cookies are `HttpOnly`, `SameSite=Lax`, `Secure` outside development,
-  and refreshed when the database sliding expiry is extended.
+- Successful registration sends verification mail after database work.
+  Transport/token failures are logged without converting a successful account
+  creation into an error.
+- Authenticated verification requests are throttled to five per hour per
+  email/IP and return `202`; verified accounts receive no new token.
+- Verification confirmation consumes hashed 24-hour tokens once and updates
+  `emailVerifiedAt`.
+- Password-reset requests always return the same `202`, including unknown and
+  throttled addresses.
+- Reset confirmation consumes a hashed one-hour token once, writes a new
+  Argon2id hash, marks the address verified, and revokes every session.
+- Reissue invalidates earlier unconsumed tokens of the same kind.
+- `requireVerifiedEmail` returns `403 EMAIL_UNVERIFIED`.
+- Malformed JSON now returns the standard `400 BAD_REQUEST` envelope instead of
+  falling through to `500`.
 
-### Project records
+### Project records and hygiene
 
-- `PLAN.md` now records the four Phase 3 slices, current status, acceptance
-  retention rule, updated immediate actions, and an owner/date dependency
-  register.
-- `CLAUDE.md` now documents the auth architecture and DB-backed test
-  prerequisite.
-- `docs/product/Pumdoki_MasterTracker_V4.xlsx` now reflects the Phase 2 local
-  foundation and Phase 3 backend slice without overstating frontend/email
-  completion. All five sheets were rendered; the old Overview clipping was
-  repaired; no formula errors were found.
+- `PLAN.md`, `CLAUDE.md`, `README.md`, and this handoff reflect slices 1–2.
+- Durable designs moved to `docs/architecture/`.
+- Slice 3 frontend-auth design is ready.
+- The master tracker marks email verification and password reset Done; its
+  formula-driven summary is now 15/148 Done (10.1%).
+- The Prettier baseline now handles the Windows checkout consistently and
+  excludes local AI/tool scratch directories.
+- The date-dependent Promotions test now freezes `Date` without faking UI
+  timers.
 
-## Final verification — 2026-07-16
+## Final local verification — 2026-07-28
 
-All commands ran from the repository root after the final dependency updates.
+All commands ran from the repository root.
 
-| Command / check                               | Result                                                                                                                                                                   |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `npm run lint`                                | ✅ exit 0 — 0 errors, 0 warnings                                                                                                                                         |
-| `npm run test`                                | ✅ web 12/12 tests, 3 files                                                                                                                                              |
-| `npm run test -w @pumdoki/contracts`          | ✅ 9/9 tests, 1 file                                                                                                                                                     |
-| `npm run test:api`                            | ✅ 33/33 tests, 5 files; includes 18 DB-backed core-auth tests                                                                                                           |
-| `npm run build`                               | ✅ Vite 7.3.6 production build; known 768.76 kB chunk advisory (185.85 kB gzip)                                                                                          |
-| `npm run build:api`                           | ✅ contracts, Prisma generation, database, and API TypeScript builds                                                                                                     |
-| `npm run test:e2e`                            | ✅ 27/27 Chromium Playwright tests                                                                                                                                       |
-| Fresh temporary DB: `npm run db:deploy` twice | ✅ both migrations applied on first run; second reported no pending migrations                                                                                           |
-| Fresh temporary DB: `npm run db:seed` twice   | ✅ idempotent; four users both runs; temporary DB dropped afterward                                                                                                      |
-| Tracker inspect/render                        | ✅ key ranges correct, formula scan 0 errors, all five sheets visually verified                                                                                          |
-| `git diff --check`                            | ✅ no whitespace errors                                                                                                                                                  |
-| `npm audit fix`                               | ✅ removed the high-severity Vite/picomatch and other fixable tooling findings without a forced breaking change                                                          |
-| Final `npm audit`                             | ⚠️ exit 1 — three moderate findings remain in `@hono/node-server` through the Prisma CLI toolchain; npm's offered fix force-downgrades Prisma 7 to 6 and was not applied |
+| Command / check                      | Result                                                                                                                                                         |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run lint`                       | ✅ exit 0                                                                                                                                                      |
+| `npm run format:check`               | ✅ exit 0                                                                                                                                                      |
+| `npm run test`                       | ✅ 11 files, 66/66 web tests                                                                                                                                   |
+| `npm run test -w @pumdoki/contracts` | ✅ 1 file, 13/13 tests                                                                                                                                         |
+| `npm run test:api`                   | ✅ 8 files, 60/60 tests; run outside the restricted filesystem sandbox required by Vitest/esbuild                                                              |
+| `npm run build`                      | ✅ Vite 7.3.6 production build                                                                                                                                 |
+| `npm run build:api`                  | ✅ contracts, Prisma generation, database, and API TypeScript builds                                                                                           |
+| `npm run test:e2e`                   | ✅ 27/27 Chromium Playwright tests                                                                                                                             |
+| Existing DB `npm run db:deploy`      | ✅ three migrations found; none pending                                                                                                                        |
+| Isolated clean DB deploy twice       | ✅ all three migrations applied first run; none pending second run                                                                                             |
+| Isolated clean DB seed twice         | ✅ four users both runs; temporary database removed                                                                                                            |
+| Real Mailpit flow                    | ✅ register `201`, reset request `202`, both messages arrived, both links targeted `http://localhost:5173`, reset token returned `200` once and `400` on reuse |
+| Tracker verification                 | ✅ key ranges inspected, formula-error scan returned zero matches, all five sheets rendered and visually checked                                               |
+| `git diff --check`                   | Run again immediately before commit                                                                                                                            |
 
-The first Vitest invocations inside the restricted filesystem sandbox could
-not resolve esbuild configs. The required suites were rerun outside that
-sandbox and passed; this was an execution-environment limitation, not a
-product failure.
+One parallel all-gate invocation caused the Connect component test to exceed
+its five-second timeout while builds and Playwright were consuming the same
+machine. No assertion failed; the required isolated `npm run test` rerun passed
+66/66 in 9.64 seconds.
+
+The web production bundle still reports the known large-chunk advisory:
+785.28 kB minified and 190.64 kB gzip.
+
+`npm audit` was not refreshed because permission to send the dependency
+metadata to npm's external advisory endpoint was rejected. The last known
+result remains the three moderate Prisma CLI/toolchain findings recorded on
+2026-07-16; do not describe the current dependency set as audit-clean.
 
 ## Risks and remaining work
 
-- **Public Git push requires explicit approval.** Local commits are ahead of
-  `origin/dev`; no push occurred.
-- **Phase 3 is not complete.** Frontend Login/SignUp and `ProtectedRoute` are
-  still simulated; email verification, password reset, Settings, and explicit
-  preference are not implemented.
-- **Phase 2 is not complete.** AWS staging/RDS, backups/restore, monitoring,
-  queueing, and idempotency remain.
-- **Retention still needs counsel.** The schema prevents accidental deletion,
-  but the lawful retention/pseudonymization schedule is a founder/legal task.
-- **Login throttling is instance-local.** Multi-instance enforcement waits on
-  Redis or an equivalent shared store.
-- **Prisma CLI advisory remains.** It does not affect the running Express API,
-  but should be rechecked when Prisma ships a non-breaking patched toolchain.
-- **Frontend bundle remains large.** Code-splitting is still advisable.
-- **Production BrowserRouter rewrite remains required** at the future host.
-- `npm run test:api` now requires Docker PostgreSQL with committed migrations
-  applied.
+- Frontend Login/SignUp and `ProtectedRoute` are still simulated.
+- `apiClient.js` currently reads error fields at the response root instead of
+  the API's nested `error` envelope; slice 3 fixes this first.
+- Frontend route declarations use lowercase role placeholders while the API
+  returns canonical uppercase roles.
+- Production email-provider selection, adult-business support, TLS,
+  deliverability, DKIM, SPF, and DMARC remain open.
+- Login and email throttling are instance-local until Redis/shared storage.
+- Phase 2 cloud/operations work remains incomplete.
+- Counsel must define acceptance-evidence retention and pseudonymization.
+- Frontend code splitting remains advisable.
+- Production `BrowserRouter` host rewrites remain required.
 
 ## Next exact task
 
-1. Obtain explicit approval to publish the local commits to the confirmed
-   public `origin/dev`, then push and verify GitHub CI.
-2. Start Phase 3 slice 2 with a spec: Mailpit, provider-neutral mailer,
-   verification-token lifecycle, password-reset-token lifecycle, expiry,
-   single use, revocation, enumeration posture, and tests.
-3. Work the dated dependency register in `PLAN.md` in parallel, beginning with
-   email-provider fit, AWS/Sentry/Redis decisions, LLC counsel, and CCBill.
+1. Install GitHub CLI, run `gh auth login`, and verify `gh auth status`.
+2. Decide whether to preserve or clean the 13 unpushed slice 2 commits before
+   publishing the public `dev` history.
+3. Push the committed `dev` branch and verify GitHub CI after the publication
+   prerequisites are resolved.
+4. Start Phase 3 slice 3 from
+   `docs/architecture/phase3-slice3-frontend-auth-integration.md`, beginning
+   with the nested API error envelope and persistent auth provider.
+5. Work the overdue AWS/Sentry/Redis/email-provider decisions and the July 30
+   LLC/counsel, CCBill, and identity-provider targets in parallel.

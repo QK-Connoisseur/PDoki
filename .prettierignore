@@ -4,5 +4,8 @@ coverage
 playwright-report
 test-results
 .vite
+.agents
+.claude
+.superpowers
 package-lock.json
 *.xlsx

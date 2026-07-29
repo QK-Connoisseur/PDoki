@@ -4,7 +4,7 @@ import { PrismaClient } from "./generated/prisma/client.js";
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
   throw new Error(
-    "DATABASE_URL is not set. Copy .env.example to .env or provide it in the environment.",
+    "DATABASE_URL is not set. Copy .env.example to .env or provide it in the environment."
   );
 }
 

@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { pinoHttp } from "pino-http";
 import type { Logger } from "pino";
 import type { PrismaClient } from "@pumdoki/database";
+import type { Mailer } from "./mail/index.js";
 import type { Env } from "./env.js";
 import { HttpError } from "./errors.js";
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -19,6 +20,7 @@ export interface AppDeps {
   checkDatabase: () => Promise<boolean>;
   version: string;
   db: PrismaClient;
+  mailer: Mailer;
 }
 
 export function createApp({
@@ -27,6 +29,7 @@ export function createApp({
   checkDatabase,
   version,
   db,
+  mailer,
 }: AppDeps): Express {
   const app = express();
   app.disable("x-powered-by");
@@ -62,7 +65,7 @@ export function createApp({
   const api = express.Router();
   api.use(healthRouter(version));
   api.use(readyRouter(checkDatabase));
-  api.use(authRouter({ db, env }));
+  api.use(authRouter({ db, env, mailer, logger }));
   app.use("/api/v1", api);
 
   app.use((req, _res, next) => {

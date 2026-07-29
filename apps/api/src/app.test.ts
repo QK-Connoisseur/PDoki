@@ -40,7 +40,7 @@ describe("hardening middleware", () => {
       .get("/api/v1/health")
       .set("Origin", "http://localhost:5173");
     expect(res.headers["access-control-allow-origin"]).toBe(
-      "http://localhost:5173",
+      "http://localhost:5173"
     );
     expect(res.headers["access-control-allow-credentials"]).toBe("true");
   });
@@ -52,5 +52,18 @@ describe("hardening middleware", () => {
     const res = await request(app).get("/api/v1/health");
     expect(res.status).toBe(429);
     expect(res.body.error.code).toBe("RATE_LIMITED");
+  });
+
+  it("returns the standard BAD_REQUEST envelope for malformed JSON", async () => {
+    const res = await request(testApp())
+      .post("/api/v1/auth/login")
+      .set("Content-Type", "application/json")
+      .send('{"email":');
+
+    expect(res.status).toBe(400);
+    const parsed = ApiErrorSchema.parse(res.body);
+    expect(parsed.error.code).toBe("BAD_REQUEST");
+    expect(parsed.error.message).toBe("Malformed JSON request body");
+    expect(parsed.error.requestId).toBe(res.headers["x-request-id"]);
   });
 });

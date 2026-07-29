@@ -88,3 +88,27 @@ export function requireRole(...roles: UserRole[]): RequestHandler {
     next();
   };
 }
+
+/**
+ * Soft verification gate. Applied to money and creator endpoints from
+ * Phase 5 onward; browsing and login stay open to unverified accounts.
+ */
+export function requireVerifiedEmail(): RequestHandler {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    if (!req.auth) {
+      next(new HttpError(401, "UNAUTHORIZED", "Authentication required"));
+      return;
+    }
+    if (req.auth.user.emailVerifiedAt === null) {
+      next(
+        new HttpError(
+          403,
+          "EMAIL_UNVERIFIED",
+          "Verify your email address to continue"
+        )
+      );
+      return;
+    }
+    next();
+  };
+}

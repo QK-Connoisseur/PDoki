@@ -7,7 +7,12 @@ const TIERS = {
     shadow: "0 0 8px rgba(244,143,177,0.3)",
     icon: (
       <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 shrink-0" fill="none">
-        <path d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z" fill="#f48fb1" stroke="#ec407a" strokeWidth="1" />
+        <path
+          d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z"
+          fill="#f48fb1"
+          stroke="#ec407a"
+          strokeWidth="1"
+        />
       </svg>
     ),
   },
@@ -19,7 +24,12 @@ const TIERS = {
     shadow: "0 0 10px rgba(236,64,122,0.25)",
     icon: (
       <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 shrink-0" fill="none">
-        <path d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z" fill="#f06292" stroke="#e91e63" strokeWidth="1" />
+        <path
+          d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z"
+          fill="#f06292"
+          stroke="#e91e63"
+          strokeWidth="1"
+        />
       </svg>
     ),
   },
@@ -31,7 +41,12 @@ const TIERS = {
     shadow: "0 0 12px rgba(233,30,99,0.3)",
     icon: (
       <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 shrink-0" fill="none">
-        <path d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z" fill="#ec407a" stroke="#c2185b" strokeWidth="1" />
+        <path
+          d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z"
+          fill="#ec407a"
+          stroke="#c2185b"
+          strokeWidth="1"
+        />
       </svg>
     ),
   },
@@ -44,8 +59,18 @@ const TIERS = {
     glow: true,
     icon: (
       <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 shrink-0" fill="none">
-        <path d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z" fill="#e91e63" stroke="#ad1457" strokeWidth="1" />
-        <path d="M10 6l1 2.5h2.5l-2 1.7.8 2.5L10 11l-2.3 1.7.8-2.5-2-1.7H9z" fill="#ffd54f" stroke="#ffb300" strokeWidth="0.5" />
+        <path
+          d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z"
+          fill="#e91e63"
+          stroke="#ad1457"
+          strokeWidth="1"
+        />
+        <path
+          d="M10 6l1 2.5h2.5l-2 1.7.8 2.5L10 11l-2.3 1.7.8-2.5-2-1.7H9z"
+          fill="#ffd54f"
+          stroke="#ffb300"
+          strokeWidth="0.5"
+        />
       </svg>
     ),
   },
@@ -59,9 +84,23 @@ const TIERS = {
     metallic: true,
     icon: (
       <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 shrink-0" fill="none">
-        <path d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z" fill="#c2185b" stroke="#880e4f" strokeWidth="1" />
-        <path d="M10 6l1 2.5h2.5l-2 1.7.8 2.5L10 11l-2.3 1.7.8-2.5-2-1.7H9z" fill="#ffd54f" stroke="#ffb300" strokeWidth="0.5" />
-        <path d="M10 8.5l.6 1.5h1.5l-1.2 1 .5 1.5-1.4-1-1.4 1 .5-1.5-1.2-1H9.4z" fill="#fff" fillOpacity="0.5" />
+        <path
+          d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z"
+          fill="#c2185b"
+          stroke="#880e4f"
+          strokeWidth="1"
+        />
+        <path
+          d="M10 6l1 2.5h2.5l-2 1.7.8 2.5L10 11l-2.3 1.7.8-2.5-2-1.7H9z"
+          fill="#ffd54f"
+          stroke="#ffb300"
+          strokeWidth="0.5"
+        />
+        <path
+          d="M10 8.5l.6 1.5h1.5l-1.2 1 .5 1.5-1.4-1-1.4 1 .5-1.5-1.2-1H9.4z"
+          fill="#fff"
+          fillOpacity="0.5"
+        />
       </svg>
     ),
   },
@@ -83,8 +122,17 @@ const TIERS = {
             <stop offset="100%" stopColor="#ff6f00" />
           </linearGradient>
         </defs>
-        <path d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z" fill="url(#legend-heart)" stroke="#e65100" strokeWidth="0.8" />
-        <path d="M10 6l1.2 2.5h2.7l-2.2 1.8.9 2.7L10 11.3 7.4 13l.9-2.7-2.2-1.8h2.7z" fill="#fff" fillOpacity="0.9" />
+        <path
+          d="M10 17s-7-4.5-7-9a4 4 0 018 0 4 4 0 018 0c0 4.5-7 9-7 9z"
+          fill="url(#legend-heart)"
+          stroke="#e65100"
+          strokeWidth="0.8"
+        />
+        <path
+          d="M10 6l1.2 2.5h2.7l-2.2 1.8.9 2.7L10 11.3 7.4 13l.9-2.7-2.2-1.8h2.7z"
+          fill="#fff"
+          fillOpacity="0.9"
+        />
       </svg>
     ),
   },
@@ -96,7 +144,8 @@ export default function DokiTierBadge({ tier }) {
 
   const legendaryRingStyle = t.legendary
     ? {
-        background: "linear-gradient(135deg, #ffd54f, #e91e63, #9c27b0, #e91e63, #ffd54f)",
+        background:
+          "linear-gradient(135deg, #ffd54f, #e91e63, #9c27b0, #e91e63, #ffd54f)",
         padding: "1.5px",
         borderRadius: "9999px",
       }
@@ -123,7 +172,10 @@ export default function DokiTierBadge({ tier }) {
 
   if (t.legendary) {
     return (
-      <span className="inline-block rounded-full animate-pulse" style={{ ...legendaryRingStyle, animationDuration: "3s" }}>
+      <span
+        className="inline-block rounded-full animate-pulse"
+        style={{ ...legendaryRingStyle, animationDuration: "3s" }}
+      >
         {badge}
       </span>
     );

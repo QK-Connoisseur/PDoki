@@ -1,18 +1,35 @@
-import type { LoginRequest, RegisterRequest } from "@pumdoki/contracts";
-import { LoginRequestSchema, RegisterRequestSchema } from "@pumdoki/contracts";
+import type {
+  LoginRequest,
+  PasswordResetConfirmRequest,
+  PasswordResetRequest,
+  RegisterRequest,
+  VerifyEmailConfirmRequest,
+} from "@pumdoki/contracts";
+import {
+  LoginRequestSchema,
+  PasswordResetConfirmSchema,
+  PasswordResetRequestSchema,
+  RegisterRequestSchema,
+  VerifyEmailConfirmSchema,
+} from "@pumdoki/contracts";
 import type { PrismaClient } from "@pumdoki/database";
 import { Router, type Request } from "express";
+import type { Logger } from "pino";
+import { AttemptLimiter } from "../auth/attemptLimiter.js";
 import { LoginAttemptTracker } from "../auth/loginAttempts.js";
 import { createAuthService } from "../auth/service.js";
 import { clearSessionCookie, setSessionCookie } from "../auth/session.js";
 import type { Env } from "../env.js";
 import { HttpError } from "../errors.js";
+import type { Mailer } from "../mail/index.js";
 import { requireAuth } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
 
 interface AuthRouterDeps {
   db: PrismaClient;
   env: Env;
+  mailer: Mailer;
+  logger: Logger;
 }
 
 function requestMetadata(req: Request) {
@@ -22,11 +39,18 @@ function requestMetadata(req: Request) {
   };
 }
 
-export function authRouter({ db, env }: AuthRouterDeps): Router {
+export function authRouter({
+  db,
+  env,
+  mailer,
+  logger,
+}: AuthRouterDeps): Router {
   const router = Router();
-  const service = createAuthService(db);
+  const service = createAuthService(db, { mailer, env, logger });
   const authenticate = requireAuth(db, env);
   const loginAttempts = new LoginAttemptTracker();
+  // 5 requests per hour, per email + IP.
+  const emailRequests = new AttemptLimiter(5, 60 * 60 * 1000);
 
   router.post(
     "/auth/register",
@@ -80,6 +104,60 @@ export function authRouter({ db, env }: AuthRouterDeps): Router {
     clearSessionCookie(res, env);
     res.status(204).end();
   });
+
+  router.post("/auth/verify-email/request", authenticate, async (req, res) => {
+    const user = req.auth!.user;
+    const metadata = requestMetadata(req);
+    const key = `verify:${metadata.ipAddress}:${user.email}`;
+    if (emailRequests.isBlocked(key)) {
+      throw new HttpError(
+        429,
+        "RATE_LIMITED",
+        "Too many verification emails requested, please try again later"
+      );
+    }
+    emailRequests.recordFailure(key);
+    await service.requestEmailVerification(user, metadata);
+    res.status(202).json({ status: "accepted" });
+  });
+
+  router.post(
+    "/auth/verify-email/confirm",
+    validate({ body: VerifyEmailConfirmSchema }),
+    async (req, res) => {
+      const { token } = req.validated?.body as VerifyEmailConfirmRequest;
+      const user = await service.confirmEmailVerification(token);
+      res.json({ user });
+    }
+  );
+
+  router.post(
+    "/auth/password-reset/request",
+    validate({ body: PasswordResetRequestSchema }),
+    async (req, res) => {
+      const { email } = req.validated?.body as PasswordResetRequest;
+      const metadata = requestMetadata(req);
+      const key = `reset:${metadata.ipAddress}:${email}`;
+      // Always 202, even when throttled: a different envelope would reveal
+      // which addresses have accounts.
+      if (!emailRequests.isBlocked(key)) {
+        emailRequests.recordFailure(key);
+        await service.requestPasswordReset(email, metadata);
+      }
+      res.status(202).json({ status: "accepted" });
+    }
+  );
+
+  router.post(
+    "/auth/password-reset/confirm",
+    validate({ body: PasswordResetConfirmSchema }),
+    async (req, res) => {
+      const { token, password } = req.validated
+        ?.body as PasswordResetConfirmRequest;
+      await service.confirmPasswordReset(token, password);
+      res.json({ status: "reset" });
+    }
+  );
 
   router.get("/me", authenticate, (req, res) => {
     const user = req.auth!.user;

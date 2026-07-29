@@ -10,7 +10,9 @@ describe("StateViews", () => {
   });
 
   it("EmptyState renders title and message", () => {
-    render(<EmptyState title="No posts" message="Follow a creator to begin." />);
+    render(
+      <EmptyState title="No posts" message="Follow a creator to begin." />
+    );
     expect(screen.getByText("No posts")).toBeInTheDocument();
     expect(screen.getByText("Follow a creator to begin.")).toBeInTheDocument();
   });

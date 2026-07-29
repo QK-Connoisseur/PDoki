@@ -3,12 +3,15 @@ import type { Express } from "express";
 import type { PrismaClient } from "@pumdoki/database";
 import { createApp } from "../app.js";
 import { loadEnv } from "../env.js";
+import { createMemoryMailer } from "../mail/index.js";
+import type { Mailer } from "../mail/index.js";
 
 export function testApp(
   overrides: {
     checkDatabase?: () => Promise<boolean>;
     env?: Partial<Record<string, string>>;
     db?: PrismaClient;
+    mailer?: Mailer;
   } = {}
 ): Express {
   const env = loadEnv({
@@ -22,5 +25,6 @@ export function testApp(
     checkDatabase: overrides.checkDatabase ?? (async () => true),
     version: "test",
     db: overrides.db ?? ({} as PrismaClient),
+    mailer: overrides.mailer ?? createMemoryMailer(),
   });
 }

@@ -33,10 +33,13 @@ export default function CreatePostModal({
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center p-4"
       style={{
-        background: "radial-gradient(ellipse at 60% 40%, rgba(249,168,200,0.18) 0%, rgba(0,0,0,0.52) 100%)",
+        background:
+          "radial-gradient(ellipse at 60% 40%, rgba(249,168,200,0.18) 0%, rgba(0,0,0,0.52) 100%)",
         backdropFilter: "blur(6px)",
       }}
-      onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleClose();
+      }}
     >
       {/* Outer glow ring — gold when locked, pink when open */}
       <div
@@ -65,11 +68,17 @@ export default function CreatePostModal({
               background: locked
                 ? "linear-gradient(90deg, rgba(245,182,59,0.10) 0%, rgba(249,168,200,0.13) 100%)"
                 : "linear-gradient(90deg, rgba(249,168,200,0.08) 0%, rgba(255,255,255,0) 100%)",
-              borderBottom: locked ? "1px solid rgba(245,182,59,0.18)" : "1px solid #fce4ec",
+              borderBottom: locked
+                ? "1px solid rgba(245,182,59,0.18)"
+                : "1px solid #fce4ec",
             }}
           >
             {/* Floral accent — top left */}
-            <svg viewBox="0 0 40 40" className="absolute left-0 top-0 w-16 h-16 opacity-[0.07] pointer-events-none" aria-hidden>
+            <svg
+              viewBox="0 0 40 40"
+              className="absolute left-0 top-0 w-16 h-16 opacity-[0.07] pointer-events-none"
+              aria-hidden
+            >
               <circle cx="20" cy="20" r="8" fill="#df5f97" />
               {[0, 60, 120, 180, 240, 300].map((deg, i) => (
                 <ellipse
@@ -88,16 +97,31 @@ export default function CreatePostModal({
               {locked ? (
                 <span
                   className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
-                  style={{ background: "linear-gradient(90deg,#f5b63b,#f9a8c8)", color: "#241a22" }}
+                  style={{
+                    background: "linear-gradient(90deg,#f5b63b,#f9a8c8)",
+                    color: "#241a22",
+                  }}
                 >
-                  <svg viewBox="0 0 16 16" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <svg
+                    viewBox="0 0 16 16"
+                    className="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  >
                     <rect x="2" y="7" width="12" height="8" rx="2" />
                     <path d="M5 7V5a3 3 0 016 0v2" />
                   </svg>
                   Subscribers Only
                 </span>
               ) : (
-                <span className="text-sm font-semibold tracking-wide" style={{ color: "#241a22", letterSpacing: "0.04em" }}>Create</span>
+                <span
+                  className="text-sm font-semibold tracking-wide"
+                  style={{ color: "#241a22", letterSpacing: "0.04em" }}
+                >
+                  Create
+                </span>
               )}
             </div>
 
@@ -105,11 +129,24 @@ export default function CreatePostModal({
               onClick={handleClose}
               className="flex h-8 w-8 items-center justify-center rounded-full transition"
               style={{ color: "#8c6d7f" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#fce4ec"; e.currentTarget.style.color = "#e8384f"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#8c6d7f"; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#fce4ec";
+                e.currentTarget.style.color = "#e8384f";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = "#8c6d7f";
+              }}
               aria-label="Close"
             >
-              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <svg
+                viewBox="0 0 24 24"
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              >
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
             </button>
@@ -124,11 +161,25 @@ export default function CreatePostModal({
                   src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80"
                   alt="Your avatar"
                   className="h-10 w-10 rounded-full object-cover"
-                  style={{ border: locked ? "2px solid #f5b63b" : "2px solid #fce4ec" }}
+                  style={{
+                    border: locked ? "2px solid #f5b63b" : "2px solid #fce4ec",
+                  }}
                 />
                 {locked && (
-                  <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg,#f5b63b,#df5f97)" }}>
-                    <svg viewBox="0 0 10 10" className="w-2.5 h-2.5" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round">
+                  <span
+                    className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full"
+                    style={{
+                      background: "linear-gradient(135deg,#f5b63b,#df5f97)",
+                    }}
+                  >
+                    <svg
+                      viewBox="0 0 10 10"
+                      className="w-2.5 h-2.5"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                    >
                       <rect x="1.5" y="4.5" width="7" height="5" rx="1" />
                       <path d="M3 4.5V3a2 2 0 014 0v1.5" />
                     </svg>
@@ -137,15 +188,22 @@ export default function CreatePostModal({
               </div>
               <textarea
                 value={text}
-                onChange={e => setText(e.target.value)}
+                onChange={(e) => setText(e.target.value)}
                 placeholder="Post a new drop..."
                 rows={4}
                 className="flex-1 resize-none rounded-2xl outline-none transition-all duration-300"
                 style={{
-                  border: locked ? "1.5px solid rgba(245,182,59,0.35)" : "1.5px solid #fce4ec",
+                  border: locked
+                    ? "1.5px solid rgba(245,182,59,0.35)"
+                    : "1.5px solid #fce4ec",
                   background: locked ? "rgba(255,252,240,0.7)" : "#fffafc",
                   padding: "12px 16px",
-                  fontSize: fontSize === "small" ? "13px" : fontSize === "large" ? "18px" : "14px",
+                  fontSize:
+                    fontSize === "small"
+                      ? "13px"
+                      : fontSize === "large"
+                        ? "18px"
+                        : "14px",
                   fontWeight: bold ? "700" : "400",
                   fontStyle: italic ? "italic" : "normal",
                   color: fontColor,
@@ -154,9 +212,17 @@ export default function CreatePostModal({
             </div>
 
             {/* ─── Formatting toolbar ─── */}
-            <div className="mt-3 flex items-center gap-2 flex-wrap border-t pt-3" style={{ borderColor: locked ? "rgba(245,182,59,0.18)" : "#fce4ec" }}>
+            <div
+              className="mt-3 flex items-center gap-2 flex-wrap border-t pt-3"
+              style={{
+                borderColor: locked ? "rgba(245,182,59,0.18)" : "#fce4ec",
+              }}
+            >
               {/* Font size — ghost segmented */}
-              <div className="flex items-center rounded-xl overflow-hidden" style={{ border: "1.5px solid #f9e4ef" }}>
+              <div
+                className="flex items-center rounded-xl overflow-hidden"
+                style={{ border: "1.5px solid #f9e4ef" }}
+              >
                 {[
                   { id: "small", label: "S" },
                   { id: "normal", label: "M" },
@@ -167,7 +233,10 @@ export default function CreatePostModal({
                     onClick={() => setFontSize(size.id)}
                     className="px-2.5 py-1.5 text-xs font-semibold transition-all duration-150"
                     style={{
-                      background: fontSize === size.id ? "linear-gradient(90deg,#f9a8c8,#f472b6)" : "transparent",
+                      background:
+                        fontSize === size.id
+                          ? "linear-gradient(90deg,#f9a8c8,#f472b6)"
+                          : "transparent",
                       color: fontSize === size.id ? "#fff" : "#b89aa8",
                       borderRight: idx < 2 ? "1px solid #f9e4ef" : "none",
                     }}
@@ -195,7 +264,9 @@ export default function CreatePostModal({
                 onClick={() => setItalic(!italic)}
                 className="flex h-8 w-8 items-center justify-center rounded-xl text-xs transition-all"
                 style={{
-                  border: italic ? "1.5px solid #f472b6" : "1.5px solid #f9e4ef",
+                  border: italic
+                    ? "1.5px solid #f472b6"
+                    : "1.5px solid #f9e4ef",
                   background: italic ? "rgba(244,114,182,0.08)" : "transparent",
                   color: italic ? "#f472b6" : "#b89aa8",
                 }}
@@ -221,9 +292,16 @@ export default function CreatePostModal({
                       width: "20px",
                       height: "20px",
                       background: c.color,
-                      border: fontColor === c.color ? "2.5px solid #241a22" : "2.5px solid transparent",
-                      transform: fontColor === c.color ? "scale(1.2)" : "scale(1)",
-                      outline: fontColor === c.color ? "2px solid rgba(36,26,34,0.15)" : "none",
+                      border:
+                        fontColor === c.color
+                          ? "2.5px solid #241a22"
+                          : "2.5px solid transparent",
+                      transform:
+                        fontColor === c.color ? "scale(1.2)" : "scale(1)",
+                      outline:
+                        fontColor === c.color
+                          ? "2px solid rgba(36,26,34,0.15)"
+                          : "none",
                     }}
                     title={c.name}
                   />
@@ -237,31 +315,72 @@ export default function CreatePostModal({
                 <div className="relative flex-shrink-0">
                   <button
                     className="flex h-9 w-9 items-center justify-center rounded-full transition-all"
-                    style={{ background: "linear-gradient(135deg,#f5b63b,#f9a8c8)", boxShadow: "0 2px 8px rgba(245,182,59,0.3)" }}
+                    style={{
+                      background: "linear-gradient(135deg,#f5b63b,#f9a8c8)",
+                      boxShadow: "0 2px 8px rgba(245,182,59,0.3)",
+                    }}
                     onMouseEnter={() => setShowVesoTooltip(true)}
                     onMouseLeave={() => setShowVesoTooltip(false)}
                     aria-label="Veso - 1 Veso = 1 Dollar"
                     type="button"
                   >
                     <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
-                      <path d="M12 18c-1.5-1-4-2.5-5.5-4.5C5 11.5 5 10 6.5 9c1-.7 2.2-.4 3 .5.3.3.5.7.5 1.1.0-.4.2-.8.5-1.1.8-.9 2-.12 3-.5 1.5 1 1.5 2.5.0 4.5-1.5 2-4 3.5-5.5 4.5z" fill="white" opacity="0.9" />
-                      <path d="M9.5 9.5c.3-.3.7-.5 1.1-.5h2.8c.4 0 .8.2 1.1.5" stroke="white" strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.7" />
+                      <path
+                        d="M12 18c-1.5-1-4-2.5-5.5-4.5C5 11.5 5 10 6.5 9c1-.7 2.2-.4 3 .5.3.3.5.7.5 1.1.0-.4.2-.8.5-1.1.8-.9 2-.12 3-.5 1.5 1 1.5 2.5.0 4.5-1.5 2-4 3.5-5.5 4.5z"
+                        fill="white"
+                        opacity="0.9"
+                      />
+                      <path
+                        d="M9.5 9.5c.3-.3.7-.5 1.1-.5h2.8c.4 0 .8.2 1.1.5"
+                        stroke="white"
+                        strokeWidth="1.2"
+                        strokeLinecap="round"
+                        fill="none"
+                        opacity="0.7"
+                      />
                     </svg>
                   </button>
                   {showVesoTooltip && (
                     <div
                       className="absolute bottom-11 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-xl px-3 py-1.5 text-[11px] font-semibold shadow-lg z-10 pointer-events-none"
-                      style={{ background: "#241a22", color: "#f9a8c8", border: "1px solid rgba(249,168,200,0.2)" }}
+                      style={{
+                        background: "#241a22",
+                        color: "#f9a8c8",
+                        border: "1px solid rgba(249,168,200,0.2)",
+                      }}
                     >
                       1 Veso = 1 Dollar
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0" style={{ borderLeft: "5px solid transparent", borderRight: "5px solid transparent", borderTop: "5px solid #241a22" }} />
+                      <div
+                        className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
+                        style={{
+                          borderLeft: "5px solid transparent",
+                          borderRight: "5px solid transparent",
+                          borderTop: "5px solid #241a22",
+                        }}
+                      />
                     </div>
                   )}
                 </div>
-                <div className="flex-1 flex items-center rounded-2xl overflow-hidden" style={{ border: "1.5px solid rgba(245,182,59,0.35)", background: "rgba(255,252,240,0.8)" }}>
-                  <span className="pl-3 pr-1 text-sm font-bold" style={{ color: "#b8860b" }}>
-                    <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 inline-block mr-0.5" fill="none">
-                      <path d="M8 12c-1-.7-2.7-1.7-3.7-3C3 7.5 3 6.5 4.4 5.7c.7-.4 1.5-.2 2 .4.2.2.3.5.3.8 0-.3.1-.6.3-.8.5-.6 1.3-.8 2-.4C10.4 6.5 10.4 7.5 9 9c-1 1.3-2.7 2.3-3.7 3z" fill="#f5b63b" />
+                <div
+                  className="flex-1 flex items-center rounded-2xl overflow-hidden"
+                  style={{
+                    border: "1.5px solid rgba(245,182,59,0.35)",
+                    background: "rgba(255,252,240,0.8)",
+                  }}
+                >
+                  <span
+                    className="pl-3 pr-1 text-sm font-bold"
+                    style={{ color: "#b8860b" }}
+                  >
+                    <svg
+                      viewBox="0 0 16 16"
+                      className="w-3.5 h-3.5 inline-block mr-0.5"
+                      fill="none"
+                    >
+                      <path
+                        d="M8 12c-1-.7-2.7-1.7-3.7-3C3 7.5 3 6.5 4.4 5.7c.7-.4 1.5-.2 2 .4.2.2.3.5.3.8 0-.3.1-.6.3-.8.5-.6 1.3-.8 2-.4C10.4 6.5 10.4 7.5 9 9c-1 1.3-2.7 2.3-3.7 3z"
+                        fill="#f5b63b"
+                      />
                     </svg>
                   </span>
                   <input
@@ -269,7 +388,7 @@ export default function CreatePostModal({
                     min="0"
                     step="1"
                     value={vesoPrice}
-                    onChange={e => setVesoPrice(e.target.value)}
+                    onChange={(e) => setVesoPrice(e.target.value)}
                     placeholder="Set price in Vesos"
                     className="flex-1 bg-transparent py-2 pr-3 text-sm outline-none"
                     style={{ color: "#241a22" }}
@@ -279,15 +398,38 @@ export default function CreatePostModal({
             )}
 
             {/* ─── Media + lock + post row ─── */}
-            <div className="mt-3 flex items-center gap-2 flex-wrap border-t pt-3" style={{ borderColor: locked ? "rgba(245,182,59,0.18)" : "#fce4ec" }}>
+            <div
+              className="mt-3 flex items-center gap-2 flex-wrap border-t pt-3"
+              style={{
+                borderColor: locked ? "rgba(245,182,59,0.18)" : "#fce4ec",
+              }}
+            >
               {/* Photo */}
               <button
                 className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
-                style={{ border: "1.5px solid #f9e4ef", color: "#b89aa8", background: "transparent" }}
-                onMouseEnter={e => { e.currentTarget.style.background = "#fce4ec"; e.currentTarget.style.color = "#df5f97"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#b89aa8"; }}
+                style={{
+                  border: "1.5px solid #f9e4ef",
+                  color: "#b89aa8",
+                  background: "transparent",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#fce4ec";
+                  e.currentTarget.style.color = "#df5f97";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "#b89aa8";
+                }}
               >
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <rect x="3" y="3" width="18" height="18" rx="3" />
                   <circle cx="8.5" cy="8.5" r="1.5" />
                   <path d="M21 15l-5-5L5 21" />
@@ -298,11 +440,29 @@ export default function CreatePostModal({
               {/* Video */}
               <button
                 className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
-                style={{ border: "1.5px solid #f9e4ef", color: "#b89aa8", background: "transparent" }}
-                onMouseEnter={e => { e.currentTarget.style.background = "#fce4ec"; e.currentTarget.style.color = "#df5f97"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#b89aa8"; }}
+                style={{
+                  border: "1.5px solid #f9e4ef",
+                  color: "#b89aa8",
+                  background: "transparent",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#fce4ec";
+                  e.currentTarget.style.color = "#df5f97";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "#b89aa8";
+                }}
               >
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <polygon points="23 7 16 12 23 17 23 7" />
                   <rect x="1" y="5" width="15" height="14" rx="2" />
                 </svg>
@@ -314,12 +474,24 @@ export default function CreatePostModal({
                 onClick={() => setLocked(!locked)}
                 className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200"
                 style={{
-                  border: locked ? "1.5px solid #f5b63b" : "1.5px solid #f9e4ef",
-                  background: locked ? "linear-gradient(90deg,rgba(245,182,59,0.12),rgba(249,168,200,0.10))" : "transparent",
+                  border: locked
+                    ? "1.5px solid #f5b63b"
+                    : "1.5px solid #f9e4ef",
+                  background: locked
+                    ? "linear-gradient(90deg,rgba(245,182,59,0.12),rgba(249,168,200,0.10))"
+                    : "transparent",
                   color: locked ? "#b8860b" : "#b89aa8",
                 }}
               >
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <rect x="3" y="11" width="18" height="11" rx="2" />
                   <path d="M7 11V7a5 5 0 0110 0v4" />
                 </svg>
