@@ -4,6 +4,8 @@ import AppHeader from "./AppHeader";
 import Sidebar, { MobileNav } from "./Sidebar";
 import ChatSidebar from "./ChatSidebar";
 import { chatContacts } from "../fixtures/chatContacts";
+import { useOptionalAuth } from "../auth/authContext";
+import { AUTH_ROLES } from "../auth/authApi";
 
 /**
  * Shared member application shell.
@@ -42,7 +44,10 @@ export default function MemberLayout({
   modals,
 }) {
   const navigate = useNavigate();
+  const auth = useOptionalAuth();
+  const showCreatorDashboard = auth?.user?.role === AUTH_ROLES.CREATOR;
   const [showComposeMenu, setShowComposeMenu] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
 
   const handleNavigate = (id) => {
     if (id === "home") navigate("/home");
@@ -56,20 +61,44 @@ export default function MemberLayout({
 
   const totalUnread = chatContacts.reduce((sum, c) => sum + c.unread, 0);
 
+  const handleLogout = async () => {
+    setLogoutError("");
+    try {
+      await auth?.logout();
+      navigate("/login", { replace: true });
+    } catch {
+      setLogoutError(
+        "We couldn’t log you out. Your session is still active; please try again."
+      );
+    }
+  };
+
   return (
     <div className={`min-h-screen ${bgClassName} text-[#5b4153]`}>
       <AppHeader
         userStatus={userStatus}
         onStatusChange={onStatusChange}
         onLogoClick={onLogoClick}
+        onLogout={handleLogout}
+        showCreatorDashboard={showCreatorDashboard}
       />
+
+      {logoutError && (
+        <div
+          role="alert"
+          className="fixed right-4 top-20 z-[60] max-w-sm rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-lg"
+        >
+          {logoutError}
+        </div>
+      )}
 
       <div className="flex pt-16 min-h-screen">
         <Sidebar
           activePage={activePage}
           onNavigate={handleNavigate}
           onOpenDashboard={() => navigate("/dashboard")}
-          onLogout={() => navigate("/login")}
+          showCreatorDashboard={showCreatorDashboard}
+          onLogout={handleLogout}
           onNavigateLegal={handleNavigateLegal}
           showComposeMenu={showComposeMenu}
           setShowComposeMenu={setShowComposeMenu}

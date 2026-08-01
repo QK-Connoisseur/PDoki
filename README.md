@@ -32,7 +32,7 @@ The following are intended to work at launch:
 - Creator tipping through Send Love.
 - Veso prepaid credits, where 1 Veso equals 1 USD.
 - Veso wallet recharge and spending.
-- Creator dashboard and protected admin operations.
+- Creator dashboard plus separately deployed private admin operations.
 - Explicit-content preference controls.
 - Creator verification, consent, moderation, reporting, and required compliance workflows.
 - Oasis/Drimy daily-retention gameplay, collectibles, backgrounds, and skins.
@@ -125,6 +125,7 @@ These requirements were extracted from temporary implementation-prompt files bef
 pumdoki/
 ├── apps/
 │   ├── web/                 # React 19 + Vite + Tailwind frontend
+│   ├── admin/               # Separately built private operations shell
 │   └── api/                 # Node/TypeScript Express API
 ├── packages/
 │   ├── contracts/           # Shared API schemas and types
@@ -148,6 +149,13 @@ pumdoki/
 
 The previous prompt-heavy AI folder proposal was intentionally not adopted. Product decisions belong in the README, PLAN, tracker, issues, and focused formal documentation—not in a growing collection of disposable prompts.
 
+The public web application intentionally has no `/admin` route. `apps/admin`
+is an independently buildable private operations shell for a future separate
+deployment. Its workflows are not implemented and it must not be exposed
+publicly. The backend `ADMIN` role remains the source of operational API
+authorization; separate hosting and hidden navigation are not substitutes for
+server-side permissions.
+
 ## Current frontend
 
 The web prototype includes:
@@ -167,18 +175,18 @@ The web prototype includes:
 Current limitations:
 
 - Data is mostly hardcoded mock data (migrating to `apps/web/src/fixtures` per page).
-- Frontend authentication is simulated; route guards are present but
-  pass-through placeholders. The backend auth and email-flow endpoints are
-  implemented independently and are the next frontend integration target.
+- Authentication uses the real API with HttpOnly-cookie session restoration,
+  protected/role routes, registration/login/logout, email verification, and
+  password reset. Settings and explicit-content preferences remain unbuilt.
 - Financial buttons do not process real transactions.
 - Media is loaded from external demo URLs.
 - Many controls are visual placeholders.
 
 URL routing (React Router), ESLint/Prettier, Vitest + Testing Library unit
-tests, a Playwright E2E smoke suite, and GitHub Actions CI are now in place for
-the frontend foundation. The API/database foundation and Phase 3 auth backend
-slices are implemented locally; production infrastructure and the remaining
-product domains are not.
+tests, real-stack Playwright auth/routing coverage, and GitHub Actions CI are
+now in place for the frontend foundation. The API/database foundation and
+Phase 3 auth Slices 1–3 are implemented locally; production infrastructure,
+Settings/explicit-content controls, and the remaining product domains are not.
 
 ## Development
 
@@ -200,6 +208,21 @@ npm install
 ```bash
 npm run dev
 ```
+
+For full-stack review on the current Windows workstation, use
+`npm run dev:e2e:web` so Vite binds explicitly to `127.0.0.1`. Keep the API in
+a second terminal with `npm run dev:api`; the complete environment and startup
+sequence is recorded in `HANDOFF.md`.
+
+The private operations shell is a separate workspace and dev server:
+
+```bash
+npm run dev:admin
+npm run build:admin
+```
+
+It uses `127.0.0.1:5174` for development and is not part of public web-app
+navigation or deployment.
 
 ### Run the local API stack
 
@@ -234,7 +257,7 @@ npm run lint          # ESLint across all workspaces
 npm run format        # Prettier write (format:check to verify only)
 npm run test          # Vitest unit tests (apps/web)
 npm run test:api      # DB-backed API tests; requires the local database
-npm run test:e2e      # Playwright E2E (run `npx playwright install` once first)
+npm run test:e2e      # real API/DB/Mailpit Playwright E2E; start/deploy/seed DB first
 ```
 
 The build/dev/preview root commands delegate to the `@pumdoki/web` workspace.

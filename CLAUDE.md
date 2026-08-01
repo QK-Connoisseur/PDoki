@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Pumdoki is an adult creator platform (subscriptions, paid content, creator services/bookings, real-time messaging, prepaid "Veso" credits, and a collectible "Oasis/Drimy" retention game). The repo is an npm-workspaces monorepo: a **React frontend prototype** in `apps/web` plus a TypeScript Express API in `apps/api`, shared Zod schemas in `packages/contracts`, and Prisma + PostgreSQL in `packages/database`. Phase 3 slices 1–2 are implemented locally: core auth, email verification, password reset, and the verified-email middleware seam. Frontend auth integration, Settings, payments, media, and other product APIs remain incomplete. `packages/ui` is still empty scaffolding.
+Pumdoki is an adult creator platform (subscriptions, paid content, creator services/bookings, real-time messaging, prepaid "Veso" credits, and a collectible "Oasis/Drimy" retention game). The repo is an npm-workspaces monorepo: a **React frontend prototype** in `apps/web`, an independently buildable private operations shell in `apps/admin`, a TypeScript Express API in `apps/api`, shared Zod schemas in `packages/contracts`, and Prisma + PostgreSQL in `packages/database`. Phase 3 slices 1–3 are implemented locally: core auth, email verification/password reset, and frontend auth integration. Settings, explicit-content preferences, payments, media, operational workflows, and other product APIs remain incomplete. `packages/ui` is still empty scaffolding.
 
 Authoritative product/scope docs, read these before non-trivial work:
 
 - `README.md` — product direction, confirmed launch scope, and stable UI requirements (Profile, Store, Veso, Oasis, legal/compliance UI).
 - `PLAN.md` — dependency-ordered, 14-phase delivery roadmap with exit criteria and open business/legal decisions.
-- `docs/architecture/` — durable slice designs and architecture decisions. Slice 3 starts with `phase3-slice3-frontend-auth-integration.md`.
+- `docs/architecture/` — durable slice designs, implementation records, and architecture decisions. Slice 3 is recorded in `phase3-slice3-frontend-auth-integration.md`.
 - `docs/product/Pumdoki_MasterTracker_V4.xlsx` — operational checklist ("master tracker").
 
 ## Commands
@@ -20,7 +20,10 @@ All commands run from the repo root and delegate to the `@pumdoki/web` workspace
 ```bash
 npm install        # install all workspaces (Node >= 20.19 required)
 npm run dev        # vite dev server for the web app
+npm run dev:e2e:web # vite bound explicitly to 127.0.0.1 for local full-stack review
+npm run dev:admin  # private operations shell on 127.0.0.1:5174
 npm run build      # production build of the web app
+npm run build:admin # independent operations-app production build
 npm run preview    # preview the production build
 ```
 
@@ -42,7 +45,14 @@ the root environment: `MAIL_TRANSPORT` (`console` or `smtp`), `SMTP_HOST`,
 `SMTP_PORT`, and `MAIL_FROM`. The local setup uses reserved `.example`
 addresses; no production email provider has been selected.
 
-Quality tooling (root): `npm run lint` (ESLint flat config; the JS prototype is pragmatic — noisy rules are warnings, `rules-of-hooks` is an error — while `apps/api` and `packages/*` TypeScript is linted with typescript-eslint recommended and unused-vars as errors), `npm run format`/`format:check` (Prettier), `npm run test` (Vitest + Testing Library in `apps/web`), `npm run test:api` (Vitest + Supertest in `apps/api`), `npm run test:e2e` (Playwright; run `npx playwright install` once first). CI lives in `.github/workflows/ci.yml` (lint + unit test + build, an API job with a Postgres service that deploys migrations, seeds, tests, and builds the backend, plus a Playwright job). Backend TypeScript is typechecked by its `tsc` builds; the JS frontend still has **no typecheck**.
+For this Windows workstation's full-stack manual review, use `127.0.0.1`
+consistently: set `VITE_API_BASE_URL=http://127.0.0.1:3000/api/v1` in both the
+ignored root `.env` and `apps/web/.env.local`, set
+`WEB_ORIGIN=http://127.0.0.1:5173` in the root `.env`, run `npm run dev:api` in
+one terminal, and run `npm run dev:e2e:web` in another. See `HANDOFF.md` for
+the complete prepare/start/stop sequence and seeded accounts.
+
+Quality tooling (root): `npm run lint` (ESLint flat config; the JS prototype is pragmatic — noisy rules are warnings, `rules-of-hooks` is an error — while `apps/api` and `packages/*` TypeScript is linted with typescript-eslint recommended and unused-vars as errors), `npm run format`/`format:check` (Prettier), `npm run test` (Vitest + Testing Library in `apps/web`), `npm run test:api` (Vitest + Supertest in `apps/api`), `npm run test:e2e` (Playwright against the real API/PostgreSQL/Mailpit stack; run `npm run db:up`, migrations, and seed first, plus `npx playwright install` once). CI lives in `.github/workflows/ci.yml` (lint + unit test + build, an API job with a Postgres service that deploys migrations, seeds, tests, and builds the backend, plus a Playwright job with PostgreSQL and Mailpit services). Backend TypeScript is typechecked by its `tsc` builds; the JS frontend still has **no typecheck**.
 
 ## Architecture
 
@@ -56,17 +66,24 @@ Backend foundation (all TypeScript, ESM, strict; base tsconfig in `packages/conf
 
 The frontend code lives in `apps/web/src`:
 
-- `App.jsx` — root. **Uses React Router (`BrowserRouter`).** Routes are organized into public/auth, member, creator, admin, and legal groups. The older `useNav` adapter remains for specialized pages that still expose callback navigation. Shared-shell pages navigate directly with React Router. Routes are wrapped in an `ErrorBoundary`; member/creator/admin routes use `ProtectedRoute` (currently a transparent seam until real auth exists). `userStatus` is lifted so it persists across routes.
-- `pages/` — one component per screen (Home, Profile, Store, Connect, Wallet, Promotions, CreatorDashboard, Oasis, Login, SignUp, LegalHub, CreatorOnboarding). Several prototype pages remain large, but backend-bound sample content is imported from `fixtures/` rather than being declared inside page components.
+- `App.jsx` — root. **Uses React Router (`BrowserRouter`).** `AuthProvider` restores the HttpOnly-cookie session through `/me`. Routes are organized into public/auth, member, creator, and legal groups. The older `useNav` adapter remains for specialized pages that still expose callback navigation. Shared-shell pages navigate directly with React Router. Routes are wrapped in an `ErrorBoundary`; member/creator routes use the real `ProtectedRoute` state and uppercase API roles. Creator Dashboard navigation is visible only to `CREATOR` accounts. The public app intentionally has no `/admin` route. `userStatus` is lifted so it persists across routes.
+- `auth/` — auth API adapter, canonical roles and policy versions, `AuthProvider` state machine, and hooks. The API remains the identity source of truth; no auth token is stored in browser storage.
+- `pages/` — one component per screen (Home, Profile, Store, Connect, Wallet, Promotions, CreatorDashboard, Oasis, Login, SignUp, ForgotPassword, ResetPassword, VerifyEmail, LegalHub, CreatorOnboarding). Several prototype pages remain large, but backend-bound sample content is imported from `fixtures/` rather than being declared inside page components.
 - `components/` — shared widgets and foundation primitives. `MemberLayout` is the shared shell for Home, Profile, Store, Connect, and Promotions; it composes `AppHeader`, Sidebar/mobile navigation, and ChatSidebar. Specialized feature areas such as Wallet, Oasis, and Creator Dashboard intentionally retain their own layouts. `ErrorBoundary`, `ProtectedRoute`, and `StateViews` provide failure, authorization, loading, empty, and retry seams.
-- `lib/` — `env.js` (validated `import.meta.env` access), `apiClient.js` (fetch wrapper: base URL, credentials, request IDs, typed errors, 401 handling), and `useSimulatedFetch.js` (temporary async-state seam for prototype pages until real API calls replace it). Slice 3 must first correct `apiClient` to read the API's nested `error` envelope.
+- `lib/` — `env.js` (validated `import.meta.env` access), `apiClient.js` (fetch wrapper: base URL, credentials, nested error envelopes, request IDs, typed errors, and global later-`401` notification), and `useSimulatedFetch.js` (temporary async-state seam for prototype pages until real API calls replace it).
 - `fixtures/` — development-only sample content for public, social, Wallet, Oasis, and Creator Dashboard pages. These files are the replacement boundary for future `/api/v1` responses.
 - `utils/` — small pure helpers (e.g. `sortMomentRail.js`).
 - `test/setup.js` — Vitest setup (jest-dom). Tests are colocated as `*.test.{js,jsx}`.
 
+The backend retains `ADMIN` for API authorization. `apps/admin` is an
+independently buildable private shell, not a public product route. Its Phase 11
+moderation/operations workflows remain unimplemented and must not be deployed
+until operational MFA/SSO, restricted hosting, API permissions, and audit
+controls are in place.
+
 Conventions:
 
-- Prototype content comes from `fixtures/`; media is loaded from external demo URLs. Page-local display configuration and interactive local state remain in components. Frontend auth and all financial buttons are still simulated; the new backend auth endpoints persist independently until Phase 3 frontend integration.
+- Prototype content comes from `fixtures/`; media is loaded from external demo URLs. Page-local display configuration and interactive local state remain in components. Authentication uses the real API; financial buttons and most product-domain data remain simulated.
 - Styling is **Tailwind CSS v4** via `@tailwindcss/vite` (config-less; `@import "tailwindcss"` in `index.css`). Custom keyframe animations are hand-written in `index.css`. Visual identity is sakura-pink/pearl/off-white with rounded "premium" surfaces; Dark Knight is a planned second theme.
 - Plain JavaScript + JSX (no TypeScript in the frontend). PLAN.md mandates **TypeScript for all new backend/shared-contract code**, converting frontend files only when touched for backend integration.
 
@@ -89,4 +106,4 @@ These are product invariants, not suggestions — violating them is a correctnes
 
 ## Repository state note
 
-The monorepo migration is committed: work against `apps/web` and `apps/api`, never old top-level paths. Phase 2 is **partially complete (local foundation)** — staging deploy, RDS, backups, Sentry, job queue, and idempotency remain deferred. Phase 3 slices 1–2 (core auth backend and email flows) are locally implemented and verified; slices 3–4 remain. See `HANDOFF.md` for exact commands, counts, and publication status.
+The monorepo migration is committed: work against `apps/web` and `apps/api`, never old top-level paths. Phase 2 is **partially complete (local foundation)** — staging deploy, RDS, backups, Sentry, job queue, and idempotency remain deferred. Phase 3 slices 1–3 (core auth backend, email flows, and frontend integration) are locally implemented and verified; Slice 4 Settings/explicit-content work remains. See `HANDOFF.md` for exact commands, counts, and publication status.

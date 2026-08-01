@@ -2,7 +2,7 @@
 
 @CLAUDE.md
 
-Last updated: July 28, 2026
+Last updated: August 1, 2026
 
 ## 1. Purpose
 
@@ -122,15 +122,22 @@ Decision gate:
 
 Recommendation:
 
-- Keep Admin inside `apps/web` for MVP at protected `/admin` routes.
-- Build Admin as an isolated feature area with separate layouts, permissions, API endpoints, and audit logging.
-- Do not create a separately deployed admin application until operational needs justify it.
+- Keep the public Pumdoki application free of `/admin` routes and admin links.
+- Build a separately deployed private operations application in a future
+  `apps/admin` workspace with its own layout, build, hosting, and access policy.
+- Keep `ADMIN` in the backend role model and enforce every operational
+  permission in the API. The separate deployment is defense in depth, not a
+  replacement for authorization.
+- Require stronger operational controls before launch: MFA or SSO, restricted
+  access, audit logging, and separately permissioned sensitive records.
 
 Why:
 
-- One frontend deployment is simpler and cheaper for a solo founder.
-- Authorization must still be enforced by the API; hiding links is never sufficient.
-- The feature can later be extracted into `apps/admin` without changing the database model.
+- The customer-facing app should not advertise or host the operations surface.
+- Independent deployment reduces accidental coupling and allows a stricter
+  authentication, network, release, and monitoring posture.
+- API authorization remains mandatory because a private URL or hidden link is
+  not a security boundary.
 
 ### 3.4 Email
 
@@ -290,7 +297,6 @@ Provisional recommendation:
    - Public/auth.
    - Member.
    - Creator.
-   - Admin.
    - Legal.
 8. Create a shared application shell.
 9. Extract shared header, sidebar, mobile navigation, profile menu, notifications, and chat rail.
@@ -416,7 +422,7 @@ Provisional recommendation:
 - Admin permissions are server-enforced.
 - Explicit-content preference works throughout the frontend.
 
-### Current implementation status — July 28, 2026
+### Current implementation status — July 29, 2026
 
 - Phase 3 is split into four separately specified and verified slices: core
   auth backend, email flows, frontend auth integration, and Settings.
@@ -429,14 +435,18 @@ Provisional recommendation:
   tokens, reissue invalidation, verification/reset endpoints, session
   revocation after reset, request throttling, and the verified-email middleware
   seam.
+- Slice 3, frontend auth integration, is implemented and locally verified:
+  nested API errors, persistent cookie-backed auth restoration, live
+  Login/SignUp/logout, canonical role guards, requested-route restoration,
+  verification/reset screens, the unverified-email banner, and real
+  API/PostgreSQL/Mailpit browser flows.
 - Acceptance records use restrictive deletion. A future account-deletion flow
   must deactivate/pseudonymize according to a counsel-approved retention
   schedule rather than cascade-delete legal evidence.
-- Frontend session persistence, real Login/SignUp integration, verification and
-  reset screens, Settings, and the explicit-content preference remain
-  incomplete. Phase 3 must not be described as complete.
-- Durable slice designs live in `docs/architecture/`; the next design is
-  `phase3-slice3-frontend-auth-integration.md`.
+- Settings and the explicit-content preference remain incomplete. Phase 3 must
+  not be described as complete.
+- Durable slice designs live in `docs/architecture/`; Slice 3's implementation
+  record is in `phase3-slice3-frontend-auth-integration.md`.
 - Phase 2 remains partially complete while its cloud/operations remainder is
   tracked separately.
 
@@ -786,7 +796,10 @@ Keep live-streaming controls hidden behind a disabled feature flag until post-MV
 
 Build in this order:
 
-1. Protected `/admin`.
+1. Complete and securely deploy the private operations application in
+   `apps/admin`; its independent build shell exists, but authentication,
+   operational workflows, and hosting controls remain. Do not add `/admin` to
+   the public web app.
 2. Operations overview.
 3. User and creator search.
 4. Creator verification queue.
@@ -807,7 +820,11 @@ Build in this order:
 
 ### Security rules
 
+- The operations application has an independent deployment and is not linked
+  from the public product.
 - Admin permissions are API-enforced.
+- Operational authentication requires MFA or SSO plus restricted access before
+  production use.
 - Sensitive document access is separately permissioned.
 - Every sensitive view and action is logged.
 - Destructive actions require confirmation and reason.
@@ -981,13 +998,12 @@ follow-up date.
 
 ## 21. Immediate next actions
 
-1. Commit the completed Phase 3 slice 2 closure work, publish it to the
-   confirmed public repository once the GitHub CLI/authentication prerequisite
-   is available, and record CI results.
-2. Begin Phase 3 slice 3 from
-   `docs/architecture/phase3-slice3-frontend-auth-integration.md`: correct the
-   API error-envelope adapter, add persistent auth state, connect Login/SignUp,
-   enforce protected routes, and build verification/reset screens.
+1. Review, commit, and publish the completed Phase 3 Slice 3 frontend-auth
+   integration, including creator-only Dashboard navigation and removal of the
+   public `/admin` placeholder, then verify its GitHub Actions run.
+2. Specify and begin Phase 3 Slice 4: the minimum Settings experience and
+   explicit-content preference, default hidden and enforced by future APIs and
+   queries rather than CSS alone.
 3. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
    decisions in the register above.
 4. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist

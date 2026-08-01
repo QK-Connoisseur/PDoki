@@ -1,14 +1,15 @@
 # Phase 3 · Slice 3: Frontend Authentication Integration
 
-Date: 2026-07-28 · Status: ready for implementation · Branch: `dev`
+Date: 2026-08-01 · Status: implemented and locally verified · Branch: `dev`
 
 ## Context
 
 Phase 3 slices 1 and 2 provide the server-side account system: registration,
 login, secure cookie sessions, `/me`, logout/logout-all, email verification,
 password reset, role enforcement, and the `requireVerifiedEmail` seam. The
-frontend still simulates login and signup, `ProtectedRoute` passes every user
-through, and the verification/reset routes do not exist.
+Slice 3 frontend now consumes those APIs: Login and SignUp are live,
+`ProtectedRoute` restores and enforces server identity, and verification/reset
+routes complete the browser flows.
 
 This slice connects the existing React interface to those APIs. It does not add
 Settings or explicit-content preferences; those remain slice 4.
@@ -29,20 +30,26 @@ Settings or explicit-content preferences; those remain slice 4.
   and verification guidance. Money and creator actions remain protected by the
   future API endpoints that apply `requireVerifiedEmail`.
 - API roles use the canonical uppercase values `MEMBER`, `CREATOR`,
-  `MODERATOR`, and `ADMIN`. Frontend route declarations must not use the
-  current lowercase placeholders.
+  `MODERATOR`, and `ADMIN`. The public frontend uses `CREATOR` for its only
+  role-restricted product route; `ADMIN` remains a backend/private-operations
+  role and does not create a public `/admin` route.
+- Creator Dashboard navigation is rendered only for `CREATOR` accounts. Link
+  visibility improves the experience, while `ProtectedRoute` and future API
+  permissions remain the security boundary.
+- The operations UI is an independently built `apps/admin` application, not a
+  route group inside `apps/web`. Slice 3 creates only its safe, data-free shell;
+  operational authentication and workflows remain Phase 11.
 - No authentication data is persisted in localStorage or sessionStorage.
 
-## Existing gaps to correct first
+## Initial gaps corrected by this slice
 
-`apps/web/src/lib/apiClient.js` currently reads non-2xx fields from the response
-root, but the API envelope is `{ error: { code, message, requestId, details? } }`.
-The client and its tests must parse that nested envelope before UI flows depend
-on error codes.
+`apps/web/src/lib/apiClient.js` previously read non-2xx fields from the response
+root. It now parses the API's
+`{ error: { code, message, requestId, details? } }` envelope and notifies the
+auth provider when a later request returns `401`.
 
-`ProtectedRoute` currently accepts lowercase role strings while the shared
-contract and API return uppercase roles. Route declarations and tests must use
-the shared canonical values.
+`ProtectedRoute` previously accepted lowercase role strings. Route declarations
+and tests now use the API's canonical uppercase roles.
 
 ## Frontend architecture
 
@@ -182,7 +189,9 @@ Playwright coverage:
 - A valid verification link updates the UI.
 - Password reset completes and the previous password no longer works.
 - Logout protects member routes on refresh.
-- Creator and admin routes reject insufficient roles.
+- Members cannot see Creator Dashboard navigation or enter the creator route.
+- Creators can open the dashboard from the profile menu.
+- The public app has no `/admin` route.
 
 Browser tests should use the real local API/PostgreSQL stack for the core
 vertical flow. Mocked component tests remain useful for edge states.
@@ -199,6 +208,29 @@ vertical flow. Mocked component tests remain useful for edge states.
   final changes.
 - `PLAN.md`, `CLAUDE.md`, `HANDOFF.md`, and the master tracker record the real
   result without claiming Settings or explicit-content completion.
+
+## Implementation record
+
+Completed on 2026-07-29:
+
+- Added the auth provider/state machine, API adapter, canonical roles, public
+  route guard, protected-route enforcement, and global later-`401`
+  invalidation.
+- Connected Login and SignUp to the API and added forgot-password,
+  reset-password, verification-confirmation, and persistent unverified-email
+  experiences.
+- Added component coverage for auth state, forms, guards, verification, and
+  reset edge cases.
+- Added real PostgreSQL/API/Mailpit Playwright flows and CI services for
+  registration, verification, password reset, session persistence, logout,
+  requested-route restoration, creator-only navigation/role denial, and public
+  `/admin` route absence.
+- Removed the public admin placeholder while retaining the backend `ADMIN` role
+  and added an independently buildable, data-free `apps/admin` shell. Phase 11
+  still owns its authentication, restricted deployment, API integration,
+  permissions, moderation workflows, and audit controls.
+- Kept Settings and explicit-content preferences explicitly out of scope for
+  Slice 4.
 
 ## Out of scope
 

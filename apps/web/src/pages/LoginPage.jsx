@@ -2,10 +2,18 @@ import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import { featuredCreators, loginCtaCards } from "../fixtures/login";
 
-export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
+export default function LoginPage({
+  onLogin,
+  onOpenSignup,
+  onForgotPassword,
+  onNavigateLegal,
+}) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [carouselHovered, setCarouselHovered] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
@@ -34,9 +42,33 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
 
   const trackTranslate = `translateX(-${currentSlide * (100 / featuredCreators.length)}%)`;
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    onLogin();
+    setPending(true);
+    setError(null);
+    try {
+      await onLogin({
+        email: credentials.email.trim().toLowerCase(),
+        password: credentials.password,
+      });
+    } catch (nextError) {
+      if (nextError?.status === 401) {
+        setError("The email or password is incorrect.");
+      } else if (
+        nextError?.status === 429 ||
+        nextError?.code === "RATE_LIMITED"
+      ) {
+        setError("Too many login attempts. Please wait and try again.");
+      } else if (nextError?.status === 403) {
+        setError("This account is currently restricted.");
+      } else {
+        setError(
+          "We couldn’t reach the authentication service. Please try again."
+        );
+      }
+    } finally {
+      setPending(false);
+    }
   };
 
   return (
@@ -393,7 +425,15 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
                 </p>
               </div>
 
-              <form className="space-y-4" onSubmit={handleLogin}>
+              <form className="space-y-4" onSubmit={handleLogin} noValidate>
+                {error && (
+                  <div
+                    role="alert"
+                    className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                  >
+                    {error}
+                  </div>
+                )}
                 <div>
                   <label
                     htmlFor="email"
@@ -404,7 +444,16 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
                   <input
                     id="email"
                     type="email"
+                    value={credentials.email}
+                    onChange={(event) =>
+                      setCredentials((current) => ({
+                        ...current,
+                        email: event.target.value,
+                      }))
+                    }
                     placeholder="you@example.com"
+                    autoComplete="email"
+                    required
                     className="w-full rounded-2xl border border-pink-100 bg-[#fffafc] px-4 py-3 text-sm outline-none ring-0 transition placeholder:text-[#c59aae] focus:border-pink-300"
                   />
                 </div>
@@ -417,50 +466,66 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
                     >
                       Password
                     </label>
-                    <a
-                      href="#"
+                    <button
+                      type="button"
+                      onClick={onForgotPassword}
                       className="text-sm font-medium text-[#df5f97] hover:underline"
                     >
                       Forgot password?
-                    </a>
+                    </button>
                   </div>
                   <input
                     id="password"
                     type="password"
+                    value={credentials.password}
+                    onChange={(event) =>
+                      setCredentials((current) => ({
+                        ...current,
+                        password: event.target.value,
+                      }))
+                    }
                     placeholder="Enter your password"
+                    autoComplete="current-password"
+                    required
                     className="w-full rounded-2xl border border-pink-100 bg-[#fffafc] px-4 py-3 text-sm outline-none transition placeholder:text-[#c59aae] focus:border-pink-300"
                   />
                 </div>
 
-                <div className="flex items-center justify-between text-sm">
-                  <label className="flex items-center gap-2 text-[#8c6d7f]">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-pink-200 text-pink-400 focus:ring-pink-300"
-                    />
-                    Remember me
-                  </label>
+                <div className="flex items-center justify-end text-sm">
                   <span className="rounded-full bg-pink-50 px-3 py-1 text-xs font-medium text-[#d85a91]">
-                    Secure login
+                    Secure cookie session
                   </span>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full rounded-2xl bg-gradient-to-r from-[#f472b6] to-[#ec4899] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-200 transition hover:translate-y-[-1px]"
+                  disabled={
+                    pending ||
+                    !credentials.email.trim() ||
+                    !credentials.password
+                  }
+                  className="w-full rounded-2xl bg-gradient-to-r from-[#f472b6] to-[#ec4899] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-200 transition hover:translate-y-[-1px] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Log in
+                  {pending ? "Logging in…" : "Log in"}
                 </button>
 
                 <p className="mt-3 text-center text-xs leading-5 text-[#8c6d7f]">
                   By logging in and using Pumdoki, you agree to our{" "}
-                  <a href="#" className="text-[#df5f97] hover:underline">
+                  <button
+                    type="button"
+                    onClick={() => onNavigateLegal?.("terms")}
+                    className="text-[#df5f97] hover:underline"
+                  >
                     Terms of Service
-                  </a>{" "}
+                  </button>{" "}
                   and{" "}
-                  <a href="#" className="text-[#df5f97] hover:underline">
+                  <button
+                    type="button"
+                    onClick={() => onNavigateLegal?.("privacy")}
+                    className="text-[#df5f97] hover:underline"
+                  >
                     Privacy Policy
-                  </a>
+                  </button>
                   , and confirm that you are at least 18 years old.
                 </p>
               </form>
@@ -471,7 +536,12 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
                 <div className="h-px flex-1 bg-pink-100" />
               </div>
 
-              <button className="flex w-full items-center justify-center gap-3 rounded-2xl border border-pink-100 bg-white px-4 py-3 text-sm font-medium text-[#6b475e] transition hover:bg-pink-50">
+              <button
+                type="button"
+                disabled
+                aria-disabled="true"
+                className="flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-2xl border border-pink-100 bg-white px-4 py-3 text-sm font-medium text-[#6b475e] opacity-60"
+              >
                 <svg className="h-5 w-5" viewBox="0 0 48 48" aria-hidden="true">
                   <path
                     fill="#FFC107"
@@ -490,7 +560,7 @@ export default function LoginPage({ onLogin, onOpenSignup, onNavigateLegal }) {
                     d="M43.611 20.083H42V20H24v8h11.303a12.05 12.05 0 0 1-4.084 5.57h.001l6.19 5.238C36.972 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917Z"
                   />
                 </svg>
-                Continue with Google
+                Google sign-in unavailable
               </button>
 
               <div className="mt-6 rounded-2xl bg-pink-50 p-4 text-sm leading-6 text-[#8a6a7c]">

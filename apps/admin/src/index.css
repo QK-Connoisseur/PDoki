@@ -1,0 +1,134 @@
+:root {
+  color: #43263b;
+  background: #1f1020;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.operations-shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at top, rgb(223 95 151 / 24%), transparent 42%),
+    linear-gradient(145deg, #1f1020, #35162d 55%, #1a101b);
+}
+
+.operations-card {
+  width: min(680px, 100%);
+  padding: clamp(28px, 6vw, 52px);
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 28px;
+  background: rgb(255 250 252 / 96%);
+  box-shadow: 0 28px 80px rgb(7 2 7 / 35%);
+}
+
+.brand-mark {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 24px;
+  place-items: center;
+  border-radius: 16px;
+  color: white;
+  background: linear-gradient(135deg, #df5f97, #7c2f62);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #a63d72;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: #2c1728;
+  font-size: clamp(34px, 7vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.lede {
+  margin: 20px 0 30px;
+  color: #6c4c62;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.boundary-list {
+  display: grid;
+  gap: 1px;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid #f0ccdc;
+  border-radius: 18px;
+  background: #f0ccdc;
+}
+
+.boundary-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.7fr) minmax(0, 1.3fr);
+  gap: 18px;
+  padding: 16px 18px;
+  background: white;
+}
+
+dt {
+  color: #86506f;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+dd {
+  margin: 0;
+  color: #3a2434;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.notice {
+  margin: 24px 0 0;
+  padding: 13px 16px;
+  border-radius: 14px;
+  color: #7a254b;
+  background: #fff0f6;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .boundary-row {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+}

@@ -231,6 +231,7 @@ export default function Sidebar({
   activePage,
   onNavigate,
   onOpenDashboard,
+  showCreatorDashboard = false,
   onLogout,
   onNavigateLegal,
   showComposeMenu,
@@ -464,11 +465,15 @@ export default function Sidebar({
                 label: "Saved",
                 icon: "M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z",
               },
-              {
-                label: "Creator Dashboard",
-                icon: "M4 6h16M4 12h16M4 18h7",
-                action: onOpenDashboard,
-              },
+              ...(showCreatorDashboard
+                ? [
+                    {
+                      label: "Creator Dashboard",
+                      icon: "M4 6h16M4 12h16M4 18h7",
+                      action: onOpenDashboard,
+                    },
+                  ]
+                : []),
               {
                 label: "Help & Support",
                 icon: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01",

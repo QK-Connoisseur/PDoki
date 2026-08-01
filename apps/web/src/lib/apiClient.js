@@ -10,7 +10,7 @@ export class ApiError extends Error {
     super(message);
     this.name = "ApiError";
     this.status = status ?? 0;
-    this.code = code ?? "unknown_error";
+    this.code = code ?? "UNKNOWN_ERROR";
     this.requestId = requestId;
     this.details = details;
   }
@@ -25,6 +25,22 @@ function generateRequestId() {
   const c = globalThis.crypto;
   if (c?.randomUUID) return c.randomUUID();
   return `req_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+}
+
+const unauthorizedListeners = new Set();
+
+function notifyUnauthorized(error) {
+  for (const listener of unauthorizedListeners) listener(error);
+}
+
+/**
+ * Subscribe to unauthorized responses from the shared browser client.
+ * AuthProvider uses this to invalidate stale frontend session state without
+ * coupling the low-level request wrapper to React or navigation.
+ */
+export function subscribeToUnauthorized(listener) {
+  unauthorizedListeners.add(listener);
+  return () => unauthorizedListeners.delete(listener);
 }
 
 /**
@@ -66,7 +82,7 @@ export function createApiClient({
     } catch {
       throw new ApiError("Network request failed", {
         status: 0,
-        code: "network_error",
+        code: "NETWORK_ERROR",
         requestId,
       });
     }
@@ -77,16 +93,18 @@ export function createApiClient({
     const payload = isJson ? await response.json().catch(() => null) : null;
 
     if (!response.ok) {
-      if (response.status === 401 && onUnauthorized) onUnauthorized();
-      throw new ApiError(
-        payload?.message || `Request failed (${response.status})`,
+      const apiError = payload?.error;
+      const normalized = new ApiError(
+        apiError?.message || `Request failed (${response.status})`,
         {
           status: response.status,
-          code: payload?.code,
-          requestId: payload?.requestId || requestId,
-          details: payload?.details,
+          code: apiError?.code,
+          requestId: apiError?.requestId || requestId,
+          details: apiError?.details,
         }
       );
+      if (response.status === 401 && onUnauthorized) onUnauthorized(normalized);
+      throw normalized;
     }
 
     return payload;
@@ -105,4 +123,6 @@ export function createApiClient({
 }
 
 /** Default client bound to the configured API base URL. */
-export const apiClient = createApiClient();
+export const apiClient = createApiClient({
+  onUnauthorized: notifyUnauthorized,
+});

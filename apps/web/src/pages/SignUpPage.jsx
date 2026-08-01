@@ -1,47 +1,80 @@
 import { useState } from "react";
+import {
+  CURRENT_PRIVACY_VERSION,
+  CURRENT_TERMS_VERSION,
+} from "../auth/policyVersions";
 
-export default function SignUpPage({ onLogin, onBack, onNavigateLegal }) {
+export default function SignUpPage({ onRegister, onBack, onNavigateLegal }) {
   const [form, setForm] = useState({
-    username: "",
+    displayName: "",
     email: "",
     password: "",
     confirm: "",
     ageAgree: false,
-    termsAgree: false,
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const set = (field) => (e) => {
     const val =
       e.target.type === "checkbox" ? e.target.checked : e.target.value;
     setForm((f) => ({ ...f, [field]: val }));
     setErrors((e) => ({ ...e, [field]: undefined }));
+    setSubmitError("");
   };
 
   const validate = () => {
     const errs = {};
-    if (!form.username.trim()) errs.username = "Username is required";
-    else if (form.username.length < 3) errs.username = "At least 3 characters";
+    if (!form.displayName.trim()) errs.displayName = "Display name is required";
+    else if (form.displayName.trim().length > 50)
+      errs.displayName = "Use 50 characters or fewer";
     if (!form.email.trim()) errs.email = "Email is required";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       errs.email = "Invalid email address";
     if (!form.password) errs.password = "Password is required";
-    else if (form.password.length < 8) errs.password = "At least 8 characters";
+    else if (form.password.length < 10)
+      errs.password = "At least 10 characters";
+    else if (form.password.length > 128)
+      errs.password = "Use 128 characters or fewer";
     if (form.password !== form.confirm) errs.confirm = "Passwords do not match";
     if (!form.ageAgree)
       errs.ageAgree = "You must confirm your age and agree to the terms";
     return errs;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       return;
     }
-    onLogin && onLogin();
+    setPending(true);
+    setSubmitError("");
+    try {
+      await onRegister({
+        displayName: form.displayName.trim(),
+        email: form.email.trim().toLowerCase(),
+        password: form.password,
+        ageAttested: true,
+        acceptedTermsVersion: CURRENT_TERMS_VERSION,
+        acceptedPrivacyVersion: CURRENT_PRIVACY_VERSION,
+      });
+    } catch (error) {
+      if (error?.status === 409 || error?.code === "CONFLICT") {
+        setSubmitError("An account already exists for this email address.");
+      } else if (error?.status === 429 || error?.code === "RATE_LIMITED") {
+        setSubmitError("Too many requests. Please wait and try again.");
+      } else {
+        setSubmitError(
+          "We couldn’t create your account. Check your connection and try again."
+        );
+      }
+    } finally {
+      setPending(false);
+    }
   };
 
   const navLegal = (sub) => onNavigateLegal && onNavigateLegal(sub);
@@ -122,30 +155,49 @@ export default function SignUpPage({ onLogin, onBack, onNavigateLegal }) {
             </div>
 
             <form onSubmit={handleSubmit} noValidate className="space-y-4">
-              {/* Username */}
+              {submitError && (
+                <div
+                  role="alert"
+                  className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                >
+                  {submitError}
+                </div>
+              )}
+
+              {/* Display name */}
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[#8c6d7f]">
-                  Username
+                <label
+                  htmlFor="signup-display-name"
+                  className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[#8c6d7f]"
+                >
+                  Display name
                 </label>
                 <input
+                  id="signup-display-name"
                   type="text"
-                  value={form.username}
-                  onChange={set("username")}
-                  placeholder="yourhandle"
-                  autoComplete="username"
-                  className={`w-full rounded-xl border px-4 py-2.5 text-sm text-[#241a22] placeholder-[#c9aab8] outline-none transition focus:ring-2 focus:ring-pink-200 ${errors.username ? "border-red-300 bg-red-50/30" : "border-pink-100 bg-white focus:border-pink-200"}`}
+                  value={form.displayName}
+                  onChange={set("displayName")}
+                  placeholder="How you’ll appear"
+                  autoComplete="name"
+                  className={`w-full rounded-xl border px-4 py-2.5 text-sm text-[#241a22] placeholder-[#c9aab8] outline-none transition focus:ring-2 focus:ring-pink-200 ${errors.displayName ? "border-red-300 bg-red-50/30" : "border-pink-100 bg-white focus:border-pink-200"}`}
                 />
-                {errors.username && (
-                  <p className="mt-1 text-xs text-red-500">{errors.username}</p>
+                {errors.displayName && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {errors.displayName}
+                  </p>
                 )}
               </div>
 
               {/* Email */}
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[#8c6d7f]">
+                <label
+                  htmlFor="signup-email"
+                  className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[#8c6d7f]"
+                >
                   Email address
                 </label>
                 <input
+                  id="signup-email"
                   type="email"
                   value={form.email}
                   onChange={set("email")}
@@ -160,15 +212,19 @@ export default function SignUpPage({ onLogin, onBack, onNavigateLegal }) {
 
               {/* Password */}
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[#8c6d7f]">
+                <label
+                  htmlFor="signup-password"
+                  className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[#8c6d7f]"
+                >
                   Password
                 </label>
                 <div className="relative">
                   <input
+                    id="signup-password"
                     type={showPassword ? "text" : "password"}
                     value={form.password}
                     onChange={set("password")}
-                    placeholder="Minimum 8 characters"
+                    placeholder="10–128 characters"
                     autoComplete="new-password"
                     className={`w-full rounded-xl border px-4 py-2.5 pr-10 text-sm text-[#241a22] placeholder-[#c9aab8] outline-none transition focus:ring-2 focus:ring-pink-200 ${errors.password ? "border-red-300 bg-red-50/30" : "border-pink-100 bg-white focus:border-pink-200"}`}
                   />
@@ -216,10 +272,14 @@ export default function SignUpPage({ onLogin, onBack, onNavigateLegal }) {
 
               {/* Confirm Password */}
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[#8c6d7f]">
+                <label
+                  htmlFor="signup-confirm-password"
+                  className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[#8c6d7f]"
+                >
                   Confirm password
                 </label>
                 <input
+                  id="signup-confirm-password"
                   type={showPassword ? "text" : "password"}
                   value={form.confirm}
                   onChange={set("confirm")}
@@ -291,6 +351,7 @@ export default function SignUpPage({ onLogin, onBack, onNavigateLegal }) {
               {/* Submit */}
               <button
                 type="submit"
+                disabled={pending || !form.ageAgree}
                 className="w-full rounded-2xl py-3 text-sm font-bold text-white transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
                   background: form.ageAgree
@@ -302,7 +363,7 @@ export default function SignUpPage({ onLogin, onBack, onNavigateLegal }) {
                   color: form.ageAgree ? "white" : "#c9aab8",
                 }}
               >
-                Create Account
+                {pending ? "Creating account…" : "Create Account"}
               </button>
 
               {/* Google */}
@@ -313,7 +374,9 @@ export default function SignUpPage({ onLogin, onBack, onNavigateLegal }) {
               </div>
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2.5 rounded-2xl border border-pink-100 bg-white py-2.5 text-sm font-medium text-[#5b4153] transition hover:border-pink-200 hover:bg-pink-50/40"
+                disabled
+                aria-disabled="true"
+                className="flex w-full cursor-not-allowed items-center justify-center gap-2.5 rounded-2xl border border-pink-100 bg-white py-2.5 text-sm font-medium text-[#5b4153] opacity-60"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -337,7 +400,7 @@ export default function SignUpPage({ onLogin, onBack, onNavigateLegal }) {
                     fill="#EA4335"
                   />
                 </svg>
-                Continue with Google
+                Google sign-up unavailable
               </button>
             </form>
 

@@ -1844,6 +1844,7 @@ export default function WalletPage({
   onLogout,
   onViewProfile,
   onOpenDashboard,
+  showCreatorDashboard = false,
   userStatus = "online",
   onStatusChange,
 }) {
@@ -2009,15 +2010,17 @@ export default function WalletPage({
                   >
                     My Profile
                   </button>
-                  <button
-                    onClick={() => {
-                      onOpenDashboard && onOpenDashboard();
-                      setShowProfileMenu(false);
-                    }}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97]"
-                  >
-                    Creator Dashboard
-                  </button>
+                  {showCreatorDashboard && (
+                    <button
+                      onClick={() => {
+                        onOpenDashboard && onOpenDashboard();
+                        setShowProfileMenu(false);
+                      }}
+                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97]"
+                    >
+                      Creator Dashboard
+                    </button>
+                  )}
                   <button
                     onClick={onBack}
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#5b4153] transition hover:bg-pink-50/60 hover:text-[#df5f97]"

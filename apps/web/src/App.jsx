@@ -5,8 +5,12 @@ import {
   Route,
   Navigate,
   useNavigate,
+  useLocation,
   useParams,
 } from "react-router-dom";
+import { AuthProvider } from "./auth/AuthProvider";
+import { AUTH_ROLES } from "./auth/authApi";
+import { useAuth } from "./auth/authContext";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
@@ -17,12 +21,15 @@ import PromotionsPage from "./pages/PromotionsPage";
 import CreatorDashboardPage from "./pages/CreatorDashboardPage";
 import WalletPage from "./pages/WalletPage";
 import SignUpPage from "./pages/SignUpPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
 import LegalHubPage from "./pages/LegalHubPage";
 import CreatorOnboardingPage from "./pages/CreatorOnboardingPage";
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { EmptyState } from "./components/StateViews";
+import PublicOnlyRoute from "./components/PublicOnlyRoute";
 
 /**
  * Navigation adapter.
@@ -38,9 +45,18 @@ import { EmptyState } from "./components/StateViews";
  */
 function useNav(userStatus, onStatusChange) {
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
   return {
     onBack: () => navigate("/home"),
-    onLogout: () => navigate("/login"),
+    onLogout: async () => {
+      try {
+        await logout();
+        navigate("/login", { replace: true });
+      } catch {
+        // Keep the user on the protected page when the server could not revoke
+        // the session; a later retry remains possible.
+      }
+    },
     onViewProfile: () => navigate("/profile"),
     onOpenOasis: () => navigate("/oasis"),
     onOpenConnect: () => navigate("/connect"),
@@ -49,11 +65,59 @@ function useNav(userStatus, onStatusChange) {
     onOpenDashboard: () => navigate("/dashboard"),
     onOpenWallet: () => navigate("/wallet"),
     onOpenCreatorOnboarding: () => navigate("/creator/onboarding"),
+    showCreatorDashboard: user?.role === AUTH_ROLES.CREATOR,
     onNavigateLegal: (subPage = "hub") =>
       navigate(subPage === "hub" ? "/legal" : `/legal/${subPage}`),
     userStatus,
     onStatusChange,
   };
+}
+
+function LoginRoute({ nav }) {
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const requested = location.state?.from;
+  const destination =
+    typeof requested?.pathname === "string"
+      ? `${requested.pathname}${requested.search || ""}${requested.hash || ""}`
+      : "/home";
+
+  const login = async (input) => {
+    await auth.login(input);
+    navigate(destination, { replace: true });
+  };
+
+  return (
+    <PublicOnlyRoute redirectTo={destination}>
+      <LoginPage
+        onLogin={login}
+        onOpenSignup={() => navigate("/signup")}
+        onForgotPassword={() => navigate("/forgot-password")}
+        onNavigateLegal={nav.onNavigateLegal}
+      />
+      <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />
+    </PublicOnlyRoute>
+  );
+}
+
+function SignUpRoute({ nav }) {
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  return (
+    <PublicOnlyRoute>
+      <SignUpPage
+        onRegister={async (input) => {
+          await auth.register(input);
+          navigate("/home", { replace: true });
+        }}
+        onBack={() => navigate("/login")}
+        onNavigateLegal={nav.onNavigateLegal}
+      />
+      <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />
+    </PublicOnlyRoute>
+  );
 }
 
 function LegalRoute({ nav }) {
@@ -67,24 +131,9 @@ function LegalRoute({ nav }) {
   );
 }
 
-/**
- * Placeholder for the future Admin area (PLAN Phase 11). The route group exists
- * now so the guarding seam is in place; real admin screens land later and are
- * always API-authorized, never merely link-hidden.
- */
-function AdminPlaceholder() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-[#fff8fb]">
-      <EmptyState
-        title="Admin area"
-        message="The moderation and operations console arrives in a later phase."
-      />
-    </div>
-  );
-}
-
 function AppShell() {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [userStatus, setUserStatus] = useState("online");
   const nav = useNav(userStatus, setUserStatus);
   // Props the shared-shell social pages need (navigation is handled by the shell).
@@ -95,32 +144,19 @@ function AppShell() {
       <Route path="/" element={<Navigate to="/login" replace />} />
 
       {/* ─── Public / auth ─────────────────────────────────────────── */}
+      <Route path="/login" element={<LoginRoute nav={nav} />} />
+      <Route path="/signup" element={<SignUpRoute nav={nav} />} />
       <Route
-        path="/login"
+        path="/forgot-password"
         element={
-          <>
-            <LoginPage
-              onLogin={() => navigate("/home")}
-              onOpenSignup={() => navigate("/signup")}
-              onNavigateLegal={nav.onNavigateLegal}
-            />
-            <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />
-          </>
+          <ForgotPasswordPage
+            onRequest={auth.requestPasswordReset}
+            onBack={() => navigate("/login")}
+          />
         }
       />
-      <Route
-        path="/signup"
-        element={
-          <>
-            <SignUpPage
-              onLogin={() => navigate("/home")}
-              onBack={() => navigate("/login")}
-              onNavigateLegal={nav.onNavigateLegal}
-            />
-            <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />
-          </>
-        }
-      />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
 
       {/* ─── Member ────────────────────────────────────────────────── */}
       <Route
@@ -185,7 +221,7 @@ function AppShell() {
       <Route
         path="/dashboard"
         element={
-          <ProtectedRoute roles={["creator"]}>
+          <ProtectedRoute roles={[AUTH_ROLES.CREATOR]}>
             <CreatorDashboardPage {...nav} />
           </ProtectedRoute>
         }
@@ -205,15 +241,6 @@ function AppShell() {
       />
 
       {/* ─── Admin (Phase 11 — protected placeholder) ──────────────── */}
-      <Route
-        path="/admin/*"
-        element={
-          <ProtectedRoute roles={["admin"]}>
-            <AdminPlaceholder />
-          </ProtectedRoute>
-        }
-      />
-
       {/* ─── Legal ─────────────────────────────────────────────────── */}
       <Route path="/legal" element={<LegalRoute nav={nav} />} />
       <Route path="/legal/:page" element={<LegalRoute nav={nav} />} />
@@ -227,7 +254,9 @@ export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <AppShell />
+        <AuthProvider>
+          <AppShell />
+        </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );

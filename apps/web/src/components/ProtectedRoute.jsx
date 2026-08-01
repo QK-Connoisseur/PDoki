@@ -1,18 +1,59 @@
-/**
- * Route guard placeholder.
- *
- * Phase 1 has no real authentication yet, so this currently renders its
- * children unchanged. It exists to establish the guarding seam: once session
- * auth lands (Phase 3), this will read auth state, redirect unauthenticated
- * users to `/login`, and enforce `roles` server-confirmed permissions.
- *
- * NOTE: Hiding a route here is never a substitute for API-enforced
- * authorization — the backend remains the source of truth.
- *
- * @param {{ roles?: string[], children: React.ReactNode }} props
- */
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../auth/authContext";
+import EmailVerificationBanner from "./EmailVerificationBanner";
+import { ErrorState, LoadingState } from "./StateViews";
+
+function FullPageState({ children }) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#fff8fb]">
+      {children}
+    </div>
+  );
+}
+
 export default function ProtectedRoute({ roles, children }) {
-  // TODO(phase-3): replace with real session/role checks + <Navigate to="/login" />.
-  void roles;
-  return <>{children}</>;
+  const auth = useAuth();
+  const location = useLocation();
+
+  if (auth.status === "loading") {
+    return (
+      <FullPageState>
+        <LoadingState label="Restoring your session…" />
+      </FullPageState>
+    );
+  }
+
+  if (auth.status === "unavailable") {
+    return (
+      <FullPageState>
+        <ErrorState
+          title="Authentication service unavailable"
+          message="We couldn’t confirm your session. Check your connection and try again."
+          onRetry={() => void auth.refreshSession().catch(() => {})}
+        />
+      </FullPageState>
+    );
+  }
+
+  if (auth.status === "unauthenticated") {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (roles?.length && !roles.includes(auth.user.role)) {
+    return (
+      <FullPageState>
+        <ErrorState
+          title="Access denied"
+          message="Your account does not have permission to view this page."
+        />
+      </FullPageState>
+    );
+  }
+
+  return (
+    <>
+      <EmailVerificationBanner />
+      {children}
+    </>
+  );
 }

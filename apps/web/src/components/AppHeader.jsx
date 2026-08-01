@@ -14,6 +14,8 @@ import { notifications as defaultNotifications } from "../fixtures/notifications
  *   userStatus?: string,
  *   onStatusChange?: (s: string) => void,
  *   onLogoClick?: () => void,
+ *   onLogout?: () => void,
+ *   showCreatorDashboard?: boolean,
  *   notifications?: Array<{id:number,text:string,time:string,avatar:string}>,
  * }} props
  */
@@ -21,6 +23,8 @@ export default function AppHeader({
   userStatus = "online",
   onStatusChange,
   onLogoClick,
+  onLogout,
+  showCreatorDashboard = false,
   notifications = defaultNotifications,
 }) {
   const navigate = useNavigate();
@@ -52,11 +56,15 @@ export default function AppHeader({
       icon: "M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z",
       action: () => navigate("/profile"),
     },
-    {
-      label: "Creator Dashboard",
-      icon: "M4 6h16M4 12h16M4 18h7",
-      action: () => navigate("/dashboard"),
-    },
+    ...(showCreatorDashboard
+      ? [
+          {
+            label: "Creator Dashboard",
+            icon: "M4 6h16M4 12h16M4 18h7",
+            action: () => navigate("/dashboard"),
+          },
+        ]
+      : []),
     {
       label: "Wallet",
       icon: "M21 4H3a1 1 0 00-1 1v14a1 1 0 001 1h18a1 1 0 001-1V5a1 1 0 00-1-1zM1 10h22M16 15h2",
@@ -312,7 +320,7 @@ export default function AppHeader({
                 ))}
                 <hr className="my-1 border-pink-100" />
                 <button
-                  onClick={() => navigate("/login")}
+                  onClick={onLogout}
                   className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8384f] transition hover:bg-red-50/60 cursor-pointer"
                 >
                   <svg

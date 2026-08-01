@@ -40,28 +40,44 @@ describe("createApiClient", () => {
   });
 
   it("throws a typed ApiError carrying status and code on non-2xx", async () => {
-    const fetchImpl = vi
-      .fn()
-      .mockResolvedValue(
-        jsonResponse(
-          { message: "Bad input", code: "validation_error" },
-          { status: 422 }
-        )
-      );
+    const fetchImpl = vi.fn().mockResolvedValue(
+      jsonResponse(
+        {
+          error: {
+            message: "Bad input",
+            code: "BAD_REQUEST",
+            requestId: "server-request-id",
+            details: [{ path: ["email"], message: "Invalid email" }],
+          },
+        },
+        { status: 422 }
+      )
+    );
     const client = createApiClient({ baseUrl: "http://api.test", fetchImpl });
 
     await expect(client.post("/x", {})).rejects.toMatchObject({
       name: "ApiError",
       status: 422,
-      code: "validation_error",
+      code: "BAD_REQUEST",
+      requestId: "server-request-id",
+      details: [{ path: ["email"], message: "Invalid email" }],
     });
   });
 
   it("invokes onUnauthorized on 401", async () => {
     const onUnauthorized = vi.fn();
-    const fetchImpl = vi
-      .fn()
-      .mockResolvedValue(jsonResponse({ message: "nope" }, { status: 401 }));
+    const fetchImpl = vi.fn().mockResolvedValue(
+      jsonResponse(
+        {
+          error: {
+            message: "nope",
+            code: "UNAUTHORIZED",
+            requestId: "unauthorized-request",
+          },
+        },
+        { status: 401 }
+      )
+    );
     const client = createApiClient({
       baseUrl: "http://api.test",
       fetchImpl,
@@ -79,5 +95,6 @@ describe("createApiClient", () => {
     const error = await client.get("/health").catch((e) => e);
     expect(error).toBeInstanceOf(ApiError);
     expect(error.isNetworkError).toBe(true);
+    expect(error.code).toBe("NETWORK_ERROR");
   });
 });

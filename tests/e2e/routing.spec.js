@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { loginAs, submitLogin } from "./auth-helpers";
 
 // Phase 1 browser coverage: real URLs must resolve on a cold load (not just via
 // in-app navigation), unknown paths fall back, browser Back/Forward works across
@@ -13,13 +14,18 @@ test.describe("routing", () => {
     await expect(page.getByText("Welcome back")).toBeVisible();
   });
 
-  test("deep-linking /store loads directly on refresh", async ({ page }) => {
+  test("an anonymous deep link returns to /store after login", async ({
+    page,
+  }) => {
     await page.goto("/store");
+    await expect(page).toHaveURL(/\/login$/);
+    await submitLogin(page);
     await expect(page).toHaveURL(/\/store$/);
     await expect(page.getByText("Trending")).toBeVisible();
   });
 
   test("deep-linking /connect renders the Connect screen", async ({ page }) => {
+    await loginAs(page);
     await page.goto("/connect");
     await expect(page).toHaveURL(/\/connect$/);
     await expect(
@@ -37,6 +43,7 @@ test.describe("browser history", () => {
   test("Back/Forward navigate between shared-shell member routes", async ({
     page,
   }) => {
+    await loginAs(page);
     await page.goto("/home");
     await expect(page.getByText("For You")).toBeVisible();
 
@@ -69,17 +76,20 @@ test.describe("browser history", () => {
 
 test.describe("core page async states", () => {
   test("loading state is shown while data resolves", async ({ page }) => {
+    await loginAs(page);
     await page.goto("/store?state=loading");
     await expect(page.getByRole("status")).toBeVisible();
     await expect(page.getByText("Loading the store…")).toBeVisible();
   });
 
   test("empty state is shown when there is no data", async ({ page }) => {
+    await loginAs(page);
     await page.goto("/store?state=empty");
     await expect(page.getByText("No items found")).toBeVisible();
   });
 
   test("error state shows a retry that recovers the page", async ({ page }) => {
+    await loginAs(page);
     await page.goto("/store?state=error");
     await expect(page.getByRole("alert")).toBeVisible();
     await expect(page.getByText("We couldn’t load the store.")).toBeVisible();
@@ -119,11 +129,19 @@ const featurePageStates = [
 test.describe("feature page async states", () => {
   for (const feature of featurePageStates) {
     test(`${feature.name} exposes an empty state`, async ({ page }) => {
+      await loginAs(
+        page,
+        feature.name === "creator dashboard" ? "creator" : "member"
+      );
       await page.goto(`${feature.path}?state=empty`);
       await expect(page.getByText(feature.empty)).toBeVisible();
     });
 
     test(`${feature.name} retries after an error`, async ({ page }) => {
+      await loginAs(
+        page,
+        feature.name === "creator dashboard" ? "creator" : "member"
+      );
       await page.goto(`${feature.path}?state=error`);
       await expect(page.getByRole("alert")).toBeVisible();
       await expect(page.getByText(feature.error)).toBeVisible();
