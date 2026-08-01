@@ -125,6 +125,7 @@ export function createAuthService(db: PrismaClient, deps: AuthServiceDeps) {
               email: input.email,
               passwordHash,
               displayName: input.displayName,
+              preference: { create: {} },
             },
           });
           await tx.acceptanceRecord.createMany({

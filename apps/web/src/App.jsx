@@ -20,6 +20,7 @@ import StorePage from "./pages/StorePage";
 import PromotionsPage from "./pages/PromotionsPage";
 import CreatorDashboardPage from "./pages/CreatorDashboardPage";
 import WalletPage from "./pages/WalletPage";
+import SettingsPage from "./pages/SettingsPage";
 import SignUpPage from "./pages/SignUpPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
@@ -64,6 +65,7 @@ function useNav(userStatus, onStatusChange) {
     onOpenPromotions: () => navigate("/promotions"),
     onOpenDashboard: () => navigate("/dashboard"),
     onOpenWallet: () => navigate("/wallet"),
+    onOpenSettings: () => navigate("/settings"),
     onOpenCreatorOnboarding: () => navigate("/creator/onboarding"),
     showCreatorDashboard: user?.role === AUTH_ROLES.CREATOR,
     onNavigateLegal: (subPage = "hub") =>
@@ -216,6 +218,14 @@ function AppShell() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <SettingsPage {...member} />
+          </ProtectedRoute>
+        }
+      />
 
       {/* ─── Creator ───────────────────────────────────────────────── */}
       <Route
@@ -240,7 +250,6 @@ function AppShell() {
         }
       />
 
-      {/* ─── Admin (Phase 11 — protected placeholder) ──────────────── */}
       {/* ─── Legal ─────────────────────────────────────────────────── */}
       <Route path="/legal" element={<LegalRoute nav={nav} />} />
       <Route path="/legal/:page" element={<LegalRoute nav={nav} />} />

@@ -35,6 +35,7 @@ const protectedRoutes = [
   { path: "/connect", group: "member", expect: "Voice Call" },
   { path: "/promotions", group: "member" },
   { path: "/wallet", group: "member" },
+  { path: "/settings", group: "member", expect: "Content preferences" },
   { path: "/oasis", group: "member" },
   { path: "/dashboard", group: "creator", role: "creator" },
   { path: "/creator/onboarding", group: "creator" },

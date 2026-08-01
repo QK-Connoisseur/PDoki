@@ -177,7 +177,9 @@ Current limitations:
 - Data is mostly hardcoded mock data (migrating to `apps/web/src/fixtures` per page).
 - Authentication uses the real API with HttpOnly-cookie session restoration,
   protected/role routes, registration/login/logout, email verification, and
-  password reset. Settings and explicit-content preferences remain unbuilt.
+  password reset. The first real Settings flow persists an explicit-content
+  preference that is hidden by default and requires confirmation to enable;
+  the remaining account Settings are not yet built.
 - Financial buttons do not process real transactions.
 - Media is loaded from external demo URLs.
 - Many controls are visual placeholders.
@@ -185,8 +187,9 @@ Current limitations:
 URL routing (React Router), ESLint/Prettier, Vitest + Testing Library unit
 tests, real-stack Playwright auth/routing coverage, and GitHub Actions CI are
 now in place for the frontend foundation. The API/database foundation and
-Phase 3 auth Slices 1–3 are implemented locally; production infrastructure,
-Settings/explicit-content controls, and the remaining product domains are not.
+Phase 3 auth Slices 1–3 are published and CI-verified; Slice 4 Settings work is
+in progress locally. Production infrastructure, server-side content filtering,
+the remaining Settings categories, and other product domains are not complete.
 
 ## Development
 

@@ -97,6 +97,7 @@ export default function MemberLayout({
           activePage={activePage}
           onNavigate={handleNavigate}
           onOpenDashboard={() => navigate("/dashboard")}
+          onOpenSettings={() => navigate("/settings")}
           showCreatorDashboard={showCreatorDashboard}
           onLogout={handleLogout}
           onNavigateLegal={handleNavigateLegal}

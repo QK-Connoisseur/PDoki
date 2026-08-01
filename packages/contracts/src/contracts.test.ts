@@ -6,6 +6,8 @@ import {
   LoginRequestSchema,
   ReadyResponseSchema,
   RegisterRequestSchema,
+  UpdateUserPreferencesRequestSchema,
+  UserPreferencesResponseSchema,
   UserSchema,
 } from "./index.js";
 
@@ -26,6 +28,40 @@ describe("ApiErrorSchema", () => {
       error: { code: "TEAPOT", message: "x", requestId: "y" },
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe("user preferences schemas", () => {
+  it("accepts the safe default and explicit opt-in responses", () => {
+    expect(
+      UserPreferencesResponseSchema.parse({
+        preferences: { showExplicitContent: false },
+      }).preferences.showExplicitContent
+    ).toBe(false);
+    expect(
+      UserPreferencesResponseSchema.parse({
+        preferences: { showExplicitContent: true },
+      }).preferences.showExplicitContent
+    ).toBe(true);
+  });
+
+  it("requires an exact boolean update body", () => {
+    expect(
+      UpdateUserPreferencesRequestSchema.safeParse({
+        showExplicitContent: true,
+      }).success
+    ).toBe(true);
+    expect(
+      UpdateUserPreferencesRequestSchema.safeParse({
+        showExplicitContent: "true",
+      }).success
+    ).toBe(false);
+    expect(
+      UpdateUserPreferencesRequestSchema.safeParse({
+        showExplicitContent: true,
+        role: "ADMIN",
+      }).success
+    ).toBe(false);
   });
 });
 

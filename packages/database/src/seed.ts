@@ -34,10 +34,15 @@ const seedUsers = [
 
 async function main(): Promise<void> {
   for (const user of seedUsers) {
-    await prisma.user.upsert({
+    const seededUser = await prisma.user.upsert({
       where: { email: user.email },
       update: { displayName: user.displayName, role: user.role },
       create: { ...user, passwordHash: devHash("pumdoki-dev-password") },
+    });
+    await prisma.userPreference.upsert({
+      where: { userId: seededUser.id },
+      update: {},
+      create: { userId: seededUser.id },
     });
   }
   const count = await prisma.user.count();

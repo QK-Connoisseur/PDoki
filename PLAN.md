@@ -422,7 +422,7 @@ Provisional recommendation:
 - Admin permissions are server-enforced.
 - Explicit-content preference works throughout the frontend.
 
-### Current implementation status — July 29, 2026
+### Current implementation status — August 1, 2026
 
 - Phase 3 is split into four separately specified and verified slices: core
   auth backend, email flows, frontend auth integration, and Settings.
@@ -435,7 +435,8 @@ Provisional recommendation:
   tokens, reissue invalidation, verification/reset endpoints, session
   revocation after reset, request throttling, and the verified-email middleware
   seam.
-- Slice 3, frontend auth integration, is implemented and locally verified:
+- Slice 3, frontend auth integration, is implemented, published, and
+  CI-verified:
   nested API errors, persistent cookie-backed auth restoration, live
   Login/SignUp/logout, canonical role guards, requested-route restoration,
   verification/reset screens, the unverified-email banner, and real
@@ -443,10 +444,17 @@ Provisional recommendation:
 - Acceptance records use restrictive deletion. A future account-deletion flow
   must deactivate/pseudonymize according to a counsel-approved retention
   schedule rather than cascade-delete legal evidence.
-- Settings and the explicit-content preference remain incomplete. Phase 3 must
-  not be described as complete.
-- Durable slice designs live in `docs/architecture/`; Slice 3's implementation
-  record is in `phase3-slice3-frontend-auth-integration.md`.
+- Slice 4 is in progress. Its first vertical cut adds a one-to-one persisted
+  preference with a default-hidden migration/backfill, authenticated
+  `GET/PATCH /me/preferences`, a protected Settings page, deliberate opt-in,
+  immediate opt-out, and unit/API/browser coverage. Profile/email/password/
+  session controls and the other Settings categories remain incomplete.
+- Explicit-content enforcement in server-side feed/content queries remains a
+  Phase 5 integration because real content APIs do not yet exist. The client
+  preference alone must not be treated as enforcement.
+- Durable slice designs live in `docs/architecture/`; the Slice 3 record and
+  Slice 4 design are `phase3-slice3-frontend-auth-integration.md` and
+  `phase3-slice4-settings-preferences.md`.
 - Phase 2 remains partially complete while its cloud/operations remainder is
   tracked separately.
 
@@ -998,12 +1006,12 @@ follow-up date.
 
 ## 21. Immediate next actions
 
-1. Review, commit, and publish the completed Phase 3 Slice 3 frontend-auth
-   integration, including creator-only Dashboard navigation and removal of the
-   public `/admin` placeholder, then verify its GitHub Actions run.
-2. Specify and begin Phase 3 Slice 4: the minimum Settings experience and
-   explicit-content preference, default hidden and enforced by future APIs and
-   queries rather than CSS alone.
+1. Manually review the Phase 3 Slice 4 explicit-content preference vertical
+   cut, then continue its account-security increment: profile name, email
+   change/reverification, password change, and active-session controls.
+2. Sequence the remaining Settings categories against their dependencies and
+   preserve the requirement for future content APIs to enforce explicit
+   preferences server-side.
 3. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
    decisions in the register above.
 4. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
