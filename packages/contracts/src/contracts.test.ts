@@ -1,15 +1,67 @@
 import { describe, expect, it } from "vitest";
 import {
+  AccountSessionsResponseSchema,
   ApiErrorSchema,
   AuthResponseSchema,
+  ChangeEmailRequestSchema,
+  ChangePasswordRequestSchema,
   HealthResponseSchema,
   LoginRequestSchema,
   ReadyResponseSchema,
   RegisterRequestSchema,
+  UpdateProfileRequestSchema,
   UpdateUserPreferencesRequestSchema,
   UserPreferencesResponseSchema,
   UserSchema,
 } from "./index.js";
+
+describe("account settings schemas", () => {
+  it("normalizes profile and email changes and rejects extra fields", () => {
+    expect(
+      UpdateProfileRequestSchema.parse({ displayName: "  New Name  " })
+        .displayName
+    ).toBe("New Name");
+    expect(
+      ChangeEmailRequestSchema.parse({
+        email: "  New@Example.COM ",
+        currentPassword: "old-password",
+      }).email
+    ).toBe("new@example.com");
+    expect(
+      ChangeEmailRequestSchema.safeParse({
+        email: "new@example.com",
+        currentPassword: "old-password",
+        role: "ADMIN",
+      }).success
+    ).toBe(false);
+  });
+
+  it("enforces the shared password policy", () => {
+    expect(
+      ChangePasswordRequestSchema.safeParse({
+        currentPassword: "old",
+        newPassword: "short",
+      }).success
+    ).toBe(false);
+  });
+
+  it("accepts session metadata and requires the current marker", () => {
+    expect(
+      AccountSessionsResponseSchema.safeParse({
+        sessions: [
+          {
+            id: "5ac3d89f-b6d3-4e72-a928-8cb19c607607",
+            createdAt: "2026-08-01T12:00:00.000Z",
+            expiresAt: "2026-08-31T12:00:00.000Z",
+            ipAddress: null,
+            userAgent: "Chrome/140",
+            current: true,
+          },
+        ],
+      }).success
+    ).toBe(true);
+  });
+});
 
 describe("ApiErrorSchema", () => {
   it("accepts a valid error envelope", () => {

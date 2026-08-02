@@ -108,6 +108,10 @@ export function AuthProvider({ children, api = defaultAuthApi }) {
     [api, becomeUnauthenticated]
   );
 
+  const updateUser = useCallback((nextUser) => {
+    setUser((currentUser) => (currentUser ? nextUser : null));
+  }, []);
+
   const value = useMemo(
     () => ({
       status,
@@ -121,6 +125,7 @@ export function AuthProvider({ children, api = defaultAuthApi }) {
       confirmVerification,
       requestPasswordReset,
       confirmPasswordReset,
+      updateUser,
     }),
     [
       status,
@@ -134,6 +139,7 @@ export function AuthProvider({ children, api = defaultAuthApi }) {
       confirmVerification,
       requestPasswordReset,
       confirmPasswordReset,
+      updateUser,
     ]
   );
 

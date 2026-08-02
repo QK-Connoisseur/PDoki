@@ -47,6 +47,13 @@ function Harness() {
       >
         Request verification
       </button>
+      <button
+        onClick={() =>
+          auth.updateUser({ ...auth.user, email: "changed@pumdoki.example" })
+        }
+      >
+        Replace user
+      </button>
     </div>
   );
 }
@@ -133,6 +140,23 @@ describe("AuthProvider", () => {
     });
     await waitFor(() =>
       expect(screen.getByTestId("status")).toHaveTextContent("unauthenticated")
+    );
+  });
+
+  it("updates the authenticated user after an account edit", async () => {
+    const api = makeApi();
+    render(
+      <AuthProvider api={api}>
+        <Harness />
+      </AuthProvider>
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId("status")).toHaveTextContent("authenticated")
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "Replace user" }));
+    expect(screen.getByTestId("email")).toHaveTextContent(
+      "changed@pumdoki.example"
     );
   });
 });

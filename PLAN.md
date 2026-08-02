@@ -415,12 +415,34 @@ Provisional recommendation:
 14. Add an explicit-content opt-in gate for adults.
 15. Add optional OAuth only after core auth is stable.
 
+### Founder-approved Phase 3 transition scope — August 1, 2026
+
+The founder approved closing Phase 3 on the core authentication and account-
+security scope delivered through Slice 4B, rather than pulling later product
+domains forward solely because they have future Settings entries:
+
+- Notifications move with persisted notifications and messaging in Phase 9.
+- Billing moves with subscriptions, processors, and receipts in Phase 7.
+- Data export and account deletion require the Phase 4 legal/retention design
+  and final pre-launch privacy verification. Acceptance evidence must never be
+  cascade-deleted.
+- Theme selection moves with the shared design-system/theme implementation.
+- Server-side explicit-content filtering moves with real content APIs in
+  Phase 5; the persisted default-hidden preference and deliberate Settings
+  control are the Phase 3 boundary.
+- Optional OAuth remains deferred until first-beta requirements justify it.
+
+This is a reduced Phase 3 scope, not a claim that every item in the original
+Settings list is implemented.
+
 ### Exit criteria
 
 - Authentication persists across refresh.
 - Protected pages reject unauthorized users.
 - Admin permissions are server-enforced.
-- Explicit-content preference works throughout the frontend.
+- Explicit-content preference persists safely and is exposed through the
+  protected frontend Settings flow. Real content-query enforcement is a Phase
+  5 exit criterion because Phase 3 has no content API to filter.
 
 ### Current implementation status — August 1, 2026
 
@@ -444,17 +466,28 @@ Provisional recommendation:
 - Acceptance records use restrictive deletion. A future account-deletion flow
   must deactivate/pseudonymize according to a counsel-approved retention
   schedule rather than cascade-delete legal evidence.
-- Slice 4 is in progress. Its first vertical cut adds a one-to-one persisted
+- Slice 4A is committed locally as `7972bf2`. It adds a one-to-one persisted
   preference with a default-hidden migration/backfill, authenticated
   `GET/PATCH /me/preferences`, a protected Settings page, deliberate opt-in,
-  immediate opt-out, and unit/API/browser coverage. Profile/email/password/
-  session controls and the other Settings categories remain incomplete.
+  immediate opt-out, and unit/API/browser coverage.
+- Slice 4B is implemented and fully locally verified. Protected Settings now
+  supports display-name editing, current-password-confirmed email change with
+  reverification, current-password-confirmed password change, and active-
+  session listing/revocation. Sensitive changes invalidate stale tokens and
+  revoke every other session while preserving the current browser.
+- The founder-approved Phase 3 core scope is therefore locally complete. It is
+  not published or CI-verified yet: Slice 4B remains in the working tree and
+  Slice 4A remains an unpushed local commit. Phase 3 should not be called
+  published/complete until manual review, commit/push, and green CI finish.
+- Notification, theme, billing, data-export, and deletion Settings are
+  intentionally sequenced to the dependency phases listed above.
 - Explicit-content enforcement in server-side feed/content queries remains a
   Phase 5 integration because real content APIs do not yet exist. The client
   preference alone must not be treated as enforcement.
-- Durable slice designs live in `docs/architecture/`; the Slice 3 record and
-  Slice 4 design are `phase3-slice3-frontend-auth-integration.md` and
-  `phase3-slice4-settings-preferences.md`.
+- Durable slice designs live in `docs/architecture/`; the Slice 3, Slice 4A,
+  and Slice 4B records are `phase3-slice3-frontend-auth-integration.md`,
+  `phase3-slice4-settings-preferences.md`, and
+  `phase3-slice4b-account-security-settings.md`.
 - Phase 2 remains partially complete while its cloud/operations remainder is
   tracked separately.
 
@@ -1006,15 +1039,18 @@ follow-up date.
 
 ## 21. Immediate next actions
 
-1. Manually review the Phase 3 Slice 4 explicit-content preference vertical
-   cut, then continue its account-security increment: profile name, email
-   change/reverification, password change, and active-session controls.
-2. Sequence the remaining Settings categories against their dependencies and
-   preserve the requirement for future content APIs to enforce explicit
-   preferences server-side.
-3. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
+1. Manually review Phase 3 Slice 4B account-security Settings, then commit and
+   publish Slices 4A/4B and require green GitHub CI before beginning Phase 4
+   implementation.
+2. Begin Phase 4 with a legal/trust foundation slice: formalize the decision
+   register, versioned creator-agreement acceptance model, provider seams, and
+   an application-received/pending-review creator-onboarding outcome. Do not
+   imply that counsel, identity vendors, or operational review are live.
+3. Preserve the dependency sequencing for notification, theme, billing,
+   export/deletion, and explicit-content query enforcement.
+4. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
    decisions in the register above.
-4. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
+5. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
    workstreams in parallel.
-5. Build the commission and payout model using real processor quotes when
+6. Build the commission and payout model using real processor quotes when
    available.

@@ -4,8 +4,8 @@ Pumdoki is an adult creator platform focused on subscriptions, paid content, cre
 
 The repository contains a broad React frontend prototype plus a local
 TypeScript/Express/PostgreSQL backend foundation. Core authentication, secure
-sessions, email verification, password reset, and their database models are
-implemented locally. Frontend auth integration, media, payments, compliance
+sessions, email verification, password reset, account-security Settings, and
+their database models are implemented locally. Media, payments, compliance
 operations, moderation, and production infrastructure remain incomplete.
 
 The detailed delivery roadmap is maintained in [PLAN.md](./PLAN.md).
@@ -177,19 +177,23 @@ Current limitations:
 - Data is mostly hardcoded mock data (migrating to `apps/web/src/fixtures` per page).
 - Authentication uses the real API with HttpOnly-cookie session restoration,
   protected/role routes, registration/login/logout, email verification, and
-  password reset. The first real Settings flow persists an explicit-content
-  preference that is hidden by default and requires confirmation to enable;
-  the remaining account Settings are not yet built.
+  password reset. Protected Settings uses real APIs for display name,
+  email/reverification, password change, active-session listing/revocation,
+  and a default-hidden explicit-content preference with deliberate opt-in.
+  Notifications, theme, billing, export, and deletion are sequenced to their
+  later dependency phases.
 - Financial buttons do not process real transactions.
 - Media is loaded from external demo URLs.
 - Many controls are visual placeholders.
 
 URL routing (React Router), ESLint/Prettier, Vitest + Testing Library unit
 tests, real-stack Playwright auth/routing coverage, and GitHub Actions CI are
-now in place for the frontend foundation. The API/database foundation and
-Phase 3 auth Slices 1–3 are published and CI-verified; Slice 4 Settings work is
-in progress locally. Production infrastructure, server-side content filtering,
-the remaining Settings categories, and other product domains are not complete.
+now in place for the frontend foundation. Phase 3 Slices 1–3 are published and
+CI-verified; Slice 4A is committed locally and Slice 4B is fully locally
+verified but not yet committed/published. Together they close the founder-
+approved Phase 3 core scope after manual review and green CI. Production
+infrastructure, server-side content filtering, dependency-bound Settings, and
+other product domains are not complete.
 
 ## Development
 

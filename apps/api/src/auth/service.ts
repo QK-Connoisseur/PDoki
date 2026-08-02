@@ -1,7 +1,11 @@
 import type {
+  AccountSession,
   AuthUser,
+  ChangeEmailRequest,
+  ChangePasswordRequest,
   LoginRequest,
   RegisterRequest,
+  UpdateProfileRequest,
 } from "@pumdoki/contracts";
 import type {
   PrismaClient,
@@ -109,6 +113,179 @@ export function createAuthService(db: PrismaClient, deps: AuthServiceDeps) {
   }
 
   return {
+    async updateProfile(
+      userId: string,
+      input: UpdateProfileRequest
+    ): Promise<AuthUser> {
+      const user = await db.user.update({
+        where: { id: userId },
+        data: { displayName: input.displayName },
+      });
+      return toAuthUser(user);
+    },
+
+    async changeEmail(
+      userId: string,
+      currentSessionId: string,
+      input: ChangeEmailRequest,
+      metadata: RequestMetadata
+    ): Promise<AuthUser> {
+      const user = await db.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        throw new HttpError(401, "UNAUTHORIZED", "Session is not valid");
+      }
+
+      const verification = await verifyPassword(
+        user.passwordHash,
+        input.currentPassword
+      );
+      if (!verification.valid) {
+        throw new HttpError(
+          400,
+          "BAD_REQUEST",
+          "Current password is incorrect",
+          {
+            field: "currentPassword",
+          }
+        );
+      }
+      if (user.email === input.email) return toAuthUser(user);
+
+      const now = new Date();
+      try {
+        const updated = await db.$transaction(async (tx) => {
+          const changed = await tx.user.update({
+            where: { id: userId },
+            data: { email: input.email, emailVerifiedAt: null },
+          });
+          await tx.verificationToken.updateMany({
+            where: { userId, consumedAt: null },
+            data: { consumedAt: now },
+          });
+          await tx.session.updateMany({
+            where: {
+              userId,
+              id: { not: currentSessionId },
+              revokedAt: null,
+            },
+            data: { revokedAt: now },
+          });
+          return changed;
+        });
+
+        try {
+          await sendVerificationMail(updated, metadata.ipAddress);
+        } catch (mailError) {
+          deps.logger.error(
+            { err: mailError, userId },
+            "Failed to send verification mail after email change"
+          );
+        }
+        return toAuthUser(updated);
+      } catch (error) {
+        if (isUniqueConstraintError(error)) {
+          throw new HttpError(409, "CONFLICT", "That email is already in use");
+        }
+        throw error;
+      }
+    },
+
+    async changePassword(
+      userId: string,
+      currentSessionId: string,
+      input: ChangePasswordRequest
+    ): Promise<void> {
+      const user = await db.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        throw new HttpError(401, "UNAUTHORIZED", "Session is not valid");
+      }
+
+      const verification = await verifyPassword(
+        user.passwordHash,
+        input.currentPassword
+      );
+      if (!verification.valid) {
+        throw new HttpError(
+          400,
+          "BAD_REQUEST",
+          "Current password is incorrect",
+          {
+            field: "currentPassword",
+          }
+        );
+      }
+      const reusesCurrent = await verifyPassword(
+        user.passwordHash,
+        input.newPassword
+      );
+      if (reusesCurrent.valid) {
+        throw new HttpError(
+          400,
+          "BAD_REQUEST",
+          "New password must be different from the current password",
+          { field: "newPassword" }
+        );
+      }
+
+      const passwordHash = await hashPassword(input.newPassword);
+      const now = new Date();
+      await db.$transaction(async (tx) => {
+        await tx.user.update({
+          where: { id: userId },
+          data: { passwordHash },
+        });
+        await tx.verificationToken.updateMany({
+          where: { userId, kind: "PASSWORD_RESET", consumedAt: null },
+          data: { consumedAt: now },
+        });
+        await tx.session.updateMany({
+          where: {
+            userId,
+            id: { not: currentSessionId },
+            revokedAt: null,
+          },
+          data: { revokedAt: now },
+        });
+      });
+    },
+
+    async listActiveSessions(
+      userId: string,
+      currentSessionId: string
+    ): Promise<AccountSession[]> {
+      const sessions = await db.session.findMany({
+        where: {
+          userId,
+          revokedAt: null,
+          expiresAt: { gt: new Date() },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+      return sessions.map((session) => ({
+        id: session.id,
+        createdAt: session.createdAt.toISOString(),
+        expiresAt: session.expiresAt.toISOString(),
+        ipAddress: session.ipAddress,
+        userAgent: session.userAgent,
+        current: session.id === currentSessionId,
+      }));
+    },
+
+    async revokeSession(userId: string, sessionId: string): Promise<void> {
+      const revoked = await db.session.updateMany({
+        where: {
+          id: sessionId,
+          userId,
+          revokedAt: null,
+          expiresAt: { gt: new Date() },
+        },
+        data: { revokedAt: new Date() },
+      });
+      if (revoked.count !== 1) {
+        throw new HttpError(404, "NOT_FOUND", "Active session not found");
+      }
+    },
+
     async register(
       input: RegisterRequest,
       metadata: RequestMetadata

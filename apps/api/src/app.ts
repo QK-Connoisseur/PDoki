@@ -10,6 +10,7 @@ import type { Env } from "./env.js";
 import { HttpError } from "./errors.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { requestId } from "./middleware/requestId.js";
+import { accountRouter } from "./routes/account.js";
 import { authRouter } from "./routes/auth.js";
 import { healthRouter } from "./routes/health.js";
 import { preferencesRouter } from "./routes/preferences.js";
@@ -67,6 +68,7 @@ export function createApp({
   api.use(healthRouter(version));
   api.use(readyRouter(checkDatabase));
   api.use(authRouter({ db, env, mailer, logger }));
+  api.use(accountRouter({ db, env, mailer, logger }));
   api.use(preferencesRouter({ db, env }));
   app.use("/api/v1", api);
 

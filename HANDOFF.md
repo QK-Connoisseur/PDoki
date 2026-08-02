@@ -4,19 +4,25 @@ Last updated: 2026-08-01 · Branch: `dev`
 
 ## Current phase
 
-**Phase 3 Slice 4 — Settings and explicit-content preferences — is in
-progress.** Slice 3 is published and CI-verified. Slice 4's first vertical cut
-is implemented, locally verified, and captured in the current local commit.
+**Phase 3 Slice 4B — account-security Settings — is implemented and fully
+locally verified.** Slice 3 is published and CI-verified. Slice 4A is captured
+in the current local commit; Slice 4B is still in the working tree.
 
-Phase 3 as a whole is not complete:
+The founder-approved reduced Phase 3 core scope is locally complete:
 
 1. Core auth backend — complete, published, and CI-verified.
 2. Email verification and password reset — complete, published, and
    CI-verified in commit `dcdccd5`.
 3. Frontend auth integration — complete, published, and CI-verified in commit
    `1089ae0`.
-4. Settings and explicit-content preference — initial persisted preference
-   flow complete locally; broader account Settings remain.
+4. Settings — Slice 4A persists the default-hidden explicit preference; Slice
+   4B adds profile, email/reverification, password, and active-session controls.
+
+Phase 3 is not yet published/CI-complete. Founder manual review, a Slice 4B
+commit, push, and green GitHub CI are still required before Phase 4
+implementation begins. Notifications, theme, billing, export/deletion, and
+server-side explicit-content query enforcement are intentionally sequenced to
+their dependency phases rather than pulled into Phase 3.
 
 Phase 2 remains **partially complete (local foundation)**. Staging/RDS,
 backups and a restore drill, Sentry/equivalent monitoring, a background-job
@@ -27,8 +33,9 @@ queue, and the full idempotency framework remain deferred.
 - `dev` and `origin/dev` are at Slice 3 commit `1089ae0`.
 - Slice 3 was pushed directly to `dev`; GitHub Actions run
   `30703161510` passed all three jobs (web, API, and Playwright).
-- The Slice 4 preference commit is local and has not been pushed. GitHub CI has
-  therefore not run against Slice 4 yet.
+- Slice 4A is local commit `7972bf2` and has not been pushed. Slice 4B is fully
+  locally verified but uncommitted. GitHub CI has therefore not run against
+  either Slice 4 increment.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -90,6 +97,22 @@ Seeded review accounts all use password `pumdoki-dev-password`:
 - `admin@pumdoki.example` (backend role validation only; the public web app has
   no admin route)
 
+Slice 4B founder review checklist:
+
+1. Log in as the seeded member and open **Settings** from the profile menu.
+2. Change the display name and confirm it updates in the authenticated shell.
+3. Change to an unused `.example` email while entering the current password.
+   Confirm the account becomes unverified, open the new message in Mailpit,
+   and follow its verification link.
+4. Create another session in a different browser/private window, reload
+   Settings, and revoke that other session. The current browser must remain
+   signed in.
+5. Change the password. Confirm the current browser remains signed in, the
+   other browser is signed out, the old password fails, and the new password
+   succeeds.
+6. Confirm explicit content still requires opt-in confirmation, persists after
+   reload, and turns off immediately.
+
 When finished, stop the API and Vite watchers with `Ctrl+C`, then run:
 
 ```powershell
@@ -109,12 +132,23 @@ npm run db:down
   password-reset requests remain enumeration-neutral.
 - Sessions use opaque 32-byte tokens, 30-day sliding expiry, and renewal at
   most once per 24 hours.
+- Email and password changes require the current password and throttle failed
+  confirmations per user/IP. They invalidate relevant outstanding links and
+  revoke every other active session while preserving the current browser.
+- A changed email is unverified until its new Mailpit/provider link is
+  confirmed. Duplicate email changes return `409 CONFLICT`.
+- Session revocation is scoped by authenticated user; a foreign or missing
+  session identifier returns `NOT_FOUND`.
 - Acceptance records remain append-only with restrictive deletion.
 - Explicit content is hidden by default. Enabling it requires deliberate
   confirmation; disabling it is immediate. This preference does not replace
   age or identity verification.
 - Future content APIs must enforce the preference in server-side queries and
   payload construction. Client-side hiding is not a security boundary.
+- Founder-approved Phase 3 transition scope defers notification Settings to
+  Phase 9, billing to payments, export/deletion to counsel-approved privacy
+  work, theme to the design-system workstream, and explicit-content query
+  enforcement to Phase 5 content APIs.
 
 ## Founder manual review — decisions resolved before Slice 3 commit
 
@@ -188,7 +222,7 @@ npm run db:down
   Started. All five sheets were rendered and visually checked; the formula
   error scan returned zero matches.
 
-## Slice 4 work in progress
+## What Slices 4A and 4B implement
 
 - `UserPreference` stores one row per user with
   `showExplicitContent=false` by default. Migration
@@ -199,46 +233,65 @@ npm run db:down
 - Shared Zod contracts define the read/update payloads. Authenticated
   `GET /api/v1/me/preferences` and `PATCH /api/v1/me/preferences` endpoints
   return and persist the preference; anonymous calls are rejected.
-- The protected `/settings` page shows the current account summary and the
-  live explicit-content preference. Profile-menu, Sidebar More, and Wallet
-  navigation all open it.
+- The protected `/settings` page is reachable from Profile menu, Sidebar More,
+  and Wallet navigation. It uses live APIs for account and content settings.
 - Opt-in requires an explanatory confirmation. Opt-out saves immediately.
   Failed updates retain the prior value and show a retryable error.
 - The browser regression registers a unique member, navigates through the
   profile menu, opts in, reloads to prove persistence, and opts out.
 - The durable design is
   `docs/architecture/phase3-slice4-settings-preferences.md`.
-- This is not all of Slice 4. Profile editing, email change/reverification,
-  password change, session management, notification/theme controls, billing,
-  export, and deletion remain. Content filtering cannot be enforced in feed
-  queries until Phase 5 introduces real content APIs.
+- Slice 4B adds shared Zod contracts and authenticated endpoints for display-
+  name editing, email change, password change, active-session listing, and
+  session revocation. No new migration is needed because the existing User and
+  Session models already contain the required data.
+- Email changes require the current password, normalize/uniquely constrain the
+  new address, mark it unverified, invalidate all outstanding verification and
+  reset tokens, send a fresh verification message, and revoke other sessions.
+- Password changes require the current password and a different policy-valid
+  new password, invalidate reset tokens, and revoke other sessions.
+- The current browser survives sensitive changes. Active-session rows expose
+  trustworthy creation/expiry metadata and an ownership-scoped revoke action;
+  the UI routes current-session termination through normal logout.
+- `AuthProvider.updateUser` keeps the member shell synchronized after profile
+  and email edits without reloading or exposing session tokens.
+- The Slice 4B browser regression proves the full account-security path against
+  PostgreSQL and Mailpit, including reverification and old-password rejection.
+- Its durable design is
+  `docs/architecture/phase3-slice4b-account-security-settings.md`.
+- Notifications, theme, billing, export, deletion, and server-side content
+  filtering remain explicitly deferred to their dependency phases under the
+  founder-approved Phase 3 transition scope.
 
 ## Current local verification — 2026-08-01
 
 All commands ran from the repository root.
 
-| Command / check                      | Result                                                                                 |
-| ------------------------------------ | -------------------------------------------------------------------------------------- |
-| `npm run format:check`               | ✅ exit 0                                                                              |
-| `npm run lint`                       | ✅ exit 0                                                                              |
-| `npm run test`                       | ✅ 22 files, 106/106 web tests                                                         |
-| `npm run test -w @pumdoki/contracts` | ✅ 1 file, 15/15 tests                                                                 |
-| `npm run test:api`                   | ✅ 9 files, 64/64 tests                                                                |
-| `npm run build`                      | ✅ Vite 7.3.6 production build                                                         |
-| `npm run build:api`                  | ✅ contracts, Prisma generation, database, and API TypeScript builds                   |
-| `npm run test:e2e`                   | ✅ 38/38 Chromium Playwright tests against real API/PostgreSQL/Mailpit                 |
-| `npm run db:deploy`                  | ✅ fourth migration applied successfully                                               |
-| `npm run db:seed`                    | ✅ idempotent seed completed; existing local E2E users explain the current total of 19 |
-| Tracker verification                 | ✅ key ranges inspected, zero formula errors, and all five sheets rendered             |
-| `git diff --check`                   | ✅ exit 0                                                                              |
+| Command / check                      | Result                                                                           |
+| ------------------------------------ | -------------------------------------------------------------------------------- |
+| `npm run format:check`               | ✅ exit 0                                                                        |
+| `npm run lint`                       | ✅ exit 0                                                                        |
+| `npm run test`                       | ✅ 22 files, 113/113 web tests                                                   |
+| `npm run test -w @pumdoki/contracts` | ✅ 1 file, 18/18 tests                                                           |
+| `npm run test:api`                   | ✅ 10 files, 69/69 tests                                                         |
+| `npm run build`                      | ✅ Vite 7.3.6 production build                                                   |
+| `npm run build:api`                  | ✅ contracts, Prisma generation, database, and API TypeScript builds             |
+| `npm run test:e2e`                   | ✅ 39/39 Chromium Playwright tests against real API/PostgreSQL/Mailpit           |
+| `npm run db:deploy`                  | ✅ four migrations found; no pending migration                                   |
+| `npm run db:seed`                    | ✅ idempotent seed completed; local E2E history explains the current total of 32 |
+| Tracker verification                 | ✅ key ranges inspected, zero formula errors, and all five sheets rendered       |
+| `git diff --check`                   | ✅ exit 0                                                                        |
 
 The web production bundle still reports the known large-chunk advisory:
-809.71 kB minified and 197.58 kB gzip.
+816.80 kB minified and 199.32 kB gzip.
 
-The first combined web-test run lacked the Settings test's `matchMedia` stub;
-after adding it, the full suite passed. The first API run expected a different
-validation error label than the established middleware emits; the assertion
-was corrected to the existing `BAD_REQUEST` contract and all API tests passed.
+Focused UI, API integration, and account-security browser tests passed before
+the full suites. The first full contract-test attempt was blocked by the local
+sandbox's parent-directory read restriction; the same command passed outside
+the sandbox (18/18). PostgreSQL was initially stopped, then `npm run db:up` and
+`db:deploy` restored the local stack and all DB-backed tests passed. The first
+two focused browser attempts found test-only selector/redirect expectations;
+after correcting those assertions, the focused and full browser suites passed.
 
 `npm audit` was not refreshed. The last known result remains the three moderate
 Prisma CLI/toolchain findings recorded on 2026-07-16; do not describe the
@@ -246,13 +299,16 @@ current dependency set as audit-clean.
 
 ## Risks and remaining work
 
-- Profile editing, email/password changes, active-session controls, and the
-  remaining Settings categories are still absent.
+- Dependency-bound notification, theme, billing, export, and deletion Settings
+  remain unimplemented by design; see the Phase 3 transition scope in PLAN.md.
 - Explicit-content preference persistence works, but no real content/feed API
   exists yet to enforce it while constructing content payloads.
 - Production email-provider selection, adult-business support, TLS,
   deliverability, DKIM, SPF, and DMARC remain open.
 - Login and email throttling are instance-local until Redis/shared storage.
+- Current-password throttling is also instance-local until Redis/shared
+  storage. The database/session security behavior itself is enforced server-
+  side.
 - Phase 2 cloud/operations work remains incomplete.
 - Counsel must define acceptance-evidence retention and pseudonymization.
 - Production `BrowserRouter` host rewrites remain required.
@@ -260,14 +316,13 @@ current dependency set as audit-clean.
 
 ## Next exact task
 
-1. Founder manually reviews `/settings` using the member account, including
-   opt-in confirmation, reload persistence, and immediate opt-out.
-2. Continue Slice 4 with the account-security increment: profile display-name
-   editing, email change plus reverification, password change, and active
-   session listing/revocation.
-3. Explicitly sequence or defer notification/theme, billing, export, and
-   deletion Settings according to their later-phase dependencies. Enforce the
-   explicit preference in server-side content queries when Phase 5 adds them.
+1. Founder manually reviews the Slice 4B checklist above.
+2. Commit Slice 4B, push the two local Slice 4 commits, and require green GitHub
+   CI before describing Phase 3's reduced core scope as published/complete.
+3. Begin Phase 4 with a legal/trust foundation slice: versioned creator-
+   agreement acceptance, provider-neutral verification seams, and a creator-
+   application received/pending-review result instead of direct Dashboard
+   access. Do not claim counsel/vendor/operations approval.
 4. Continue the overdue AWS/Sentry/Redis/email-provider decisions and the
    LLC/counsel, CCBill, identity-provider, and country-allowlist workstreams in
    parallel.
