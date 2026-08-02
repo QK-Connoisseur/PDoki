@@ -1,6 +1,8 @@
 export { prisma } from "./client.js";
 export {
   AcceptanceKind,
+  CreatorApplicationStatus,
+  IdentityVerificationStatus,
   Prisma,
   PrismaClient,
   UserRole,
@@ -9,6 +11,7 @@ export {
 } from "./generated/prisma/client.js";
 export type {
   AcceptanceRecord,
+  CreatorApplication,
   Session,
   User,
   VerificationToken,

@@ -444,7 +444,7 @@ Settings list is implemented.
   protected frontend Settings flow. Real content-query enforcement is a Phase
   5 exit criterion because Phase 3 has no content API to filter.
 
-### Current implementation status — August 1, 2026
+### Current implementation status — August 2, 2026
 
 - Phase 3 is split into four separately specified and verified slices: core
   auth backend, email flows, frontend auth integration, and Settings.
@@ -466,19 +466,18 @@ Settings list is implemented.
 - Acceptance records use restrictive deletion. A future account-deletion flow
   must deactivate/pseudonymize according to a counsel-approved retention
   schedule rather than cascade-delete legal evidence.
-- Slice 4A is committed locally as `7972bf2`. It adds a one-to-one persisted
+- Slice 4A was committed as `7972bf2`. It adds a one-to-one persisted
   preference with a default-hidden migration/backfill, authenticated
   `GET/PATCH /me/preferences`, a protected Settings page, deliberate opt-in,
   immediate opt-out, and unit/API/browser coverage.
-- Slice 4B is implemented and fully locally verified. Protected Settings now
+- Slice 4B was committed as `d55f5f3`. Protected Settings now
   supports display-name editing, current-password-confirmed email change with
   reverification, current-password-confirmed password change, and active-
   session listing/revocation. Sensitive changes invalidate stale tokens and
   revoke every other session while preserving the current browser.
-- The founder-approved Phase 3 core scope is therefore locally complete. It is
-  not published or CI-verified yet: Slice 4B remains in the working tree and
-  Slice 4A remains an unpushed local commit. Phase 3 should not be called
-  published/complete until manual review, commit/push, and green CI finish.
+- The founder-approved Phase 3 core scope is published on `dev` through
+  `d55f5f3`. GitHub Actions run `30728045838` passed web, API, private-admin
+  build, and real-stack Playwright jobs, so Phase 3 is complete.
 - Notification, theme, billing, data-export, and deletion Settings are
   intentionally sequenced to the dependency phases listed above.
 - Explicit-content enforcement in server-side feed/content queries remains a
@@ -533,6 +532,32 @@ Settings list is implemented.
 11. Add performer records and releases.
 12. Support more than one performer per media item without creating a complicated public UI.
 13. Link every explicit media item to required performer records.
+
+### Current Phase 4 implementation status — August 2, 2026
+
+- Slice 1, the creator-application foundation, is implemented and fully
+  locally verified but uncommitted.
+- A verified `MEMBER` can submit exactly one creator application containing a
+  creator-facing name and two-letter country code. The API returns a persisted
+  `PENDING` application with identity verification `NOT_STARTED`.
+- The application and three append-only acceptance records (prototype creator
+  agreement, content policy, and identity-verification disclosure) are created
+  atomically with user, version, timestamp, and request IP.
+- Submission does not change the member's role. The profile menu shows
+  **Apply to become a creator** only to members and **Creator Dashboard** only
+  to creators; a pending applicant cannot access `/dashboard`.
+- Revisited applications load the persisted outcome. Duplicate submissions,
+  anonymous users, unverified users, non-members, false acceptances, and
+  malformed country codes are rejected.
+- The old simulated ID/selfie upload, hardcoded payout economics, unsupported
+  security/retention claims, review-time promise, and direct Dashboard redirect
+  were removed. No identity files leave the browser.
+- The durable boundary and provider prerequisites are documented in
+  `docs/architecture/phase4-slice1-creator-application-foundation.md`.
+- This is not creator onboarding completion: counsel-approved policies, legal
+  entity work, country eligibility, tax intake, an approved identity provider,
+  private operations authentication/review, reviewer audit evidence, performer
+  records, and publishing gates remain open.
 
 ### Reporting and compliance operations
 
@@ -1039,18 +1064,21 @@ follow-up date.
 
 ## 21. Immediate next actions
 
-1. Manually review Phase 3 Slice 4B account-security Settings, then commit and
-   publish Slices 4A/4B and require green GitHub CI before beginning Phase 4
-   implementation.
-2. Begin Phase 4 with a legal/trust foundation slice: formalize the decision
-   register, versioned creator-agreement acceptance model, provider seams, and
-   an application-received/pending-review creator-onboarding outcome. Do not
-   imply that counsel, identity vendors, or operational review are live.
-3. Preserve the dependency sequencing for notification, theme, billing,
+1. Manually review Phase 4 Slice 1 using the verified-member flow, then commit,
+   publish, and require green GitHub CI.
+2. Define Phase 4 Slice 2 around a separately deployed private creator-review
+   workflow: operational authentication/MFA and restricted origin, review
+   permissions, immutable reviewer/reason audit evidence, and safe
+   `PENDING`/`NEEDS_INFORMATION`/`REJECTED` transitions. Keep `APPROVED` and role
+   promotion disabled until identity, country, legal, and operations gates are
+   concrete.
+3. In parallel, advance the legal entity/counsel, acceptance-retention,
+   identity-provider, country-allowlist, tax, and operational-mailbox decisions.
+4. Preserve the dependency sequencing for notification, theme, billing,
    export/deletion, and explicit-content query enforcement.
-4. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
+5. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
    decisions in the register above.
-5. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
+6. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
    workstreams in parallel.
-6. Build the commission and payout model using real processor quotes when
+7. Build the commission and payout model using real processor quotes when
    available.

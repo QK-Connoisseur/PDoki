@@ -242,7 +242,6 @@ function AppShell() {
           <ProtectedRoute>
             <CreatorOnboardingPage
               onBack={() => navigate(-1)}
-              onComplete={() => navigate("/dashboard")}
               onNavigateLegal={nav.onNavigateLegal}
             />
             <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />

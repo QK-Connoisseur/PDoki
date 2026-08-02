@@ -16,6 +16,7 @@ import { notifications as defaultNotifications } from "../fixtures/notifications
  *   onLogoClick?: () => void,
  *   onLogout?: () => void,
  *   showCreatorDashboard?: boolean,
+ *   showCreatorApplication?: boolean,
  *   notifications?: Array<{id:number,text:string,time:string,avatar:string}>,
  * }} props
  */
@@ -25,6 +26,7 @@ export default function AppHeader({
   onLogoClick,
   onLogout,
   showCreatorDashboard = false,
+  showCreatorApplication = false,
   notifications = defaultNotifications,
 }) {
   const navigate = useNavigate();
@@ -62,6 +64,15 @@ export default function AppHeader({
             label: "Creator Dashboard",
             icon: "M4 6h16M4 12h16M4 18h7",
             action: () => navigate("/dashboard"),
+          },
+        ]
+      : []),
+    ...(showCreatorApplication
+      ? [
+          {
+            label: "Apply to become a creator",
+            icon: "M12 3v18M3 12h18",
+            action: () => navigate("/creator/onboarding"),
           },
         ]
       : []),

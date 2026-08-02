@@ -5,6 +5,8 @@ import {
   AuthResponseSchema,
   ChangeEmailRequestSchema,
   ChangePasswordRequestSchema,
+  CreateCreatorApplicationRequestSchema,
+  CreatorApplicationResponseSchema,
   HealthResponseSchema,
   LoginRequestSchema,
   ReadyResponseSchema,
@@ -58,6 +60,59 @@ describe("account settings schemas", () => {
             current: true,
           },
         ],
+      }).success
+    ).toBe(true);
+  });
+});
+
+describe("creator application schemas", () => {
+  const validApplicationRequest = {
+    creatorName: "  Sakura Studio  ",
+    countryCode: " us ",
+    acceptedCreatorAgreement: true,
+    acceptedCreatorAgreementVersion: "prototype-2026-08-01",
+    acceptedContentPolicy: true,
+    acceptedContentPolicyVersion: "prototype-2026-08-01",
+    acceptedIdentityVerificationDisclosure: true,
+    acceptedIdentityVerificationDisclosureVersion: "prototype-2026-08-01",
+  } as const;
+
+  it("normalizes creator names and country codes", () => {
+    const parsed = CreateCreatorApplicationRequestSchema.parse(
+      validApplicationRequest
+    );
+    expect(parsed.creatorName).toBe("Sakura Studio");
+    expect(parsed.countryCode).toBe("US");
+  });
+
+  it("requires every explicit acceptance and exact prototype version", () => {
+    expect(
+      CreateCreatorApplicationRequestSchema.safeParse({
+        ...validApplicationRequest,
+        acceptedContentPolicy: false,
+      }).success
+    ).toBe(false);
+    expect(
+      CreateCreatorApplicationRequestSchema.safeParse({
+        ...validApplicationRequest,
+        acceptedCreatorAgreementVersion: "unknown",
+      }).success
+    ).toBe(false);
+  });
+
+  it("accepts the pending application response", () => {
+    expect(
+      CreatorApplicationResponseSchema.safeParse({
+        application: {
+          id: "e03581af-ded8-42e3-8298-f4d93844fd1e",
+          userId: "7024fc48-182a-4544-b341-046837db9d2f",
+          creatorName: "Sakura Studio",
+          countryCode: "US",
+          status: "PENDING",
+          identityVerificationStatus: "NOT_STARTED",
+          submittedAt: "2026-08-01T22:10:00.000Z",
+          updatedAt: "2026-08-01T22:10:00.000Z",
+        },
       }).success
     ).toBe(true);
   });

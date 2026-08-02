@@ -46,6 +46,7 @@ export default function MemberLayout({
   const navigate = useNavigate();
   const auth = useOptionalAuth();
   const showCreatorDashboard = auth?.user?.role === AUTH_ROLES.CREATOR;
+  const showCreatorApplication = auth?.user?.role === AUTH_ROLES.MEMBER;
   const [showComposeMenu, setShowComposeMenu] = useState(false);
   const [logoutError, setLogoutError] = useState("");
 
@@ -81,6 +82,7 @@ export default function MemberLayout({
         onLogoClick={onLogoClick}
         onLogout={handleLogout}
         showCreatorDashboard={showCreatorDashboard}
+        showCreatorApplication={showCreatorApplication}
       />
 
       {logoutError && (
@@ -97,8 +99,10 @@ export default function MemberLayout({
           activePage={activePage}
           onNavigate={handleNavigate}
           onOpenDashboard={() => navigate("/dashboard")}
+          onOpenCreatorApplication={() => navigate("/creator/onboarding")}
           onOpenSettings={() => navigate("/settings")}
           showCreatorDashboard={showCreatorDashboard}
+          showCreatorApplication={showCreatorApplication}
           onLogout={handleLogout}
           onNavigateLegal={handleNavigateLegal}
           showComposeMenu={showComposeMenu}

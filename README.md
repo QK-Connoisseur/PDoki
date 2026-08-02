@@ -182,18 +182,23 @@ Current limitations:
   and a default-hidden explicit-content preference with deliberate opt-in.
   Notifications, theme, billing, export, and deletion are sequenced to their
   later dependency phases.
+- Verified members can now submit one real creator application. The application
+  and versioned prototype-policy evidence persist in PostgreSQL, while the
+  account remains a member with no Dashboard access. Identity documents,
+  operational approval, tax intake, and finalized legal terms are deliberately
+  not collected or simulated yet.
 - Financial buttons do not process real transactions.
 - Media is loaded from external demo URLs.
 - Many controls are visual placeholders.
 
 URL routing (React Router), ESLint/Prettier, Vitest + Testing Library unit
 tests, real-stack Playwright auth/routing coverage, and GitHub Actions CI are
-now in place for the frontend foundation. Phase 3 Slices 1–3 are published and
-CI-verified; Slice 4A is committed locally and Slice 4B is fully locally
-verified but not yet committed/published. Together they close the founder-
-approved Phase 3 core scope after manual review and green CI. Production
-infrastructure, server-side content filtering, dependency-bound Settings, and
-other product domains are not complete.
+now in place for the frontend foundation. Phase 3 is published and CI-verified
+through commit `d55f5f3`. Phase 4 Slice 1, the persisted pending creator-
+application foundation, is implemented and fully locally verified but not yet
+committed. Production infrastructure, identity verification, private
+operations review, server-side content filtering, dependency-bound Settings,
+and other product domains are not complete.
 
 ## Development
 

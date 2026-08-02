@@ -231,8 +231,10 @@ export default function Sidebar({
   activePage,
   onNavigate,
   onOpenDashboard,
+  onOpenCreatorApplication,
   onOpenSettings,
   showCreatorDashboard = false,
+  showCreatorApplication = false,
   onLogout,
   onNavigateLegal,
   showComposeMenu,
@@ -473,6 +475,15 @@ export default function Sidebar({
                       label: "Creator Dashboard",
                       icon: "M4 6h16M4 12h16M4 18h7",
                       action: onOpenDashboard,
+                    },
+                  ]
+                : []),
+              ...(showCreatorApplication
+                ? [
+                    {
+                      label: "Apply to become a creator",
+                      icon: "M12 3v18M3 12h18",
+                      action: onOpenCreatorApplication,
                     },
                   ]
                 : []),

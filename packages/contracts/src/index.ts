@@ -4,3 +4,4 @@ export * from "./user.js";
 export * from "./auth.js";
 export * from "./preferences.js";
 export * from "./account.js";
+export * from "./creatorApplication.js";

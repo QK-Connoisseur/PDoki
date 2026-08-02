@@ -1,14 +1,14 @@
 # Session Handoff
 
-Last updated: 2026-08-01 · Branch: `dev`
+Last updated: 2026-08-02 · Branch: `dev`
 
 ## Current phase
 
-**Phase 3 Slice 4B — account-security Settings — is implemented and fully
-locally verified.** Slice 3 is published and CI-verified. Slice 4A is captured
-in the current local commit; Slice 4B is still in the working tree.
+**Phase 4 Slice 1 — creator-application foundation — is implemented and fully
+locally verified in the working tree.** Phase 3 is published and CI-verified
+through commit `d55f5f3`.
 
-The founder-approved reduced Phase 3 core scope is locally complete:
+The founder-approved Phase 3 core scope is complete:
 
 1. Core auth backend — complete, published, and CI-verified.
 2. Email verification and password reset — complete, published, and
@@ -18,11 +18,13 @@ The founder-approved reduced Phase 3 core scope is locally complete:
 4. Settings — Slice 4A persists the default-hidden explicit preference; Slice
    4B adds profile, email/reverification, password, and active-session controls.
 
-Phase 3 is not yet published/CI-complete. Founder manual review, a Slice 4B
-commit, push, and green GitHub CI are still required before Phase 4
-implementation begins. Notifications, theme, billing, export/deletion, and
-server-side explicit-content query enforcement are intentionally sequenced to
-their dependency phases rather than pulled into Phase 3.
+Phase 4 Slice 1 replaces simulated creator approval with a database-backed
+application. A verified member submits a creator-facing name, country code,
+and three versioned prototype acknowledgements. The application persists as
+`PENDING`, identity verification remains `NOT_STARTED`, and the account remains
+a member with no Dashboard access. No ID, selfie, tax, or banking files are
+requested. Counsel-approved policies, provider integration, country/tax gates,
+and private operations review remain open.
 
 Phase 2 remains **partially complete (local foundation)**. Staging/RDS,
 backups and a restore drill, Sentry/equivalent monitoring, a background-job
@@ -30,12 +32,11 @@ queue, and the full idempotency framework remain deferred.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at Slice 3 commit `1089ae0`.
-- Slice 3 was pushed directly to `dev`; GitHub Actions run
-  `30703161510` passed all three jobs (web, API, and Playwright).
-- Slice 4A is local commit `7972bf2` and has not been pushed. Slice 4B is fully
-  locally verified but uncommitted. GitHub CI has therefore not run against
-  either Slice 4 increment.
+- `dev` and `origin/dev` are at Phase 3 Slice 4B commit `d55f5f3`.
+- The same push published Slice 4A commit `7972bf2`. GitHub Actions run
+  `30728045838` passed the web/private-admin build, API, and Playwright jobs.
+- Phase 4 Slice 1 is fully locally verified but uncommitted and unpushed, so CI
+  has not run against it yet.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -97,21 +98,22 @@ Seeded review accounts all use password `pumdoki-dev-password`:
 - `admin@pumdoki.example` (backend role validation only; the public web app has
   no admin route)
 
-Slice 4B founder review checklist:
+Phase 4 Slice 1 founder review checklist:
 
-1. Log in as the seeded member and open **Settings** from the profile menu.
-2. Change the display name and confirm it updates in the authenticated shell.
-3. Change to an unused `.example` email while entering the current password.
-   Confirm the account becomes unverified, open the new message in Mailpit,
-   and follow its verification link.
-4. Create another session in a different browser/private window, reload
-   Settings, and revoke that other session. The current browser must remain
-   signed in.
-5. Change the password. Confirm the current browser remains signed in, the
-   other browser is signed out, the old password fails, and the new password
-   succeeds.
-6. Confirm explicit content still requires opt-in confirmation, persists after
-   reload, and turns off immediately.
+1. Register a unique member, then open the verification message in Mailpit and
+   follow the link. An unverified member may open the application page but may
+   not submit.
+2. From the member profile menu, confirm **Apply to become a creator** is
+   present and **Creator Dashboard** is absent. Open the application.
+3. Enter a creator-facing name and two-letter country code. Review and accept
+   both explicitly labeled prototype policies.
+4. Confirm the identity step requests no files and explains that verification
+   comes later. Accept the disclosure and submit.
+5. Confirm **Application received**, `PENDING`, and `NOT STARTED` appear; reload
+   and verify the same persisted result returns.
+6. Directly open `/dashboard` and confirm the pending member is denied. Log in
+   as the seeded creator and confirm only **Creator Dashboard**, not a new
+   application entry, appears in the profile menu.
 
 When finished, stop the API and Vite watchers with `Ctrl+C`, then run:
 
@@ -149,6 +151,14 @@ npm run db:down
   Phase 9, billing to payments, export/deletion to counsel-approved privacy
   work, theme to the design-system workstream, and explicit-content query
   enforcement to Phase 5 content APIs.
+- Creator applications are member-only and require a verified email to submit.
+  Submission is one-per-user, records versioned evidence atomically, and never
+  changes the role or unlocks Dashboard.
+- Phase 4 Slice 1 stores no government ID, selfie, tax form, or banking data.
+  Identity verification remains provider-neutral and `NOT_STARTED` until
+  vendor, security, retention, country, and operations decisions are approved.
+- Prototype creator policy versions use a `prototype-*` prefix and must not be
+  represented as counsel-approved launch agreements or payout terms.
 
 ## Founder manual review — decisions resolved before Slice 3 commit
 
@@ -158,14 +168,12 @@ npm run db:down
   Dashboard option is rendered only for creators in the shared profile menu,
   sidebar More menu, and Wallet profile menu. A `MEMBER` sees no Dashboard
   option and receives the forbidden state on direct `/dashboard` access.
-- Public registration intentionally creates a `MEMBER`. Creator application,
-  identity review, approval, and role promotion are later phases and are not
-  implemented, so a newly registered user cannot yet become a creator without
-  seed/manual database state.
-- The prototype creator-onboarding completion currently navigates directly to
-  `/dashboard` without promoting the account. Until the approval workflow
-  exists, that produces a forbidden state for a normal registered member and
-  should be replaced with an application-received/pending-approval outcome.
+- Public registration intentionally creates a `MEMBER`. Phase 4 Slice 1 now
+  lets a verified member submit a persisted pending creator application, but
+  identity review, approval, and role promotion remain unimplemented.
+- The old creator-onboarding simulation no longer uploads local identity files
+  or navigates directly to `/dashboard`; it returns the persisted pending
+  outcome and leaves the account role unchanged.
 - Founder decision on 2026-08-01: the public Pumdoki web app has no `/admin`
   route or admin navigation. The placeholder was removed.
 - The backend `ADMIN` role and API authorization boundary remain. A separately
@@ -263,35 +271,59 @@ npm run db:down
   filtering remain explicitly deferred to their dependency phases under the
   founder-approved Phase 3 transition scope.
 
-## Current local verification — 2026-08-01
+## What Phase 4 Slice 1 implements
+
+- `CreatorApplication` is a one-to-one, restrict-on-delete record with
+  application states `PENDING`, `NEEDS_INFORMATION`, `APPROVED`, and `REJECTED`
+  plus provider-neutral identity states. This slice creates only `PENDING` /
+  `NOT_STARTED`.
+- Shared strict Zod contracts normalize creator names/country codes and require
+  all three exact prototype versions and literal-true acknowledgements.
+- Authenticated `GET /api/v1/me/creator-application` loads a member's current
+  result. Verified-member-only `POST /api/v1/creator-applications` creates the
+  application and acceptance evidence in one transaction; duplicate submission
+  returns `409 CONFLICT`.
+- The member profile and Sidebar menus expose **Apply to become a creator**.
+  Creator accounts instead see **Creator Dashboard**. Application submission
+  never changes role or redirects to Dashboard.
+- The three-step browser flow loads current state, supports retry and email-
+  verification prompting, records the pending outcome, and restores it after
+  reload.
+- The unsafe prototype copy and behavior were removed: no hardcoded 80/20
+  revenue split, payout threshold/net terms, unsupported encryption/access/
+  retention claims, 1–3 day SLA, ID/selfie inputs, or simulated approval.
+- The durable design is
+  `docs/architecture/phase4-slice1-creator-application-foundation.md`.
+
+## Current local verification — 2026-08-02
 
 All commands ran from the repository root.
 
-| Command / check                      | Result                                                                           |
-| ------------------------------------ | -------------------------------------------------------------------------------- |
-| `npm run format:check`               | ✅ exit 0                                                                        |
-| `npm run lint`                       | ✅ exit 0                                                                        |
-| `npm run test`                       | ✅ 22 files, 113/113 web tests                                                   |
-| `npm run test -w @pumdoki/contracts` | ✅ 1 file, 18/18 tests                                                           |
-| `npm run test:api`                   | ✅ 10 files, 69/69 tests                                                         |
-| `npm run build`                      | ✅ Vite 7.3.6 production build                                                   |
-| `npm run build:api`                  | ✅ contracts, Prisma generation, database, and API TypeScript builds             |
-| `npm run test:e2e`                   | ✅ 39/39 Chromium Playwright tests against real API/PostgreSQL/Mailpit           |
-| `npm run db:deploy`                  | ✅ four migrations found; no pending migration                                   |
-| `npm run db:seed`                    | ✅ idempotent seed completed; local E2E history explains the current total of 32 |
-| Tracker verification                 | ✅ key ranges inspected, zero formula errors, and all five sheets rendered       |
-| `git diff --check`                   | ✅ exit 0                                                                        |
+| Command / check                      | Result                                                                         |
+| ------------------------------------ | ------------------------------------------------------------------------------ |
+| `npm run format:check`               | ✅ exit 0                                                                      |
+| `npm run lint`                       | ✅ exit 0                                                                      |
+| `npm run test`                       | ✅ 25 files, 122/122 web tests                                                 |
+| `npm run test -w @pumdoki/contracts` | ✅ 1 file, 21/21 tests                                                         |
+| `npm run test:api`                   | ✅ 11 files, 74/74 tests                                                       |
+| `npm run build`                      | ✅ Vite 7.3.6 web production build                                             |
+| `npm run build:admin`                | ✅ private operations shell production build                                   |
+| `npm run build:api`                  | ✅ contracts, Prisma generation, database, and API TypeScript builds           |
+| `npm run test:e2e -- --workers=1`    | ✅ 40/40 Chromium tests against real API/PostgreSQL/Mailpit                    |
+| `npm run db:deploy`                  | ✅ fifth migration applied successfully                                        |
+| Focused creator browser regression   | ✅ signup, Mailpit verify, submit, reload, and Dashboard denial                |
+| Tracker                              | Not changed for this uncommitted slice; prior Phase 3 workbook state is intact |
+| `git diff --check`                   | ✅ exit 0                                                                      |
 
 The web production bundle still reports the known large-chunk advisory:
-816.80 kB minified and 199.32 kB gzip.
+812.00 kB minified and 198.68 kB gzip.
 
-Focused UI, API integration, and account-security browser tests passed before
-the full suites. The first full contract-test attempt was blocked by the local
-sandbox's parent-directory read restriction; the same command passed outside
-the sandbox (18/18). PostgreSQL was initially stopped, then `npm run db:up` and
-`db:deploy` restored the local stack and all DB-backed tests passed. The first
-two focused browser attempts found test-only selector/redirect expectations;
-after correcting those assertions, the focused and full browser suites passed.
+Focused contract, browser-adapter, component, API-integration, and Playwright
+tests passed before the full suites. One unchanged Connect component test timed
+out while format, lint, test, and build were competing in parallel; it passed
+alone and the independently rerun full web suite passed 122/122. The first
+private-admin build was denied by the local filesystem sandbox while Vite
+resolved its config; the same unchanged build passed outside that sandbox.
 
 `npm audit` was not refreshed. The last known result remains the three moderate
 Prisma CLI/toolchain findings recorded on 2026-07-16; do not describe the
@@ -311,18 +343,24 @@ current dependency set as audit-clean.
   side.
 - Phase 2 cloud/operations work remains incomplete.
 - Counsel must define acceptance-evidence retention and pseudonymization.
+- Counsel-approved creator/payout/content policies, country eligibility, tax
+  intake, and an identity provider with approved security/retention controls
+  do not exist yet. Do not enable ID collection or creator approval.
+- The private operations shell has no production authentication, MFA/SSO,
+  creator-review actions, permissions, or immutable reviewer audit log.
 - Production `BrowserRouter` host rewrites remain required.
 - Frontend code splitting remains advisable.
 
 ## Next exact task
 
-1. Founder manually reviews the Slice 4B checklist above.
-2. Commit Slice 4B, push the two local Slice 4 commits, and require green GitHub
-   CI before describing Phase 3's reduced core scope as published/complete.
-3. Begin Phase 4 with a legal/trust foundation slice: versioned creator-
-   agreement acceptance, provider-neutral verification seams, and a creator-
-   application received/pending-review result instead of direct Dashboard
-   access. Do not claim counsel/vendor/operations approval.
-4. Continue the overdue AWS/Sentry/Redis/email-provider decisions and the
-   LLC/counsel, CCBill, identity-provider, and country-allowlist workstreams in
-   parallel.
+1. Founder manually reviews the Phase 4 Slice 1 checklist above.
+2. Commit and publish Slice 1, then require green GitHub CI before treating it
+   as the shared Phase 4 baseline.
+3. Design Phase 4 Slice 2 around the separately deployed private operations
+   app: restricted operational authentication/MFA, server-enforced review
+   permissions, immutable reviewer/reason evidence, and safe pending/needs-
+   information/rejected transitions. Keep approval and role promotion disabled
+   until identity, country, legal, and operating controls are real.
+4. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
+   counsel, CCBill, identity-provider, retention, tax, and country-allowlist
+   workstreams in parallel. Do not collect identity files in the meantime.
