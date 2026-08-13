@@ -11,7 +11,7 @@ function FullPageState({ children }) {
   );
 }
 
-export default function ProtectedRoute({ roles, children }) {
+export default function ProtectedRoute({ roles, children, forbiddenFallback }) {
   const auth = useAuth();
   const location = useLocation();
 
@@ -40,6 +40,8 @@ export default function ProtectedRoute({ roles, children }) {
   }
 
   if (roles?.length && !roles.includes(auth.user.role)) {
+    if (forbiddenFallback !== undefined) return forbiddenFallback;
+
     return (
       <FullPageState>
         <ErrorState

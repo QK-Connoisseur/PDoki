@@ -304,7 +304,7 @@ export default function AppHeader({
               />
             </button>
             {showProfileMenu && (
-              <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden">
+              <div className="absolute right-0 top-full mt-2 w-60 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-pink-100 bg-white py-2 shadow-xl">
                 <StatusMenuRow
                   status={userStatus}
                   onStatusChange={onStatusChange}
@@ -327,7 +327,9 @@ export default function AppHeader({
                     >
                       <path d={item.icon} />
                     </svg>
-                    {item.label}
+                    <span className="min-w-0 flex-1 text-left leading-snug">
+                      {item.label}
+                    </span>
                   </button>
                 ))}
                 <hr className="my-1 border-pink-100" />

@@ -79,5 +79,9 @@ test("a verified member submits a persisted pending creator application", async 
   await expect(page.getByText("E2E Creator Applicant")).toBeVisible();
 
   await page.goto("/dashboard");
-  await expect(page.getByText("Access denied")).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Oops! You need verified creator access to open this studio.",
+    })
+  ).toBeVisible();
 });

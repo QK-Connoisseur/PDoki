@@ -141,7 +141,14 @@ test("creator dashboard navigation and route access are creator-only", async ({
   ).toHaveCount(0);
 
   await page.goto("/dashboard");
-  await expect(page.getByText("Access denied")).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Oops! You need verified creator access to open this studio.",
+    })
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Start or view creator application" })
+  ).toBeVisible();
 });
 
 test("creators can open the dashboard from the profile menu", async ({

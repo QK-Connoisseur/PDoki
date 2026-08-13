@@ -19,6 +19,7 @@ import ConnectPage from "./pages/ConnectPage";
 import StorePage from "./pages/StorePage";
 import PromotionsPage from "./pages/PromotionsPage";
 import CreatorDashboardPage from "./pages/CreatorDashboardPage";
+import CreatorDashboardGatePage from "./pages/CreatorDashboardGatePage";
 import WalletPage from "./pages/WalletPage";
 import SettingsPage from "./pages/SettingsPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -231,7 +232,16 @@ function AppShell() {
       <Route
         path="/dashboard"
         element={
-          <ProtectedRoute roles={[AUTH_ROLES.CREATOR]}>
+          <ProtectedRoute
+            roles={[AUTH_ROLES.CREATOR]}
+            forbiddenFallback={
+              <CreatorDashboardGatePage
+                user={auth.user}
+                onOpenApplication={nav.onOpenCreatorOnboarding}
+                onReturnHome={nav.onBack}
+              />
+            }
+          >
             <CreatorDashboardPage {...nav} />
           </ProtectedRoute>
         }

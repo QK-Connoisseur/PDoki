@@ -27,7 +27,7 @@ function LoginDestination() {
   );
 }
 
-function renderRoute(auth, roles) {
+function renderRoute(auth, roles, forbiddenFallback) {
   return render(
     <AuthContext.Provider value={auth}>
       <MemoryRouter initialEntries={["/private?tab=one"]}>
@@ -36,7 +36,10 @@ function renderRoute(auth, roles) {
           <Route
             path="/private"
             element={
-              <ProtectedRoute roles={roles}>
+              <ProtectedRoute
+                roles={roles}
+                forbiddenFallback={forbiddenFallback}
+              >
                 <div>Protected content</div>
               </ProtectedRoute>
             }
@@ -81,6 +84,18 @@ describe("ProtectedRoute", () => {
   it("renders a forbidden state for a non-canonical role mismatch", () => {
     renderRoute(authState(), [AUTH_ROLES.CREATOR]);
     expect(screen.getByText("Access denied")).toBeVisible();
+    expect(screen.queryByText("Protected content")).not.toBeInTheDocument();
+  });
+
+  it("renders a route-specific forbidden fallback when one is supplied", () => {
+    renderRoute(
+      authState(),
+      [AUTH_ROLES.CREATOR],
+      <div>Creator studio gate</div>
+    );
+
+    expect(screen.getByText("Creator studio gate")).toBeVisible();
+    expect(screen.queryByText("Access denied")).not.toBeInTheDocument();
     expect(screen.queryByText("Protected content")).not.toBeInTheDocument();
   });
 
