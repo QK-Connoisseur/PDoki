@@ -579,8 +579,10 @@ Settings list is implemented.
 - The local Slice 2 engineering gate is green: all six migrations deploy to
   PostgreSQL 17, focused migration/review coverage passes 10/10, the full API
   suite passes 90/90, the web suite passes 126/126, the real-stack Chromium
-  suite passes 40/40, and builds/lint/format pass. GitHub review and CI remain
-  required, and the foundation is not a usable private-operations workflow.
+  suite passes 40/40, and builds/lint/format pass. Draft pull request #1 targets
+  `dev`; GitHub Actions run `31704980241` passed all three jobs at initial review
+  head `ee83274`. Merge remains conditioned on human review and a green final
+  PR head, and the foundation is not a usable private-operations workflow.
 - This is not creator onboarding completion: counsel-approved policies, legal
   entity work, country eligibility, tax intake, an approved identity provider,
   private operations authentication/review, production-grade reviewer audit
@@ -1093,8 +1095,9 @@ follow-up date.
 
 ## 21. Immediate next actions
 
-1. Push `codex/phase4-slice2-and-ux`, open a draft pull request to `dev`, and
-   require green GitHub CI. Keep the review router unmounted from the public API.
+1. Review draft pull request #1 against `dev` and merge only after human review
+   is complete and its final head is green. Keep the review router unmounted
+   from the public API.
 2. Review backend commit `1ba32ea` and web UX commit `aa10873` independently
    before merging so the two scopes remain auditable.
 3. Before any operational deployment, implement the signed Access/IdP assertion

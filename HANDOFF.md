@@ -50,6 +50,11 @@ queue, and the full idempotency framework remain deferred.
   creator-application profile-menu width and label wrapping, and replaces the
   generic non-creator `/dashboard` denial with a branded creator-access gate.
   These changes do not weaken the creator-only route guard.
+- [Draft pull request #1](https://github.com/QK-Connoisseur/PDoki/pull/1)
+  targets `dev`. GitHub Actions run `31704980241` passed its API,
+  web/private-admin, and real-stack Playwright jobs at initial review head
+  `ee83274`; merge remains conditioned on human review and a green final PR
+  head.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -420,7 +425,8 @@ does. A repository-wide line-ending accident was reduced to the actual semantic
 diff, and `.gitattributes` plus Prettier now require LF.
 
 The local engineering gate is complete and the work is committed on the
-publication branch. GitHub review and CI remain required, and passing these
+publication branch. Draft PR #1 is open, and its initial GitHub CI run is green;
+human review and a green final PR head remain merge conditions. Passing these
 checks does not authorize a deployed operations workflow.
 
 ## Risks and remaining work
@@ -461,10 +467,10 @@ checks does not authorize a deployed operations workflow.
 
 1. Treat published commit `ce6c9e4` and green CI run `30739645872` as the
    shared Phase 4 Slice 1 engineering baseline.
-2. Push `codex/phase4-slice2-and-ux`, open a draft pull request to `dev`, and
-   require green GitHub CI before treating either commit as shared baseline.
-   Keep the public review route unmounted and keep `APPROVED`, role promotion,
-   and identity collection absent.
+2. Review [draft pull request #1](https://github.com/QK-Connoisseur/PDoki/pull/1)
+   against `dev` and merge only after human review is complete and the final PR
+   head is green. Keep the public review route unmounted and keep `APPROVED`,
+   role promotion, and identity collection absent.
 3. Review the separate backend (`1ba32ea`) and web UX (`aa10873`) commits
    independently before merging the pull request.
 4. Before any operational deployment, implement and verify the private
