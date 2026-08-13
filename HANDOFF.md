@@ -51,10 +51,14 @@ queue, and the full idempotency framework remain deferred.
   generic non-creator `/dashboard` denial with a branded creator-access gate.
   These changes do not weaken the creator-only route guard.
 - [Draft pull request #1](https://github.com/QK-Connoisseur/PDoki/pull/1)
-  targets `dev`. GitHub Actions run `31704980241` passed its API,
-  web/private-admin, and real-stack Playwright jobs at initial review head
-  `ee83274`; merge remains conditioned on human review and a green final PR
-  head.
+  targets `dev`. GitHub Actions run `31705311373` passed its API,
+  web/private-admin, and real-stack Playwright jobs at current head `35ff434`;
+  merge remains conditioned on human review.
+- Branch `codex/operations-readiness-packet` adds non-secret planning templates
+  for private-admin activation, hardware-key recovery, Google Workspace
+  recovery privacy, environment inputs, provider decisions, and future staging
+  verification. It makes no live account change, selects no provider, and does
+  not authorize deployment or router activation.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -452,7 +456,8 @@ checks does not authorize a deployed operations workflow.
   those controls are implemented and verified.
 - Founder began the Cloudflare and Yubico prerequisites on 2026-08-03. This is
   in progress and does not yet constitute verified private-admin restricted
-  access or MFA integration.
+  access or MFA integration. The readiness packet in `docs/operations/` defines
+  the future evidence gate without asserting current account state.
 - Revisit Google Workspace signup/recovery privacy without recording personal
   contact details in this repository. Confirm directory visibility and current
   recovery factors, enroll an independent backup key/recovery path, and verify
@@ -473,11 +478,13 @@ checks does not authorize a deployed operations workflow.
    role promotion, and identity collection absent.
 3. Review the separate backend (`1ba32ea`) and web UX (`aa10873`) commits
    independently before merging the pull request.
-4. Before any operational deployment, implement and verify the private
-   operations origin, signed Access/IdP assertion verifier, operator
-   provisioning, hardware MFA, mutation-origin/CSRF checks, trusted-proxy
-   policy, and restricted runtime database privileges described in the Slice 2
-   architecture record.
+4. Use the non-secret [operations readiness packet](docs/operations/README.md)
+   to implement and verify the private operations origin, signed Access/IdP
+   assertion verifier, operator provisioning, hardware MFA and recovery,
+   mutation-origin/CSRF checks, trusted-proxy policy, and restricted runtime
+   database privileges described in the Slice 2 architecture record. Keep live
+   identifiers and evidence out of Git, and do not activate from a checklist
+   alone.
 5. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.

@@ -134,6 +134,7 @@ pumdoki/
 │   └── config/              # Shared lint, TypeScript, and formatting config
 ├── docs/
 │   ├── architecture/
+│   ├── operations/           # Non-secret readiness templates; no live state
 │   ├── legal/
 │   ├── api/
 │   └── product/
@@ -201,7 +202,9 @@ backend state/evidence foundation; its local migration and full test gates pass,
 but it is not a deployable private-operations workflow. Production
 infrastructure, identity verification, operational authentication/review,
 server-side content filtering, dependency-bound Settings, and other product
-domains are not complete.
+domains are not complete. The [operations readiness packet](docs/operations/README.md)
+contains non-secret planning templates for those future controls; it neither
+records their live state nor authorizes activation.
 
 ## Development
 

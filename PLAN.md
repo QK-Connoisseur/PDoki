@@ -580,9 +580,9 @@ Settings list is implemented.
   PostgreSQL 17, focused migration/review coverage passes 10/10, the full API
   suite passes 90/90, the web suite passes 126/126, the real-stack Chromium
   suite passes 40/40, and builds/lint/format pass. Draft pull request #1 targets
-  `dev`; GitHub Actions run `31704980241` passed all three jobs at initial review
-  head `ee83274`. Merge remains conditioned on human review and a green final
-  PR head, and the foundation is not a usable private-operations workflow.
+  `dev`; GitHub Actions run `31705311373` passed all three jobs at current head
+  `35ff434`. Merge remains conditioned on human review, and the foundation is
+  not a usable private-operations workflow.
 - This is not creator onboarding completion: counsel-approved policies, legal
   entity work, country eligibility, tax intake, an approved identity provider,
   private operations authentication/review, production-grade reviewer audit
@@ -1077,21 +1077,21 @@ These are working management targets, not legal or processor deadlines. The
 founder may revise them, but each item must retain an owner and a concrete
 follow-up date.
 
-| Dependency or decision                           | Owner                 | Target     | Current state / next action                                                                                                                                                                                                        |
-| ------------------------------------------------ | --------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AWS staging shape and account access             | Founder + Engineering | 2026-07-23 | Overdue: decide deployment shape and credentials boundary; Phase 2 remains partial.                                                                                                                                                |
-| Sentry or equivalent                             | Founder + Engineering | 2026-07-23 | Overdue: select account/provider and define environment separation.                                                                                                                                                                |
-| Redis, queue, and idempotency approach           | Engineering           | 2026-07-23 | Overdue: decide whether beta uses managed Redis and document the local fallback.                                                                                                                                                   |
-| Transactional email provider and local Mailpit   | Founder + Engineering | 2026-07-23 | Local Mailpit and provider-neutral mail are complete; production-provider adult-business fit and deliverability remain overdue.                                                                                                    |
-| LLC attorney/CPA shortlist and entity state      | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                                                                                                                 |
-| CCBill requirements and fee quote                | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                                                                                                                    |
-| Identity-verification shortlist                  | Founder + Engineering | 2026-07-30 | Compare two or three providers for countries, AUP, security, and cost.                                                                                                                                                             |
-| Epoch terms and written cascade behavior         | Founder               | 2026-08-06 | Confirm commercial and technical fallback behavior in writing.                                                                                                                                                                     |
-| Initial country allowlist                        | Founder + Counsel     | 2026-08-06 | Start with the US and only supported Latin American countries.                                                                                                                                                                     |
-| Commission, payout, refund, and Veso economics   | Founder + CPA/Counsel | 2026-08-13 | Model processor fees, chargebacks, taxes, reserves, and Founding discounts.                                                                                                                                                        |
-| Acceptance/evidence retention schedule           | Founder + Counsel     | 2026-08-13 | Define retention, pseudonymization, lawful deletion, and litigation-hold rules before account deletion or creator onboarding ships.                                                                                                |
-| Private-admin restricted access and hardware MFA | Founder + Engineering | 2026-08-06 | In progress: founder is completing Cloudflare and Yubico setup; engineering must document restricted-origin configuration, key enrollment/recovery policy, and required non-secret integration inputs before any admin deployment. |
-| Google Workspace recovery-contact privacy        | Founder + Engineering | 2026-08-20 | Review directory visibility and account-recovery factors without recording personal contact details here. Establish independent backup access before replacing any temporary signup contact.                                       |
+| Dependency or decision                           | Owner                 | Target     | Current state / next action                                                                                                                                                                                                      |
+| ------------------------------------------------ | --------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AWS staging shape and account access             | Founder + Engineering | 2026-07-23 | Overdue: use the non-secret staging decision matrix and future verification runbook in `docs/operations/`; deployment shape, credentials boundary, and approval remain undecided, so Phase 2 remains partial.                    |
+| Sentry or equivalent                             | Founder + Engineering | 2026-07-23 | Overdue: the provider scorecard is drafted in `docs/operations/`; select a provider and approve environment separation, PII minimization, retention, alerting, and cost before integration.                                      |
+| Redis, queue, and idempotency approach           | Engineering           | 2026-07-23 | Overdue: the responsibility/outage matrix is drafted in `docs/operations/`; select the beta approach and preserve PostgreSQL as the durable financial/idempotency record.                                                        |
+| Transactional email provider and local Mailpit   | Founder + Engineering | 2026-07-23 | Local Mailpit and provider-neutral mail are complete; the provider scorecard is drafted, while production adult-business fit, data terms, authentication, bounce/complaint handling, and deliverability remain overdue.          |
+| LLC attorney/CPA shortlist and entity state      | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                                                                                                               |
+| CCBill requirements and fee quote                | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                                                                                                                  |
+| Identity-verification shortlist                  | Founder + Engineering | 2026-07-30 | Compare two or three providers for countries, AUP, security, and cost.                                                                                                                                                           |
+| Epoch terms and written cascade behavior         | Founder               | 2026-08-06 | Confirm commercial and technical fallback behavior in writing.                                                                                                                                                                   |
+| Initial country allowlist                        | Founder + Counsel     | 2026-08-06 | Start with the US and only supported Latin American countries.                                                                                                                                                                   |
+| Commission, payout, refund, and Veso economics   | Founder + CPA/Counsel | 2026-08-13 | Model processor fees, chargebacks, taxes, reserves, and Founding discounts.                                                                                                                                                      |
+| Acceptance/evidence retention schedule           | Founder + Counsel     | 2026-08-13 | Define retention, pseudonymization, lawful deletion, and litigation-hold rules before account deletion or creator onboarding ships.                                                                                              |
+| Private-admin restricted access and hardware MFA | Founder + Engineering | 2026-08-06 | Non-secret activation gates, key/recovery policy, and configuration inputs are drafted in `docs/operations/`; live restricted-origin configuration, signed assertion integration, enrollment, testing, and approval remain open. |
+| Google Workspace recovery-contact privacy        | Founder + Engineering | 2026-08-20 | A repository-safe checklist is drafted in `docs/operations/`. Review live directory/recovery surfaces privately and test independent backup access before replacing any temporary contact; record no personal details here.      |
 
 ## 21. Immediate next actions
 
@@ -1100,11 +1100,12 @@ follow-up date.
    from the public API.
 2. Review backend commit `1ba32ea` and web UX commit `aa10873` independently
    before merging so the two scopes remain auditable.
-3. Before any operational deployment, implement the signed Access/IdP assertion
-   verifier, explicit operator provisioning/permission mapping, private origin,
-   hardware MFA and recovery policy, mutation-origin/CSRF validation, trusted-
-   proxy policy, and restricted runtime database grants defined in the Slice 2
-   architecture record.
+3. Use the non-secret [operations readiness packet](docs/operations/README.md)
+   to review the signed Access/IdP assertion verifier, explicit operator
+   provisioning/permission mapping, private origin, hardware MFA and recovery
+   policy, mutation-origin/CSRF validation, trusted-proxy policy, and restricted
+   runtime database grants before any operational deployment. Templates do not
+   authorize activation.
 4. Keep `APPROVED`, role promotion, identity files, tax/banking intake, and
    creator publishing disabled until identity, country, legal, and operations
    gates are concrete.
