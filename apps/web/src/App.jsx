@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -12,26 +12,33 @@ import { AuthProvider } from "./auth/AuthProvider";
 import { AUTH_ROLES } from "./auth/authApi";
 import { useAuth } from "./auth/authContext";
 import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage";
-import OasisPage from "./pages/OasisPage";
-import ConnectPage from "./pages/ConnectPage";
-import StorePage from "./pages/StorePage";
-import PromotionsPage from "./pages/PromotionsPage";
-import CreatorDashboardPage from "./pages/CreatorDashboardPage";
-import CreatorDashboardGatePage from "./pages/CreatorDashboardGatePage";
-import WalletPage from "./pages/WalletPage";
-import SettingsPage from "./pages/SettingsPage";
-import SignUpPage from "./pages/SignUpPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-import VerifyEmailPage from "./pages/VerifyEmailPage";
-import LegalHubPage from "./pages/LegalHubPage";
-import CreatorOnboardingPage from "./pages/CreatorOnboardingPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicOnlyRoute from "./components/PublicOnlyRoute";
+import RouteSuspense from "./components/RouteSuspense";
+
+const SignUpPage = lazy(() => import("./pages/SignUpPage"));
+const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
+const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
+const VerifyEmailPage = lazy(() => import("./pages/VerifyEmailPage"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
+const ConnectPage = lazy(() => import("./pages/ConnectPage"));
+const StorePage = lazy(() => import("./pages/StorePage"));
+const PromotionsPage = lazy(() => import("./pages/PromotionsPage"));
+const WalletPage = lazy(() => import("./pages/WalletPage"));
+const OasisPage = lazy(() => import("./pages/OasisPage"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage"));
+const CreatorDashboardPage = lazy(() => import("./pages/CreatorDashboardPage"));
+const CreatorDashboardGatePage = lazy(
+  () => import("./pages/CreatorDashboardGatePage")
+);
+const CreatorOnboardingPage = lazy(
+  () => import("./pages/CreatorOnboardingPage")
+);
+const LegalHubPage = lazy(() => import("./pages/LegalHubPage"));
 
 /**
  * Navigation adapter.
@@ -143,128 +150,130 @@ function AppShell() {
   const member = { userStatus, onStatusChange: setUserStatus };
 
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+    <RouteSuspense>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
-      {/* ─── Public / auth ─────────────────────────────────────────── */}
-      <Route path="/login" element={<LoginRoute nav={nav} />} />
-      <Route path="/signup" element={<SignUpRoute nav={nav} />} />
-      <Route
-        path="/forgot-password"
-        element={
-          <ForgotPasswordPage
-            onRequest={auth.requestPasswordReset}
-            onBack={() => navigate("/login")}
-          />
-        }
-      />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/verify-email" element={<VerifyEmailPage />} />
-
-      {/* ─── Member ────────────────────────────────────────────────── */}
-      <Route
-        path="/home"
-        element={
-          <ProtectedRoute>
-            <HomePage {...member} />
-            <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile/:creatorId?"
-        element={
-          <ProtectedRoute>
-            <ProfilePage {...member} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/connect"
-        element={
-          <ProtectedRoute>
-            <ConnectPage {...member} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/store"
-        element={
-          <ProtectedRoute>
-            <StorePage {...member} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/promotions"
-        element={
-          <ProtectedRoute>
-            <PromotionsPage {...member} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/wallet"
-        element={
-          <ProtectedRoute>
-            <WalletPage {...nav} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/oasis"
-        element={
-          <ProtectedRoute>
-            <OasisPage onBack={nav.onBack} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <SettingsPage {...member} />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* ─── Creator ───────────────────────────────────────────────── */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute
-            roles={[AUTH_ROLES.CREATOR]}
-            forbiddenFallback={
-              <CreatorDashboardGatePage
-                user={auth.user}
-                onOpenApplication={nav.onOpenCreatorOnboarding}
-                onReturnHome={nav.onBack}
-              />
-            }
-          >
-            <CreatorDashboardPage {...nav} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/creator/onboarding"
-        element={
-          <ProtectedRoute>
-            <CreatorOnboardingPage
-              onBack={() => navigate(-1)}
-              onNavigateLegal={nav.onNavigateLegal}
+        {/* ─── Public / auth ─────────────────────────────────────────── */}
+        <Route path="/login" element={<LoginRoute nav={nav} />} />
+        <Route path="/signup" element={<SignUpRoute nav={nav} />} />
+        <Route
+          path="/forgot-password"
+          element={
+            <ForgotPasswordPage
+              onRequest={auth.requestPasswordReset}
+              onBack={() => navigate("/login")}
             />
-            <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />
-          </ProtectedRoute>
-        }
-      />
+          }
+        />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
 
-      {/* ─── Legal ─────────────────────────────────────────────────── */}
-      <Route path="/legal" element={<LegalRoute nav={nav} />} />
-      <Route path="/legal/:page" element={<LegalRoute nav={nav} />} />
+        {/* ─── Member ────────────────────────────────────────────────── */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <HomePage {...member} />
+              <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:creatorId?"
+          element={
+            <ProtectedRoute>
+              <ProfilePage {...member} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/connect"
+          element={
+            <ProtectedRoute>
+              <ConnectPage {...member} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/store"
+          element={
+            <ProtectedRoute>
+              <StorePage {...member} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/promotions"
+          element={
+            <ProtectedRoute>
+              <PromotionsPage {...member} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/wallet"
+          element={
+            <ProtectedRoute>
+              <WalletPage {...nav} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/oasis"
+          element={
+            <ProtectedRoute>
+              <OasisPage onBack={nav.onBack} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsPage {...member} />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+        {/* ─── Creator ───────────────────────────────────────────────── */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute
+              roles={[AUTH_ROLES.CREATOR]}
+              forbiddenFallback={
+                <CreatorDashboardGatePage
+                  user={auth.user}
+                  onOpenApplication={nav.onOpenCreatorOnboarding}
+                  onReturnHome={nav.onBack}
+                />
+              }
+            >
+              <CreatorDashboardPage {...nav} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/creator/onboarding"
+          element={
+            <ProtectedRoute>
+              <CreatorOnboardingPage
+                onBack={() => navigate(-1)}
+                onNavigateLegal={nav.onNavigateLegal}
+              />
+              <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ─── Legal ─────────────────────────────────────────────────── */}
+        <Route path="/legal" element={<LegalRoute nav={nav} />} />
+        <Route path="/legal/:page" element={<LegalRoute nav={nav} />} />
+
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </RouteSuspense>
   );
 }
 

@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { loginAs, submitLogin } from "./auth-helpers";
 
 // Phase 1 browser coverage: real URLs must resolve on a cold load (not just via
-// in-app navigation), unknown paths fall back, browser Back/Forward works across
+// in-app navigation), unknown paths remain reviewable, browser Back/Forward works across
 // the shared shell, and core pages expose real loading / empty / error states.
 
 test.describe("routing", () => {
@@ -33,9 +33,28 @@ test.describe("routing", () => {
     ).toBeVisible();
   });
 
-  test("unknown routes fall back to /login", async ({ page }) => {
+  test("unknown routes preserve the URL and offer anonymous recovery", async ({
+    page,
+  }) => {
     await page.goto("/does-not-exist");
+    await expect(page).toHaveURL(/\/does-not-exist$/);
+    await expect(
+      page.getByRole("heading", { name: "This page wandered off." })
+    ).toBeVisible();
+    await expect(page.getByRole("button", { name: "Go back" })).toBeVisible();
+    await page.getByRole("button", { name: "Sign in" }).click();
     await expect(page).toHaveURL(/\/login$/);
+  });
+
+  test("authenticated visitors can recover from an unknown route", async ({
+    page,
+  }) => {
+    await loginAs(page);
+    await page.goto("/missing-member-page");
+    await expect(page).toHaveURL(/\/missing-member-page$/);
+    await expect(page.getByRole("button", { name: "Go home" })).toBeVisible();
+    await page.getByRole("button", { name: "Go home" }).click();
+    await expect(page).toHaveURL(/\/home$/);
   });
 });
 
