@@ -1,12 +1,16 @@
 # Session Handoff
 
-Last updated: 2026-08-02 · Branch: `dev`
+Last updated: 2026-08-13 · Publication branch: `codex/phase4-slice2-and-ux` · Target: `dev`
 
 ## Current phase
 
-**Phase 4 Slice 1 — creator-application foundation — is implemented and fully
-locally verified in the working tree.** Phase 3 is published and CI-verified
-through commit `d55f5f3`.
+**Phase 4 Slice 1 — creator-application foundation — is published and
+CI-verified on `dev` as commit `ce6c9e4`.** Phase 4 Slice 2 is committed on the
+publication branch as `1ba32ea`. Its security boundary and state machine are
+recorded, its public API exposure and concurrency defects are repaired, and its
+full local migration, API, browser, build, and quality gates are green. It
+remains deliberately unusable as an operations workflow until the documented
+private-origin authentication and deployment controls exist.
 
 The founder-approved Phase 3 core scope is complete:
 
@@ -32,11 +36,20 @@ queue, and the full idempotency framework remain deferred.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at Phase 3 Slice 4B commit `d55f5f3`.
-- The same push published Slice 4A commit `7972bf2`. GitHub Actions run
-  `30728045838` passed the web/private-admin build, API, and Playwright jobs.
-- Phase 4 Slice 1 is fully locally verified but uncommitted and unpushed, so CI
-  has not run against it yet.
+- `dev` and `origin/dev` are at Phase 4 Slice 1 commit `ce6c9e4`.
+- GitHub Actions run `30739645872` passed the API build/test, web/private-admin
+  lint/test/build, and real-stack Playwright jobs for Slice 1.
+- Phase 4 Slice 2 is committed as `1ba32ea` on the publication branch. It adds strict review
+  contracts, a fail-closed operations-authentication seam, atomic non-approval
+  transitions, a constrained review-event migration, and focused coverage. The
+  normal public API does not mount the review router. Its local engineering
+  gates pass, but it is not a usable private-operations workflow because real
+  operational authentication and the documented deployment controls remain
+  open.
+- Separate web UX commit `aa10873` redesigns registration, improves the
+  creator-application profile-menu width and label wrapping, and replaces the
+  generic non-creator `/dashboard` denial with a branded creator-access gate.
+  These changes do not weaken the creator-only route guard.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -115,6 +128,11 @@ Phase 4 Slice 1 founder review checklist:
    as the seeded creator and confirm only **Creator Dashboard**, not a new
    application entry, appears in the profile menu.
 
+Founder result — 2026-08-03: ✅ all six checks passed, including blocking
+unverified application submission, persisting the `PENDING` / `NOT_STARTED`
+result after reload, rendering role-correct navigation, and denying direct
+`/dashboard` access to non-creators.
+
 When finished, stop the API and Vite watchers with `Ctrl+C`, then run:
 
 ```powershell
@@ -159,6 +177,10 @@ npm run db:down
   vendor, security, retention, country, and operations decisions are approved.
 - Prototype creator policy versions use a `prototype-*` prefix and must not be
   represented as counsel-approved launch agreements or payout terms.
+- Founder confirmed on 2026-08-03 that creator-review operations will follow
+  the separately deployed private-admin boundary: no public web route or link,
+  API-enforced permissions, and no operational deployment until restricted
+  access and MFA/SSO are implemented.
 
 ## Founder manual review — decisions resolved before Slice 3 commit
 
@@ -167,7 +189,8 @@ npm run db:down
 - The creator dashboard route allows only canonical `CREATOR` accounts. The
   Dashboard option is rendered only for creators in the shared profile menu,
   sidebar More menu, and Wallet profile menu. A `MEMBER` sees no Dashboard
-  option and receives the forbidden state on direct `/dashboard` access.
+  option and receives a branded locked-studio state on direct `/dashboard`
+  access; the server-backed creator-role boundary remains unchanged.
 - Public registration intentionally creates a `MEMBER`. Phase 4 Slice 1 now
   lets a verified member submit a persisted pending creator application, but
   identity review, approval, and role promotion remain unimplemented.
@@ -299,21 +322,21 @@ npm run db:down
 
 All commands ran from the repository root.
 
-| Command / check                      | Result                                                                         |
-| ------------------------------------ | ------------------------------------------------------------------------------ |
-| `npm run format:check`               | ✅ exit 0                                                                      |
-| `npm run lint`                       | ✅ exit 0                                                                      |
-| `npm run test`                       | ✅ 25 files, 122/122 web tests                                                 |
-| `npm run test -w @pumdoki/contracts` | ✅ 1 file, 21/21 tests                                                         |
-| `npm run test:api`                   | ✅ 11 files, 74/74 tests                                                       |
-| `npm run build`                      | ✅ Vite 7.3.6 web production build                                             |
-| `npm run build:admin`                | ✅ private operations shell production build                                   |
-| `npm run build:api`                  | ✅ contracts, Prisma generation, database, and API TypeScript builds           |
-| `npm run test:e2e -- --workers=1`    | ✅ 40/40 Chromium tests against real API/PostgreSQL/Mailpit                    |
-| `npm run db:deploy`                  | ✅ fifth migration applied successfully                                        |
-| Focused creator browser regression   | ✅ signup, Mailpit verify, submit, reload, and Dashboard denial                |
-| Tracker                              | Not changed for this uncommitted slice; prior Phase 3 workbook state is intact |
-| `git diff --check`                   | ✅ exit 0                                                                      |
+| Command / check                      | Result                                                               |
+| ------------------------------------ | -------------------------------------------------------------------- |
+| `npm run format:check`               | ✅ exit 0                                                            |
+| `npm run lint`                       | ✅ exit 0                                                            |
+| `npm run test`                       | ✅ 25 files, 122/122 web tests                                       |
+| `npm run test -w @pumdoki/contracts` | ✅ 1 file, 21/21 tests                                               |
+| `npm run test:api`                   | ✅ 11 files, 74/74 tests                                             |
+| `npm run build`                      | ✅ Vite 7.3.6 web production build                                   |
+| `npm run build:admin`                | ✅ private operations shell production build                         |
+| `npm run build:api`                  | ✅ contracts, Prisma generation, database, and API TypeScript builds |
+| `npm run test:e2e -- --workers=1`    | ✅ 40/40 Chromium tests against real API/PostgreSQL/Mailpit          |
+| `npm run db:deploy`                  | ✅ fifth migration applied successfully                              |
+| Focused creator browser regression   | ✅ signup, Mailpit verify, submit, reload, and Dashboard denial      |
+| Tracker                              | Not changed for Slice 1; prior Phase 3 workbook state is intact      |
+| `git diff --check`                   | ✅ exit 0                                                            |
 
 The web production bundle still reports the known large-chunk advisory:
 812.00 kB minified and 198.68 kB gzip.
@@ -328,6 +351,77 @@ resolved its config; the same unchanged build passed outside that sandbox.
 `npm audit` was not refreshed. The last known result remains the three moderate
 Prisma CLI/toolchain findings recorded on 2026-07-16; do not describe the
 current dependency set as audit-clean.
+
+## Current web UX verification — 2026-08-03
+
+This verification covers the redesigned registration UI, profile-menu width
+and label alignment, and the route-specific non-creator Dashboard gate. It does
+not verify or complete the separate Phase 4 Slice 2 backend seam.
+
+| Command / check                                                                                               | Result                                                                                           |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `npm run test -w @pumdoki/web`                                                                                | ✅ 26 files, 126/126 tests                                                                       |
+| Focused `ProtectedRoute` and `CreatorDashboardGatePage` tests                                                 | ✅ 2 files, 9/9 tests                                                                            |
+| `npx playwright test tests/e2e/auth.spec.js tests/e2e/creator-application.spec.js --workers=1`                | ✅ 7/7 real-stack Chromium tests                                                                 |
+| `npm run lint`                                                                                                | ✅ exit 0                                                                                        |
+| `npm run build:web`                                                                                           | ✅ Vite 7.3.6 production build                                                                   |
+| Prettier check for touched web, E2E, `PLAN.md`, and `HANDOFF.md` files                                        | ✅ exit 0                                                                                        |
+| `git diff --check` for touched web, E2E, `PLAN.md`, and `HANDOFF.md` files                                    | ✅ exit 0                                                                                        |
+| Manual authenticated `/dashboard` review at desktop and 375 px content width, plus application-CTA navigation | ✅ gate resolved after session restore, no horizontal overflow, CTA opened `/creator/onboarding` |
+
+The web production bundle reports the existing large-chunk advisory at 823.19
+kB minified and 201.80 kB gzip. The first sandboxed build attempt could not
+resolve Vite's config because of local filesystem restrictions; the unchanged
+build passed outside that sandbox.
+
+## Current Slice 2 publication-branch verification — 2026-08-13
+
+The durable design is
+`docs/architecture/phase4-slice2-private-creator-review.md`. It records the
+private-origin/MFA boundary, exact acyclic transition matrix, optimistic
+concurrency rule, evidence limitations, exclusions, and activation blockers.
+
+The normal `createApp()` no longer mounts the creator-review router. The
+dormant router requires an injected operational verifier, validates UUID
+parameters and strict action/expected-status bodies, and cannot use its test
+assurance outside `NODE_ENV=test`. `PENDING` may move to
+`NEEDS_INFORMATION` or `REJECTED`; `NEEDS_INFORMATION` may move only to
+`REJECTED`; `REJECTED` and `APPROVED` are terminal in this slice. A conditional
+status update and event insert share one transaction, so stale/concurrent
+requests return `409` without appending evidence.
+
+Checks run from the repository root on August 12:
+
+| Command / check                                  | Result                                                                |
+| ------------------------------------------------ | --------------------------------------------------------------------- |
+| Contracts, database, and API TypeScript builds   | ✅ exit 0 after Prisma client generation                              |
+| `npm run lint` equivalent with the installed CLI | ✅ exit 0                                                             |
+| Focused contract suite                           | ✅ 1 file, 24/24 tests                                                |
+| Operations boundary + non-DB API suites          | ✅ 7 files, 31/31 tests outside the local-port sandbox                |
+| Slice 2 migration deploy and status              | ✅ all 6 migrations applied; schema up to date on PostgreSQL 17       |
+| Focused creator-review database integration      | ✅ 2 files, 10/10 tests                                               |
+| Full API suite                                   | ✅ 14 files, 90/90 tests                                              |
+| Web unit/component suite                         | ✅ 26 files, 126/126 tests                                            |
+| Full real-stack Chromium suite                   | ✅ 40/40 against the API, PostgreSQL, and Mailpit                     |
+| Web production build                             | ✅ 823.19 kB minified / 201.80 kB gzip; existing large-chunk advisory |
+| Private-admin production build                   | ✅ exit 0                                                             |
+| Six-migration SQL/constraint smoke in PGlite     | ✅ all migrations applied; 4/4 Unicode edge-whitespace inserts denied |
+| Full Prettier check and `git diff --check`       | ✅ exit 0 after documentation reconciliation                          |
+
+The in-process PGlite smoke check is useful SQL-syntax and constraint evidence,
+but it does not replace the required PostgreSQL 17 deploy, concurrency,
+rollback, and full integration gates.
+
+The checkout originated on Windows, so exact macOS optional packages already
+pinned in `package-lock.json` were added only to ignored `node_modules` for
+Rollup, esbuild, Lightning CSS, and Tailwind Oxide. That optional-package repair
+did not change a manifest or lockfile; the intentional `pg` test dependency
+does. A repository-wide line-ending accident was reduced to the actual semantic
+diff, and `.gitattributes` plus Prettier now require LF.
+
+The local engineering gate is complete and the work is committed on the
+publication branch. GitHub review and CI remain required, and passing these
+checks does not authorize a deployed operations workflow.
 
 ## Risks and remaining work
 
@@ -347,20 +441,37 @@ current dependency set as audit-clean.
   intake, and an identity provider with approved security/retention controls
   do not exist yet. Do not enable ID collection or creator approval.
 - The private operations shell has no production authentication, MFA/SSO,
-  creator-review actions, permissions, or immutable reviewer audit log.
+  creator-review UI, deployed API verifier, or globally immutable audit log.
+  Slice 2's dormant application-level evidence seam must remain unmounted until
+  those controls are implemented and verified.
+- Founder began the Cloudflare and Yubico prerequisites on 2026-08-03. This is
+  in progress and does not yet constitute verified private-admin restricted
+  access or MFA integration.
+- Revisit Google Workspace signup/recovery privacy without recording personal
+  contact details in this repository. Confirm directory visibility and current
+  recovery factors, enroll an independent backup key/recovery path, and verify
+  access before replacing any temporary contact so the privacy improvement does
+  not create an account lockout.
 - Production `BrowserRouter` host rewrites remain required.
+- Unknown web routes still redirect to `/login`; the branded 404 required by
+  the Phase 1 route-state scope remains open.
 - Frontend code splitting remains advisable.
 
 ## Next exact task
 
-1. Founder manually reviews the Phase 4 Slice 1 checklist above.
-2. Commit and publish Slice 1, then require green GitHub CI before treating it
-   as the shared Phase 4 baseline.
-3. Design Phase 4 Slice 2 around the separately deployed private operations
-   app: restricted operational authentication/MFA, server-enforced review
-   permissions, immutable reviewer/reason evidence, and safe pending/needs-
-   information/rejected transitions. Keep approval and role promotion disabled
-   until identity, country, legal, and operating controls are real.
-4. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
+1. Treat published commit `ce6c9e4` and green CI run `30739645872` as the
+   shared Phase 4 Slice 1 engineering baseline.
+2. Push `codex/phase4-slice2-and-ux`, open a draft pull request to `dev`, and
+   require green GitHub CI before treating either commit as shared baseline.
+   Keep the public review route unmounted and keep `APPROVED`, role promotion,
+   and identity collection absent.
+3. Review the separate backend (`1ba32ea`) and web UX (`aa10873`) commits
+   independently before merging the pull request.
+4. Before any operational deployment, implement and verify the private
+   operations origin, signed Access/IdP assertion verifier, operator
+   provisioning, hardware MFA, mutation-origin/CSRF checks, trusted-proxy
+   policy, and restricted runtime database privileges described in the Slice 2
+   architecture record.
+5. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.
