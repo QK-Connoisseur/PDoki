@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-16 · Publication branch: `codex/phase4-slice2-and-ux` · Target: `dev`
+Last updated: 2026-08-16 · Working branch: `codex/frontend-routing-hardening` · Base: `codex/phase4-slice2-and-ux`
 
 ## Current phase
 
@@ -55,6 +55,9 @@ queue, and the full idempotency framework remain deferred.
   web/private-admin, and real-stack Playwright jobs at initial review head
   `ee83274`; merge remains conditioned on human review and a green final PR
   head.
+- The remote-safe frontend routing work is isolated on
+  `codex/frontend-routing-hardening`, stacked on PR #1's head so PR #1 remains
+  frozen. It must be retargeted or aligned to `dev` after PR #1 merges.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -435,6 +438,31 @@ publication branch. Draft PR #1 is open, and its initial GitHub CI run is green;
 human review and a green final PR head remain merge conditions. Passing these
 checks does not authorize a deployed operations workflow.
 
+## Current frontend routing-hardening verification — 2026-08-13
+
+- Unknown URLs retain the requested path and render a branded, accessible 404.
+  Anonymous visitors receive **Go back** and **Sign in**; authenticated visitors
+  receive **Go back** and **Go home**. Session restoration is not guessed, and
+  an authentication outage offers a retry.
+- `/admin` receives the same generic 404 and exposes no private-admin content.
+- Non-login feature, auth, and legal routes are lazy-loaded behind an accessible
+  shared route-loading state. Login and the 404 recovery route remain eager.
+- A rejected lazy import reaches the top-level recovery boundary, whose
+  **Reload page** action performs a real page reload because React caches a
+  rejected lazy-module promise.
+- The final web suite passes 29 files and 137/137 tests. The full real-stack
+  Chromium suite passes 41/41 against the API, PostgreSQL, and Mailpit; focused
+  routing/authentication coverage passes 21/21 after the final review fixes.
+- The production entry JavaScript fell from 823.19 kB / 201.34 kB gzip to
+  279.03 kB / 88.31 kB gzip: reductions of 66.10% minified and 56.14% gzip.
+  The largest generated JavaScript chunk is 279.03 kB, below Vite's 500 kB
+  advisory threshold.
+- API 90/90, API/contracts/database build, private-admin build, lint, Prettier,
+  and `git diff --check` pass. Desktop 1440×900 and mobile 390×844 visual review
+  show no overflow or clipped recovery actions.
+- CI now runs Prettier, uses read-only repository-token permissions, and applies
+  bounded job timeouts. GitHub CI and human review remain required.
+
 ## Risks and remaining work
 
 - Dependency-bound notification, theme, billing, export, and deletion Settings
@@ -465,9 +493,6 @@ checks does not authorize a deployed operations workflow.
   access before replacing any temporary contact so the privacy improvement does
   not create an account lockout.
 - Production `BrowserRouter` host rewrites remain required.
-- Unknown web routes still redirect to `/login`; the branded 404 required by
-  the Phase 1 route-state scope remains open.
-- Frontend code splitting remains advisable.
 
 ## Next exact task
 

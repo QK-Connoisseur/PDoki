@@ -193,9 +193,12 @@ Current limitations:
 
 URL routing (React Router), ESLint/Prettier, Vitest + Testing Library unit
 tests, real-stack Playwright auth/routing coverage, and GitHub Actions CI are
-now in place for the frontend foundation. Phase 3 is published and CI-verified
-through commit `d55f5f3`. Phase 4 Slice 1, the persisted pending creator-
-application foundation, is published and CI-verified as commit `ce6c9e4`.
+now in place for the frontend foundation. Unknown URLs retain their path and
+render a branded, session-aware 404, while non-login feature routes are lazy-
+loaded behind a shared accessible loading state. Phase 3 is published and
+CI-verified through commit `d55f5f3`. Phase 4 Slice 1, the persisted pending
+creator-application foundation, is published and CI-verified as commit
+`ce6c9e4`.
 Phase 4 Slice 2 is committed on the current publication branch as a fail-closed
 backend state/evidence foundation; its local migration and full test gates pass,
 but it is not a deployable private-operations workflow. Production

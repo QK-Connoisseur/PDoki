@@ -317,9 +317,15 @@ Provisional recommendation:
     accessible 404 page for unknown URLs with clear Back, Home, and Sign-in
     actions appropriate to the visitor's session state.
 19. Add loading, empty, and retry states to core pages.
+20. Lazy-load feature routes behind an accessible shared loading state while
+    keeping critical recovery routes eager.
 
-Current gap — August 3, 2026: the wildcard web route still redirects unknown
-URLs to `/login`; the branded 404 state above remains open.
+Implemented and locally verified — August 13, 2026: unknown URLs retain their
+requested path and render a branded 404. Anonymous visitors receive Back and
+Sign-in recovery; authenticated visitors receive Back and Home; `/admin`
+remains a generic unknown route. Unresolved sessions are never guessed, and an
+authentication outage exposes retry. Feature pages are route-split behind the
+shared loading state; see `HANDOFF.md` for test and bundle measurements.
 
 ### Exit criteria
 
