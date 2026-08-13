@@ -57,7 +57,8 @@ queue, and the full idempotency framework remain deferred.
   head.
 - The remote-safe frontend routing work is isolated on
   `codex/frontend-routing-hardening`, stacked on PR #1's head so PR #1 remains
-  frozen. It must be retargeted or aligned to `dev` after PR #1 merges.
+  frozen. [Draft pull request #2](https://github.com/QK-Connoisseur/PDoki/pull/2)
+  targets the PR #1 branch and must be retargeted to `dev` after PR #1 merges.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -504,11 +505,14 @@ checks does not authorize a deployed operations workflow.
    role promotion, and identity collection absent.
 3. Review the separate backend (`1ba32ea`) and web UX (`aa10873`) commits
    independently before merging the pull request.
-4. Before any operational deployment, implement and verify the private
+4. Review stacked [draft pull request #2](https://github.com/QK-Connoisseur/PDoki/pull/2)
+   after PR #1. Once PR #1 merges, retarget PR #2 to `dev` and require a green
+   final head before merging it.
+5. Before any operational deployment, implement and verify the private
    operations origin, signed Access/IdP assertion verifier, operator
    provisioning, hardware MFA, mutation-origin/CSRF checks, trusted-proxy
    policy, and restricted runtime database privileges described in the Slice 2
    architecture record.
-5. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
+6. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.
