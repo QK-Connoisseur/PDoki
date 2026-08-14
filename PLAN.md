@@ -165,11 +165,14 @@ Required transactional messages:
 
 Local implementation status:
 
-- A provider-neutral mailer with console and SMTP transports is implemented.
+- A provider-neutral mailer with local Mailpit SMTP and an explicit
+  non-delivery console sink is implemented.
 - Mailpit is part of the local Docker Compose stack and receives verification
-  and password-reset mail.
+  mail, password-reset mail, and the post-commit pending creator-application
+  receipt.
 - No production provider is selected. Adult-business support, production
-  deliverability, TLS, DKIM, SPF, and DMARC remain open.
+  deliverability, authenticated TLS, DKIM, SPF, and DMARC remain open; the
+  current mailer fails closed in production.
 
 ### 3.5 Identity verification
 

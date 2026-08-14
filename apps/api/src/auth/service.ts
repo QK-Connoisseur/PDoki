@@ -101,9 +101,7 @@ export function createAuthService(db: PrismaClient, deps: AuthServiceDeps) {
     ipAddress?: string
   ): Promise<void> {
     const token = await issueToken(user.id, "EMAIL_VERIFICATION", ipAddress);
-    await sendSafely(
-      deps.mailer,
-      deps.logger,
+    await sendSafely(deps.mailer, deps.logger, "email-verification", () =>
       renderVerificationEmail({
         to: user.email,
         displayName: user.displayName,
@@ -472,9 +470,7 @@ export function createAuthService(db: PrismaClient, deps: AuthServiceDeps) {
         "PASSWORD_RESET",
         metadata.ipAddress
       );
-      await sendSafely(
-        deps.mailer,
-        deps.logger,
+      await sendSafely(deps.mailer, deps.logger, "password-reset", () =>
         renderPasswordResetEmail({
           to: user.email,
           displayName: user.displayName,

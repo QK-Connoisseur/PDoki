@@ -26,10 +26,10 @@ Founder decisions locked 2026-07-27:
   login makes the two cases distinguishable by `Set-Cookie` anyway. Reset
   stays neutral because it is the flow that actually gets scripted and
   neutrality there costs nothing the user notices.
-- **No email provider is selected in this slice.** Local Mailpit plus a console
-  transport only. The provider decision in PLAN's dependency register (due
-  2026-07-23, adult-business support unconfirmed) stays open and must not be
-  pre-empted by this code.
+- **No email provider is selected in this slice.** Local Mailpit plus an
+  explicit non-delivery console sink only. The provider decision in PLAN's
+  dependency register (due 2026-07-23, adult-business support unconfirmed)
+  stays open and must not be pre-empted by this code.
 - **This slice is backend-only.** No frontend changes; the pages that consume
   these endpoints are slice 3.
 
@@ -58,32 +58,47 @@ Alternatives considered and rejected:
 
 New module `apps/api/src/mail/`:
 
-| File           | Purpose                                                                                                                        |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `mailer.ts`    | `interface Mailer { send(message: MailMessage): Promise<void> }` and the `MailMessage` type (`to`, `subject`, `text`, `html`). |
-| `smtp.ts`      | Nodemailer SMTP transport. Points at local Mailpit in development.                                                             |
-| `console.ts`   | Renders the message to the pino logger. Default when no SMTP host is configured.                                               |
-| `memory.ts`    | Test double. Captures sent messages for assertions.                                                                            |
-| `templates.ts` | Pure functions returning `{ subject, text, html }` for each mail. No I/O.                                                      |
+| File           | Purpose                                                                                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mailer.ts`    | `Mailer.send(message)` plus `MailMessage` (`template`, `to`, `subject`, `text`, `html`) and the bounded best-effort send wrapper.                             |
+| `smtp.ts`      | Nodemailer transport for plaintext loopback Mailpit only. Non-local and production selection fail closed; connection, greeting, and socket waits are bounded. |
+| `console.ts`   | Explicit non-delivery sink. Logs only the static template identifier and never recipients, bodies, links, or tokens.                                          |
+| `memory.ts`    | Test double. Captures sent messages for assertions.                                                                                                           |
+| `templates.ts` | Pure functions returning HTML-escaped verification, reset, and creator-application-received messages. No I/O.                                                 |
 
 `createApp` gains a `mailer` dependency; `server.ts` selects the transport from
-env. Two templates: verification and password reset.
+env. The current templates are verification, password reset, and a
+creator-application-received receipt added by Phase 4 Slice 1.
+
+Message preparation and delivery happen after the relevant database work has
+committed. Preparation or transport failures never turn that successful
+domain operation into an error response. The wrapper bounds how long a request
+waits, while the SMTP transport supplies its own I/O timeouts. A timeout means
+delivery is unknown, not cancelled or guaranteed. Durable delivery still
+requires the separately designed transactional outbox/worker foundation.
 
 Local Mailpit is added to `docker-compose.yml` (SMTP `1025`, web UI `8025`) and
-started by the existing `npm run db:up`.
+started by the existing `npm run db:up`. Compose publishes SMTP and the
+unauthenticated Mailpit inbox on host IPv4 loopback (`127.0.0.1`) only; never
+replace those bindings with unqualified host-port mappings.
 
 New environment variables, validated in `env.ts` and documented in
 `.env.example`:
 
-| Variable         | Default                    | Notes                                |
-| ---------------- | -------------------------- | ------------------------------------ |
-| `MAIL_TRANSPORT` | `console`                  | `smtp` or `console`.                 |
-| `SMTP_HOST`      | `localhost`                | Required when `MAIL_TRANSPORT=smtp`. |
-| `SMTP_PORT`      | `1025`                     | Mailpit's SMTP port locally.         |
-| `MAIL_FROM`      | `no-reply@pumdoki.example` | Reserved example domain only.        |
+| Variable         | Default                    | Notes                              |
+| ---------------- | -------------------------- | ---------------------------------- |
+| `MAIL_TRANSPORT` | `smtp`                     | Local Mailpit; `console` discards. |
+| `SMTP_HOST`      | `localhost`                | Loopback Mailpit only.             |
+| `SMTP_PORT`      | `1025`                     | Mailpit's SMTP port locally.       |
+| `MAIL_FROM`      | `no-reply@pumdoki.example` | Reserved example domain only.      |
 
 Email links are built from the existing `WEB_ORIGIN`; no additional URL
 variable is introduced.
+
+`createMailer` deliberately refuses to start in production. A future
+production transport must add an approved provider, authenticated TLS,
+credentials sourced from the deployment secret store, and operational
+delivery controls before that guard can be removed.
 
 **Compliance constraints on template copy.** Templates use reserved
 `@pumdoki.example` addresses only. They must not claim that encryption,

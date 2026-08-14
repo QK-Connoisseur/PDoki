@@ -70,7 +70,7 @@ export function createApp({
   api.use(readyRouter(checkDatabase));
   api.use(authRouter({ db, env, mailer, logger }));
   api.use(accountRouter({ db, env, mailer, logger }));
-  api.use(creatorApplicationsRouter({ db, env }));
+  api.use(creatorApplicationsRouter({ db, env, mailer, logger }));
   api.use(preferencesRouter({ db, env }));
   app.use("/api/v1", api);
 

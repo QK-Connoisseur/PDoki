@@ -35,6 +35,11 @@ function isUniqueConstraintError(error: unknown): boolean {
   );
 }
 
+interface VerifiedReceiptRecipient {
+  email: string;
+  emailVerifiedAt: Date | null;
+}
+
 function toReviewEvent(
   event: CreatorApplicationReviewEvent
 ): ContractReviewEvent {
@@ -66,10 +71,31 @@ export function createCreatorApplicationService(db: PrismaClient) {
       userId: string,
       input: CreateCreatorApplicationRequest,
       ipAddress: string
-    ): Promise<ContractCreatorApplication> {
+    ): Promise<{
+      application: ContractCreatorApplication;
+      receiptEmail: string;
+    }> {
       const now = new Date();
       try {
-        const application = await db.$transaction(async (tx) => {
+        const submitted = await db.$transaction(async (tx) => {
+          const [recipient] = await tx.$queryRaw<VerifiedReceiptRecipient[]>`
+            /* creator_application_verified_email_lock */
+            SELECT "email", "emailVerifiedAt"
+            FROM "User"
+            WHERE "id" = ${userId}::uuid
+            FOR UPDATE
+          `;
+          if (!recipient) {
+            throw new HttpError(401, "UNAUTHORIZED", "Session is not valid");
+          }
+          if (recipient.emailVerifiedAt === null) {
+            throw new HttpError(
+              403,
+              "EMAIL_UNVERIFIED",
+              "Verify your email address to continue"
+            );
+          }
+
           const created = await tx.creatorApplication.create({
             data: {
               userId,
@@ -103,9 +129,12 @@ export function createCreatorApplicationService(db: PrismaClient) {
               },
             ],
           });
-          return created;
+          return { created, receiptEmail: recipient.email };
         });
-        return toContract(application);
+        return {
+          application: toContract(submitted.created),
+          receiptEmail: submitted.receiptEmail,
+        };
       } catch (error) {
         if (isUniqueConstraintError(error)) {
           throw new HttpError(
