@@ -439,7 +439,7 @@ publication branch. Draft PR #1 is open, and its initial GitHub CI run is green;
 human review and a green final PR head remain merge conditions. Passing these
 checks does not authorize a deployed operations workflow.
 
-## Current frontend routing-hardening verification — 2026-08-13
+## Current frontend routing-hardening verification — 2026-08-16
 
 - Unknown URLs retain the requested path and render a branded, accessible 404.
   Anonymous visitors receive **Go back** and **Sign in**; authenticated visitors
@@ -451,12 +451,12 @@ checks does not authorize a deployed operations workflow.
 - A rejected lazy import reaches the top-level recovery boundary, whose
   **Reload page** action performs a real page reload because React caches a
   rejected lazy-module promise.
-- The final web suite passes 29 files and 137/137 tests. The full real-stack
+- The final web suite passes 29 files and 140/140 tests. The full real-stack
   Chromium suite passes 41/41 against the API, PostgreSQL, and Mailpit; focused
   routing/authentication coverage passes 21/21 after the final review fixes.
-- The production entry JavaScript fell from 823.19 kB / 201.34 kB gzip to
-  279.03 kB / 88.31 kB gzip: reductions of 66.10% minified and 56.14% gzip.
-  The largest generated JavaScript chunk is 279.03 kB, below Vite's 500 kB
+- The production entry JavaScript fell from 824.63 kB / 201.75 kB gzip to
+  280.39 kB / 88.66 kB gzip: reductions of 66.00% minified and 56.05% gzip.
+  The largest generated JavaScript chunk is 280.39 kB, below Vite's 500 kB
   advisory threshold.
 - API 90/90, API/contracts/database build, private-admin build, lint, Prettier,
   and `git diff --check` pass. Desktop 1440×900 and mobile 390×844 visual review
