@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AUTH_ROLES } from "../auth/authApi";
 import { useAuth } from "../auth/authContext";
+import EmailVerificationBanner from "../components/EmailVerificationBanner";
 import { ErrorState, LoadingState } from "../components/StateViews";
 import {
   CREATOR_AGREEMENT_VERSION,
@@ -313,6 +314,7 @@ export default function CreatorOnboardingPage({
   if (application) {
     return (
       <PageFrame onBack={onBack}>
+        <EmailVerificationBanner />
         <Outcome application={application} onBack={onBack} />
       </PageFrame>
     );

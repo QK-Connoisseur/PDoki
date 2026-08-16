@@ -1,15 +1,16 @@
 # Session Handoff
 
-Last updated: 2026-08-13 · Publication branch: `codex/phase4-slice2-and-ux` · Target: `dev`
+Last updated: 2026-08-16 · Working branch: `codex/operations-readiness-packet` · Base: `dev`
 
 ## Current phase
 
-**Phase 4 Slice 1 — creator-application foundation — is published and
-CI-verified on `dev` as commit `ce6c9e4`.** Phase 4 Slice 2 is committed on the
-publication branch as `1ba32ea`. Its security boundary and state machine are
-recorded, its public API exposure and concurrency defects are repaired, and its
-full local migration, API, browser, build, and quality gates are green. It
-remains deliberately unusable as an operations workflow until the documented
+**Phase 4 Slice 1 is published and CI-verified as `ce6c9e4`; Phase 4
+Slice 2 and its creator UX are published through PR #1 merge commit
+`e7352c8`; frontend routing hardening is published through PR #2 merge commit
+`1189404`.** The Slice 2 security boundary and state machine are recorded, its
+public API exposure and concurrency defects are repaired, and its full local
+migration, API, browser, build, and quality gates are green. It remains
+deliberately unusable as an operations workflow until the documented
 private-origin authentication and deployment controls exist.
 
 The founder-approved Phase 3 core scope is complete:
@@ -36,38 +37,42 @@ queue, and the full idempotency framework remain deferred.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at Phase 4 Slice 1 commit `ce6c9e4`.
+- `dev` and `origin/dev` are at PR #2 merge commit `1189404`, which contains
+  PR #1 merge commit `e7352c8`.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
-- Phase 4 Slice 2 is committed as `1ba32ea` on the publication branch. It adds strict review
-  contracts, a fail-closed operations-authentication seam, atomic non-approval
-  transitions, a constrained review-event migration, and focused coverage. The
-  normal public API does not mount the review router. Its local engineering
-  gates pass, but it is not a usable private-operations workflow because real
-  operational authentication and the documented deployment controls remain
-  open.
+- Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
+  implementation began in commit `1ba32ea`. It adds strict review contracts, a
+  fail-closed operations-authentication seam, atomic non-approval transitions,
+  a constrained review-event migration, and focused coverage. The normal public
+  API does not mount the review router. Its engineering and CI gates pass, but
+  it is not a usable private-operations workflow because real operational
+  authentication and the documented deployment controls remain open.
 - Separate web UX commit `aa10873` redesigns registration, improves the
   creator-application profile-menu width and label wrapping, and replaces the
   generic non-creator `/dashboard` denial with a branded creator-access gate.
   These changes do not weaken the creator-only route guard.
-- [Draft pull request #1](https://github.com/QK-Connoisseur/PDoki/pull/1)
-  targets `dev`. GitHub Actions run `31705311373` passed its API,
-  web/private-admin, and real-stack Playwright jobs at current head `35ff434`;
-  merge remains conditioned on human review.
-- Branch `codex/operations-readiness-packet` adds non-secret planning templates
-  for private-admin activation, hardware-key recovery, Google Workspace
-  recovery privacy, environment inputs, provider decisions, and future staging
-  verification. It makes no live account change, selects no provider, and does
-  not authorize deployment or router activation.
+- [Pull request #1](https://github.com/QK-Connoisseur/PDoki/pull/1)
+  merged into `dev` as `e7352c8`. Final-head GitHub Actions run `31947756634`
+  passed its API, web/private-admin, and real-stack Playwright jobs at
+  `e83b027`.
+- [Pull request #2](https://github.com/QK-Connoisseur/PDoki/pull/2)
+  merged into `dev` as `1189404`. Final-head GitHub Actions run `31948805621`
+  passed the same three jobs at `3e5646d`.
+- [Draft pull request #3](https://github.com/QK-Connoisseur/PDoki/pull/3), on
+  branch `codex/operations-readiness-packet`, adds non-secret planning
+  templates for private-admin activation, hardware-key recovery, Google
+  Workspace recovery privacy, environment inputs, provider decisions, and
+  future staging verification. It makes no live account change, selects no
+  provider, and does not authorize deployment or router activation.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
 
 ## Manual local review setup
 
-On this Windows machine, use `127.0.0.1` consistently. Another local process
-answers the IPv6 `localhost:3000`, and the normal Vite command binds to
-`localhost` rather than `127.0.0.1`.
+For full-stack manual review, use `127.0.0.1` consistently so the browser, API,
+and configured credentialed origin use the same explicit IPv4 host.
 
 The ignored root `.env` must contain:
 
@@ -115,8 +120,8 @@ Review endpoints:
 
 Seeded review accounts all use password `pumdoki-dev-password`:
 
-- `member@pumdoki.example`
-- `creator@pumdoki.example`
+- `member@pumdoki.example` (left unverified for verification-reminder testing)
+- `creator@pumdoki.example` (preverified creator-role fixture)
 - `admin@pumdoki.example` (backend role validation only; the public web app has
   no admin route)
 
@@ -188,8 +193,10 @@ npm run db:down
   represented as counsel-approved launch agreements or payout terms.
 - Founder confirmed on 2026-08-03 that creator-review operations will follow
   the separately deployed private-admin boundary: no public web route or link,
-  API-enforced permissions, and no operational deployment until restricted
-  access and MFA/SSO are implemented.
+  API-enforced permissions, and no operational deployment until the signed
+  operations identity boundary, restricted access, and cryptographically
+  verified, phishing-resistant, hardware-backed authentication assurance are
+  implemented.
 
 ## Founder manual review — decisions resolved before Slice 3 commit
 
@@ -212,9 +219,10 @@ npm run db:down
   buildable private operations shell now exists in `apps/admin` with its own
   Vite entry point and release artifact. It is not linked from `apps/web` and
   has no operational data or actions.
-- Phase 11 must add operational authentication, MFA/SSO, restricted hosting,
-  API integration, permissions, and audit logging before `apps/admin` is
-  deployed. The current shell explicitly warns against public deployment.
+- Phase 11 must add the signed operations identity boundary,
+  phishing-resistant hardware-backed authentication assurance, restricted
+  hosting, API integration, permissions, and audit logging before `apps/admin`
+  is deployed. The current shell explicitly warns against public deployment.
 
 ## What Slice 3 implements
 
@@ -233,8 +241,14 @@ npm run db:down
 - Login, registration, logout, forgot/reset password, and email verification
   use the live API. Registration submits the versioned age/Terms/Privacy
   attestation and the checkbox starts unchecked.
-- A persistent unverified-email banner supports resend pending, accepted,
-  throttled, and failure states.
+- A modern full-width unverified-email reminder sits in normal page flow below
+  each authorized ready-state shell header, so it reserves space instead of
+  covering page or chat content. Existing creator-application outcomes include
+  the strip; the new-application gate keeps its more specific verification
+  card, and forbidden/loading screens do not duplicate the reminder. It
+  supports resend pending, accepted, throttled, and failure states and can be
+  dismissed for the current browser session without changing verification
+  state or bypassing protected actions.
 - Verification/reset tokens are removed from visible browser history after
   capture. A successful password reset explains global session revocation.
 
@@ -428,10 +442,35 @@ did not change a manifest or lockfile; the intentional `pg` test dependency
 does. A repository-wide line-ending accident was reduced to the actual semantic
 diff, and `.gitattributes` plus Prettier now require LF.
 
-The local engineering gate is complete and the work is committed on the
-publication branch. Draft PR #1 is open, and its initial GitHub CI run is green;
-human review and a green final PR head remain merge conditions. Passing these
-checks does not authorize a deployed operations workflow.
+The Slice 2 engineering gate is complete, and PR #1 merged into `dev` as
+`e7352c8` after final-head GitHub Actions run `31947756634` passed. PR #2
+merged the routing work as `1189404` after run `31948805621` passed. Passing
+these checks does not authorize a deployed operations workflow.
+
+## Current frontend routing-hardening verification — 2026-08-16
+
+- Unknown URLs retain the requested path and render a branded, accessible 404.
+  Anonymous visitors receive **Go back** and **Sign in**; authenticated visitors
+  receive **Go back** and **Go home**. Session restoration is not guessed, and
+  an authentication outage offers a retry.
+- `/admin` receives the same generic 404 and exposes no private-admin content.
+- Non-login feature, auth, and legal routes are lazy-loaded behind an accessible
+  shared route-loading state. Login and the 404 recovery route remain eager.
+- A rejected lazy import reaches the top-level recovery boundary, whose
+  **Reload page** action performs a real page reload because React caches a
+  rejected lazy-module promise.
+- The final web suite passes 30 files and 144/144 tests. The full real-stack
+  Chromium suite passes 41/41 against the API, PostgreSQL, and Mailpit; focused
+  routing/authentication coverage passes 21/21 after the final review fixes.
+- The production entry JavaScript fell from 824.90 kB / 201.82 kB gzip to
+  277.80 kB / 87.93 kB gzip: reductions of 66.32% minified and 56.43% gzip.
+  The largest generated JavaScript chunk is 277.80 kB, below Vite's 500 kB
+  advisory threshold.
+- API 90/90, API/contracts/database build, private-admin build, lint, Prettier,
+  and `git diff --check` pass. Desktop 1440×900 and mobile 390×844 visual review
+  show no overflow or clipped recovery actions.
+- CI now runs Prettier, uses read-only repository-token permissions, and applies
+  bounded job timeouts. GitHub CI and human review remain required.
 
 ## Risks and remaining work
 
@@ -450,34 +489,34 @@ checks does not authorize a deployed operations workflow.
 - Counsel-approved creator/payout/content policies, country eligibility, tax
   intake, and an identity provider with approved security/retention controls
   do not exist yet. Do not enable ID collection or creator approval.
-- The private operations shell has no production authentication, MFA/SSO,
-  creator-review UI, deployed API verifier, or globally immutable audit log.
+- The private operations shell has no production signed operations
+  authentication, hardware-backed assurance, creator-review UI, deployed API
+  verifier, or globally immutable audit log.
   Slice 2's dormant application-level evidence seam must remain unmounted until
   those controls are implemented and verified.
 - Founder began the Cloudflare and Yubico prerequisites on 2026-08-03. This is
   in progress and does not yet constitute verified private-admin restricted
-  access or MFA integration. The readiness packet in `docs/operations/` defines
-  the future evidence gate without asserting current account state.
+  access or hardware-backed assurance integration. The readiness packet in
+  `docs/operations/` defines the future evidence gate without asserting
+  current account state.
 - Revisit Google Workspace signup/recovery privacy without recording personal
   contact details in this repository. Confirm directory visibility and current
   recovery factors, enroll an independent backup key/recovery path, and verify
   access before replacing any temporary contact so the privacy improvement does
   not create an account lockout.
 - Production `BrowserRouter` host rewrites remain required.
-- Unknown web routes still redirect to `/login`; the branded 404 required by
-  the Phase 1 route-state scope remains open.
-- Frontend code splitting remains advisable.
 
 ## Next exact task
 
-1. Treat published commit `ce6c9e4` and green CI run `30739645872` as the
-   shared Phase 4 Slice 1 engineering baseline.
-2. Review [draft pull request #1](https://github.com/QK-Connoisseur/PDoki/pull/1)
-   against `dev` and merge only after human review is complete and the final PR
-   head is green. Keep the public review route unmounted and keep `APPROVED`,
-   role promotion, and identity collection absent.
-3. Review the separate backend (`1ba32ea`) and web UX (`aa10873`) commits
-   independently before merging the pull request.
+1. Treat PR #1 merge commit `e7352c8`, PR #2 merge commit `1189404`, and their
+   green final-head CI runs `31947756634` and `31948805621` as the shared `dev`
+   baseline.
+2. Review [draft pull request #3](https://github.com/QK-Connoisseur/PDoki/pull/3)
+   against current `dev`. Merge only after current-dev conflict reconciliation,
+   the documented secret/personal-identifier, relative-link, formatting, and
+   whitespace checks, and green final-head CI.
+3. Keep the creator-review router unmounted from the public API and keep
+   `APPROVED`, role promotion, and identity collection absent.
 4. Use the non-secret [operations readiness packet](docs/operations/README.md)
    to implement and verify the private operations origin, signed Access/IdP
    assertion verifier, operator provisioning, hardware MFA and recovery,

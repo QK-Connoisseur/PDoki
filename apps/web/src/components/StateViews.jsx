@@ -32,6 +32,7 @@ export function ErrorState({
   title = "Something went wrong",
   message,
   onRetry,
+  retryLabel = "Try again",
 }) {
   return (
     <div
@@ -46,7 +47,7 @@ export function ErrorState({
           onClick={onRetry}
           className="rounded-full bg-pink-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-pink-600"
         >
-          Try again
+          {retryLabel}
         </button>
       )}
     </div>

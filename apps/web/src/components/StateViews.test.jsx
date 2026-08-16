@@ -24,6 +24,20 @@ describe("StateViews", () => {
     expect(onRetry).toHaveBeenCalledOnce();
   });
 
+  it("ErrorState supports a specific recovery label", async () => {
+    const onRetry = vi.fn();
+    render(
+      <ErrorState
+        message="A route chunk failed"
+        onRetry={onRetry}
+        retryLabel="Reload page"
+      />
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "Reload page" }));
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
+
   it("ErrorState omits the retry button when no handler is given", () => {
     render(<ErrorState message="Network down" />);
     expect(screen.queryByRole("button")).not.toBeInTheDocument();

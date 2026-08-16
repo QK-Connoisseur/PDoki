@@ -128,8 +128,10 @@ Decision locked — founder-confirmed August 3, 2026:
 - Keep `ADMIN` in the backend role model and enforce every operational
   permission in the API. The separate deployment is defense in depth, not a
   replacement for authorization.
-- Require stronger operational controls before launch: MFA or SSO, restricted
-  access, audit logging, and separately permissioned sensitive records.
+- Require a signed operations identity boundary with cryptographically verified,
+  phishing-resistant, hardware-backed authentication assurance before launch,
+  plus restricted access, audit logging, and separately permissioned sensitive
+  records.
 
 Why:
 
@@ -317,9 +319,17 @@ Provisional recommendation:
     accessible 404 page for unknown URLs with clear Back, Home, and Sign-in
     actions appropriate to the visitor's session state.
 19. Add loading, empty, and retry states to core pages.
+20. Lazy-load feature routes behind an accessible shared loading state while
+    keeping critical recovery routes eager.
 
-Current gap — August 3, 2026: the wildcard web route still redirects unknown
-URLs to `/login`; the branded 404 state above remains open.
+Implemented, published, and CI-verified — August 16, 2026: unknown URLs retain
+their requested path and render a branded 404. Anonymous visitors receive Back
+and Sign-in recovery; authenticated visitors receive Back and Home; `/admin`
+remains a generic unknown route. Unresolved sessions are never guessed, and an
+authentication outage exposes retry. Feature pages are route-split behind the
+shared loading state. PR #2 merged into `dev` as `1189404` after GitHub Actions
+run `31948805621` passed at reviewed head `3e5646d`; see `HANDOFF.md` for test
+and bundle measurements.
 
 ### Exit criteria
 
@@ -539,7 +549,7 @@ Settings list is implemented.
 12. Support more than one performer per media item without creating a complicated public UI.
 13. Link every explicit media item to required performer records.
 
-### Current Phase 4 implementation status — August 12, 2026
+### Current Phase 4 implementation status — August 16, 2026
 
 - Slice 1, the creator-application foundation, is implemented, published on
   `dev` as commit `ce6c9e4`, and CI-verified by GitHub Actions run
@@ -566,23 +576,25 @@ Settings list is implemented.
   were removed. No identity files leave the browser.
 - The durable boundary and provider prerequisites are documented in
   `docs/architecture/phase4-slice1-creator-application-foundation.md`.
-- Slice 2 is committed on `codex/phase4-slice2-and-ux` as `1ba32ea`. Its private-operations
-  boundary, exact non-approval state machine, concurrency rule, evidence
-  limitations, exclusions, and activation blockers are specified in
-  `docs/architecture/phase4-slice2-private-creator-review.md`.
+- Slice 2 is published on `dev` through PR #1 merge commit `e7352c8`. Its
+  private-operations boundary, exact non-approval state machine, concurrency
+  rule, evidence limitations, exclusions, and activation blockers are specified
+  in `docs/architecture/phase4-slice2-private-creator-review.md`.
 - The normal public API does not mount the creator-review router. The dormant
   router requires an injected operations verifier, rejects public-session-only
   access by construction, and permits only `PENDING → NEEDS_INFORMATION`,
   `PENDING → REJECTED`, and `NEEDS_INFORMATION → REJECTED` through an atomic
   expected-status update plus evidence insert. Approval, role promotion, and
   identity-status mutation remain absent.
-- The local Slice 2 engineering gate is green: all six migrations deploy to
-  PostgreSQL 17, focused migration/review coverage passes 10/10, the full API
-  suite passes 90/90, the web suite passes 126/126, the real-stack Chromium
-  suite passes 40/40, and builds/lint/format pass. Draft pull request #1 targets
-  `dev`; GitHub Actions run `31705311373` passed all three jobs at current head
-  `35ff434`. Merge remains conditioned on human review, and the foundation is
-  not a usable private-operations workflow.
+- The final Slice 2 engineering and CI verification is green: all six
+  migrations deploy to PostgreSQL 17, focused migration/review coverage passes
+  10/10, the full API suite passes 90/90, the web suite passes 133/133, and the
+  real-stack Chromium suite passes 40/40. GitHub Actions run `31947756634`
+  passed all three jobs at reviewed head `e83b027` before PR #1 merged.
+- The non-secret [operations readiness packet](docs/operations/README.md)
+  provides activation, recovery, configuration, provider-decision, and future
+  staging-verification templates. It records no live control, selects no
+  provider, and does not authorize deployment or mounting the dormant router.
 - This is not creator onboarding completion: counsel-approved policies, legal
   entity work, country eligibility, tax intake, an approved identity provider,
   private operations authentication/review, production-grade reviewer audit
@@ -918,8 +930,9 @@ Build in this order:
 - The operations application has an independent deployment and is not linked
   from the public product.
 - Admin permissions are API-enforced.
-- Operational authentication requires MFA or SSO plus restricted access before
-  production use.
+- Operational authentication requires a signed operations identity boundary,
+  restricted access, and cryptographically verified, phishing-resistant,
+  hardware-backed authentication assurance before production use.
 - Sensitive document access is separately permissioned.
 - Every sensitive view and action is logged.
 - Destructive actions require confirmation and reason.
@@ -1095,27 +1108,27 @@ follow-up date.
 
 ## 21. Immediate next actions
 
-1. Review draft pull request #1 against `dev` and merge only after human review
-   is complete and its final head is green. Keep the review router unmounted
-   from the public API.
-2. Review backend commit `1ba32ea` and web UX commit `aa10873` independently
-   before merging so the two scopes remain auditable.
-3. Use the non-secret [operations readiness packet](docs/operations/README.md)
-   to review the signed Access/IdP assertion verifier, explicit operator
-   provisioning/permission mapping, private origin, hardware MFA and recovery
-   policy, mutation-origin/CSRF validation, trusted-proxy policy, and restricted
-   runtime database grants before any operational deployment. Templates do not
-   authorize activation.
+1. Keep the creator-review router unmounted from the public API. The merged
+   Slice 2 foundation is not a deployable private-operations workflow.
+2. Use the non-secret [operations readiness packet](docs/operations/README.md)
+   to design and review the signed Access/IdP assertion verifier, explicit
+   operator provisioning and permission mapping, private origin, hardware MFA
+   and recovery policy, mutation-origin/CSRF validation, trusted-proxy policy,
+   and restricted runtime database grants.
+3. Implement and verify those controls before any operational deployment.
+   Templates are planning aids, not evidence or authorization; keep completed
+   decisions, identifiers, and verification evidence in the approved restricted
+   system rather than Git.
 4. Keep `APPROVED`, role promotion, identity files, tax/banking intake, and
    creator publishing disabled until identity, country, legal, and operations
    gates are concrete.
-5. In parallel, advance the legal entity/counsel, acceptance-retention,
-   identity-provider, country-allowlist, tax, and operational-mailbox decisions.
-6. Preserve the dependency sequencing for notification, theme, billing,
+5. In parallel, advance the legal-entity/counsel, acceptance-retention,
+   identity-provider, country-allowlist, tax, processor, payout-economics, and
+   operational-mailbox decisions.
+6. Preserve the dependency sequencing for notifications, theme, billing,
    export/deletion, and explicit-content query enforcement.
-7. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
-   decisions in the register above.
-8. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
-   workstreams in parallel.
-9. Build the commission and payout model using real processor quotes when
+7. Keep Phase 2 labeled partially complete and use the decision register and
+   operations packet to close the AWS, monitoring, Redis/queue/idempotency, and
+   transactional-email choices.
+8. Build the commission and payout model using real processor quotes when
    available.
