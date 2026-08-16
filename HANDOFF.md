@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-16 · Publication branch: `codex/phase4-slice2-and-ux` · Target: `dev`
+Last updated: 2026-08-16 · Working branch: `codex/frontend-routing-hardening` · Base: `codex/phase4-slice2-and-ux`
 
 ## Current phase
 
@@ -51,10 +51,13 @@ queue, and the full idempotency framework remain deferred.
   generic non-creator `/dashboard` denial with a branded creator-access gate.
   These changes do not weaken the creator-only route guard.
 - [Draft pull request #1](https://github.com/QK-Connoisseur/PDoki/pull/1)
-  targets `dev`. GitHub Actions run `31704980241` passed its API,
-  web/private-admin, and real-stack Playwright jobs at initial review head
-  `ee83274`; merge remains conditioned on human review and a green final PR
-  head.
+  targets `dev`. Final-head GitHub Actions run `31947756634` passed its API,
+  web/private-admin, and real-stack Playwright jobs at `e83b027`; merge remains
+  conditioned on human review.
+- The remote-safe frontend routing work is isolated on
+  `codex/frontend-routing-hardening`, stacked on PR #1's head so PR #1 remains
+  frozen. [Draft pull request #2](https://github.com/QK-Connoisseur/PDoki/pull/2)
+  targets the PR #1 branch and must be retargeted to `dev` after PR #1 merges.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -435,6 +438,31 @@ publication branch. Draft PR #1 is open, and its initial GitHub CI run is green;
 human review and a green final PR head remain merge conditions. Passing these
 checks does not authorize a deployed operations workflow.
 
+## Current frontend routing-hardening verification — 2026-08-16
+
+- Unknown URLs retain the requested path and render a branded, accessible 404.
+  Anonymous visitors receive **Go back** and **Sign in**; authenticated visitors
+  receive **Go back** and **Go home**. Session restoration is not guessed, and
+  an authentication outage offers a retry.
+- `/admin` receives the same generic 404 and exposes no private-admin content.
+- Non-login feature, auth, and legal routes are lazy-loaded behind an accessible
+  shared route-loading state. Login and the 404 recovery route remain eager.
+- A rejected lazy import reaches the top-level recovery boundary, whose
+  **Reload page** action performs a real page reload because React caches a
+  rejected lazy-module promise.
+- The final web suite passes 30 files and 144/144 tests. The full real-stack
+  Chromium suite passes 41/41 against the API, PostgreSQL, and Mailpit; focused
+  routing/authentication coverage passes 21/21 after the final review fixes.
+- The production entry JavaScript fell from 824.90 kB / 201.82 kB gzip to
+  277.80 kB / 87.93 kB gzip: reductions of 66.32% minified and 56.43% gzip.
+  The largest generated JavaScript chunk is 277.80 kB, below Vite's 500 kB
+  advisory threshold.
+- API 90/90, API/contracts/database build, private-admin build, lint, Prettier,
+  and `git diff --check` pass. Desktop 1440×900 and mobile 390×844 visual review
+  show no overflow or clipped recovery actions.
+- CI now runs Prettier, uses read-only repository-token permissions, and applies
+  bounded job timeouts. GitHub CI and human review remain required.
+
 ## Risks and remaining work
 
 - Dependency-bound notification, theme, billing, export, and deletion Settings
@@ -465,9 +493,6 @@ checks does not authorize a deployed operations workflow.
   access before replacing any temporary contact so the privacy improvement does
   not create an account lockout.
 - Production `BrowserRouter` host rewrites remain required.
-- Unknown web routes still redirect to `/login`; the branded 404 required by
-  the Phase 1 route-state scope remains open.
-- Frontend code splitting remains advisable.
 
 ## Next exact task
 
@@ -479,11 +504,14 @@ checks does not authorize a deployed operations workflow.
    role promotion, and identity collection absent.
 3. Review the separate backend (`1ba32ea`) and web UX (`aa10873`) commits
    independently before merging the pull request.
-4. Before any operational deployment, implement and verify the private
+4. Review stacked [draft pull request #2](https://github.com/QK-Connoisseur/PDoki/pull/2)
+   after PR #1. Once PR #1 merges, retarget PR #2 to `dev` and require a green
+   final head before merging it.
+5. Before any operational deployment, implement and verify the private
    operations origin, signed Access/IdP assertion verifier, operator
    provisioning, hardware MFA, mutation-origin/CSRF checks, trusted-proxy
    policy, and restricted runtime database privileges described in the Slice 2
    architecture record.
-5. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
+6. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.

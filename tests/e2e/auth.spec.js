@@ -238,6 +238,10 @@ test("creators can open the dashboard from the profile menu", async ({
 
 test("the public web app has no admin route", async ({ page }) => {
   await page.goto("/admin");
-  await expect(page).toHaveURL(/\/login$/);
+  await expect(page).toHaveURL(/\/admin$/);
+  await expect(
+    page.getByRole("heading", { name: "This page wandered off." })
+  ).toBeVisible();
   await expect(page.getByText("Admin area")).toHaveCount(0);
+  await expect(page.getByText(/admin/i)).toHaveCount(0);
 });

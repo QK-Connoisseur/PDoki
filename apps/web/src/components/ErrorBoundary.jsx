@@ -1,6 +1,10 @@
 import { Component } from "react";
 import { ErrorState } from "./StateViews";
 
+function reloadCurrentPage() {
+  window.location.reload();
+}
+
 /**
  * Top-level error boundary. Catches render-time errors anywhere in the routed
  * tree so a single broken page does not blank out the whole app. In dev the
@@ -21,8 +25,11 @@ export default class ErrorBoundary extends Component {
     console.error("Unhandled UI error:", error, info);
   }
 
-  handleReset = () => {
-    this.setState({ error: null });
+  handleRetry = () => {
+    // React.lazy caches a rejected module promise, so clearing this component's
+    // state cannot recover a failed route chunk. A full reload preserves the
+    // current URL and lets the browser request the current deployment again.
+    (this.props.reloadPage ?? reloadCurrentPage)();
   };
 
   render() {
@@ -36,7 +43,8 @@ export default class ErrorBoundary extends Component {
                 ? String(this.state.error?.message || this.state.error)
                 : "Please try again. If the problem continues, come back later."
             }
-            onRetry={this.handleReset}
+            onRetry={this.handleRetry}
+            retryLabel="Reload page"
           />
         </div>
       );

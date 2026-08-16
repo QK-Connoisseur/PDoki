@@ -317,9 +317,15 @@ Provisional recommendation:
     accessible 404 page for unknown URLs with clear Back, Home, and Sign-in
     actions appropriate to the visitor's session state.
 19. Add loading, empty, and retry states to core pages.
+20. Lazy-load feature routes behind an accessible shared loading state while
+    keeping critical recovery routes eager.
 
-Current gap — August 3, 2026: the wildcard web route still redirects unknown
-URLs to `/login`; the branded 404 state above remains open.
+Implemented and locally verified — August 13, 2026: unknown URLs retain their
+requested path and render a branded 404. Anonymous visitors receive Back and
+Sign-in recovery; authenticated visitors receive Back and Home; `/admin`
+remains a generic unknown route. Unresolved sessions are never guessed, and an
+authentication outage exposes retry. Feature pages are route-split behind the
+shared loading state; see `HANDOFF.md` for test and bundle measurements.
 
 ### Exit criteria
 
@@ -1100,21 +1106,23 @@ follow-up date.
    from the public API.
 2. Review backend commit `1ba32ea` and web UX commit `aa10873` independently
    before merging so the two scopes remain auditable.
-3. Before any operational deployment, implement the signed Access/IdP assertion
+3. Review stacked draft pull request #2 after PR #1. Once PR #1 merges, retarget
+   PR #2 to `dev` and require a green final head before merging it.
+4. Before any operational deployment, implement the signed Access/IdP assertion
    verifier, explicit operator provisioning/permission mapping, private origin,
    hardware MFA and recovery policy, mutation-origin/CSRF validation, trusted-
    proxy policy, and restricted runtime database grants defined in the Slice 2
    architecture record.
-4. Keep `APPROVED`, role promotion, identity files, tax/banking intake, and
+5. Keep `APPROVED`, role promotion, identity files, tax/banking intake, and
    creator publishing disabled until identity, country, legal, and operations
    gates are concrete.
-5. In parallel, advance the legal entity/counsel, acceptance-retention,
+6. In parallel, advance the legal entity/counsel, acceptance-retention,
    identity-provider, country-allowlist, tax, and operational-mailbox decisions.
-6. Preserve the dependency sequencing for notification, theme, billing,
+7. Preserve the dependency sequencing for notification, theme, billing,
    export/deletion, and explicit-content query enforcement.
-7. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
+8. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
    decisions in the register above.
-8. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
+9. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
    workstreams in parallel.
-9. Build the commission and payout model using real processor quotes when
-   available.
+10. Build the commission and payout model using real processor quotes when
+    available.
