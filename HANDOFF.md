@@ -51,10 +51,9 @@ queue, and the full idempotency framework remain deferred.
   generic non-creator `/dashboard` denial with a branded creator-access gate.
   These changes do not weaken the creator-only route guard.
 - [Draft pull request #1](https://github.com/QK-Connoisseur/PDoki/pull/1)
-  targets `dev`. GitHub Actions run `31704980241` passed its API,
-  web/private-admin, and real-stack Playwright jobs at initial review head
-  `ee83274`; merge remains conditioned on human review and a green final PR
-  head.
+  targets `dev`. Final-head GitHub Actions run `31947756634` passed its API,
+  web/private-admin, and real-stack Playwright jobs at `e83b027`; merge remains
+  conditioned on human review.
 - The remote-safe frontend routing work is isolated on
   `codex/frontend-routing-hardening`, stacked on PR #1's head so PR #1 remains
   frozen. [Draft pull request #2](https://github.com/QK-Connoisseur/PDoki/pull/2)
@@ -451,12 +450,12 @@ checks does not authorize a deployed operations workflow.
 - A rejected lazy import reaches the top-level recovery boundary, whose
   **Reload page** action performs a real page reload because React caches a
   rejected lazy-module promise.
-- The final web suite passes 29 files and 140/140 tests. The full real-stack
+- The final web suite passes 30 files and 144/144 tests. The full real-stack
   Chromium suite passes 41/41 against the API, PostgreSQL, and Mailpit; focused
   routing/authentication coverage passes 21/21 after the final review fixes.
-- The production entry JavaScript fell from 824.63 kB / 201.75 kB gzip to
-  280.39 kB / 88.66 kB gzip: reductions of 66.00% minified and 56.05% gzip.
-  The largest generated JavaScript chunk is 280.39 kB, below Vite's 500 kB
+- The production entry JavaScript fell from 824.90 kB / 201.82 kB gzip to
+  277.80 kB / 87.93 kB gzip: reductions of 66.32% minified and 56.43% gzip.
+  The largest generated JavaScript chunk is 277.80 kB, below Vite's 500 kB
   advisory threshold.
 - API 90/90, API/contracts/database build, private-admin build, lint, Prettier,
   and `git diff --check` pass. Desktop 1440×900 and mobile 390×844 visual review
