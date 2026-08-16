@@ -1,6 +1,6 @@
 # Phase 4 Slice 2 — Private creator-review state foundation
 
-Date: 2026-08-12 · Status: locally verified; deployment disabled · Branch: `dev`
+Date: 2026-08-12 · Status: merged and CI-verified; deployment disabled · Branch: `dev`
 
 ## Goal
 
@@ -32,7 +32,9 @@ is unreachable in the normal deployable API.
 Before any deployed operations server mounts the router, it must:
 
 1. Run on the separately hosted, restricted `apps/admin` origin.
-2. Require hardware-backed MFA or equivalent SSO policy.
+2. Require cryptographically verified, phishing-resistant, hardware-backed
+   authentication assurance. Generic MFA, OTP, SMS, recovery, or token presence
+   is insufficient.
 3. Validate the signed access assertion at the API origin, including issuer,
    audience, signature, expiry, and immutable external subject.
 4. Map that subject to an explicitly provisioned, active internal operator.
@@ -174,3 +176,8 @@ Production activation remains blocked on the private hostname/origin, IdP or
 Cloudflare Access issuer/audience/JWKS identifiers, operator provisioning,
 hardware-key enrollment and recovery policy, trusted-proxy configuration, and
 the legal/vendor decisions already tracked in `PLAN.md`.
+
+The [operations readiness packet](../operations/README.md) supplies non-secret
+activation, recovery, configuration, provider-decision, and future staging-test
+templates for closing those blockers. The templates are not evidence that a
+control exists or permission to mount the router.

@@ -113,7 +113,10 @@ These requirements were extracted from temporary implementation-prompt files bef
 - A global footer exposes Terms, Privacy, Cookies, DMCA, 18 USC §2257, Acceptable Use, Appeals, Law Enforcement, and Contact links.
 - Signup requires an unchecked 18+ and terms/privacy clickwrap.
 - Cookie controls include Accept All, Reject Non-Essential, and Manage Preferences.
-- Creator onboarding includes agreement acceptance, identity-document UI, a verification selfie, and policy acknowledgements.
+- Creator onboarding currently collects creator-facing profile fields and
+  versioned prototype acknowledgements only. It must not add identity-document
+  or selfie collection until an approved provider, retention policy, and
+  private operations workflow exist.
 - Content publishing includes a mandatory rights and policy confirmation.
 - Legal copy currently in the frontend is placeholder material and is not approved for production.
 - Prototype contact details must use reserved sample addresses such as `support@pumdoki.example` until real mailboxes exist.
@@ -134,6 +137,7 @@ pumdoki/
 │   └── config/              # Shared lint, TypeScript, and formatting config
 ├── docs/
 │   ├── architecture/
+│   ├── operations/           # Non-secret readiness templates; no live state
 │   ├── legal/
 │   ├── api/
 │   └── product/
@@ -152,9 +156,11 @@ The previous prompt-heavy AI folder proposal was intentionally not adopted. Prod
 The public web application intentionally has no `/admin` route. `apps/admin`
 is an independently buildable private operations shell for a future separate
 deployment. Its workflows are not implemented and it must not be exposed
-publicly. The backend `ADMIN` role remains the source of operational API
-authorization; separate hosting and hidden navigation are not substitutes for
-server-side permissions.
+publicly. The backend `ADMIN` role remains necessary but is never sufficient
+for operational API authorization. A signed operations principal, explicit
+active-operator mapping, and the required permission must also pass at the API
+origin; the public product session does not qualify. Separate hosting and
+hidden navigation are not substitutes for those server-side controls.
 
 ## Current frontend
 
@@ -199,12 +205,15 @@ loaded behind a shared accessible loading state. Phase 3 is published and
 CI-verified through commit `d55f5f3`. Phase 4 Slice 1, the persisted pending
 creator-application foundation, is published and CI-verified as commit
 `ce6c9e4`.
-Phase 4 Slice 2 is committed on the current publication branch as a fail-closed
-backend state/evidence foundation; its local migration and full test gates pass,
-but it is not a deployable private-operations workflow. Production
+Phase 4 Slice 2 and the frontend routing hardening are published on `dev`
+through merge commit `1189404`. Slice 2 remains a fail-closed backend
+state/evidence foundation rather than a deployable private-operations workflow.
+Production
 infrastructure, identity verification, operational authentication/review,
 server-side content filtering, dependency-bound Settings, and other product
-domains are not complete.
+domains are not complete. The [operations readiness packet](docs/operations/README.md)
+contains non-secret planning templates for those future controls; it neither
+records their live state nor authorizes activation.
 
 ## Development
 
