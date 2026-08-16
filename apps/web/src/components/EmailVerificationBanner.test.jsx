@@ -30,6 +30,10 @@ describe("EmailVerificationBanner", () => {
   it("is visible only for unverified users and reports accepted requests", async () => {
     renderBanner(vi.fn().mockResolvedValue({ status: "accepted" }));
     expect(screen.getByText(unverifiedUser.email)).toBeVisible();
+    expect(
+      screen.getByRole("complementary", { name: "Email verification" })
+        .className
+    ).not.toMatch(/\b(?:fixed|absolute|sticky)\b/);
 
     await userEvent.click(
       screen.getByRole("button", { name: "Resend verification link" })

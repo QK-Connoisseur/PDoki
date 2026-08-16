@@ -26,8 +26,8 @@ Settings or explicit-content preferences; those remain slice 4.
   OAuth flow.
 - Successful login returns the member to the protected route they originally
   requested, falling back to `/home`.
-- Unverified users may sign in and browse. A compact reminder offers resend and
-  verification guidance. It may be dismissed for the current browser session,
+- Unverified users may sign in and browse. An in-flow reminder offers resend
+  and verification guidance. It may be dismissed for the current browser session,
   but dismissal never changes verification state or bypasses protected API
   actions. Creator application submission already applies
   `requireVerifiedEmail`; payment-action gates remain future work.
@@ -146,8 +146,12 @@ non-production.
 The verification banner:
 
 - Appears only when `user.emailVerified` is false.
-- Uses a compact translucent card below the header instead of a full-width
-  overlay.
+- Uses a modern translucent full-width strip in normal page flow below each
+  authorized ready-state shell header. The strip reserves its own height and
+  scrolls away, so it never overlays page content, Moments, or chat controls.
+  Existing creator-application outcomes include the strip; the unverified
+  new-application path keeps its contextual verification card, while forbidden
+  and transient loading screens do not duplicate the reminder.
 - May be dismissed for the current tab session, scoped to the user and email;
   it returns in a new session or after an email change.
 - Offers resend with pending, accepted, throttled, and retryable states.

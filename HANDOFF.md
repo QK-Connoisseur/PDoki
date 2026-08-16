@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-13 · Publication branch: `codex/phase4-slice2-and-ux` · Target: `dev`
+Last updated: 2026-08-16 · Publication branch: `codex/phase4-slice2-and-ux` · Target: `dev`
 
 ## Current phase
 
@@ -229,9 +229,14 @@ npm run db:down
 - Login, registration, logout, forgot/reset password, and email verification
   use the live API. Registration submits the versioned age/Terms/Privacy
   attestation and the checkbox starts unchecked.
-- A compact unverified-email reminder supports resend pending, accepted,
-  throttled, and failure states. It can be dismissed for the current browser
-  session without changing verification state or bypassing protected actions.
+- A modern full-width unverified-email reminder sits in normal page flow below
+  each authorized ready-state shell header, so it reserves space instead of
+  covering page or chat content. Existing creator-application outcomes include
+  the strip; the new-application gate keeps its more specific verification
+  card, and forbidden/loading screens do not duplicate the reminder. It
+  supports resend pending, accepted, throttled, and failure states and can be
+  dismissed for the current browser session without changing verification
+  state or bypassing protected actions.
 - Verification/reset tokens are removed from visible browser history after
   capture. A successful password reset explains global session revocation.
 

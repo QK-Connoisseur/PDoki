@@ -50,6 +50,67 @@ test("registration persists, dismisses its reminder, and verifies through the em
   });
   await expect(page).toHaveURL(/\/home$/);
   await expect(verificationReminder).toContainText(email);
+
+  const firstMoment = page.locator(".moment-item-create").first();
+  const chatSidebar = page.getByRole("complementary", {
+    name: "Chat sidebar",
+  });
+  await expect(firstMoment).toBeVisible();
+  await expect(chatSidebar).toBeVisible();
+  const [desktopReminderBox, desktopMomentBox, desktopChatBox] =
+    await Promise.all([
+      verificationReminder.boundingBox(),
+      firstMoment.boundingBox(),
+      chatSidebar.boundingBox(),
+    ]);
+  expect(desktopReminderBox).not.toBeNull();
+  expect(desktopMomentBox).not.toBeNull();
+  expect(desktopChatBox).not.toBeNull();
+  const desktopReminderBottom =
+    desktopReminderBox.y + desktopReminderBox.height;
+  expect(desktopReminderBottom).toBeLessThanOrEqual(desktopMomentBox.y + 1);
+  expect(desktopReminderBottom).toBeLessThanOrEqual(desktopChatBox.y + 1);
+
+  await page.getByRole("button", { name: "Chat with Luna Bloom" }).click();
+  const messagesDialog = page.getByRole("dialog", { name: "Messages" });
+  const chatBubble = page.getByText(
+    "Hey! Just wanted to say your content is amazing 💕",
+    { exact: true }
+  );
+  await expect(messagesDialog).toBeVisible();
+  await expect(chatBubble).toBeVisible();
+  await expect
+    .poll(() =>
+      chatBubble.evaluate((bubble) => {
+        const box = bubble.getBoundingClientRect();
+        const topmost = document.elementFromPoint(
+          box.x + box.width / 2,
+          box.y + box.height / 2
+        );
+        return topmost === bubble || bubble.contains(topmost);
+      })
+    )
+    .toBe(true);
+  await page.getByRole("button", { name: "Close messages" }).click();
+  await expect(messagesDialog).toHaveCount(0);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(firstMoment).toBeVisible();
+  const [mobileReminderBox, mobileMomentBox] = await Promise.all([
+    verificationReminder.boundingBox(),
+    firstMoment.boundingBox(),
+  ]);
+  expect(mobileReminderBox).not.toBeNull();
+  expect(mobileMomentBox).not.toBeNull();
+  expect(mobileReminderBox.x).toBeGreaterThanOrEqual(0);
+  expect(mobileReminderBox.x + mobileReminderBox.width).toBeLessThanOrEqual(
+    390
+  );
+  expect(mobileReminderBox.y + mobileReminderBox.height).toBeLessThanOrEqual(
+    mobileMomentBox.y + 1
+  );
+  await page.setViewportSize({ width: 1280, height: 720 });
+
   await page
     .getByRole("button", { name: "Dismiss email verification reminder" })
     .click();

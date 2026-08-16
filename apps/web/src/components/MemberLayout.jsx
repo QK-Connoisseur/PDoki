@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "./AppHeader";
+import EmailVerificationBanner from "./EmailVerificationBanner";
 import Sidebar, { MobileNav } from "./Sidebar";
 import ChatSidebar from "./ChatSidebar";
 import { chatContacts } from "../fixtures/chatContacts";
@@ -94,26 +95,30 @@ export default function MemberLayout({
         </div>
       )}
 
-      <div className="flex pt-16 min-h-screen">
-        <Sidebar
-          activePage={activePage}
-          onNavigate={handleNavigate}
-          onOpenDashboard={() => navigate("/dashboard")}
-          onOpenCreatorApplication={() => navigate("/creator/onboarding")}
-          onOpenSettings={() => navigate("/settings")}
-          showCreatorDashboard={showCreatorDashboard}
-          showCreatorApplication={showCreatorApplication}
-          onLogout={handleLogout}
-          onNavigateLegal={handleNavigateLegal}
-          showComposeMenu={showComposeMenu}
-          setShowComposeMenu={setShowComposeMenu}
-          onComposePost={onComposePost}
-          onComposeMoment={onComposeMoment}
-        />
+      <div className="pt-16">
+        {auth && <EmailVerificationBanner />}
 
-        {children}
+        <div className="flex min-h-[calc(100vh-4rem)]">
+          <Sidebar
+            activePage={activePage}
+            onNavigate={handleNavigate}
+            onOpenDashboard={() => navigate("/dashboard")}
+            onOpenCreatorApplication={() => navigate("/creator/onboarding")}
+            onOpenSettings={() => navigate("/settings")}
+            showCreatorDashboard={showCreatorDashboard}
+            showCreatorApplication={showCreatorApplication}
+            onLogout={handleLogout}
+            onNavigateLegal={handleNavigateLegal}
+            showComposeMenu={showComposeMenu}
+            setShowComposeMenu={setShowComposeMenu}
+            onComposePost={onComposePost}
+            onComposeMoment={onComposeMoment}
+          />
 
-        <ChatSidebar contacts={chatContacts} />
+          {children}
+
+          <ChatSidebar contacts={chatContacts} />
+        </div>
       </div>
 
       <MobileNav

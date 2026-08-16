@@ -57,42 +57,46 @@ function EmailVerificationReminder({ user, requestVerification, storageKey }) {
   return (
     <aside
       aria-label="Email verification"
-      className="fixed top-20 right-3 left-3 z-[45] rounded-2xl border border-amber-200/70 bg-[#fffaf2]/90 p-4 text-amber-950 shadow-[0_14px_40px_rgba(120,72,20,0.16)] backdrop-blur-xl sm:right-5 sm:left-auto sm:w-[28rem]"
+      className="border-b border-amber-200/70 bg-gradient-to-r from-[#fffaf2]/95 via-white/90 to-[#fff8fb]/95 px-3 py-2.5 text-amber-950 shadow-sm backdrop-blur-xl sm:px-5"
     >
-      <div className="relative pr-11">
+      <div className="relative mx-auto max-w-5xl rounded-2xl border border-amber-200/70 bg-white/75 px-4 py-3 pr-14 shadow-[0_8px_24px_rgba(120,72,20,0.1)] sm:px-5 sm:py-3 sm:pr-14">
         <button
           type="button"
           onClick={dismiss}
           aria-label="Dismiss email verification reminder"
-          className="absolute -top-2 -right-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-2xl leading-none text-amber-700 transition hover:bg-amber-100/80 hover:text-amber-950 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="absolute top-1.5 right-1.5 inline-flex h-11 w-11 items-center justify-center rounded-full text-2xl leading-none text-amber-700 transition hover:bg-amber-100/80 hover:text-amber-950 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <span aria-hidden="true">×</span>
         </button>
-        <p className="text-sm font-bold tracking-wide">Verify your email</p>
-        <p className="mt-1 text-sm leading-5 text-amber-900">
-          Verify <strong className="break-all">{user.email}</strong> before
-          using protected creator or payment actions.
-        </p>
-        <button
-          type="button"
-          onClick={resend}
-          disabled={state === "pending"}
-          className="mt-3 inline-flex min-h-10 items-center rounded-full border border-amber-300/80 bg-amber-100/70 px-3.5 py-2 text-sm font-semibold text-amber-900 transition hover:bg-amber-200/70 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60"
-        >
-          {state === "pending" ? "Requesting…" : "Resend verification link"}
-        </button>
-        {message && (
-          <p
-            role={state === "error" ? "alert" : "status"}
-            className={
-              state === "error" || state === "throttled"
-                ? "mt-2 text-sm leading-5 text-red-700"
-                : "mt-2 text-sm leading-5 text-amber-800"
-            }
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold tracking-wide">Verify your email</p>
+            <p className="mt-0.5 text-sm leading-5 text-amber-900">
+              Verify <strong className="break-all">{user.email}</strong> before
+              using protected creator or payment actions.
+            </p>
+            {message && (
+              <p
+                role={state === "error" ? "alert" : "status"}
+                className={
+                  state === "error" || state === "throttled"
+                    ? "mt-1.5 text-sm leading-5 text-red-700"
+                    : "mt-1.5 text-sm leading-5 text-amber-800"
+                }
+              >
+                {message}
+              </p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={resend}
+            disabled={state === "pending"}
+            className="inline-flex min-h-10 shrink-0 self-start items-center rounded-full border border-amber-300/80 bg-amber-100/70 px-3.5 py-2 text-sm font-semibold text-amber-900 transition hover:bg-amber-200/70 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60 sm:self-center"
           >
-            {message}
-          </p>
-        )}
+            {state === "pending" ? "Requesting…" : "Resend verification link"}
+          </button>
+        </div>
       </div>
     </aside>
   );

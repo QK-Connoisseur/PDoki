@@ -1,6 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/authContext";
-import EmailVerificationBanner from "./EmailVerificationBanner";
 import { ErrorState, LoadingState } from "./StateViews";
 
 function FullPageState({ children }) {
@@ -52,10 +51,5 @@ export default function ProtectedRoute({ roles, children, forbiddenFallback }) {
     );
   }
 
-  return (
-    <>
-      <EmailVerificationBanner />
-      {children}
-    </>
-  );
+  return children;
 }

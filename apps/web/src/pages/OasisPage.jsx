@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import EmailVerificationBanner from "../components/EmailVerificationBanner";
 import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import { useSimulatedFetch } from "../lib/useSimulatedFetch";
 import {
@@ -1504,6 +1505,8 @@ export default function OasisPage({ onBack }) {
         {/* Spacer to balance the header */}
         <div className="w-16" />
       </header>
+
+      <EmailVerificationBanner />
 
       {/* Main Content */}
       <div className="relative mx-auto flex max-w-2xl flex-col items-center px-4 pb-8">
