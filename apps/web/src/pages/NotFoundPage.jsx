@@ -78,7 +78,7 @@ export default function NotFoundPage() {
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-6xl items-center px-5 pb-16 sm:px-8 lg:px-10">
+      <main className="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-6xl items-center justify-center px-5 pb-16 sm:px-8 lg:px-10">
         <section className="w-full max-w-2xl rounded-[2rem] border border-white/90 bg-white/80 p-7 shadow-[0_24px_70px_rgba(130,73,102,0.13)] backdrop-blur-xl sm:p-10 lg:p-12">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#df5f97]">
             Error 404

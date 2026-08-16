@@ -42,6 +42,15 @@ test.describe("routing", () => {
       page.getByRole("heading", { name: "This page wandered off." })
     ).toBeVisible();
     await expect(page.getByRole("button", { name: "Go back" })).toBeVisible();
+
+    const mainBox = await page.locator("main").boundingBox();
+    const cardBox = await page.locator("main > section").boundingBox();
+    expect(mainBox).not.toBeNull();
+    expect(cardBox).not.toBeNull();
+    const mainCenter = mainBox.x + mainBox.width / 2;
+    const cardCenter = cardBox.x + cardBox.width / 2;
+    expect(Math.abs(mainCenter - cardCenter)).toBeLessThanOrEqual(2);
+
     await page.getByRole("button", { name: "Sign in" }).click();
     await expect(page).toHaveURL(/\/login$/);
   });
