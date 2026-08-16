@@ -111,8 +111,8 @@ Review endpoints:
 
 Seeded review accounts all use password `pumdoki-dev-password`:
 
-- `member@pumdoki.example`
-- `creator@pumdoki.example`
+- `member@pumdoki.example` (left unverified for verification-reminder testing)
+- `creator@pumdoki.example` (preverified creator-role fixture)
 - `admin@pumdoki.example` (backend role validation only; the public web app has
   no admin route)
 
@@ -229,8 +229,9 @@ npm run db:down
 - Login, registration, logout, forgot/reset password, and email verification
   use the live API. Registration submits the versioned age/Terms/Privacy
   attestation and the checkbox starts unchecked.
-- A persistent unverified-email banner supports resend pending, accepted,
-  throttled, and failure states.
+- A compact unverified-email reminder supports resend pending, accepted,
+  throttled, and failure states. It can be dismissed for the current browser
+  session without changing verification state or bypassing protected actions.
 - Verification/reset tokens are removed from visible browser history after
   capture. A successful password reset explains global session revocation.
 

@@ -26,9 +26,11 @@ Settings or explicit-content preferences; those remain slice 4.
   OAuth flow.
 - Successful login returns the member to the protected route they originally
   requested, falling back to `/home`.
-- Unverified users may sign in and browse. A persistent banner offers resend
-  and verification guidance. Money and creator actions remain protected by the
-  future API endpoints that apply `requireVerifiedEmail`.
+- Unverified users may sign in and browse. A compact reminder offers resend and
+  verification guidance. It may be dismissed for the current browser session,
+  but dismissal never changes verification state or bypasses protected API
+  actions. Creator application submission already applies
+  `requireVerifiedEmail`; payment-action gates remain future work.
 - API roles use the canonical uppercase values `MEMBER`, `CREATOR`,
   `MODERATOR`, and `ADMIN`. The public frontend uses `CREATOR` for its only
   role-restricted product route; `ADMIN` remains a backend/private-operations
@@ -144,6 +146,10 @@ non-production.
 The verification banner:
 
 - Appears only when `user.emailVerified` is false.
+- Uses a compact translucent card below the header instead of a full-width
+  overlay.
+- May be dismissed for the current tab session, scoped to the user and email;
+  it returns in a new session or after an email change.
 - Offers resend with pending, accepted, throttled, and retryable states.
 - Never claims delivery when the request failed.
 
@@ -185,7 +191,7 @@ Unit and component coverage:
 Playwright coverage:
 
 - An anonymous deep link redirects to login and returns after authentication.
-- A registered user sees the verification banner.
+- A registered user sees and may session-dismiss the verification reminder.
 - A valid verification link updates the UI.
 - Password reset completes and the previous password no longer works.
 - Logout protects member routes on refresh.
@@ -217,8 +223,8 @@ Completed on 2026-07-29:
   route guard, protected-route enforcement, and global later-`401`
   invalidation.
 - Connected Login and SignUp to the API and added forgot-password,
-  reset-password, verification-confirmation, and persistent unverified-email
-  experiences.
+  reset-password, verification-confirmation, and session-dismissible
+  unverified-email experiences.
 - Added component coverage for auth state, forms, guards, verification, and
   reset edge cases.
 - Added real PostgreSQL/API/Mailpit Playwright flows and CI services for

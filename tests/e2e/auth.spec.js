@@ -29,7 +29,7 @@ async function waitForMailLink(request, email, route) {
   return match[0];
 }
 
-test("registration persists, shows verification state, and verifies through the emailed link", async ({
+test("registration persists, dismisses its reminder, and verifies through the emailed link", async ({
   page,
   request,
 }, testInfo) => {
@@ -45,8 +45,17 @@ test("registration persists, shows verification state, and verifies through the 
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Create Account" }).click();
 
+  const verificationReminder = page.getByRole("complementary", {
+    name: "Email verification",
+  });
   await expect(page).toHaveURL(/\/home$/);
-  await expect(page.getByLabel("Email verification")).toContainText(email);
+  await expect(verificationReminder).toContainText(email);
+  await page
+    .getByRole("button", { name: "Dismiss email verification reminder" })
+    .click();
+  await expect(verificationReminder).toHaveCount(0);
+  await page.goto("/store");
+  await expect(verificationReminder).toHaveCount(0);
 
   const verificationLink = await waitForMailLink(
     request,
@@ -57,7 +66,7 @@ test("registration persists, shows verification state, and verifies through the 
   await expect(page.getByText("Email verified")).toBeVisible();
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(page).toHaveURL(/\/home$/);
-  await expect(page.getByLabel("Email verification")).toHaveCount(0);
+  await expect(verificationReminder).toHaveCount(0);
 
   await page.reload();
   await expect(page).toHaveURL(/\/home$/);
@@ -157,6 +166,9 @@ test("creators can open the dashboard from the profile menu", async ({
   await page.goto("/login");
   await submitLogin(page, seedAccounts.creator);
   await expect(page).toHaveURL(/\/home$/);
+  await expect(
+    page.getByRole("complementary", { name: "Email verification" })
+  ).toHaveCount(0);
 
   await page.getByRole("button", { name: "Profile menu" }).click();
   await page.getByRole("button", { name: "Creator Dashboard" }).click();
