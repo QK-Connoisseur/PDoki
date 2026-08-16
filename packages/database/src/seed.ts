@@ -14,21 +14,25 @@ const seedUsers = [
     email: "admin@pumdoki.example",
     displayName: "Pumdoki Admin",
     role: "ADMIN",
+    preverified: false,
   },
   {
     email: "moderator@pumdoki.example",
     displayName: "Pumdoki Moderator",
     role: "MODERATOR",
+    preverified: false,
   },
   {
     email: "creator@pumdoki.example",
     displayName: "Sample Creator",
     role: "CREATOR",
+    preverified: true,
   },
   {
     email: "member@pumdoki.example",
     displayName: "Sample Member",
     role: "MEMBER",
+    preverified: false,
   },
 ] as const;
 
@@ -37,8 +41,19 @@ async function main(): Promise<void> {
     const seededUser = await prisma.user.upsert({
       where: { email: user.email },
       update: { displayName: user.displayName, role: user.role },
-      create: { ...user, passwordHash: devHash("pumdoki-dev-password") },
+      create: {
+        email: user.email,
+        displayName: user.displayName,
+        role: user.role,
+        passwordHash: devHash("pumdoki-dev-password"),
+      },
     });
+    if (user.preverified && seededUser.emailVerifiedAt === null) {
+      await prisma.user.update({
+        where: { id: seededUser.id },
+        data: { emailVerifiedAt: new Date() },
+      });
+    }
     await prisma.userPreference.upsert({
       where: { userId: seededUser.id },
       update: {},

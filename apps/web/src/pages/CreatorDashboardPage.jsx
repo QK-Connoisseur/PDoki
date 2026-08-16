@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import EmailVerificationBanner from "../components/EmailVerificationBanner";
 import { StatusMenuRow } from "../components/UserStatusSwitcher";
 import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import { useSimulatedFetch } from "../lib/useSimulatedFetch";
@@ -3086,6 +3087,8 @@ export default function CreatorDashboardPage({
           </div>
         </div>
       </header>
+
+      <EmailVerificationBanner />
 
       <div className="flex min-h-[calc(100vh-4rem)]">
         {/* ─── Left Section Nav ──────────────────────────────────── */}

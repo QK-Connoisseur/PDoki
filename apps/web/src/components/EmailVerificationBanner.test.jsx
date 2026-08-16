@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { AuthContext } from "../auth/authContext";
 import { ApiError } from "../lib/apiClient";
 import EmailVerificationBanner from "./EmailVerificationBanner";
@@ -15,17 +15,25 @@ const unverifiedUser = {
 };
 
 function renderBanner(requestVerification, user = unverifiedUser) {
-  render(
+  return render(
     <AuthContext.Provider value={{ user, requestVerification }}>
       <EmailVerificationBanner />
     </AuthContext.Provider>
   );
 }
 
+afterEach(() => {
+  window.sessionStorage.clear();
+});
+
 describe("EmailVerificationBanner", () => {
   it("is visible only for unverified users and reports accepted requests", async () => {
     renderBanner(vi.fn().mockResolvedValue({ status: "accepted" }));
     expect(screen.getByText(unverifiedUser.email)).toBeVisible();
+    expect(
+      screen.getByRole("complementary", { name: "Email verification" })
+        .className
+    ).not.toMatch(/\b(?:fixed|absolute|sticky)\b/);
 
     await userEvent.click(
       screen.getByRole("button", { name: "Resend verification link" })
@@ -51,6 +59,76 @@ describe("EmailVerificationBanner", () => {
         "Too many requests. Please wait before trying again."
       )
     ).toBeVisible();
+    expect(screen.queryByText(/Request accepted/i)).not.toBeInTheDocument();
+  });
+
+  it("dismisses immediately and remembers the choice for this browser session", async () => {
+    const first = renderBanner(vi.fn());
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: "Dismiss email verification reminder",
+      })
+    );
+    expect(
+      screen.queryByLabelText("Email verification")
+    ).not.toBeInTheDocument();
+
+    first.unmount();
+    renderBanner(vi.fn());
+    expect(
+      screen.queryByLabelText("Email verification")
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows the reminder again after the account email changes", async () => {
+    const first = renderBanner(vi.fn());
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: "Dismiss email verification reminder",
+      })
+    );
+    first.unmount();
+
+    renderBanner(vi.fn(), {
+      ...unverifiedUser,
+      email: "new-address@pumdoki.example",
+    });
+    expect(screen.getByLabelText("Email verification")).toBeVisible();
+  });
+
+  it("does not carry pending or late resend feedback to a changed email", async () => {
+    let resolveRequest;
+    const requestVerification = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveRequest = resolve;
+        })
+    );
+    const view = renderBanner(requestVerification);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Resend verification link" })
+    );
+    expect(screen.getByRole("button", { name: "Requesting…" })).toBeDisabled();
+
+    const changedUser = {
+      ...unverifiedUser,
+      email: "new-address@pumdoki.example",
+    };
+    view.rerender(
+      <AuthContext.Provider value={{ user: changedUser, requestVerification }}>
+        <EmailVerificationBanner />
+      </AuthContext.Provider>
+    );
+    expect(screen.getByText(changedUser.email)).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Resend verification link" })
+    ).toBeEnabled();
+
+    await act(async () => {
+      resolveRequest({ status: "accepted" });
+    });
     expect(screen.queryByText(/Request accepted/i)).not.toBeInTheDocument();
   });
 

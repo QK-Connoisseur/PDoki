@@ -61,3 +61,60 @@ export const CreatorApplicationResponseSchema = z.object({
 export const CurrentCreatorApplicationResponseSchema = z.object({
   application: CreatorApplicationSchema.nullable(),
 });
+
+const CreatorApplicationReviewReasonSchema = z.string().trim().min(10).max(500);
+
+export const CreatorApplicationReviewParamsSchema = z
+  .object({
+    applicationId: z.uuid(),
+  })
+  .strict();
+
+export type CreatorApplicationReviewParams = z.infer<
+  typeof CreatorApplicationReviewParamsSchema
+>;
+
+export const ReviewCreatorApplicationRequestSchema = z.discriminatedUnion(
+  "action",
+  [
+    z
+      .object({
+        action: z.literal("NEEDS_INFORMATION"),
+        expectedStatus: z.literal("PENDING"),
+        reason: CreatorApplicationReviewReasonSchema,
+      })
+      .strict(),
+    z
+      .object({
+        action: z.literal("REJECT"),
+        expectedStatus: z.enum(["PENDING", "NEEDS_INFORMATION"]),
+        reason: CreatorApplicationReviewReasonSchema,
+      })
+      .strict(),
+  ]
+);
+
+export type ReviewCreatorApplicationRequest = z.infer<
+  typeof ReviewCreatorApplicationRequestSchema
+>;
+
+export const CreatorApplicationReviewEventSchema = z.object({
+  id: z.uuid(),
+  creatorApplicationId: z.uuid(),
+  reviewerUserId: z.uuid(),
+  fromStatus: CreatorApplicationStatusSchema,
+  toStatus: CreatorApplicationStatusSchema,
+  reason: z.string(),
+  reviewedAt: z.iso.datetime(),
+  requestId: z.string(),
+  requestIp: z.string().nullable(),
+});
+
+export type CreatorApplicationReviewEvent = z.infer<
+  typeof CreatorApplicationReviewEventSchema
+>;
+
+export const ReviewCreatorApplicationResponseSchema = z.object({
+  application: CreatorApplicationSchema,
+  reviewEvent: CreatorApplicationReviewEventSchema,
+});

@@ -508,7 +508,9 @@ export default function Sidebar({
                 >
                   <path d={item.icon} />
                 </svg>
-                {item.label}
+                <span className="min-w-0 flex-1 text-left leading-snug">
+                  {item.label}
+                </span>
               </button>
             ))}
             <hr className="my-1 border-pink-100" />

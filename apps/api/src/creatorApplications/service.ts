@@ -1,8 +1,14 @@
 import type {
   CreateCreatorApplicationRequest,
   CreatorApplication as ContractCreatorApplication,
+  CreatorApplicationReviewEvent as ContractReviewEvent,
+  ReviewCreatorApplicationRequest,
 } from "@pumdoki/contracts";
-import type { CreatorApplication, PrismaClient } from "@pumdoki/database";
+import type {
+  CreatorApplication,
+  CreatorApplicationReviewEvent,
+  PrismaClient,
+} from "@pumdoki/database";
 import { HttpError } from "../errors.js";
 
 function toContract(
@@ -27,6 +33,22 @@ function isUniqueConstraintError(error: unknown): boolean {
     "code" in error &&
     error.code === "P2002"
   );
+}
+
+function toReviewEvent(
+  event: CreatorApplicationReviewEvent
+): ContractReviewEvent {
+  return {
+    id: event.id,
+    creatorApplicationId: event.creatorApplicationId,
+    reviewerUserId: event.reviewerUserId,
+    fromStatus: event.fromStatus,
+    toStatus: event.toStatus,
+    reason: event.reason,
+    reviewedAt: event.reviewedAt.toISOString(),
+    requestId: event.requestId,
+    requestIp: event.requestIp,
+  };
 }
 
 export function createCreatorApplicationService(db: PrismaClient) {
@@ -94,6 +116,65 @@ export function createCreatorApplicationService(db: PrismaClient) {
         }
         throw error;
       }
+    },
+
+    async review(
+      applicationId: string,
+      reviewerUserId: string,
+      input: ReviewCreatorApplicationRequest,
+      requestId: string,
+      requestIp: string | null
+    ): Promise<{
+      application: ContractCreatorApplication;
+      reviewEvent: ContractReviewEvent;
+    }> {
+      const nextStatus =
+        input.action === "NEEDS_INFORMATION" ? "NEEDS_INFORMATION" : "REJECTED";
+      const updated = await db.$transaction(async (tx) => {
+        const [application] = await tx.creatorApplication.updateManyAndReturn({
+          where: {
+            id: applicationId,
+            status: input.expectedStatus,
+          },
+          data: { status: nextStatus },
+        });
+        if (!application) {
+          const existing = await tx.creatorApplication.findUnique({
+            where: { id: applicationId },
+            select: { id: true },
+          });
+          if (!existing) {
+            throw new HttpError(
+              404,
+              "NOT_FOUND",
+              "Creator application not found"
+            );
+          }
+          throw new HttpError(
+            409,
+            "CONFLICT",
+            "Creator application changed or transition is unavailable"
+          );
+        }
+
+        const reviewEvent = await tx.creatorApplicationReviewEvent.create({
+          data: {
+            creatorApplicationId: application.id,
+            reviewerUserId,
+            fromStatus: input.expectedStatus,
+            toStatus: nextStatus,
+            reason: input.reason,
+            requestId,
+            requestIp,
+          },
+        });
+        return { application, reviewEvent };
+      });
+
+      return {
+        application: toContract(updated.application),
+        reviewEvent: toReviewEvent(updated.reviewEvent),
+      };
     },
   };
 }

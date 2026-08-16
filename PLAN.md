@@ -2,7 +2,7 @@
 
 @CLAUDE.md
 
-Last updated: August 1, 2026
+Last updated: August 13, 2026
 
 ## 1. Purpose
 
@@ -120,7 +120,7 @@ Decision gate:
 
 ### 3.3 Admin architecture
 
-Recommendation:
+Decision locked — founder-confirmed August 3, 2026:
 
 - Keep the public Pumdoki application free of `/admin` routes and admin links.
 - Build a separately deployed private operations application in a future
@@ -313,8 +313,13 @@ Provisional recommendation:
 15. Add environment validation.
 16. Add `.env.example`.
 17. Add GitHub Actions for install, lint, test, and build.
-18. Add error boundaries and route error states.
+18. Add error boundaries and route error states, including a branded,
+    accessible 404 page for unknown URLs with clear Back, Home, and Sign-in
+    actions appropriate to the visitor's session state.
 19. Add loading, empty, and retry states to core pages.
+
+Current gap — August 3, 2026: the wildcard web route still redirects unknown
+URLs to `/login`; the branded 404 state above remains open.
 
 ### Exit criteria
 
@@ -327,8 +332,9 @@ Provisional recommendation:
 - Run `npm run test` with all unit tests passing.
 - Run `npm run build` successfully.
 - Run `npm run test:e2e` with all Phase 1 browser tests passing. The browser
-  suite must cover direct URL loads, refresh/deep links, unknown-route
-  handling, and browser Back/Forward behavior on representative routes.
+  suite must cover direct URL loads, refresh/deep links, the branded
+  unknown-route state without a silent login redirect, and browser Back/Forward
+  behavior on representative routes.
 - Manually smoke-test the public, member, creator, legal, Store, Connect,
   Wallet, Oasis, and dashboard routes in the development server.
 - Record the verification commands and results in the current handoff before
@@ -533,10 +539,12 @@ Settings list is implemented.
 12. Support more than one performer per media item without creating a complicated public UI.
 13. Link every explicit media item to required performer records.
 
-### Current Phase 4 implementation status — August 2, 2026
+### Current Phase 4 implementation status — August 12, 2026
 
-- Slice 1, the creator-application foundation, is implemented and fully
-  locally verified but uncommitted.
+- Slice 1, the creator-application foundation, is implemented, published on
+  `dev` as commit `ce6c9e4`, and CI-verified by GitHub Actions run
+  `30739645872` (API, web/private-admin, and real-stack Playwright jobs all
+  passed).
 - A verified `MEMBER` can submit exactly one creator application containing a
   creator-facing name and two-letter country code. The API returns a persisted
   `PENDING` application with identity verification `NOT_STARTED`.
@@ -549,15 +557,36 @@ Settings list is implemented.
 - Revisited applications load the persisted outcome. Duplicate submissions,
   anonymous users, unverified users, non-members, false acceptances, and
   malformed country codes are rejected.
+- Founder manual acceptance completed on August 3, 2026: all six Slice 1
+  review checks passed, including blocking unverified submission, persisting
+  the `PENDING` / `NOT_STARTED` result after reload, role-correct navigation,
+  and denying direct `/dashboard` access to non-creators.
 - The old simulated ID/selfie upload, hardcoded payout economics, unsupported
   security/retention claims, review-time promise, and direct Dashboard redirect
   were removed. No identity files leave the browser.
 - The durable boundary and provider prerequisites are documented in
   `docs/architecture/phase4-slice1-creator-application-foundation.md`.
+- Slice 2 is committed on `codex/phase4-slice2-and-ux` as `1ba32ea`. Its private-operations
+  boundary, exact non-approval state machine, concurrency rule, evidence
+  limitations, exclusions, and activation blockers are specified in
+  `docs/architecture/phase4-slice2-private-creator-review.md`.
+- The normal public API does not mount the creator-review router. The dormant
+  router requires an injected operations verifier, rejects public-session-only
+  access by construction, and permits only `PENDING → NEEDS_INFORMATION`,
+  `PENDING → REJECTED`, and `NEEDS_INFORMATION → REJECTED` through an atomic
+  expected-status update plus evidence insert. Approval, role promotion, and
+  identity-status mutation remain absent.
+- The local Slice 2 engineering gate is green: all six migrations deploy to
+  PostgreSQL 17, focused migration/review coverage passes 10/10, the full API
+  suite passes 90/90, the web suite passes 126/126, the real-stack Chromium
+  suite passes 40/40, and builds/lint/format pass. Draft pull request #1 targets
+  `dev`; GitHub Actions run `31704980241` passed all three jobs at initial review
+  head `ee83274`. Merge remains conditioned on human review and a green final
+  PR head, and the foundation is not a usable private-operations workflow.
 - This is not creator onboarding completion: counsel-approved policies, legal
   entity work, country eligibility, tax intake, an approved identity provider,
-  private operations authentication/review, reviewer audit evidence, performer
-  records, and publishing gates remain open.
+  private operations authentication/review, production-grade reviewer audit
+  controls, performer records, and publishing gates remain open.
 
 ### Reporting and compliance operations
 
@@ -1048,37 +1077,44 @@ These are working management targets, not legal or processor deadlines. The
 founder may revise them, but each item must retain an owner and a concrete
 follow-up date.
 
-| Dependency or decision                         | Owner                 | Target     | Current state / next action                                                                                                         |
-| ---------------------------------------------- | --------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| AWS staging shape and account access           | Founder + Engineering | 2026-07-23 | Overdue: decide deployment shape and credentials boundary; Phase 2 remains partial.                                                 |
-| Sentry or equivalent                           | Founder + Engineering | 2026-07-23 | Overdue: select account/provider and define environment separation.                                                                 |
-| Redis, queue, and idempotency approach         | Engineering           | 2026-07-23 | Overdue: decide whether beta uses managed Redis and document the local fallback.                                                    |
-| Transactional email provider and local Mailpit | Founder + Engineering | 2026-07-23 | Local Mailpit and provider-neutral mail are complete; production-provider adult-business fit and deliverability remain overdue.     |
-| LLC attorney/CPA shortlist and entity state    | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                  |
-| CCBill requirements and fee quote              | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                     |
-| Identity-verification shortlist                | Founder + Engineering | 2026-07-30 | Compare two or three providers for countries, AUP, security, and cost.                                                              |
-| Epoch terms and written cascade behavior       | Founder               | 2026-08-06 | Confirm commercial and technical fallback behavior in writing.                                                                      |
-| Initial country allowlist                      | Founder + Counsel     | 2026-08-06 | Start with the US and only supported Latin American countries.                                                                      |
-| Commission, payout, refund, and Veso economics | Founder + CPA/Counsel | 2026-08-13 | Model processor fees, chargebacks, taxes, reserves, and Founding discounts.                                                         |
-| Acceptance/evidence retention schedule         | Founder + Counsel     | 2026-08-13 | Define retention, pseudonymization, lawful deletion, and litigation-hold rules before account deletion or creator onboarding ships. |
+| Dependency or decision                           | Owner                 | Target     | Current state / next action                                                                                                                                                                                                        |
+| ------------------------------------------------ | --------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AWS staging shape and account access             | Founder + Engineering | 2026-07-23 | Overdue: decide deployment shape and credentials boundary; Phase 2 remains partial.                                                                                                                                                |
+| Sentry or equivalent                             | Founder + Engineering | 2026-07-23 | Overdue: select account/provider and define environment separation.                                                                                                                                                                |
+| Redis, queue, and idempotency approach           | Engineering           | 2026-07-23 | Overdue: decide whether beta uses managed Redis and document the local fallback.                                                                                                                                                   |
+| Transactional email provider and local Mailpit   | Founder + Engineering | 2026-07-23 | Local Mailpit and provider-neutral mail are complete; production-provider adult-business fit and deliverability remain overdue.                                                                                                    |
+| LLC attorney/CPA shortlist and entity state      | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                                                                                                                 |
+| CCBill requirements and fee quote                | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                                                                                                                    |
+| Identity-verification shortlist                  | Founder + Engineering | 2026-07-30 | Compare two or three providers for countries, AUP, security, and cost.                                                                                                                                                             |
+| Epoch terms and written cascade behavior         | Founder               | 2026-08-06 | Confirm commercial and technical fallback behavior in writing.                                                                                                                                                                     |
+| Initial country allowlist                        | Founder + Counsel     | 2026-08-06 | Start with the US and only supported Latin American countries.                                                                                                                                                                     |
+| Commission, payout, refund, and Veso economics   | Founder + CPA/Counsel | 2026-08-13 | Model processor fees, chargebacks, taxes, reserves, and Founding discounts.                                                                                                                                                        |
+| Acceptance/evidence retention schedule           | Founder + Counsel     | 2026-08-13 | Define retention, pseudonymization, lawful deletion, and litigation-hold rules before account deletion or creator onboarding ships.                                                                                                |
+| Private-admin restricted access and hardware MFA | Founder + Engineering | 2026-08-06 | In progress: founder is completing Cloudflare and Yubico setup; engineering must document restricted-origin configuration, key enrollment/recovery policy, and required non-secret integration inputs before any admin deployment. |
+| Google Workspace recovery-contact privacy        | Founder + Engineering | 2026-08-20 | Review directory visibility and account-recovery factors without recording personal contact details here. Establish independent backup access before replacing any temporary signup contact.                                       |
 
 ## 21. Immediate next actions
 
-1. Manually review Phase 4 Slice 1 using the verified-member flow, then commit,
-   publish, and require green GitHub CI.
-2. Define Phase 4 Slice 2 around a separately deployed private creator-review
-   workflow: operational authentication/MFA and restricted origin, review
-   permissions, immutable reviewer/reason audit evidence, and safe
-   `PENDING`/`NEEDS_INFORMATION`/`REJECTED` transitions. Keep `APPROVED` and role
-   promotion disabled until identity, country, legal, and operations gates are
-   concrete.
-3. In parallel, advance the legal entity/counsel, acceptance-retention,
+1. Review draft pull request #1 against `dev` and merge only after human review
+   is complete and its final head is green. Keep the review router unmounted
+   from the public API.
+2. Review backend commit `1ba32ea` and web UX commit `aa10873` independently
+   before merging so the two scopes remain auditable.
+3. Before any operational deployment, implement the signed Access/IdP assertion
+   verifier, explicit operator provisioning/permission mapping, private origin,
+   hardware MFA and recovery policy, mutation-origin/CSRF validation, trusted-
+   proxy policy, and restricted runtime database grants defined in the Slice 2
+   architecture record.
+4. Keep `APPROVED`, role promotion, identity files, tax/banking intake, and
+   creator publishing disabled until identity, country, legal, and operations
+   gates are concrete.
+5. In parallel, advance the legal entity/counsel, acceptance-retention,
    identity-provider, country-allowlist, tax, and operational-mailbox decisions.
-4. Preserve the dependency sequencing for notification, theme, billing,
+6. Preserve the dependency sequencing for notification, theme, billing,
    export/deletion, and explicit-content query enforcement.
-5. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
+7. Keep Phase 2 labeled partially complete and close the AWS/Sentry/Redis
    decisions in the register above.
-6. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
+8. Begin the LLC attorney/CPA, CCBill, identity-provider, and country-allowlist
    workstreams in parallel.
-7. Build the commission and payout model using real processor quotes when
+9. Build the commission and payout model using real processor quotes when
    available.

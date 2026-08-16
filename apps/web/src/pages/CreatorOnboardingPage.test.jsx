@@ -58,6 +58,24 @@ describe("CreatorOnboardingPage", () => {
     expect(api.submit).not.toHaveBeenCalled();
   });
 
+  it("keeps the verification reminder above an existing application outcome", async () => {
+    const api = {
+      getCurrent: vi.fn().mockResolvedValue(application),
+      submit: vi.fn(),
+    };
+    renderPage({ user: { ...member, emailVerified: false }, api });
+
+    const reminder = await screen.findByRole("complementary", {
+      name: "Email verification",
+    });
+    const outcome = screen.getByText("Application received");
+
+    expect(reminder).toBeVisible();
+    expect(reminder.compareDocumentPosition(outcome)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
+  });
+
   it("requires email verification before showing the application form", async () => {
     const user = userEvent.setup();
     const requestVerification = vi

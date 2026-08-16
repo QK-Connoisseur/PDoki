@@ -53,20 +53,21 @@ enum VerificationTokenKind {
 }
 
 model User {
-  id                 String              @id @default(uuid()) @db.Uuid
-  email              String              @unique
-  passwordHash       String
-  displayName        String
-  role               UserRole            @default(MEMBER)
-  status             UserStatus          @default(ACTIVE)
-  emailVerifiedAt    DateTime?
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  sessions           Session[]
-  acceptanceRecords  AcceptanceRecord[]
-  verificationTokens VerificationToken[]
-  preference         UserPreference?
-  creatorApplication CreatorApplication?
+  id                             String                          @id @default(uuid()) @db.Uuid
+  email                          String                          @unique
+  passwordHash                   String
+  displayName                    String
+  role                           UserRole                        @default(MEMBER)
+  status                         UserStatus                      @default(ACTIVE)
+  emailVerifiedAt                DateTime?
+  createdAt                      DateTime                        @default(now())
+  updatedAt                      DateTime                        @updatedAt
+  sessions                       Session[]
+  acceptanceRecords              AcceptanceRecord[]
+  verificationTokens             VerificationToken[]
+  preference                     UserPreference?
+  creatorApplication             CreatorApplication?
+  creatorApplicationReviewEvents CreatorApplicationReviewEvent[]
 }
 
 model CreatorApplication {
@@ -81,7 +82,26 @@ model CreatorApplication {
   createdAt                  DateTime                   @default(now())
   updatedAt                  DateTime                   @updatedAt
 
+  reviewEvents CreatorApplicationReviewEvent[]
+
   @@index([status, submittedAt])
+}
+
+model CreatorApplicationReviewEvent {
+  id                   String                   @id @default(uuid()) @db.Uuid
+  creatorApplicationId String                   @db.Uuid
+  creatorApplication   CreatorApplication       @relation(fields: [creatorApplicationId], references: [id], onDelete: Restrict)
+  reviewerUserId       String                   @db.Uuid
+  reviewerUser         User                     @relation(fields: [reviewerUserId], references: [id], onDelete: Restrict)
+  fromStatus           CreatorApplicationStatus
+  toStatus             CreatorApplicationStatus
+  reason               String                   @db.VarChar(500)
+  reviewedAt           DateTime                 @default(now())
+  requestId            String                   @db.VarChar(64)
+  requestIp            String?                  @db.VarChar(45)
+
+  @@index([creatorApplicationId, reviewedAt])
+  @@index([reviewerUserId, reviewedAt])
 }
 
 model UserPreference {
