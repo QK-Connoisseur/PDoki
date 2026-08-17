@@ -1,7 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AppearanceProvider } from "../appearance/AppearanceProvider";
 import { AuthContext } from "../auth/authContext";
 import MemberLayout from "./MemberLayout";
 
@@ -20,11 +19,9 @@ const auth = {
 
 function renderLayout({ visualVariant = "default", withAuth = false } = {}) {
   const content = (
-    <AppearanceProvider>
-      <MemberLayout activePage="home" visualVariant={visualVariant}>
-        <main>Feed content</main>
-      </MemberLayout>
-    </AppearanceProvider>
+    <MemberLayout activePage="home" visualVariant={visualVariant}>
+      <main>Feed content</main>
+    </MemberLayout>
   );
 
   return render(
@@ -39,11 +36,7 @@ function renderLayout({ visualVariant = "default", withAuth = false } = {}) {
 }
 
 beforeEach(() => {
-  window.matchMedia = vi.fn().mockReturnValue({
-    matches: true,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-  });
+  window.matchMedia = vi.fn().mockReturnValue({ matches: true });
 });
 
 describe("MemberLayout", () => {

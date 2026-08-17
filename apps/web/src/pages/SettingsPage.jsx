@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../auth/authContext";
 import MemberLayout from "../components/MemberLayout";
 import { ErrorState, LoadingState } from "../components/StateViews";
-import AppearanceSettings from "../components/AppearanceSettings";
 import { settingsApi } from "../settings/settingsApi";
 
 const inputClass =
@@ -562,7 +561,6 @@ export default function SettingsPage({
           <PasswordSettings api={api} onSecurityChange={refreshSessions} />
           <SessionSettings api={api} refreshKey={sessionRefreshKey} />
           <ContentPreferences api={api} />
-          <AppearanceSettings />
         </div>
       </main>
     </MemberLayout>

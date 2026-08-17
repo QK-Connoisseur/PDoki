@@ -72,16 +72,40 @@ test("Home renders the approved Sakura glass shell without extra rail bubbles", 
   await expect(backdrop).toHaveCount(0);
 });
 
-test("Reduced Motion keeps the Sakura scene static", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
+test("the soft-pink Sakura scene and glass colors stay fixed while scrolling", async ({
+  page,
+}) => {
   await loginAs(page, "member");
 
   const backdrop = page.getByTestId("sakura-backdrop");
-  await expect(backdrop).toHaveAttribute("data-motion", "paused");
+  const header = page.locator("header.member-glass-header");
+  const feedCard = page.locator("article.sakura-feed-card").first();
+  await expect(backdrop).toHaveAttribute("data-scene", "static");
+  await expect(backdrop).toHaveCSS("position", "fixed");
   await expect(backdrop.locator(".sakura-backdrop__petal").first()).toHaveCSS(
     "animation-name",
     "none"
   );
+  await expect(header).toHaveCSS("backdrop-filter", "none");
+  await expect(feedCard).toHaveCSS("backdrop-filter", "none");
+
+  const [initialBackdropBox, initialHeaderFill] = await Promise.all([
+    backdrop.boundingBox(),
+    header.evaluate((element) => getComputedStyle(element).backgroundImage),
+  ]);
+  expect(initialBackdropBox).not.toBeNull();
+  expect(initialHeaderFill).not.toBe("none");
+
+  await page.evaluate(() => window.scrollTo(0, 700));
+  await expect
+    .poll(() => page.evaluate(() => window.scrollY))
+    .toBeGreaterThan(0);
+  const [scrolledBackdropBox, scrolledHeaderFill] = await Promise.all([
+    backdrop.boundingBox(),
+    header.evaluate((element) => getComputedStyle(element).backgroundImage),
+  ]);
+  expect(scrolledBackdropBox).toEqual(initialBackdropBox);
+  expect(scrolledHeaderFill).toBe(initialHeaderFill);
 
   await page.setViewportSize({ width: 390, height: 844 });
   const hasHorizontalOverflow = await page.evaluate(
@@ -90,29 +114,4 @@ test("Reduced Motion keeps the Sakura scene static", async ({ page }) => {
       document.documentElement.clientWidth
   );
   expect(hasHorizontalOverflow).toBe(false);
-});
-
-test("the device-local appearance switch keeps the Sakura scene still", async ({
-  page,
-}) => {
-  await loginAs(page, "member");
-  await page.goto("/settings");
-
-  const motionSwitch = page.getByRole("switch", {
-    name: "Animate Sakura background",
-  });
-  await expect(motionSwitch).toHaveAttribute("aria-checked", "true");
-  await motionSwitch.click();
-  await expect(motionSwitch).toHaveAttribute("aria-checked", "false");
-
-  await page.reload();
-  await expect(motionSwitch).toHaveAttribute("aria-checked", "false");
-
-  await page.goto("/home");
-  const backdrop = page.getByTestId("sakura-backdrop");
-  await expect(backdrop).toHaveAttribute("data-motion", "paused");
-  await expect(backdrop.locator(".sakura-backdrop__petal").first()).toHaveCSS(
-    "animation-name",
-    "none"
-  );
 });

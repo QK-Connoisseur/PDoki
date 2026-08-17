@@ -309,7 +309,7 @@ export default function ChatSidebar({ contacts = [] }) {
 
         {/* Minimised avatar rail */}
         <div className="flex-1 overflow-y-auto hide-scrollbar">
-          <div className="flex flex-col items-center gap-4 py-3">
+          <div className="flex flex-col items-center gap-7 py-4">
             {localContacts.map((contact) => (
               <button
                 key={contact.id}
