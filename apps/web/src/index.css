@@ -105,11 +105,9 @@
   --member-scene-size: cover;
   --member-surface-glass: linear-gradient(#fff, #fff);
   --member-surface-stable: linear-gradient(#fff, #fff);
-  --member-header-glaze: linear-gradient(
-    112deg,
-    rgba(255, 255, 255, 0.96),
-    rgba(248, 248, 248, 0.92)
-  );
+  --member-header-fill: rgba(255, 255, 255, 0.82);
+  --member-header-filter: blur(14px) saturate(110%);
+  --member-header-no-blur-fill: rgba(255, 255, 255, 0.9);
   --member-border-subtle: rgba(80, 80, 80, 0.2);
   --member-border-emphasis: rgba(80, 80, 80, 0.32);
   --member-rim: rgba(80, 80, 80, 0.12);
@@ -151,11 +149,25 @@
       transparent 66%
     ),
     linear-gradient(155deg, #fffefd, #fff5fa 54%, #fce9f3);
-  --member-header-glaze: linear-gradient(
-    112deg,
-    rgba(255, 255, 255, 0.76),
-    rgba(255, 246, 251, 0.58) 48%,
-    rgba(244, 215, 229, 0.64)
+  --member-header-fill:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.82),
+      rgba(255, 255, 255, 0.24) 42%,
+      transparent 62%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(255, 254, 253, 0.86),
+      rgba(255, 245, 250, 0.8) 54%,
+      rgba(252, 233, 243, 0.76)
+    );
+  --member-header-filter: blur(14px) saturate(114%);
+  --member-header-no-blur-fill: linear-gradient(
+    155deg,
+    rgba(255, 254, 253, 0.9),
+    rgba(255, 245, 250, 0.78) 54%,
+    rgba(252, 233, 243, 0.74)
   );
   --member-border-subtle: rgba(255, 255, 255, 0.78);
   --member-border-emphasis: rgba(150, 62, 105, 0.3);
@@ -163,8 +175,8 @@
   --member-highlight: rgba(255, 255, 255, 0.96);
   --member-lowlight: rgba(184, 76, 129, 0.16);
   --member-shadow: rgba(91, 45, 70, 0.11);
-  --member-control-fg: #765468;
-  --member-control-hover-fg: #8f2f65;
+  --member-control-fg: #5b4153;
+  --member-control-hover-fg: #7d2858;
   --member-control-hover-bg: rgba(255, 255, 255, 0.56);
   --member-control-focus: #8f2f65;
   --member-popover-fill: #fffdfd;
@@ -224,13 +236,9 @@
 [data-member-visual="sakura-glass"] .member-glass-header {
   border-bottom: 1px solid var(--member-border-emphasis);
   border-radius: 0;
-  background-color: var(--member-canvas, #fff0f7);
-  background-image: var(--member-header-glaze), var(--member-scene-image);
-  background-position: center, var(--member-scene-position);
-  background-repeat: no-repeat;
-  background-size:
-    100% 100%,
-    var(--member-scene-size);
+  background: var(--member-header-fill);
+  -webkit-backdrop-filter: var(--member-header-filter);
+  backdrop-filter: var(--member-header-filter);
   box-shadow: none;
 }
 
@@ -340,6 +348,13 @@
   [data-member-theme="sakura"] {
     --member-scene-image: url("./assets/backgrounds/sakura-feed-mobile.jpg");
     --member-scene-position: center top;
+    --member-header-fill: linear-gradient(
+      155deg,
+      rgba(255, 254, 253, 0.9),
+      rgba(255, 245, 250, 0.85) 54%,
+      rgba(252, 233, 243, 0.82)
+    );
+    --member-header-filter: blur(10px) saturate(112%);
   }
 
   [data-member-visual="sakura-glass"] .member-glass-header {
@@ -375,6 +390,22 @@
   }
 }
 
+@supports not (
+  (-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))
+) {
+  [data-member-visual="sakura-glass"] .member-glass-header {
+    background: var(--member-header-no-blur-fill);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  [data-member-visual="sakura-glass"] .member-glass-header {
+    background: var(--member-surface-stable);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-member-visual="sakura-glass"] .member-nav-item-inactive:hover,
   [data-member-visual="sakura-glass"] .member-nav-item-trigger:hover {
@@ -399,6 +430,8 @@
     background: #fff;
     background-image: none;
     border-color: rgba(91, 65, 83, 0.55);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     box-shadow: none;
   }
 }
@@ -421,6 +454,8 @@
     border: 1px solid CanvasText;
     background: Canvas;
     color: CanvasText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     box-shadow: none;
   }
 }

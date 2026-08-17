@@ -21,6 +21,39 @@ async function waitForBackgroundImage(locator) {
   });
 }
 
+async function captureHeaderMaterial(page, header, horizontalInset = 0) {
+  const previousVisibility = await header.evaluate((element) => {
+    const content = element.firstElementChild;
+    if (!content)
+      throw new Error("Expected the header content wrapper to exist");
+    const previous = content.style.visibility;
+    content.style.visibility = "hidden";
+    return previous;
+  });
+
+  try {
+    await page.evaluate(
+      () => new Promise((resolve) => requestAnimationFrame(resolve))
+    );
+    const box = await header.boundingBox();
+    if (!box) throw new Error("Expected the header to be visible");
+
+    return await page.screenshot({
+      clip: {
+        x: Math.round(box.x + horizontalInset),
+        y: Math.round(box.y),
+        width: Math.round(box.width - horizontalInset * 2),
+        height: Math.round(box.height),
+      },
+    });
+  } finally {
+    await header.evaluate((element, visibility) => {
+      const content = element.firstElementChild;
+      if (content) content.style.visibility = visibility;
+    }, previousVisibility);
+  }
+}
+
 test("Home renders the approved Sakura glass shell without extra rail bubbles", async ({
   page,
 }) => {
@@ -195,7 +228,7 @@ test("the Sakura glass material is shared by member routes and Create", async ({
   expect(mobileComposeBox.x + mobileComposeBox.width).toBeLessThanOrEqual(321);
 });
 
-test("the soft-pink Sakura scene and glass colors stay fixed while scrolling", async ({
+test("the static Sakura scene shows through live header glass while scrolling", async ({
   page,
 }) => {
   await loginAs(page, "member");
@@ -210,14 +243,15 @@ test("the soft-pink Sakura scene and glass colors stay fixed while scrolling", a
   await expect(backdrop).toHaveCSS("animation-name", "none");
   await expect(backdrop).toHaveCSS("background-size", "cover");
   await expect(backdrop).toHaveCSS("background-image", /sakura-feed-desktop/);
-  await waitForBackgroundImage(header);
-  await expect(header).toHaveCSS("backdrop-filter", "none");
+  await waitForBackgroundImage(backdrop);
+  await expect(header).toHaveCSS("backdrop-filter", /blur/);
+  await expect(header).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await expect(feedCard).toHaveCSS("backdrop-filter", "none");
   const initialHeaderBackground = await header.evaluate(
     (element) => getComputedStyle(element).backgroundImage
   );
   expect(initialHeaderBackground).toContain("linear-gradient");
-  expect(initialHeaderBackground).toContain("sakura-feed-desktop");
+  expect(initialHeaderBackground).not.toContain("sakura-feed-desktop");
 
   const [leftRailFill, rightRailFill, feedCardFill] = await Promise.all([
     leftRail.evaluate((element) => getComputedStyle(element).backgroundImage),
@@ -227,27 +261,11 @@ test("the soft-pink Sakura scene and glass colors stay fixed while scrolling", a
   expect(feedCardFill).toBe(leftRailFill);
   expect(rightRailFill).toBe(leftRailFill);
 
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-  });
-  await header.locator("img").evaluateAll((images) =>
-    Promise.all(
-      images.map(
-        (image) =>
-          image.complete ||
-          new Promise((resolve) => {
-            image.addEventListener("load", resolve, { once: true });
-            image.addEventListener("error", resolve, { once: true });
-          })
-      )
-    )
+  const initialBackdropBox = await backdrop.boundingBox();
+  const initialHeaderFill = await header.evaluate(
+    (element) => getComputedStyle(element).backgroundImage
   );
-  const [initialBackdropBox, initialHeaderFill, initialHeaderScreenshot] =
-    await Promise.all([
-      backdrop.boundingBox(),
-      header.evaluate((element) => getComputedStyle(element).backgroundImage),
-      header.screenshot(),
-    ]);
+  const initialHeaderScreenshot = await captureHeaderMaterial(page, header);
   expect(initialBackdropBox).not.toBeNull();
   expect(initialHeaderFill).not.toBe("none");
 
@@ -255,20 +273,23 @@ test("the soft-pink Sakura scene and glass colors stay fixed while scrolling", a
   await expect
     .poll(() => page.evaluate(() => window.scrollY))
     .toBeGreaterThan(0);
-  const [scrolledBackdropBox, scrolledHeaderFill, scrolledHeaderScreenshot] =
-    await Promise.all([
-      backdrop.boundingBox(),
-      header.evaluate((element) => getComputedStyle(element).backgroundImage),
-      header.screenshot(),
-    ]);
+  const scrolledBackdropBox = await backdrop.boundingBox();
+  const scrolledHeaderFill = await header.evaluate(
+    (element) => getComputedStyle(element).backgroundImage
+  );
+  const scrolledHeaderScreenshot = await captureHeaderMaterial(page, header);
   expect(scrolledBackdropBox).toEqual(initialBackdropBox);
   expect(scrolledHeaderFill).toBe(initialHeaderFill);
-  expect(scrolledHeaderScreenshot.equals(initialHeaderScreenshot)).toBe(true);
+  expect(scrolledHeaderScreenshot.equals(initialHeaderScreenshot)).toBe(false);
 
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(backdrop).toHaveCSS("background-image", /sakura-feed-mobile/);
-  await expect(header).toHaveCSS("background-image", /sakura-feed-mobile/);
-  await waitForBackgroundImage(header);
+  await waitForBackgroundImage(backdrop);
+  expect(
+    await header.evaluate(
+      (element) => getComputedStyle(element).backgroundImage
+    )
+  ).not.toContain("sakura-feed-mobile");
   const mobileNav = page.locator("nav.member-glass-mobile-nav");
   await expect(mobileNav).toBeVisible();
   await expect(mobileNav).toHaveCSS("backdrop-filter", "none");
@@ -276,29 +297,25 @@ test("the soft-pink Sakura scene and glass colors stay fixed while scrolling", a
     (element) => getComputedStyle(element).backgroundImage
   );
   await page.evaluate(() => window.scrollTo(0, 0));
-  const mobileHeaderBox = await header.boundingBox();
-  expect(mobileHeaderBox).not.toBeNull();
-  const mobileHeaderClip = {
-    x: Math.round(mobileHeaderBox.x + 16),
-    y: Math.round(mobileHeaderBox.y),
-    width: Math.round(mobileHeaderBox.width - 32),
-    height: Math.round(mobileHeaderBox.height),
-  };
-  const initialMobileHeaderScreenshot = await page.screenshot({
-    clip: mobileHeaderClip,
-  });
+  const initialMobileHeaderScreenshot = await captureHeaderMaterial(
+    page,
+    header,
+    16
+  );
   await page.evaluate(() => window.scrollTo(0, 500));
   await expect
     .poll(() =>
       mobileNav.evaluate((element) => getComputedStyle(element).backgroundImage)
     )
     .toBe(mobileNavFill);
-  const scrolledMobileHeaderScreenshot = await page.screenshot({
-    clip: mobileHeaderClip,
-  });
+  const scrolledMobileHeaderScreenshot = await captureHeaderMaterial(
+    page,
+    header,
+    16
+  );
   expect(
     scrolledMobileHeaderScreenshot.equals(initialMobileHeaderScreenshot)
-  ).toBe(true);
+  ).toBe(false);
   const hasHorizontalOverflow = await page.evaluate(
     () =>
       document.documentElement.scrollWidth >
@@ -308,6 +325,7 @@ test("the soft-pink Sakura scene and glass colors stay fixed while scrolling", a
 
   await page.emulateMedia({ contrast: "more" });
   await expect(header).toHaveCSS("background-image", "none");
+  await expect(header).toHaveCSS("backdrop-filter", "none");
 
   await page.emulateMedia({
     contrast: "no-preference",
@@ -315,6 +333,7 @@ test("the soft-pink Sakura scene and glass colors stay fixed while scrolling", a
   });
   await expect(backdrop).toBeHidden();
   await expect(header).toHaveCSS("background-image", "none");
+  await expect(header).toHaveCSS("backdrop-filter", "none");
 });
 
 test("header popovers stay inside a narrow member viewport", async ({
