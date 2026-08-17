@@ -94,6 +94,7 @@ export const feedPosts = [
     username: "lunabloom",
     avatar:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "sakura-cat",
     image:
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&h=500&q=80",
     aspectRatio: "8/5",
@@ -113,6 +114,7 @@ export const feedPosts = [
     username: "mikarose",
     avatar:
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "moon-kitsune",
     image:
       "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&h=1000&q=80",
     aspectRatio: "4/5",
@@ -134,6 +136,7 @@ export const feedPosts = [
     username: "airivale",
     avatar:
       "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "sakura-cat",
     image:
       "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&h=800&q=80",
     aspectRatio: "1/1",
@@ -152,6 +155,7 @@ export const feedPosts = [
     username: "soranyx",
     avatar:
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "moon-kitsune",
     image:
       "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&h=600&q=80",
     aspectRatio: "4/3",
@@ -173,6 +177,7 @@ export const feedPosts = [
     username: "airivale",
     avatar:
       "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "sakura-cat",
     mediaType: "video",
     // Public demo clip — safe, non-PPV sample media.
     videoSrc:
@@ -200,6 +205,7 @@ export const fypPosts = [
     username: "naomihart",
     avatar:
       "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "moon-kitsune",
     image:
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&h=500&q=80",
     aspectRatio: "8/5",
@@ -218,6 +224,7 @@ export const fypPosts = [
     username: "reinanoir",
     avatar:
       "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "sakura-cat",
     image:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&h=800&q=80",
     aspectRatio: "1/1",
@@ -236,6 +243,7 @@ export const fypPosts = [
     username: "kiradawn",
     avatar:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "moon-kitsune",
     image:
       "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&h=600&q=80",
     aspectRatio: "4/3",
@@ -254,6 +262,7 @@ export const fypPosts = [
     username: "yukistar",
     avatar:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "sakura-cat",
     image:
       "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&h=1000&q=80",
     aspectRatio: "4/5",
@@ -273,6 +282,7 @@ export const fypPosts = [
     username: "naomihart",
     avatar:
       "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "moon-kitsune",
     mediaType: "video",
     // Public demo clip — safe, non-PPV sample media.
     videoSrc:
@@ -297,6 +307,7 @@ export const fypPosts = [
     username: "reinanoir",
     avatar:
       "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "sakura-cat",
     mediaType: "video",
     // PPV video: safe poster only. The protected source is never present in
     // public fixture payloads — playback requires server-side entitlement.

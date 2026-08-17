@@ -342,6 +342,7 @@ export default function ChatSidebar({ contacts = [] }) {
                   size={56}
                   status={contact.status}
                   unreadCount={contact.unread}
+                  decoration={contact.avatarDecoration}
                   showStatusTooltip={false}
                 />
               </button>
@@ -476,6 +477,7 @@ export default function ChatSidebar({ contacts = [] }) {
                         size={42}
                         status={contact.status}
                         unreadCount={contact.unread}
+                        decoration={contact.avatarDecoration}
                         showStatusTooltip={false}
                       />
                       <div className="min-w-0 flex-1">
@@ -512,6 +514,7 @@ export default function ChatSidebar({ contacts = [] }) {
                       alt={activeContact.name}
                       size={40}
                       status={activeContact.status}
+                      decoration={activeContact.avatarDecoration}
                       showStatusTooltip={false}
                       showStatus={false}
                     />

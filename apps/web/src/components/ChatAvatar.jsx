@@ -1,4 +1,5 @@
 import { STATUS_OPTIONS } from "./UserStatusSwitcher";
+import Avatar from "./Avatar";
 
 /* ─── Status Heart Badge ───────────────────────────────────────────── */
 
@@ -12,7 +13,7 @@ function StatusHeart({ status, showTooltip = true }) {
 
   return (
     <span
-      className={`absolute -bottom-0.5 -right-0.5 overflow-visible${showTooltip ? " group/sh" : ""}`}
+      className={`absolute -bottom-0.5 -right-0.5 z-20 overflow-visible${showTooltip ? " group/sh" : ""}`}
       style={{ width: 14, height: 14 }}
       tabIndex={showTooltip ? 0 : undefined}
       role={showTooltip ? "img" : undefined}
@@ -100,6 +101,7 @@ export default function ChatAvatar({
   unreadCount = 0,
   showStatusTooltip = true,
   showStatus = true,
+  decoration,
   className = "",
 }) {
   return (
@@ -107,17 +109,19 @@ export default function ChatAvatar({
       className={`relative inline-block shrink-0 overflow-visible ${className}`}
       style={{ width: size, height: size }}
     >
-      <img
+      <Avatar
         src={src}
         alt={alt}
-        className="rounded-full object-cover w-full h-full ring-2 ring-pink-100"
-        style={{
+        size={size}
+        decoration={decoration}
+        imageClassName="ring-2 ring-pink-100"
+        imageStyle={{
           filter: status === "offline" ? "grayscale(0.5) opacity(0.8)" : "none",
         }}
       />
 
       {unreadCount > 0 && (
-        <span className="badge-pop absolute -top-1.5 -right-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white ring-2 ring-white">
+        <span className="badge-pop absolute -top-1.5 -right-1.5 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white ring-2 ring-white">
           {unreadCount > 9 ? "9+" : unreadCount}
         </span>
       )}

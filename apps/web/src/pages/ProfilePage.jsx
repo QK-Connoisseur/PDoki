@@ -6,6 +6,7 @@ import { useSimulatedFetch } from "../lib/useSimulatedFetch";
 import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import CreatePostModal from "../components/CreatePostModal";
 import FollowButton from "../components/FollowButton";
+import Avatar from "../components/Avatar";
 import { StaticStatusBadge } from "../components/UserStatusSwitcher";
 import MomentAvatar from "../components/MomentAvatar";
 import MomentComposer from "../components/MomentComposer";
@@ -1389,10 +1390,11 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                       className="rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden"
                     >
                       <div className="flex items-center gap-3 px-4 py-3">
-                        <img
+                        <Avatar
                           src={profile.avatar}
                           alt={profile.name}
-                          className="h-10 w-10 rounded-full object-cover border border-pink-100"
+                          size={40}
+                          decoration={profile.avatarDecoration}
                         />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">

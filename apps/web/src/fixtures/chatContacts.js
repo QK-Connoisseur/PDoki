@@ -11,6 +11,7 @@ export const chatContacts = [
     name: "Luna Bloom",
     avatar:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "sakura-cat",
     lastMessage: "Thanks for the support!",
     status: "online",
     unread: 2,
@@ -22,6 +23,7 @@ export const chatContacts = [
     name: "Mika Rose",
     avatar:
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "moon-kitsune",
     lastMessage: "See you on the stream tonight!",
     status: "busy",
     unread: 0,
@@ -33,6 +35,7 @@ export const chatContacts = [
     name: "Airi Vale",
     avatar:
       "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "sakura-cat",
     lastMessage: "New content coming soon",
     status: "resting",
     unread: 1,
@@ -44,6 +47,7 @@ export const chatContacts = [
     name: "Sora Nyx",
     avatar:
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "moon-kitsune",
     lastMessage: "Loved your comment!",
     status: "online",
     unread: 11,
@@ -55,6 +59,7 @@ export const chatContacts = [
     name: "Naomi Hart",
     avatar:
       "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "moon-kitsune",
     lastMessage: "Check out my latest post",
     status: "offline",
     unread: 0,
@@ -66,6 +71,7 @@ export const chatContacts = [
     name: "Reina Noir",
     avatar:
       "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80",
+    avatarDecoration: "sakura-cat",
     lastMessage: "When's the next drop?",
     status: "busy",
     unread: 3,

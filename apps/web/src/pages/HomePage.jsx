@@ -6,6 +6,7 @@ import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import FollowButton from "../components/FollowButton";
 import FeedMedia from "../components/FeedMedia";
 import VesoIcon from "../components/VesoIcon";
+import Avatar from "../components/Avatar";
 import MomentAvatar from "../components/MomentAvatar";
 import MomentComposer from "../components/MomentComposer";
 import { sortMomentRail } from "../utils/sortMomentRail";
@@ -144,19 +145,6 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
     () => sortMomentRail(moments, viewedMoments),
     [viewedMoments]
   );
-
-  const unseenMomentByUsername = useMemo(() => {
-    const map = {};
-    moments.forEach((m) => {
-      if (m.type === "own" || !m.username || viewedMoments.has(m.id)) return;
-      const existing = map[m.username];
-      // private/gold takes priority over regular/pink
-      if (!existing || (m.type === "private" && existing.type !== "private")) {
-        map[m.username] = m;
-      }
-    });
-    return map;
-  }, [viewedMoments]);
 
   return (
     <MemberLayout
@@ -359,8 +347,6 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   const isBookmarked = bookmarkStates[post.id] || false;
                   const isUnlocked = unlockedPosts[post.id] || false;
                   const showLocked = post.locked && !isUnlocked;
-                  const unseenMoment = unseenMomentByUsername[post.username];
-
                   return (
                     <article
                       key={post.id}
@@ -368,35 +354,18 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                     >
                       {/* Post Header */}
                       <div className="flex items-center gap-3 px-4 py-3">
-                        {/* Avatar — story ring when creator has an unseen moment */}
+                        {/* Publication avatar decoration is separate from Moments. */}
                         <button
                           onClick={onViewProfile}
-                          className="shrink-0 cursor-pointer"
+                          className="shrink-0 cursor-pointer rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f472b6] focus-visible:ring-offset-2"
                           aria-label={`View ${post.creator}'s profile`}
                         >
-                          {unseenMoment ? (
-                            <div
-                              className="p-[2.5px] rounded-full"
-                              style={{
-                                background:
-                                  unseenMoment.type === "private"
-                                    ? "linear-gradient(135deg, #6B3A00, #C08815, #ECC040, #FFF5D5, #C89018)"
-                                    : "linear-gradient(135deg, #FF4D8D, #FF73B5, #FFA3D7)",
-                              }}
-                            >
-                              <img
-                                src={post.avatar}
-                                alt={post.creator}
-                                className="h-10 w-10 rounded-full object-cover border-[1.5px] border-white"
-                              />
-                            </div>
-                          ) : (
-                            <img
-                              src={post.avatar}
-                              alt={post.creator}
-                              className="h-10 w-10 rounded-full object-cover border border-pink-100 transition hover:border-pink-300"
-                            />
-                          )}
+                          <Avatar
+                            src={post.avatar}
+                            alt={post.creator}
+                            size={40}
+                            decoration={post.avatarDecoration}
+                          />
                         </button>
 
                         {/* Name line + username */}
