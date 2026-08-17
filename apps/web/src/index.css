@@ -100,142 +100,63 @@
 
 [data-member-visual="sakura-glass"] {
   --glass-fill:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.76), transparent 38%),
-    linear-gradient(155deg, #fffefd 0%, #fff5fa 54%, #fce9f3 100%);
-  --glass-edge: rgba(196, 91, 142, 0.34);
-  --glass-highlight: rgba(255, 255, 255, 0.98);
-  --glass-lowlight: rgba(184, 76, 129, 0.14);
-  --glass-shadow: rgba(91, 45, 70, 0.12);
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.72),
+      rgba(255, 255, 255, 0.16) 42%,
+      transparent 62%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(255, 254, 253, 0.72),
+      rgba(255, 245, 250, 0.64) 54%,
+      rgba(252, 233, 243, 0.58)
+    );
+  --glass-stable-fill:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.82),
+      rgba(255, 255, 255, 0.18) 44%,
+      transparent 66%
+    ),
+    linear-gradient(155deg, #fffefd, #fff5fa 54%, #fce9f3);
+  --glass-edge: rgba(255, 255, 255, 0.78);
+  --glass-rim: rgba(196, 91, 142, 0.2);
+  --glass-highlight: rgba(255, 255, 255, 0.96);
+  --glass-lowlight: rgba(184, 76, 129, 0.16);
+  --glass-shadow: rgba(91, 45, 70, 0.11);
   background: #fff0f7;
 }
 
 .sakura-backdrop {
   position: fixed;
-  inset: 4rem 82px 0 72px;
+  inset: 0;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  color: rgba(244, 160, 197, 0.26);
   contain: strict;
-  background:
-    radial-gradient(
-      circle at 50% 10%,
-      rgba(255, 255, 255, 0.68),
-      transparent 42%
-    ),
-    radial-gradient(
-      circle at 9% 34%,
-      rgba(255, 209, 230, 0.48),
-      transparent 31%
-    ),
-    radial-gradient(
-      circle at 88% 72%,
-      rgba(255, 197, 224, 0.44),
-      transparent 34%
-    ),
-    linear-gradient(145deg, #fff8fc 0%, #fdecf5 52%, #fbe6f1 100%);
-}
-
-.sakura-backdrop__glow {
-  position: absolute;
-  width: min(48vw, 44rem);
-  aspect-ratio: 1;
-  border-radius: 999px;
-  opacity: 0.54;
-}
-
-.sakura-backdrop__glow--left {
-  left: 5%;
-  top: 18%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.88),
-    transparent 68%
-  );
-}
-
-.sakura-backdrop__glow--right {
-  right: 3%;
-  bottom: 2%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 211, 232, 0.42),
-    transparent 67%
-  );
-}
-
-.sakura-backdrop__blooms {
-  position: absolute;
-  width: clamp(10rem, 18vw, 18rem);
-  aspect-ratio: 1;
-  opacity: 0.38;
-}
-
-.sakura-backdrop__blooms--left {
-  left: -5rem;
-  bottom: -4rem;
-}
-
-.sakura-backdrop__blooms--right {
-  right: -4rem;
-  bottom: 5%;
-}
-
-.sakura-backdrop__bloom {
-  position: absolute;
-  display: block;
-  filter: drop-shadow(0 10px 24px rgba(218, 112, 160, 0.06));
-}
-
-.sakura-backdrop__bloom--large {
-  inset: 0;
-  width: 76%;
-  height: 76%;
-}
-
-.sakura-backdrop__bloom--small {
-  right: 0;
-  bottom: 0;
-  width: 52%;
-  height: 52%;
-  color: rgba(255, 188, 216, 0.2);
-  transform: rotate(24deg);
-}
-
-.sakura-backdrop__petal {
-  --sakura-scale: 1;
-  position: absolute;
-  width: 0.8rem;
-  height: 1.25rem;
-  border-radius: 80% 20% 72% 28%;
-  background: linear-gradient(
-    155deg,
-    rgba(255, 255, 255, 0.94),
-    rgba(247, 163, 202, 0.6)
-  );
-  box-shadow: 0 3px 10px rgba(196, 86, 137, 0.08);
-  opacity: 0.54;
-  transform: rotate(18deg) scale(var(--sakura-scale));
-}
-
-.sakura-backdrop__petal--2 {
-  transform: rotate(65deg) scale(var(--sakura-scale));
-}
-
-.sakura-backdrop__petal--3 {
-  transform: rotate(118deg) scale(var(--sakura-scale));
+  background-color: #fff0f7;
+  background-image: url("./assets/backgrounds/sakura-feed-desktop.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 [data-member-visual="sakura-glass"] .member-glass-header,
 [data-member-visual="sakura-glass"] .member-glass-rail,
-[data-member-visual="sakura-glass"] .member-glass-mobile-nav {
+[data-member-visual="sakura-glass"] .member-glass-mobile-nav,
+[data-member-visual="sakura-glass"] .member-glass-chat-panel,
+[data-member-visual="sakura-glass"] .sakura-feed-card,
+[data-member-visual="sakura-glass"] .email-verification-bubble {
   border-color: var(--glass-edge);
   background: var(--glass-fill);
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   box-shadow:
     inset 0 1px 0 var(--glass-highlight),
+    inset 1px 0 0 rgba(255, 255, 255, 0.54),
     inset 0 -1px 0 var(--glass-lowlight),
+    0 0 0 1px var(--glass-rim),
     0 1px 2px rgba(91, 45, 70, 0.07),
     0 10px 24px var(--glass-shadow);
 }
@@ -243,9 +164,15 @@
 [data-member-visual="sakura-glass"] .member-glass-header {
   border-bottom: 1px solid var(--glass-edge);
   border-radius: 0;
+  background: var(--glass-stable-fill);
   box-shadow:
     inset 0 1px 0 var(--glass-highlight),
-    inset 0 -1px 0 var(--glass-lowlight);
+    inset 0 -1px 0 var(--glass-lowlight),
+    0 0 0 1px var(--glass-rim);
+}
+
+[data-member-visual="sakura-glass"] .member-glass-mobile-nav {
+  background: var(--glass-stable-fill);
 }
 
 [data-member-visual="sakura-glass"] .member-glass-rail {
@@ -259,6 +186,7 @@
   border-bottom-right-radius: 1.75rem;
   box-shadow:
     inset -1px 0 var(--glass-highlight),
+    0 0 0 1px var(--glass-rim),
     8px 0 20px rgba(91, 45, 70, 0.08);
 }
 
@@ -267,6 +195,7 @@
   border-bottom-left-radius: 1.75rem;
   box-shadow:
     inset 1px 0 var(--glass-highlight),
+    0 0 0 1px var(--glass-rim),
     -8px 0 20px rgba(91, 45, 70, 0.08);
 }
 
@@ -307,26 +236,18 @@
   box-shadow: none;
 }
 
-[data-member-visual="sakura-glass"] .sakura-feed-card {
-  border-color: rgba(196, 91, 142, 0.26);
-  background: var(--glass-fill);
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
+.email-verification-bubble {
+  border-color: rgba(229, 174, 102, 0.5);
+  background: rgba(255, 250, 244, 0.94);
   box-shadow:
-    inset 0 1px 0 var(--glass-highlight),
-    inset 0 -1px 0 var(--glass-lowlight),
-    0 1px 2px rgba(91, 45, 70, 0.07),
-    0 10px 24px rgba(91, 45, 70, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 8px 24px rgba(120, 72, 20, 0.1);
 }
 
 @media (max-width: 767px) {
   .sakura-backdrop {
-    inset: 4rem 0 0;
-  }
-
-  .sakura-backdrop__blooms--right,
-  .sakura-backdrop__petal:nth-of-type(n + 3) {
-    display: none;
+    background-image: url("./assets/backgrounds/sakura-feed-mobile.jpg");
+    background-position: center top;
   }
 
   [data-member-visual="sakura-glass"] .member-glass-header {
@@ -349,7 +270,9 @@
   [data-member-visual="sakura-glass"] .member-glass-header,
   [data-member-visual="sakura-glass"] .member-glass-rail,
   [data-member-visual="sakura-glass"] .member-glass-mobile-nav,
-  [data-member-visual="sakura-glass"] .sakura-feed-card {
+  [data-member-visual="sakura-glass"] .member-glass-chat-panel,
+  [data-member-visual="sakura-glass"] .sakura-feed-card,
+  [data-member-visual="sakura-glass"] .email-verification-bubble {
     background: rgba(255, 255, 255, 0.98);
     border-color: rgba(91, 65, 83, 0.55);
     box-shadow: none;
@@ -364,7 +287,9 @@
   [data-member-visual="sakura-glass"] .member-glass-header,
   [data-member-visual="sakura-glass"] .member-glass-rail,
   [data-member-visual="sakura-glass"] .member-glass-mobile-nav,
+  [data-member-visual="sakura-glass"] .member-glass-chat-panel,
   [data-member-visual="sakura-glass"] .sakura-feed-card,
+  [data-member-visual="sakura-glass"] .email-verification-bubble,
   [data-member-visual="sakura-glass"] .member-nav-item-active {
     border: 1px solid CanvasText;
     background: Canvas;

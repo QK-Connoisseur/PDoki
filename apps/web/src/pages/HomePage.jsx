@@ -205,7 +205,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                           behavior: "smooth",
                         })
                       }
-                      className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition -translate-x-3"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition"
                       aria-label="Scroll left"
                     >
                       <svg
@@ -225,7 +225,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   <div
                     ref={storiesRef}
                     data-moments-scroller
-                    className="flex overflow-x-auto hide-scrollbar"
+                    className="mx-10 flex overflow-x-auto hide-scrollbar"
                     style={{
                       gap: `${MOMENT_GAP}px`,
                       paddingTop: "4px",
@@ -250,7 +250,11 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                               viewed={isViewed}
                             />
                             {moment.type === "own" && (
-                              <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#f472b6] text-white ring-2 ring-white shadow-sm">
+                              <div
+                                className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#f472b6] text-white ring-2 ring-white shadow-sm"
+                                data-add-moment-plus
+                                aria-hidden="true"
+                              >
                                 <svg
                                   viewBox="0 0 24 24"
                                   className="w-4 h-4"
@@ -288,7 +292,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                           behavior: "smooth",
                         })
                       }
-                      className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition translate-x-3"
+                      className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition"
                       aria-label="Scroll right"
                     >
                       <svg

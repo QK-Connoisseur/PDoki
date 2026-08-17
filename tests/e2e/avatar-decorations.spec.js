@@ -17,6 +17,21 @@ test("publication and chat avatars use cosmetics while Moments keep their own fr
   const momentItems = page.locator(".moment-item");
   await expect(momentItems.first()).toBeVisible();
   await expect(momentItems.locator("[data-avatar-decoration]")).toHaveCount(0);
+  await expect(
+    page
+      .getByRole("button", { name: /Add Moment/i })
+      .locator('[data-moment-avatar-shape="circle"]')
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("button", { name: /Add Moment/i })
+      .locator("[data-add-moment-plus]")
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("button", { name: /Sora Nyx/i })
+      .locator('[data-moment-avatar-shape="heart"]')
+  ).toBeVisible();
 
   const chatContact = page.getByRole("button", {
     name: "Chat with Luna Bloom",

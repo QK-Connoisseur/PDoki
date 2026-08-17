@@ -39,15 +39,46 @@ export default function MomentAvatar({
 }) {
   const grad = gradientForType(type);
   const isOwn = type === "own";
+  const uid = `${name}-${size}`;
+
+  if (isOwn) {
+    const ownClipId = `mc-own-${uid}`;
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        className="shrink-0"
+        data-moment-avatar-shape="circle"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          <clipPath id={ownClipId}>
+            <circle cx={size / 2} cy={size / 2} r={size / 2} />
+          </clipPath>
+        </defs>
+        <image
+          href={src}
+          x="0"
+          y="0"
+          width={size}
+          height={size}
+          clipPath={`url(#${ownClipId})`}
+          preserveAspectRatio="xMidYMid slice"
+        />
+      </svg>
+    );
+  }
+
   const spacerSize = size - ringWidth * 2;
   const innerSize = spacerSize - gapWidth * 2;
 
-  const uid = `${name}-${size}`;
   const gradId = `mg-${uid}`;
   const clipId = `mc-${uid}`;
 
-  const useGrad = !isOwn && !viewed && grad;
-  const ringFill = useGrad ? `url(#${gradId})` : isOwn ? "#e0dade" : "#c5b8c0";
+  const useGrad = !viewed && grad;
+  const ringFill = useGrad ? `url(#${gradId})` : "#c5b8c0";
 
   return (
     <svg
@@ -55,6 +86,9 @@ export default function MomentAvatar({
       height={size}
       viewBox={`0 0 ${size} ${size}`}
       className="shrink-0"
+      data-moment-avatar-shape="heart"
+      aria-hidden="true"
+      focusable="false"
     >
       <defs>
         {useGrad && (
@@ -74,7 +108,12 @@ export default function MomentAvatar({
       </defs>
 
       {/* Outer gradient or muted ring */}
-      <path d={heartPath(size)} fill={ringFill} opacity={viewed ? 0.45 : 1} />
+      <path
+        d={heartPath(size)}
+        fill={ringFill}
+        opacity={viewed ? 0.45 : 1}
+        data-moment-ring
+      />
 
       {/* White spacer — creates the negative gap between ring and photo */}
       <g transform={`translate(${ringWidth},${ringWidth})`}>

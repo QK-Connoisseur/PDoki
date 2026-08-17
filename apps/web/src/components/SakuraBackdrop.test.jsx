@@ -11,5 +11,6 @@ describe("SakuraBackdrop", () => {
     expect(backdrop).toHaveAttribute("data-scene", "static");
     expect(backdrop).toHaveClass("sakura-backdrop");
     expect(backdrop.querySelector("button, a, input")).toBeNull();
+    expect(backdrop).toBeEmptyDOMElement();
   });
 });
