@@ -4,6 +4,7 @@ import AppHeader from "./AppHeader";
 import EmailVerificationBanner from "./EmailVerificationBanner";
 import Sidebar, { MobileNav } from "./Sidebar";
 import ChatSidebar from "./ChatSidebar";
+import SakuraBackdrop from "./SakuraBackdrop";
 import { chatContacts } from "../fixtures/chatContacts";
 import { useOptionalAuth } from "../auth/authContext";
 import { AUTH_ROLES } from "../auth/authApi";
@@ -29,6 +30,7 @@ import { AUTH_ROLES } from "../auth/authApi";
  *   onStatusChange?: (s: string) => void,
  *   onLogoClick?: () => void,
  *   bgClassName?: string,
+ *   visualVariant?: "default" | "sakura-glass",
  *   children: React.ReactNode,
  *   modals?: React.ReactNode,
  * }} props
@@ -41,6 +43,7 @@ export default function MemberLayout({
   onStatusChange,
   onLogoClick,
   bgClassName = "bg-[#fff8fb]",
+  visualVariant = "default",
   children,
   modals,
 }) {
@@ -76,7 +79,12 @@ export default function MemberLayout({
   };
 
   return (
-    <div className={`min-h-screen ${bgClassName} text-[#5b4153]`}>
+    <div
+      className={`relative isolate min-h-screen ${bgClassName} text-[#5b4153]`}
+      data-member-visual={visualVariant}
+    >
+      {visualVariant === "sakura-glass" && <SakuraBackdrop />}
+
       <AppHeader
         userStatus={userStatus}
         onStatusChange={onStatusChange}
@@ -96,8 +104,6 @@ export default function MemberLayout({
       )}
 
       <div className="pt-16">
-        {auth && <EmailVerificationBanner />}
-
         <div className="flex min-h-[calc(100vh-4rem)]">
           <Sidebar
             activePage={activePage}
@@ -115,7 +121,13 @@ export default function MemberLayout({
             onComposeMoment={onComposeMoment}
           />
 
-          {children}
+          <div
+            className="flex min-w-0 flex-1 flex-col"
+            data-member-center-column
+          >
+            {auth && <EmailVerificationBanner />}
+            {children}
+          </div>
 
           <ChatSidebar contacts={chatContacts} />
         </div>

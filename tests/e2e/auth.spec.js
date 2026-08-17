@@ -55,21 +55,44 @@ test("registration persists, dismisses its reminder, and verifies through the em
   const chatSidebar = page.getByRole("complementary", {
     name: "Chat sidebar",
   });
+  const memberHeader = page.locator("header.member-glass-header");
+  const leftRail = page.locator("aside.member-glass-rail-left");
   await expect(firstMoment).toBeVisible();
   await expect(chatSidebar).toBeVisible();
-  const [desktopReminderBox, desktopMomentBox, desktopChatBox] =
-    await Promise.all([
-      verificationReminder.boundingBox(),
-      firstMoment.boundingBox(),
-      chatSidebar.boundingBox(),
-    ]);
+  const [
+    desktopReminderBox,
+    desktopMomentBox,
+    desktopChatBox,
+    desktopHeaderBox,
+    desktopLeftRailBox,
+  ] = await Promise.all([
+    verificationReminder.boundingBox(),
+    firstMoment.boundingBox(),
+    chatSidebar.boundingBox(),
+    memberHeader.boundingBox(),
+    leftRail.boundingBox(),
+  ]);
   expect(desktopReminderBox).not.toBeNull();
   expect(desktopMomentBox).not.toBeNull();
   expect(desktopChatBox).not.toBeNull();
+  expect(desktopHeaderBox).not.toBeNull();
+  expect(desktopLeftRailBox).not.toBeNull();
   const desktopReminderBottom =
     desktopReminderBox.y + desktopReminderBox.height;
   expect(desktopReminderBottom).toBeLessThanOrEqual(desktopMomentBox.y + 1);
-  expect(desktopReminderBottom).toBeLessThanOrEqual(desktopChatBox.y + 1);
+  expect(desktopReminderBox.x).toBeGreaterThanOrEqual(
+    desktopLeftRailBox.x + desktopLeftRailBox.width - 1
+  );
+  expect(desktopReminderBox.x + desktopReminderBox.width).toBeLessThanOrEqual(
+    desktopChatBox.x + 1
+  );
+  const desktopHeaderBottom = desktopHeaderBox.y + desktopHeaderBox.height;
+  expect(
+    Math.abs(desktopHeaderBottom - desktopLeftRailBox.y)
+  ).toBeLessThanOrEqual(1);
+  expect(Math.abs(desktopHeaderBottom - desktopChatBox.y)).toBeLessThanOrEqual(
+    1
+  );
 
   await page.getByRole("button", { name: "Chat with Luna Bloom" }).click();
   const messagesDialog = page.getByRole("dialog", { name: "Messages" });

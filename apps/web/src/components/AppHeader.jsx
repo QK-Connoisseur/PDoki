@@ -93,7 +93,7 @@ export default function AppHeader({
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-16 border-b border-pink-100 bg-white/92 backdrop-blur-md">
+    <header className="member-glass-header fixed top-0 left-0 right-0 z-50 h-16 border-b border-pink-100 bg-white/92 backdrop-blur-md">
       <div className="flex h-full items-center justify-between px-4">
         {/* Left: Logo */}
         <div className="flex items-center shrink-0">
@@ -108,7 +108,7 @@ export default function AppHeader({
         </div>
 
         {/* Right: Search, Notifications, Oasis, Profile */}
-        <div className="flex items-center gap-1">
+        <div className="member-header-actions flex items-center gap-1">
           {/* Search */}
           <div className="relative" data-dropdown>
             <button
@@ -117,7 +117,7 @@ export default function AppHeader({
                 setShowNotifications(false);
                 setShowProfileMenu(false);
               }}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
+              className="member-header-action flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
               aria-label="Search"
             >
               <svg
@@ -156,7 +156,7 @@ export default function AppHeader({
                 setShowSearch(false);
                 setShowProfileMenu(false);
               }}
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
+              className="member-header-action relative flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
               aria-label="Notifications"
             >
               <svg
@@ -213,7 +213,7 @@ export default function AppHeader({
           {/* Oasis */}
           <button
             onClick={() => navigate("/oasis")}
-            className="flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
+            className="member-header-action flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
             aria-label="Oasis"
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
@@ -294,7 +294,7 @@ export default function AppHeader({
                 setShowSearch(false);
                 setShowNotifications(false);
               }}
-              className="ml-1 flex h-10 w-10 items-center justify-center cursor-pointer"
+              className="member-header-action ml-1 flex h-10 w-10 items-center justify-center cursor-pointer"
               aria-label="Profile menu"
             >
               <img

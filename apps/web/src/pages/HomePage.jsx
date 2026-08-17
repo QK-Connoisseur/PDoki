@@ -107,8 +107,9 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
   }, []);
 
   useEffect(() => {
+    if (page.status !== "ready") return undefined;
     const el = storiesRef.current;
-    if (!el) return;
+    if (!el) return undefined;
     updateScrollState();
     el.addEventListener("scroll", updateScrollState, { passive: true });
     const ro = new ResizeObserver(updateScrollState);
@@ -117,7 +118,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
       el.removeEventListener("scroll", updateScrollState);
       ro.disconnect();
     };
-  }, [updateScrollState]);
+  }, [page.status, updateScrollState]);
 
   const handleMomentClick = (moment) => {
     if (moment.type === "own") {
@@ -149,6 +150,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
   return (
     <MemberLayout
       activePage="home"
+      visualVariant="sakura-glass"
       userStatus={userStatus}
       onStatusChange={onStatusChange}
       onLogoClick={() => {
@@ -192,7 +194,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
           <>
             <div className="max-w-[650px] mx-auto px-4 pt-4">
               {/* ─── Moments Row ─────────────────────────────────────── */}
-              <div className="mb-4 rounded-2xl border border-pink-100 bg-white p-4 shadow-sm">
+              <div className="mb-4 px-1 py-3" data-moments-rail>
                 <div className="relative">
                   {/* Left scroll arrow */}
                   {canScrollLeft && (
@@ -222,6 +224,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
 
                   <div
                     ref={storiesRef}
+                    data-moments-scroller
                     className="flex overflow-x-auto hide-scrollbar"
                     style={{
                       gap: `${MOMENT_GAP}px`,
@@ -350,7 +353,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   return (
                     <article
                       key={post.id}
-                      className="rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden"
+                      className="sakura-feed-card rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden"
                     >
                       {/* Post Header */}
                       <div className="flex items-center gap-3 px-4 py-3">

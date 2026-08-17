@@ -95,3 +95,331 @@
 .follow-heart-pop {
   animation: follow-heart-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
+
+/* ─── Home-only Sakura glass scene ─────────────────────────────────── */
+
+[data-member-visual="sakura-glass"] {
+  background:
+    radial-gradient(
+      circle at 50% 10%,
+      rgba(255, 255, 255, 0.92),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 9% 34%,
+      rgba(255, 222, 237, 0.46),
+      transparent 31%
+    ),
+    radial-gradient(
+      circle at 88% 72%,
+      rgba(255, 211, 231, 0.4),
+      transparent 34%
+    ),
+    linear-gradient(145deg, #fffafd 0%, #fff1f7 50%, #ffeef6 100%);
+}
+
+.sakura-backdrop {
+  position: fixed;
+  inset: 4rem 82px 0 72px;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  color: rgba(244, 160, 197, 0.22);
+  contain: strict;
+}
+
+.sakura-backdrop__glow {
+  position: absolute;
+  width: min(48vw, 44rem);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  opacity: 0.48;
+  animation: sakura-ambient-drift 32s ease-in-out infinite alternate;
+}
+
+.sakura-backdrop__glow--left {
+  left: 5%;
+  top: 18%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.88),
+    transparent 68%
+  );
+}
+
+.sakura-backdrop__glow--right {
+  right: 3%;
+  bottom: 2%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 211, 232, 0.42),
+    transparent 67%
+  );
+  animation-delay: -16s;
+  animation-direction: alternate-reverse;
+}
+
+.sakura-backdrop__blooms {
+  position: absolute;
+  width: clamp(10rem, 18vw, 18rem);
+  aspect-ratio: 1;
+  opacity: 0.42;
+  animation: sakura-bloom-breathe 38s ease-in-out infinite alternate;
+}
+
+.sakura-backdrop__blooms--left {
+  left: -5rem;
+  bottom: -4rem;
+}
+
+.sakura-backdrop__blooms--right {
+  right: -4rem;
+  bottom: 5%;
+  animation-delay: -19s;
+  animation-direction: alternate-reverse;
+}
+
+.sakura-backdrop__bloom {
+  position: absolute;
+  display: block;
+  filter: drop-shadow(0 10px 24px rgba(218, 112, 160, 0.06));
+}
+
+.sakura-backdrop__bloom--large {
+  inset: 0;
+  width: 76%;
+  height: 76%;
+}
+
+.sakura-backdrop__bloom--small {
+  right: 0;
+  bottom: 0;
+  width: 52%;
+  height: 52%;
+  color: rgba(255, 188, 216, 0.2);
+  transform: rotate(24deg);
+}
+
+.sakura-backdrop__petal {
+  --sakura-scale: 1;
+  position: absolute;
+  width: 0.8rem;
+  height: 1.25rem;
+  border-radius: 80% 20% 72% 28%;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.94),
+    rgba(247, 163, 202, 0.6)
+  );
+  box-shadow: 0 3px 10px rgba(196, 86, 137, 0.08);
+  opacity: 0.54;
+  animation: sakura-petal-float var(--sakura-duration) ease-in-out infinite;
+  animation-delay: var(--sakura-delay);
+}
+
+.sakura-backdrop__petal--2 {
+  transform: rotate(65deg) scale(var(--sakura-scale));
+}
+
+.sakura-backdrop__petal--3 {
+  transform: rotate(118deg) scale(var(--sakura-scale));
+}
+
+@keyframes sakura-ambient-drift {
+  from {
+    transform: translate3d(-8px, 5px, 0) scale(0.98);
+    opacity: 0.4;
+  }
+  to {
+    transform: translate3d(16px, -9px, 0) scale(1.04);
+    opacity: 0.55;
+  }
+}
+
+@keyframes sakura-bloom-breathe {
+  from {
+    transform: translate3d(-5px, 7px, 0) rotate(-2deg);
+    opacity: 0.34;
+  }
+  to {
+    transform: translate3d(10px, -8px, 0) rotate(3deg);
+    opacity: 0.47;
+  }
+}
+
+@keyframes sakura-petal-float {
+  0%,
+  100% {
+    transform: translate3d(-5px, 5px, 0) rotate(18deg)
+      scale(var(--sakura-scale));
+    opacity: 0.38;
+  }
+  50% {
+    transform: translate3d(17px, -16px, 0) rotate(53deg)
+      scale(var(--sakura-scale));
+    opacity: 0.66;
+  }
+}
+
+[data-member-visual="sakura-glass"] .member-glass-header,
+[data-member-visual="sakura-glass"] .member-glass-rail,
+[data-member-visual="sakura-glass"] .member-glass-mobile-nav {
+  border-color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 249, 252, 0.95);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 10px 32px rgba(117, 60, 91, 0.08);
+}
+
+[data-member-visual="sakura-glass"] .member-glass-header {
+  border-bottom: 1px solid rgba(226, 171, 197, 0.42);
+  border-radius: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.38);
+}
+
+[data-member-visual="sakura-glass"] .member-glass-rail {
+  height: calc(100vh - 4rem);
+  height: calc(100dvh - 4rem);
+  border-top: 0;
+}
+
+[data-member-visual="sakura-glass"] .member-glass-rail-left {
+  border-right: 1px solid rgba(226, 171, 197, 0.38);
+  border-bottom-right-radius: 1.75rem;
+}
+
+[data-member-visual="sakura-glass"] .member-glass-rail-right {
+  border-left: 1px solid rgba(226, 171, 197, 0.38);
+  border-bottom-left-radius: 1.75rem;
+}
+
+@supports (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  [data-member-visual="sakura-glass"] .member-glass-header,
+  [data-member-visual="sakura-glass"] .member-glass-rail,
+  [data-member-visual="sakura-glass"] .member-glass-mobile-nav {
+    background: rgba(255, 248, 252, 0.78);
+    -webkit-backdrop-filter: blur(24px) saturate(122%);
+    backdrop-filter: blur(24px) saturate(122%);
+  }
+}
+
+[data-member-visual="sakura-glass"] .member-rail-nav {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-member-visual="sakura-glass"] .member-nav-item-inactive,
+[data-member-visual="sakura-glass"] .member-nav-item-trigger {
+  background: transparent;
+}
+
+[data-member-visual="sakura-glass"] .member-nav-item-inactive:hover,
+[data-member-visual="sakura-glass"] .member-nav-item-trigger:hover {
+  background: transparent;
+  color: #df5f97;
+  transform: translateY(-1px);
+}
+
+[data-member-visual="sakura-glass"] .member-nav-item-active {
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 7px 18px rgba(136, 68, 100, 0.1);
+}
+
+[data-member-visual="sakura-glass"] .member-chat-expand-toggle {
+  border-color: rgba(226, 171, 197, 0.34);
+  background: transparent;
+}
+
+[data-member-visual="sakura-glass"] [data-moments-rail] {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-member-visual="sakura-glass"] .sakura-feed-card {
+  border-color: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 252, 253, 0.93);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 14px 36px rgba(106, 52, 82, 0.08);
+}
+
+.sakura-backdrop[data-motion="paused"] .sakura-backdrop__glow,
+.sakura-backdrop[data-motion="paused"] .sakura-backdrop__blooms,
+.sakura-backdrop[data-motion="paused"] .sakura-backdrop__petal {
+  animation: none;
+}
+
+.sakura-backdrop[data-motion="running"] .sakura-backdrop__glow,
+.sakura-backdrop[data-motion="running"] .sakura-backdrop__blooms,
+.sakura-backdrop[data-motion="running"] .sakura-backdrop__petal {
+  will-change: transform, opacity;
+}
+
+@media (max-width: 767px) {
+  .sakura-backdrop {
+    inset: 4rem 0 0;
+  }
+
+  .sakura-backdrop__blooms--right,
+  .sakura-backdrop__petal:nth-of-type(n + 3) {
+    display: none;
+  }
+
+  [data-member-visual="sakura-glass"] .member-glass-header {
+    border-radius: 0 0 1rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sakura-backdrop__glow,
+  .sakura-backdrop__blooms,
+  .sakura-backdrop__petal {
+    animation: none !important;
+  }
+
+  [data-member-visual="sakura-glass"] .member-nav-item-inactive:hover,
+  [data-member-visual="sakura-glass"] .member-nav-item-trigger:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .sakura-backdrop {
+    opacity: 0.34;
+  }
+
+  [data-member-visual="sakura-glass"] .member-glass-header,
+  [data-member-visual="sakura-glass"] .member-glass-rail,
+  [data-member-visual="sakura-glass"] .member-glass-mobile-nav,
+  [data-member-visual="sakura-glass"] .sakura-feed-card {
+    background: rgba(255, 255, 255, 0.98);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .sakura-backdrop {
+    display: none;
+  }
+
+  [data-member-visual="sakura-glass"] .member-glass-header,
+  [data-member-visual="sakura-glass"] .member-glass-rail,
+  [data-member-visual="sakura-glass"] .member-glass-mobile-nav,
+  [data-member-visual="sakura-glass"] .sakura-feed-card,
+  [data-member-visual="sakura-glass"] .member-nav-item-active {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+  }
+}

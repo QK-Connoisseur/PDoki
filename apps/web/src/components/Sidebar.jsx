@@ -278,7 +278,7 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`hidden md:flex flex-col shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-r border-pink-100 bg-white z-40 transition-all duration-300 ease-in-out ${
+      className={`member-glass-rail member-glass-rail-left hidden md:flex flex-col shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-r border-pink-100 bg-white z-40 transition-[width] duration-300 ease-in-out ${
         sidebarOpen ? "w-[220px]" : "w-[72px]"
       }`}
       onMouseEnter={() => {
@@ -291,7 +291,7 @@ export default function Sidebar({
       }}
     >
       <div className="flex-[1]" />
-      <nav className="flex flex-col gap-1 px-3">
+      <nav className="member-rail-nav flex flex-col gap-1 px-3">
         {NAV_ITEMS.map((item) => {
           const isActive = activePage === item.id;
           const { Icon } = item;
@@ -301,7 +301,7 @@ export default function Sidebar({
               <div key={item.id} className="relative" data-dropdown>
                 <button
                   onClick={() => setShowComposeMenu(!showComposeMenu)}
-                  className="flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden text-[#111] hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
+                  className="member-nav-item member-nav-item-trigger flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden text-[#111] hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
                   aria-label="Create"
                 >
                   <div className="shrink-0">
@@ -370,12 +370,13 @@ export default function Sidebar({
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden cursor-pointer ${
+              className={`member-nav-item ${isActive ? "member-nav-item-active" : "member-nav-item-inactive"} flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden cursor-pointer ${
                 isActive
                   ? "bg-pink-50/60 text-[#111]"
                   : "text-[#111] hover:bg-pink-50/60 hover:text-[#f9a8c8]"
               }`}
               aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
             >
               <div
                 className={`shrink-0 transition-transform duration-200 ${isActive ? "scale-110" : ""}`}
@@ -423,7 +424,7 @@ export default function Sidebar({
       <div ref={moreMenuRef} className="relative px-3 pb-4" data-dropdown>
         <button
           onClick={() => setShowMoreMenu(!showMoreMenu)}
-          className={`flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden cursor-pointer ${
+          className={`member-nav-item member-nav-item-trigger flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden cursor-pointer ${
             showMoreMenu
               ? "bg-pink-50 text-[#111]"
               : "text-[#111] hover:bg-pink-50/60 hover:text-[#f9a8c8]"
@@ -550,7 +551,7 @@ export function MobileNav({
   totalUnread = 0,
 }) {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-pink-100 bg-white/95 backdrop-blur-md">
+    <nav className="member-glass-mobile-nav md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-pink-100 bg-white/95 backdrop-blur-md">
       <div className="flex h-14 items-center justify-around px-2">
         {NAV_ITEMS.map((item) => {
           const isActive = activePage === item.id;
@@ -561,7 +562,7 @@ export function MobileNav({
               <div key={item.id} className="relative" data-dropdown>
                 <button
                   onClick={() => setShowComposeMenu(!showComposeMenu)}
-                  className="flex h-11 w-11 items-center justify-center rounded-xl transition text-[#111] active:text-[#f9a8c8] cursor-pointer"
+                  className="member-mobile-nav-item member-nav-item-trigger flex h-11 w-11 items-center justify-center rounded-xl transition text-[#111] active:text-[#f9a8c8] cursor-pointer"
                   aria-label="Create"
                 >
                   <Icon active={false} />
@@ -619,10 +620,11 @@ export function MobileNav({
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`flex h-11 w-11 items-center justify-center rounded-xl transition cursor-pointer ${
+              className={`member-mobile-nav-item ${isActive ? "member-nav-item-active" : "member-nav-item-inactive"} flex h-11 w-11 items-center justify-center rounded-xl transition cursor-pointer ${
                 isActive ? "text-[#111]" : "text-[#111] active:text-[#f9a8c8]"
               }`}
               aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
             >
               <Icon active={isActive} />
             </button>
@@ -631,12 +633,13 @@ export function MobileNav({
         {/* Mobile Chat Icon */}
         <button
           onClick={() => onNavigate("chat")}
-          className={`relative flex h-11 w-11 items-center justify-center rounded-xl transition cursor-pointer ${
+          className={`member-mobile-nav-item ${activePage === "chat" ? "member-nav-item-active" : "member-nav-item-inactive"} relative flex h-11 w-11 items-center justify-center rounded-xl transition cursor-pointer ${
             activePage === "chat"
               ? "text-[#111]"
               : "text-[#111] active:text-[#f9a8c8]"
           }`}
           aria-label="Messages"
+          aria-current={activePage === "chat" ? "page" : undefined}
         >
           <svg
             viewBox="0 0 24 24"

@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthContext } from "../auth/authContext";
+import { AppearanceProvider } from "../appearance/AppearanceProvider";
 import SettingsPage from "./SettingsPage";
 
 const auth = {
@@ -27,8 +28,19 @@ const currentSession = {
   current: true,
 };
 
+let appearanceStorage;
+
+function createMemoryStorage() {
+  const values = new Map();
+  return {
+    getItem: vi.fn((key) => values.get(key) ?? null),
+    setItem: vi.fn((key, value) => values.set(key, value)),
+  };
+}
+
 beforeEach(() => {
   vi.clearAllMocks();
+  appearanceStorage = createMemoryStorage();
   window.matchMedia = vi.fn().mockReturnValue({
     matches: false,
     addEventListener: vi.fn(),
@@ -52,9 +64,11 @@ function makeApi(overrides = {}) {
 function renderSettings(api = makeApi()) {
   return render(
     <MemoryRouter>
-      <AuthContext.Provider value={auth}>
-        <SettingsPage api={api} />
-      </AuthContext.Provider>
+      <AppearanceProvider storage={appearanceStorage}>
+        <AuthContext.Provider value={auth}>
+          <SettingsPage api={api} />
+        </AuthContext.Provider>
+      </AppearanceProvider>
     </MemoryRouter>
   );
 }
@@ -226,5 +240,23 @@ describe("SettingsPage", () => {
       expect(screen.queryByText("Microsoft Edge")).not.toBeInTheDocument()
     );
     expect(api.revokeSession).toHaveBeenCalledWith(otherSession.id);
+  });
+
+  it("persists the device-local Sakura motion preference", async () => {
+    const user = userEvent.setup();
+    const first = renderSettings();
+    const toggle = screen.getByRole("switch", {
+      name: "Animate Sakura background",
+    });
+
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+
+    first.unmount();
+    renderSettings();
+    expect(
+      screen.getByRole("switch", { name: "Animate Sakura background" })
+    ).toHaveAttribute("aria-checked", "false");
   });
 });
