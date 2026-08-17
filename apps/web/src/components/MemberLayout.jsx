@@ -31,6 +31,7 @@ import { AUTH_ROLES } from "../auth/authApi";
  *   onLogoClick?: () => void,
  *   bgClassName?: string,
  *   visualVariant?: "default" | "sakura-glass",
+ *   memberTheme?: "sakura" | "none",
  *   children: React.ReactNode,
  *   modals?: React.ReactNode,
  * }} props
@@ -44,6 +45,7 @@ export default function MemberLayout({
   onLogoClick,
   bgClassName = "bg-[#fff8fb]",
   visualVariant = "sakura-glass",
+  memberTheme = "sakura",
   children,
   modals,
 }) {
@@ -82,8 +84,11 @@ export default function MemberLayout({
     <div
       className={`relative isolate min-h-screen ${bgClassName} text-[#5b4153]`}
       data-member-visual={visualVariant}
+      data-member-theme={memberTheme}
     >
-      {visualVariant === "sakura-glass" && <SakuraBackdrop />}
+      {visualVariant === "sakura-glass" && memberTheme === "sakura" && (
+        <SakuraBackdrop />
+      )}
 
       <AppHeader
         userStatus={userStatus}

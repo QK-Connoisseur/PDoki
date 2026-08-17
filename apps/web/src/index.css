@@ -99,7 +99,38 @@
 /* ─── Shared member Sakura glass scene ─────────────────────────────── */
 
 [data-member-visual="sakura-glass"] {
-  --glass-fill:
+  --member-canvas: #fff;
+  --member-scene-image: none;
+  --member-scene-position: center center;
+  --member-scene-size: cover;
+  --member-surface-glass: linear-gradient(#fff, #fff);
+  --member-surface-stable: linear-gradient(#fff, #fff);
+  --member-header-glaze: linear-gradient(
+    112deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(248, 248, 248, 0.92)
+  );
+  --member-border-subtle: rgba(80, 80, 80, 0.2);
+  --member-border-emphasis: rgba(80, 80, 80, 0.32);
+  --member-rim: rgba(80, 80, 80, 0.12);
+  --member-highlight: rgba(255, 255, 255, 0.96);
+  --member-lowlight: rgba(80, 80, 80, 0.12);
+  --member-shadow: rgba(30, 30, 30, 0.12);
+  --member-control-fg: #474747;
+  --member-control-hover-fg: #1f1f1f;
+  --member-control-hover-bg: rgba(255, 255, 255, 0.72);
+  --member-control-focus: #1f1f1f;
+  --member-popover-fill: #fff;
+  --member-popover-border: rgba(80, 80, 80, 0.2);
+  --member-popover-shadow: rgba(30, 30, 30, 0.16);
+}
+
+[data-member-theme="sakura"] {
+  --member-canvas: #fff0f7;
+  --member-scene-image: url("./assets/backgrounds/sakura-feed-desktop.jpg");
+  --member-scene-position: center center;
+  --member-scene-size: cover;
+  --member-surface-glass:
     linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.72),
@@ -112,7 +143,7 @@
       rgba(255, 245, 250, 0.64) 54%,
       rgba(252, 233, 243, 0.58)
     );
-  --glass-stable-fill:
+  --member-surface-stable:
     linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.82),
@@ -120,12 +151,36 @@
       transparent 66%
     ),
     linear-gradient(155deg, #fffefd, #fff5fa 54%, #fce9f3);
-  --glass-edge: rgba(255, 255, 255, 0.78);
-  --glass-rim: rgba(196, 91, 142, 0.2);
-  --glass-highlight: rgba(255, 255, 255, 0.96);
-  --glass-lowlight: rgba(184, 76, 129, 0.16);
-  --glass-shadow: rgba(91, 45, 70, 0.11);
-  background: #fff0f7;
+  --member-header-glaze: linear-gradient(
+    112deg,
+    rgba(255, 255, 255, 0.76),
+    rgba(255, 246, 251, 0.58) 48%,
+    rgba(244, 215, 229, 0.64)
+  );
+  --member-border-subtle: rgba(255, 255, 255, 0.78);
+  --member-border-emphasis: rgba(150, 62, 105, 0.3);
+  --member-rim: rgba(196, 91, 142, 0.2);
+  --member-highlight: rgba(255, 255, 255, 0.96);
+  --member-lowlight: rgba(184, 76, 129, 0.16);
+  --member-shadow: rgba(91, 45, 70, 0.11);
+  --member-control-fg: #765468;
+  --member-control-hover-fg: #8f2f65;
+  --member-control-hover-bg: rgba(255, 255, 255, 0.56);
+  --member-control-focus: #8f2f65;
+  --member-popover-fill: #fffdfd;
+  --member-popover-border: rgba(150, 62, 105, 0.22);
+  --member-popover-shadow: rgba(91, 45, 70, 0.16);
+}
+
+[data-member-visual="sakura-glass"] {
+  --glass-fill: var(--member-surface-glass);
+  --glass-stable-fill: var(--member-surface-stable);
+  --glass-edge: var(--member-border-subtle);
+  --glass-rim: var(--member-rim);
+  --glass-highlight: var(--member-highlight);
+  --glass-lowlight: var(--member-lowlight);
+  --glass-shadow: var(--member-shadow);
+  background: var(--member-canvas, #fff0f7);
 }
 
 .sakura-backdrop {
@@ -135,11 +190,14 @@
   overflow: hidden;
   pointer-events: none;
   contain: strict;
-  background-color: #fff0f7;
-  background-image: url("./assets/backgrounds/sakura-feed-desktop.jpg");
-  background-position: center center;
+  background-color: var(--member-canvas, #fff0f7);
+  background-image: var(
+    --member-scene-image,
+    url("./assets/backgrounds/sakura-feed-desktop.jpg")
+  );
+  background-position: var(--member-scene-position, center center);
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: var(--member-scene-size, cover);
 }
 
 [data-member-visual="sakura-glass"] .member-glass-header,
@@ -164,10 +222,36 @@
 }
 
 [data-member-visual="sakura-glass"] .member-glass-header {
-  border-bottom: 1px solid rgba(150, 62, 105, 0.32);
+  border-bottom: 1px solid var(--member-border-emphasis);
   border-radius: 0;
-  background: var(--glass-stable-fill);
+  background-color: var(--member-canvas, #fff0f7);
+  background-image: var(--member-header-glaze), var(--member-scene-image);
+  background-position: center, var(--member-scene-position);
+  background-repeat: no-repeat;
+  background-size:
+    100% 100%,
+    var(--member-scene-size);
   box-shadow: none;
+}
+
+[data-member-visual="sakura-glass"] .member-header-action {
+  color: var(--member-control-fg);
+}
+
+[data-member-visual="sakura-glass"] .member-header-action:hover {
+  background: var(--member-control-hover-bg);
+  color: var(--member-control-hover-fg);
+}
+
+[data-member-visual="sakura-glass"] .member-header-action:focus-visible {
+  outline: 2px solid var(--member-control-focus);
+  outline-offset: 2px;
+}
+
+[data-member-visual="sakura-glass"] .member-header-popover {
+  border-color: var(--member-popover-border);
+  background: var(--member-popover-fill);
+  box-shadow: 0 18px 42px var(--member-popover-shadow);
 }
 
 [data-member-visual="sakura-glass"] .member-glass-modal-panel {
@@ -175,7 +259,7 @@
 }
 
 [data-member-visual="sakura-glass"] .email-verification-bubble {
-  border-color: rgba(150, 62, 105, 0.32);
+  border-color: var(--member-border-emphasis);
   box-shadow: 0 8px 24px rgba(91, 45, 70, 0.11);
 }
 
@@ -253,13 +337,41 @@
 }
 
 @media (max-width: 767px) {
-  .sakura-backdrop {
-    background-image: url("./assets/backgrounds/sakura-feed-mobile.jpg");
-    background-position: center top;
+  [data-member-theme="sakura"] {
+    --member-scene-image: url("./assets/backgrounds/sakura-feed-mobile.jpg");
+    --member-scene-position: center top;
   }
 
   [data-member-visual="sakura-glass"] .member-glass-header {
     border-radius: 0 0 1rem 1rem;
+  }
+
+  .member-header-logo svg {
+    width: 7rem;
+    height: auto;
+  }
+
+  .member-header-actions {
+    position: static;
+  }
+
+  .member-header-actions > [data-dropdown] {
+    position: static;
+  }
+
+  .member-header-popover {
+    top: calc(100% + 0.75rem);
+    right: 1rem;
+    margin-top: 0;
+    max-width: calc(100% - 2rem);
+  }
+
+  .member-header-popover-wide {
+    width: min(20rem, calc(100% - 2rem));
+  }
+
+  .member-header-popover-profile {
+    width: min(15rem, calc(100% - 2rem));
   }
 }
 
@@ -282,8 +394,10 @@
   [data-member-visual="sakura-glass"] .sakura-glass-surface,
   [data-member-visual="sakura-glass"] .member-glass-modal-panel,
   [data-member-visual="sakura-glass"] .sakura-feed-card,
-  [data-member-visual="sakura-glass"] .email-verification-bubble {
-    background: rgba(255, 255, 255, 0.98);
+  [data-member-visual="sakura-glass"] .email-verification-bubble,
+  [data-member-visual="sakura-glass"] .member-header-popover {
+    background: #fff;
+    background-image: none;
     border-color: rgba(91, 65, 83, 0.55);
     box-shadow: none;
   }
@@ -302,6 +416,7 @@
   [data-member-visual="sakura-glass"] .member-glass-modal-panel,
   [data-member-visual="sakura-glass"] .sakura-feed-card,
   [data-member-visual="sakura-glass"] .email-verification-bubble,
+  [data-member-visual="sakura-glass"] .member-header-popover,
   [data-member-visual="sakura-glass"] .member-nav-item-active {
     border: 1px solid CanvasText;
     background: Canvas;

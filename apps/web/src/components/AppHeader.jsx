@@ -93,14 +93,14 @@ export default function AppHeader({
   ];
 
   return (
-    <header className="member-glass-header fixed top-0 left-0 right-0 z-50 h-16 border-b border-pink-100 bg-white/92 backdrop-blur-md">
-      <div className="flex h-full items-center justify-between px-4">
+    <header className="member-header member-glass-header fixed top-0 left-0 right-0 z-50 h-16 border-b border-pink-100 bg-white/92 backdrop-blur-md">
+      <div className="flex h-full items-center justify-between px-2 sm:px-4">
         {/* Left: Logo */}
         <div className="flex items-center shrink-0">
           <button
             type="button"
             onClick={handleLogoClick}
-            className="cursor-pointer"
+            className="member-header-logo cursor-pointer"
             aria-label="Pumdoki — home"
           >
             <PumdokiLogo />
@@ -119,6 +119,8 @@ export default function AppHeader({
               }}
               className="member-header-action flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
               aria-label="Search"
+              aria-expanded={showSearch}
+              aria-controls="member-search-popover"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -134,10 +136,14 @@ export default function AppHeader({
               </svg>
             </button>
             {showSearch && (
-              <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl border border-pink-100 bg-white p-4 shadow-xl">
+              <div
+                id="member-search-popover"
+                className="member-header-popover member-header-popover-wide absolute right-0 top-full mt-2 w-80 rounded-2xl border border-pink-100 bg-white p-4 shadow-xl"
+              >
                 <input
                   autoFocus
                   type="text"
+                  aria-label="Search creators, posts, and tags"
                   placeholder="Search creators, posts, tags..."
                   className="w-full rounded-xl border border-pink-100 bg-[#fffafc] px-4 py-2.5 text-sm outline-none placeholder:text-[#c59aae] focus:border-pink-300"
                 />
@@ -158,6 +164,8 @@ export default function AppHeader({
               }}
               className="member-header-action relative flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
               aria-label="Notifications"
+              aria-expanded={showNotifications}
+              aria-controls="member-notifications-popover"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -178,7 +186,10 @@ export default function AppHeader({
               )}
             </button>
             {showNotifications && (
-              <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl border border-pink-100 bg-white shadow-xl overflow-hidden">
+              <div
+                id="member-notifications-popover"
+                className="member-header-popover member-header-popover-wide absolute right-0 top-full mt-2 w-80 rounded-2xl border border-pink-100 bg-white shadow-xl overflow-hidden"
+              >
                 <div className="border-b border-pink-50 px-4 py-3">
                   <h3 className="text-sm font-semibold text-[#241a22]">
                     Notifications
@@ -296,6 +307,8 @@ export default function AppHeader({
               }}
               className="member-header-action ml-1 flex h-10 w-10 items-center justify-center cursor-pointer"
               aria-label="Profile menu"
+              aria-expanded={showProfileMenu}
+              aria-controls="member-profile-popover"
             >
               <img
                 src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80"
@@ -304,7 +317,10 @@ export default function AppHeader({
               />
             </button>
             {showProfileMenu && (
-              <div className="absolute right-0 top-full mt-2 w-60 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-pink-100 bg-white py-2 shadow-xl">
+              <div
+                id="member-profile-popover"
+                className="member-header-popover member-header-popover-profile absolute right-0 top-full mt-2 w-60 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-pink-100 bg-white py-2 shadow-xl"
+              >
                 <StatusMenuRow
                   status={userStatus}
                   onStatusChange={onStatusChange}

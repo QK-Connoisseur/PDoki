@@ -17,9 +17,13 @@ const auth = {
   requestVerification: vi.fn(),
 };
 
-function renderLayout({ visualVariant, withAuth = false } = {}) {
+function renderLayout({ visualVariant, memberTheme, withAuth = false } = {}) {
   const content = (
-    <MemberLayout activePage="home" visualVariant={visualVariant}>
+    <MemberLayout
+      activePage="home"
+      visualVariant={visualVariant}
+      memberTheme={memberTheme}
+    >
       <main>Feed content</main>
     </MemberLayout>
   );
@@ -46,12 +50,25 @@ describe("MemberLayout", () => {
     expect(
       sakura.container.querySelector('[data-member-visual="sakura-glass"]')
     ).toBeInTheDocument();
+    expect(
+      sakura.container.querySelector('[data-member-theme="sakura"]')
+    ).toBeInTheDocument();
 
     sakura.unmount();
-    const standard = renderLayout({ visualVariant: "default" });
+    const standard = renderLayout({ memberTheme: "none" });
     expect(screen.queryByTestId("sakura-backdrop")).not.toBeInTheDocument();
     expect(
-      standard.container.querySelector('[data-member-visual="default"]')
+      standard.container.querySelector('[data-member-visual="sakura-glass"]')
+    ).toBeInTheDocument();
+    expect(
+      standard.container.querySelector('[data-member-theme="none"]')
+    ).toBeInTheDocument();
+
+    standard.unmount();
+    const materialOptOut = renderLayout({ visualVariant: "default" });
+    expect(screen.queryByTestId("sakura-backdrop")).not.toBeInTheDocument();
+    expect(
+      materialOptOut.container.querySelector('[data-member-visual="default"]')
     ).toBeInTheDocument();
   });
 
