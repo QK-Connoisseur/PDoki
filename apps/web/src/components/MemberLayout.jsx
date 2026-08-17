@@ -43,7 +43,7 @@ export default function MemberLayout({
   onStatusChange,
   onLogoClick,
   bgClassName = "bg-[#fff8fb]",
-  visualVariant = "default",
+  visualVariant = "sakura-glass",
   children,
   modals,
 }) {

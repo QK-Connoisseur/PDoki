@@ -17,7 +17,7 @@ const auth = {
   requestVerification: vi.fn(),
 };
 
-function renderLayout({ visualVariant = "default", withAuth = false } = {}) {
+function renderLayout({ visualVariant, withAuth = false } = {}) {
   const content = (
     <MemberLayout activePage="home" visualVariant={visualVariant}>
       <main>Feed content</main>
@@ -40,15 +40,15 @@ beforeEach(() => {
 });
 
 describe("MemberLayout", () => {
-  it("opts Home into the Sakura scene without changing the default shell", () => {
-    const sakura = renderLayout({ visualVariant: "sakura-glass" });
+  it("uses the Sakura scene across the member shell with an explicit opt-out", () => {
+    const sakura = renderLayout();
     expect(screen.getByTestId("sakura-backdrop")).toBeInTheDocument();
     expect(
       sakura.container.querySelector('[data-member-visual="sakura-glass"]')
     ).toBeInTheDocument();
 
     sakura.unmount();
-    const standard = renderLayout();
+    const standard = renderLayout({ visualVariant: "default" });
     expect(screen.queryByTestId("sakura-backdrop")).not.toBeInTheDocument();
     expect(
       standard.container.querySelector('[data-member-visual="default"]')

@@ -303,7 +303,7 @@ function FilterControls({
 
 function StoreCard({ item, followedUsernames, onBookmark, toggleFollow }) {
   return (
-    <div className="group rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-1 cursor-pointer">
+    <div className="sakura-glass-surface group rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-1 cursor-pointer">
       {/* Thumbnail — 16:9 */}
       <div className="relative aspect-video overflow-hidden bg-pink-50">
         <img

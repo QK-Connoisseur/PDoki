@@ -5,17 +5,14 @@ import MomentAvatar from "./MomentAvatar";
 const avatar = "https://images.example/avatar.jpg";
 
 describe("MomentAvatar", () => {
-  it("renders Add Moment as a plain circular portrait without a heart ring", () => {
+  it("renders Add Moment as a heart-clipped portrait without an outer ring", () => {
     const { container } = render(
       <MomentAvatar src={avatar} name="own" type="own" />
     );
 
-    const shape = container.querySelector(
-      '[data-moment-avatar-shape="circle"]'
-    );
+    const shape = container.querySelector('[data-moment-avatar-shape="heart"]');
     expect(shape).toBeInTheDocument();
-    expect(shape.querySelector("circle")).toBeInTheDocument();
-    expect(shape.querySelector("path")).toBeNull();
+    expect(shape.querySelector("clipPath path")).toBeInTheDocument();
     expect(shape.querySelector("[data-moment-ring]")).toBeNull();
   });
 

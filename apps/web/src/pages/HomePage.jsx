@@ -660,7 +660,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
       {/* ─── Compose Modal ─────────────────────────────────────────── */}
       {showCompose && (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+          className="member-create-overlay fixed inset-0 z-[60] flex items-center justify-center p-4"
           style={{
             background:
               "radial-gradient(ellipse at 60% 40%, rgba(249,168,200,0.18) 0%, rgba(0,0,0,0.52) 100%)",
@@ -677,7 +677,8 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
         >
           {/* Outer glow ring — gold when locked, pink when open */}
           <div
-            className="w-full max-w-lg rounded-[28px] p-[2px] transition-all duration-500"
+            className="member-create-frame w-full max-w-lg rounded-[28px] p-[2px] transition-all duration-500"
+            data-locked={composeLocked}
             style={{
               background: composeLocked
                 ? "linear-gradient(135deg, #f5b63b 0%, #f9a8c8 40%, #df5f97 70%, #f5b63b 100%)"
@@ -688,11 +689,11 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
             }}
           >
             <div
-              className="rounded-[26px] overflow-hidden"
+              className="member-glass-modal-panel rounded-[26px] overflow-hidden bg-white"
               style={{
                 background: composeLocked
                   ? "linear-gradient(160deg, #fffdf8 0%, #fff8fc 60%, #fff9f0 100%)"
-                  : "#ffffff",
+                  : undefined,
               }}
             >
               {/* ─── Header ─── */}

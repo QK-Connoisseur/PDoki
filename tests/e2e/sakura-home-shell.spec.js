@@ -14,6 +14,8 @@ test("Home renders the approved Sakura glass shell without extra rail bubbles", 
   });
 
   await expect(backdrop).toBeVisible();
+  await expect(header).toHaveCSS("border-bottom-width", "1px");
+  await expect(header).toHaveCSS("box-shadow", "none");
   const [headerBox, leftBox, rightBox] = await Promise.all([
     header.boundingBox(),
     leftRail.boundingBox(),
@@ -43,6 +45,10 @@ test("Home renders the approved Sakura glass shell without extra rail bubbles", 
 
   const verificationBubble = page.locator(".email-verification-bubble");
   await expect(verificationBubble).toHaveCount(1);
+  const verificationShadow = await verificationBubble.evaluate(
+    (element) => getComputedStyle(element).boxShadow
+  );
+  expect(verificationShadow).not.toContain("inset");
   const resendVerification = verificationBubble.getByRole("button", {
     name: "Resend verification link",
   });
@@ -106,7 +112,66 @@ test("Home renders the approved Sakura glass shell without extra rail bubbles", 
   await page.getByRole("button", { name: "Close messages" }).click();
 
   await page.goto("/store");
-  await expect(backdrop).toHaveCount(0);
+  await expect(backdrop).toBeVisible();
+  await expect(page.locator(".sakura-glass-surface").first()).toBeVisible();
+});
+
+test("the Sakura glass material is shared by member routes and Create", async ({
+  page,
+}) => {
+  await loginAs(page, "member");
+
+  const routes = [
+    { path: "/home", surface: "article.sakura-feed-card" },
+    { path: "/store", surface: ".sakura-glass-surface" },
+    { path: "/connect", surface: ".sakura-glass-surface" },
+    { path: "/promotions", surface: "article.sakura-glass-surface" },
+    { path: "/profile", surface: ".sakura-glass-surface" },
+    { path: "/settings", surface: "section.sakura-glass-surface" },
+  ];
+
+  for (const route of routes) {
+    await page.goto(route.path);
+    await expect(
+      page.locator('[data-member-visual="sakura-glass"]')
+    ).toBeVisible();
+    await expect(page.getByTestId("sakura-backdrop")).toBeVisible();
+
+    const surface = page.locator(route.surface).first();
+    const leftRail = page.locator("aside.member-glass-rail-left");
+    await expect(surface).toBeVisible();
+    const [surfaceFill, railFill] = await Promise.all([
+      surface.evaluate((element) => getComputedStyle(element).backgroundImage),
+      leftRail.evaluate((element) => getComputedStyle(element).backgroundImage),
+    ]);
+    expect(surfaceFill).toBe(railFill);
+  }
+
+  await page.goto("/store");
+  await page.getByRole("button", { name: "Create", exact: true }).click();
+  await page.getByRole("button", { name: "Create Post", exact: true }).click();
+  const createPanel = page.locator(".member-glass-modal-panel");
+  const leftRail = page.locator("aside.member-glass-rail-left");
+  await expect(createPanel).toBeVisible();
+  const [createFill, railFill] = await Promise.all([
+    createPanel.evaluate(
+      (element) => getComputedStyle(element).backgroundImage
+    ),
+    leftRail.evaluate((element) => getComputedStyle(element).backgroundImage),
+  ]);
+  expect(createFill).toBe(railFill);
+  await page.getByRole("button", { name: "Close", exact: true }).click();
+
+  await page.setViewportSize({ width: 320, height: 700 });
+  await page.getByRole("button", { name: "Create", exact: true }).click();
+  const mobileComposeMenu = page
+    .locator("nav.member-glass-mobile-nav")
+    .locator("div.absolute.bottom-full");
+  await expect(mobileComposeMenu).toBeVisible();
+  const mobileComposeBox = await mobileComposeMenu.boundingBox();
+  expect(mobileComposeBox).not.toBeNull();
+  expect(mobileComposeBox.x).toBeGreaterThanOrEqual(0);
+  expect(mobileComposeBox.x + mobileComposeBox.width).toBeLessThanOrEqual(321);
 });
 
 test("the soft-pink Sakura scene and glass colors stay fixed while scrolling", async ({

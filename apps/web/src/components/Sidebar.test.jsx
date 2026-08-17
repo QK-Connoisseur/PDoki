@@ -68,5 +68,52 @@ describe("Sidebar visual hooks", () => {
     expect(screen.getByRole("button", { name: "Home" })).not.toHaveAttribute(
       "aria-current"
     );
+    expect(
+      screen.queryByRole("button", { name: "Create", exact: true })
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows only compose actions that the current page implements", async () => {
+    const user = userEvent.setup();
+    const onComposePost = vi.fn();
+    const setShowComposeMenu = vi.fn();
+    renderSidebar({
+      showComposeMenu: true,
+      setShowComposeMenu,
+      onComposePost,
+      onComposeMoment: undefined,
+    });
+
+    expect(
+      screen.getByRole("button", { name: "Create Post", exact: true })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Create Moment", exact: true })
+    ).not.toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", { name: "Create Post", exact: true })
+    );
+    expect(onComposePost).toHaveBeenCalledOnce();
+    expect(setShowComposeMenu).toHaveBeenCalledWith(false);
+  });
+
+  it("keeps the narrow-screen compose menu inside the right edge", () => {
+    render(
+      <MobileNav
+        activePage="store"
+        onNavigate={vi.fn()}
+        showComposeMenu
+        setShowComposeMenu={vi.fn()}
+        onComposePost={vi.fn()}
+      />
+    );
+
+    const menu = screen.getByRole("button", {
+      name: "Create Post",
+      exact: true,
+    }).parentElement;
+    expect(menu).toHaveClass("right-0", "max-w-[calc(100vw-1rem)]");
+    expect(menu).not.toHaveClass("left-1/2", "-translate-x-1/2");
   });
 });

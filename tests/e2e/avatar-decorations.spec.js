@@ -20,8 +20,13 @@ test("publication and chat avatars use cosmetics while Moments keep their own fr
   await expect(
     page
       .getByRole("button", { name: /Add Moment/i })
-      .locator('[data-moment-avatar-shape="circle"]')
+      .locator('[data-moment-avatar-shape="heart"]')
   ).toBeVisible();
+  await expect(
+    page
+      .getByRole("button", { name: /Add Moment/i })
+      .locator("[data-moment-ring]")
+  ).toHaveCount(0);
   await expect(
     page
       .getByRole("button", { name: /Add Moment/i })
@@ -32,6 +37,11 @@ test("publication and chat avatars use cosmetics while Moments keep their own fr
       .getByRole("button", { name: /Sora Nyx/i })
       .locator('[data-moment-avatar-shape="heart"]')
   ).toBeVisible();
+  await expect(
+    page
+      .getByRole("button", { name: /Sora Nyx/i })
+      .locator("[data-moment-ring]")
+  ).toHaveCount(1);
 
   const chatContact = page.getByRole("button", {
     name: "Chat with Luna Bloom",

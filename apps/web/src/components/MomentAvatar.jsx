@@ -49,13 +49,13 @@ export default function MomentAvatar({
         height={size}
         viewBox={`0 0 ${size} ${size}`}
         className="shrink-0"
-        data-moment-avatar-shape="circle"
+        data-moment-avatar-shape="heart"
         aria-hidden="true"
         focusable="false"
       >
         <defs>
           <clipPath id={ownClipId}>
-            <circle cx={size / 2} cy={size / 2} r={size / 2} />
+            <path d={heartPath(size)} />
           </clipPath>
         </defs>
         <image

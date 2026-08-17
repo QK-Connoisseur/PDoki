@@ -297,6 +297,8 @@ export default function Sidebar({
           const { Icon } = item;
 
           if (item.id === "compose") {
+            if (!onComposePost && !onComposeMoment) return null;
+
             return (
               <div key={item.id} className="relative" data-dropdown>
                 <button
@@ -319,47 +321,51 @@ export default function Sidebar({
                 </button>
                 {showComposeMenu && (
                   <div className="absolute left-0 bottom-full mb-2 w-[200px] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
-                    <button
-                      onClick={() => {
-                        onComposePost && onComposePost();
-                        setShowComposeMenu(false);
-                      }}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4.5 w-4.5 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                    {onComposePost && (
+                      <button
+                        onClick={() => {
+                          onComposePost();
+                          setShowComposeMenu(false);
+                        }}
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
                       >
-                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                      Create Post
-                    </button>
-                    <button
-                      onClick={() => {
-                        onComposeMoment && onComposeMoment();
-                        setShowComposeMenu(false);
-                      }}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4.5 w-4.5 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4.5 w-4.5 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        Create Post
+                      </button>
+                    )}
+                    {onComposeMoment && (
+                      <button
+                        onClick={() => {
+                          onComposeMoment();
+                          setShowComposeMenu(false);
+                        }}
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
                       >
-                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                      </svg>
-                      Create Moment
-                    </button>
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4.5 w-4.5 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                        </svg>
+                        Create Moment
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -558,6 +564,8 @@ export function MobileNav({
           const { Icon } = item;
 
           if (item.id === "compose") {
+            if (!onComposePost && !onComposeMoment) return null;
+
             return (
               <div key={item.id} className="relative" data-dropdown>
                 <button
@@ -568,48 +576,52 @@ export function MobileNav({
                   <Icon active={false} />
                 </button>
                 {showComposeMenu && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[180px] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
-                    <button
-                      onClick={() => {
-                        onComposePost && onComposePost();
-                        setShowComposeMenu(false);
-                      }}
-                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 cursor-pointer"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                  <div className="absolute bottom-full right-0 mb-2 w-[180px] max-w-[calc(100vw-1rem)] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
+                    {onComposePost && (
+                      <button
+                        onClick={() => {
+                          onComposePost();
+                          setShowComposeMenu(false);
+                        }}
+                        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 cursor-pointer"
                       >
-                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                      Create Post
-                    </button>
-                    <button
-                      onClick={() => {
-                        onComposeMoment && onComposeMoment();
-                        setShowComposeMenu(false);
-                      }}
-                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 cursor-pointer"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        Create Post
+                      </button>
+                    )}
+                    {onComposeMoment && (
+                      <button
+                        onClick={() => {
+                          onComposeMoment();
+                          setShowComposeMenu(false);
+                        }}
+                        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 cursor-pointer"
                       >
-                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                      </svg>
-                      Create Moment
-                    </button>
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                        </svg>
+                        Create Moment
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
