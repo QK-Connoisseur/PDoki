@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-18 · Working branch: `codex/phase2-worker-compatibility-spike` · Base: `dev` at `a126554`
+Last updated: 2026-08-18 · Working branch: `codex/node24-baseline` · Base: stacked on `codex/phase2-worker-compatibility-spike` at `68387d7`
 
 ## Current phase
 
@@ -37,15 +37,19 @@ queue, shared throttling, and the full idempotency framework remain
 unimplemented. The founder approved a provider-neutral architecture direction
 on August 18, 2026: PostgreSQL is the durable jobs/outbox and idempotency
 authority; Redis is limited to shared throttling and ephemeral coordination;
-and dependency outages must never create an unlimited path. The current branch
-adds only the separately authorized local worker compatibility/privilege proof.
-It authorizes no provider, production dependency, spend, provisioning,
+and dependency outages must never create an unlimited path. The stacked spike
+branch adds only the separately authorized local compatibility/privilege proof;
+this branch adds the separately authorized Node 24 runtime baseline. Neither
+authorizes a provider, production worker dependency, spend, provisioning,
 deployment, live configuration, or private-operations activation.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at PR #8 merge commit `a126554`. The current local
-  compatibility-spike branch starts directly from that clean baseline.
+- `dev` and `origin/dev` are at PR #8 merge commit `a126554`. Draft PR #9
+  publishes the compatibility spike from reviewed head `68387d7`; the current
+  Node 24 branch is stacked directly on that head to keep the PR diffs separate.
+  GitHub Actions run `32194178253` passed all three jobs for that exact PR #9
+  head.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -86,17 +90,25 @@ deployment, live configuration, or private-operations activation.
   GitHub Actions run `32138399232` passed all three jobs at reviewed head
   `2ba21a9`. It selected no provider and implemented no queue, Redis store,
   idempotency framework, deployment, or live configuration.
-- The current local transaction/privilege sub-proof adds no production
+- The transaction/privilege sub-proof in draft PR #9 adds no production
   dependency, schema, migration, worker, runtime configuration, or behavior.
   Its dedicated PostgreSQL 17 proof passes 5/5 tests: Prisma atomic
   commit/rollback (including enqueue failure), synthetic
   migration/API/worker role separation, two-worker `SKIP LOCKED`, and
   stale-lease-token fencing. A separate cleanup query found no remaining
-  generated role or schema. This dedicated run used local Node `v26.7.0`; it
-  does not claim execution on CI's Node 20 baseline. The result provisionally favors an
-  application-owned PostgreSQL outbox; candidate selection remains open because
-  an isolated migration fixture and worker retry/shutdown lifecycle were not
-  evaluated.
+  generated role or schema. Its initial dedicated run used local Node
+  `v26.7.0`, and the current runtime-baseline branch reran it successfully on
+  Node `v24.19.0`. The result provisionally favors an application-owned
+  PostgreSQL outbox; candidate selection remains open because an isolated
+  migration fixture and worker retry/shutdown lifecycle were not evaluated.
+- The separately authorized
+  [Node 24 runtime baseline](docs/architecture/node24-runtime-baseline.md) is
+  locally green on exact Node `v24.19.0` / npm `11.17.0`: clean install and
+  dependency-tree inspection, 166 web tests, 24 contract tests, 118 API tests,
+  5 spike tests, 46 real-stack Chromium tests, every production build, all six
+  migrations, and the idempotent seed. CI now reads `.nvmrc`; current action
+  majors also use Node 24. No provider, worker, schema, deployment, or live
+  configuration is added.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -545,11 +557,12 @@ these checks does not authorize a deployed operations workflow.
    Its transaction/privilege sub-proof provisionally favors an
    application-owned outbox but does not complete candidate evaluation or
    authorize the durable worker foundation.
-2. Publish the separately authorized Node 24 LTS baseline PR before building
-   new infrastructure on the repository's end-of-life Node 20 CI baseline.
-   Keep that narrow engines, CI/runtime-guidance, compatibility, and full-test
-   change outside this spike branch.
-3. On the supported runtime, finish the local candidate spike: re-evaluate the
+2. Review draft PR #9. If its merge is separately approved, merge it, retarget
+   the stacked Node 24 baseline PR to `dev`, confirm its isolated diff, and
+   require all final-head CI jobs to pass before requesting separate merge
+   approval.
+3. After the supported runtime is published, finish the local candidate spike:
+   re-evaluate the
    current Graphile Worker and pg-boss releases and test the chosen/app-owned
    path's exact least-privilege grants, stale-attempt fencing, isolated
    migration fixture, and retry/graceful-shutdown lifecycle. Keep the fixture

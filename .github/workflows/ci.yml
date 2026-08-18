@@ -18,15 +18,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: npm run format:check
       - run: npm run lint
       - run: npm run test
+      - run: npm run test --workspace @pumdoki/contracts
       - run: npm run build
       - run: npm run build:admin
 
@@ -51,10 +52,10 @@ jobs:
     env:
       DATABASE_URL: postgresql://pumdoki:pumdoki@localhost:5432/pumdoki_dev
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: npm run build:api
@@ -88,10 +89,10 @@ jobs:
     env:
       DATABASE_URL: postgresql://pumdoki:pumdoki@localhost:5432/pumdoki_dev
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: npm run build:api
@@ -99,7 +100,7 @@ jobs:
       - run: npx tsx packages/database/src/seed.ts
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report

@@ -219,7 +219,8 @@ records their live state nor authorizes activation.
 
 ### Requirements
 
-- Node.js 20.19 or newer.
+- Node.js 24.19.0 or newer. The repository pins the verified local and CI
+  baseline in `.nvmrc`; with nvm, run `nvm install && nvm use`.
 - npm.
 
 ### Install

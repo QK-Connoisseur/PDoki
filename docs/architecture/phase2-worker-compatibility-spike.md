@@ -11,6 +11,10 @@ production job schema, worker process, provider, cloud resource, dependency,
 runtime upgrade, secret, deployment, live configuration, or private-operations
 activation.
 
+The separately authorized [Node 24 runtime baseline](node24-runtime-baseline.md)
+is a later, isolated follow-up. It changes no worker-foundation authorization
+or conclusion in this spike.
+
 No existing email flow was moved to a queue. The spike harness reads or changes
 no user, creator, payment, Veso, identity, or review data.
 
@@ -22,17 +26,18 @@ requirements without weakening database ownership?
 
 ## Baseline and candidate result
 
-The repository declares Node.js `>=20.19`, pins Node 20 in CI, uses PostgreSQL
-17, and already has Prisma 7 plus `pg` for database-backed tests. It has no job
-library, queue schema, worker process, or separate runtime database URLs.
+The repository baseline is Node.js `>=24.19.0`, with exact local/CI selection
+through `.nvmrc`. It uses PostgreSQL 17 and already has Prisma 7 plus `pg` for
+database-backed tests. It has no job library, queue schema, worker process, or
+separate runtime database URLs.
 
 As of this spike:
 
-| Candidate                           | Compatibility result                                                                                                                                                                                                                                                                                           | Outcome                                                                                                                                                                                     |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Graphile Worker                     | Tagged `0.17.3` declares Node 14+, but the current official requirements have moved to Node 22.18+. Its documented default expects the worker to execute as the database-owner role; lower-privilege use needs adjustments, and SQL enqueue requires owner privilege or a reviewed `SECURITY DEFINER` wrapper. | Not installed. Re-evaluate the current supported release and exact restricted-role migration behavior on the separately authorized Node 24 baseline.                                        |
-| pg-boss                             | Current `12.27.0` requires Node 22.12+, outside CI's Node 20 baseline. It documents Prisma transaction enqueue and migration suppression, but its job/completion model still needs a focused proof that a stale attempt cannot acknowledge a reclaimed job under the ADR's opaque lease-token rule.            | Not installed. Re-evaluate on an approved supported runtime, including stale-attempt fencing and exact least-privilege grants.                                                              |
-| Application-owned PostgreSQL outbox | The synthetic proof uses the existing Prisma transaction, permits exact API/worker grants, and represents the ADR's opaque lease token and token-matched acknowledgement directly. An isolated migration fixture and worker retry/shutdown lifecycle were not tested.                                          | Provisional leading option for the current SQL boundary, not a final candidate selection. Complete test-only migration and lifecycle evaluation before the durable local foundation begins. |
+| Candidate                           | Compatibility result                                                                                                                                                                                                                                                                                                                                          | Outcome                                                                                                                                                                                     |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Graphile Worker                     | Tagged `0.17.3` declares Node 14+, and the current official requirements documentation requires Node 22.18+, which the Node 24 baseline satisfies. Its documented default expects the worker to execute as the database-owner role; lower-privilege use needs adjustments, and SQL enqueue requires owner privilege or a reviewed `SECURITY DEFINER` wrapper. | Not installed. Re-evaluate the current supported release and exact restricted-role migration behavior on Node 24.                                                                           |
+| pg-boss                             | Current `12.27.0` requires Node 22.12+, which the Node 24 baseline satisfies. It documents Prisma transaction enqueue and migration suppression, but its job/completion model still needs a focused proof that a stale attempt cannot acknowledge a reclaimed job under the ADR's opaque lease-token rule.                                                    | Not installed. Re-evaluate on Node 24, including stale-attempt fencing and exact least-privilege grants.                                                                                    |
+| Application-owned PostgreSQL outbox | The synthetic proof uses the existing Prisma transaction, permits exact API/worker grants, and represents the ADR's opaque lease token and token-matched acknowledgement directly. An isolated migration fixture and worker retry/shutdown lifecycle were not tested.                                                                                         | Provisional leading option for the current SQL boundary, not a final candidate selection. Complete test-only migration and lifecycle evaluation before the durable local foundation begins. |
 
 Primary references:
 
@@ -49,12 +54,10 @@ Primary references:
 - [Prisma raw SQL inside transactions](https://www.prisma.io/docs/orm/prisma-client/using-raw-sql/raw-queries)
 - [Node.js end-of-life status](https://nodejs.org/en/about/eol)
 
-Node 20 is end-of-life. The local proof ran on Node `v26.7.0` and npm `11.19.0`;
-it did not execute this dedicated suite on CI's Node 20 runtime. Node 20 package
-compatibility statements above come from package metadata, not this run. A
-Node 24 LTS is separately authorized as the next baseline PR. That authorization
-does not add runtime-baseline changes to this spike branch or authorize the
-durable worker foundation.
+The initial local proof ran on Node `v26.7.0` and npm `11.19.0`; it did not run
+on the former end-of-life Node 20 CI baseline. The separate Node 24 baseline
+verification reran this dedicated suite successfully on Node `v24.19.0` and npm
+`11.17.0`. This runtime change does not authorize the durable worker foundation.
 
 ## Reproducible local proof
 
@@ -131,6 +134,15 @@ Test Files  1 passed (1)
 Tests       5 passed (5)
 ```
 
+Runtime-baseline rerun on August 18, 2026:
+
+```text
+Node        v24.19.0
+npm         11.17.0
+Test Files  1 passed (1)
+Tests       5 passed (5)
+```
+
 A separate post-run database query found no remaining generated role or schema.
 
 ## Conclusion
@@ -149,10 +161,9 @@ delivery, or deployed database roles.
 
 ## Next sequencing gates
 
-1. Publish the separately authorized narrow Node 24 LTS baseline PR covering
-   engines, CI, local guidance, native dependencies, builds, API tests, and
-   browser tests.
-2. On the supported runtime, finish the candidate spike: re-evaluate current
+1. Publish the separately authorized narrow
+   [Node 24 runtime baseline](node24-runtime-baseline.md).
+2. After that baseline is published, finish the candidate spike: re-evaluate current
    Graphile Worker and pg-boss, and test the chosen/app-owned path's exact
    least-privilege grants, stale-attempt fencing, isolated migration fixture,
    and retry/graceful-shutdown lifecycle. The fixture and lifecycle harness

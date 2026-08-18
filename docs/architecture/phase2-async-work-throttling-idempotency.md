@@ -502,7 +502,6 @@ Still undecided and not authorized by this ADR:
 
 - a Redis, queue, monitoring, cloud, or transactional-email provider;
 - a worker library or application-owned schema;
-- a Node.js/runtime baseline change;
 - AWS account shape, region, networking, credentials, or cost ceiling;
 - retention, residency, DPA, deletion, and legal policies;
 - production/staging provisioning, data migration, DNS, secrets, or rollout;
@@ -510,3 +509,7 @@ Still undecided and not authorized by this ADR:
 - payment, Veso, identity, creator approval/promotion, or private-operations
   activation; and
 - production readiness or completion of Phase 2.
+
+This ADR did not authorize a Node.js/runtime baseline change. The founder later
+authorized the separate [Node 24 runtime baseline](node24-runtime-baseline.md),
+whose draft PR, verification, and merge remain independent review gates.

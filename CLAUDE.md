@@ -18,7 +18,7 @@ Authoritative product/scope docs, read these before non-trivial work:
 All commands run from the repo root and delegate to the `@pumdoki/web` workspace:
 
 ```bash
-npm install        # install all workspaces (Node >= 20.19 required)
+npm install        # install all workspaces (Node >= 24.19.0; see .nvmrc)
 npm run dev        # vite dev server for the web app
 npm run dev:e2e:web # vite bound explicitly to 127.0.0.1 for local full-stack review
 npm run dev:admin  # private operations shell on 127.0.0.1:5174
