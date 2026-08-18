@@ -31,11 +31,31 @@ describe("loadEnv", () => {
     );
   });
 
-  it("defaults mail configuration to the console transport", () => {
+  it("normalizes a trailing slash on an HTTP(S) web origin", () => {
+    expect(
+      loadEnv({ ...validEnv, WEB_ORIGIN: "https://app.example.com/" })
+        .WEB_ORIGIN
+    ).toBe("https://app.example.com");
+  });
+
+  it.each([
+    "javascript:alert(1)",
+    "ftp://app.example.com",
+    "https://user:password@app.example.com",
+    "https://app.example.com/path",
+    "https://app.example.com?preview=1",
+    "https://app.example.com#fragment",
+  ])("rejects a non-origin WEB_ORIGIN value: %s", (webOrigin) => {
+    expect(() => loadEnv({ ...validEnv, WEB_ORIGIN: webOrigin })).toThrow(
+      /WEB_ORIGIN/
+    );
+  });
+
+  it("defaults mail configuration to local SMTP delivery", () => {
     const env = loadEnv({
       DATABASE_URL: "postgresql://test:test@localhost:5432/pumdoki_test",
     } as NodeJS.ProcessEnv);
-    expect(env.MAIL_TRANSPORT).toBe("console");
+    expect(env.MAIL_TRANSPORT).toBe("smtp");
     expect(env.SMTP_PORT).toBe(1025);
     expect(env.MAIL_FROM).toBe("no-reply@pumdoki.example");
   });

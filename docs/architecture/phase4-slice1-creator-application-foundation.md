@@ -22,6 +22,14 @@ creator approval remain blocked on founder/legal/vendor decisions.
 - The same transaction appends creator-agreement, content-policy, and identity-
   verification-disclosure acceptance records with user, version, timestamp,
   and request IP.
+- After that transaction commits, the API makes one bounded, best-effort
+  attempt to send a data-minimized receipt. Preparation, timeout, or transport
+  failure does not roll back the application or change the successful response;
+  delivery remains unguaranteed until a transactional outbox exists.
+- The submission transaction locks and revalidates the user's current verified
+  email before creating the application, and captures that address for the
+  post-commit receipt. A concurrent email change that commits first revokes the
+  submission gate and produces no application, evidence, or receipt.
 - Prototype versions are explicitly labeled `prototype-*`; they must not be
   represented as counsel-approved launch policies.
 
@@ -58,6 +66,11 @@ with `NOT_STARTED` verification; later private operations APIs own transitions.
 - Shared contracts normalize country codes and reject missing/false acceptance.
 - Anonymous, unverified, and non-member submissions are rejected.
 - Application and all acceptance records are created atomically.
+- A successful first submission attempts exactly one truthful pending receipt
+  after commit; rejected or duplicate submissions attempt none.
+- The receipt contains no creator name, country, application/user ID, request
+  IP, acceptance version, review estimate, approval claim, or request for
+  sensitive files.
 - Repeated route visits load the persisted pending outcome.
 - The browser flow never promotes the member or navigates to Dashboard.
 - No identity files leave the browser because this UI no longer requests them.

@@ -1,6 +1,12 @@
 import type { Logger } from "pino";
 
+export type MailTemplate =
+  | "email-verification"
+  | "password-reset"
+  | "creator-application-received";
+
 export interface MailMessage {
+  template: MailTemplate;
   to: string;
   subject: string;
   text: string;
@@ -11,18 +17,54 @@ export interface Mailer {
   send(message: MailMessage): Promise<void>;
 }
 
+export const MAIL_SEND_TIMEOUT_MS = 5_000;
+
+class MailSendTimeoutError extends Error {
+  constructor() {
+    super("Mail send timed out");
+    this.name = "MailSendTimeoutError";
+  }
+}
+
 /**
- * Sends without letting a transport failure fail the user-facing request.
- * Delivery is best-effort: the user can always request a new link.
+ * Builds and sends without letting preparation or transport failure fail the
+ * user-facing request. The deadline bounds how long the caller waits; each
+ * transport must also enforce its own I/O timeouts. Delivery is unknown when
+ * the deadline wins, and workflows that require guaranteed delivery need a
+ * separately designed durable outbox.
  */
 export async function sendSafely(
   mailer: Mailer,
   logger: Logger,
-  message: MailMessage
+  template: MailTemplate,
+  createMessage: () => MailMessage,
+  timeoutMs = MAIL_SEND_TIMEOUT_MS
 ): Promise<void> {
+  let timeout: NodeJS.Timeout | undefined;
   try {
-    await mailer.send(message);
+    const message = createMessage();
+    await Promise.race([
+      mailer.send(message),
+      new Promise<never>((_resolve, reject) => {
+        timeout = setTimeout(
+          () => reject(new MailSendTimeoutError()),
+          timeoutMs
+        );
+      }),
+    ]);
   } catch (error) {
-    logger.error({ err: error, subject: message.subject }, "mail send failed");
+    const failureKind =
+      error instanceof MailSendTimeoutError
+        ? "delivery-timeout"
+        : "delivery-failed";
+    logger.error(
+      {
+        template,
+        failureKind,
+      },
+      "mail delivery was not confirmed"
+    );
+  } finally {
+    if (timeout) clearTimeout(timeout);
   }
 }
