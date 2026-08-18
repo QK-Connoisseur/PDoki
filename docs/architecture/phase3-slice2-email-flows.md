@@ -74,8 +74,10 @@ Message preparation and delivery happen after the relevant database work has
 committed. Preparation or transport failures never turn that successful
 domain operation into an error response. The wrapper bounds how long a request
 waits, while the SMTP transport supplies its own I/O timeouts. A timeout means
-delivery is unknown, not cancelled or guaranteed. Durable delivery still
-requires the separately designed transactional outbox/worker foundation.
+delivery is unknown, not cancelled or guaranteed. Durable delivery intent and
+bounded retry still require implementation of the separately approved
+[Phase 2 transactional outbox/worker architecture](phase2-async-work-throttling-idempotency.md).
+That architecture does not guarantee recipient delivery.
 
 Local Mailpit is added to `docker-compose.yml` (SMTP `1025`, web UI `8025`) and
 started by the existing `npm run db:up`. Compose publishes SMTP and the
@@ -216,8 +218,9 @@ The two endpoints respond to exhaustion differently, and deliberately so:
   simply sends no mail. A `429` here would reveal through the envelope which
   addresses are worth attacking.
 
-This remains instance-local until the deferred Redis decision, as documented
-for login throttling in slice 1.
+This remains instance-local until the approved shared-throttling architecture
+is implemented, as documented for login throttling in slice 1. Provider and
+implementation selection remain deferred.
 
 ## Contracts changes (`packages/contracts`)
 
