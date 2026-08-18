@@ -87,7 +87,7 @@ function AccountDetails({ user, api, updateUser, onSecurityChange }) {
   };
 
   return (
-    <section className="rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
+    <section className="sakura-glass-surface rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-lg font-bold text-[#241a22]">Account details</h2>
@@ -212,7 +212,7 @@ function PasswordSettings({ api, onSecurityChange }) {
   };
 
   return (
-    <section className="mt-5 rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
+    <section className="sakura-glass-surface mt-5 rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
       <h2 className="text-lg font-bold text-[#241a22]">Password</h2>
       <p className="mt-1 text-sm leading-6 text-[#8c6d7f]">
         Use at least 10 characters. A successful change signs out your other
@@ -313,7 +313,7 @@ function SessionSettings({ api, refreshKey }) {
   };
 
   return (
-    <section className="mt-5 rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
+    <section className="sakura-glass-surface mt-5 rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
       <h2 className="text-lg font-bold text-[#241a22]">Active sessions</h2>
       <p className="mt-1 text-sm leading-6 text-[#8c6d7f]">
         Review browsers signed into your account. Use the main Log out action to
@@ -426,7 +426,7 @@ function ContentPreferences({ api }) {
 
   return (
     <>
-      <section className="mt-5 rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
+      <section className="sakura-glass-surface mt-5 rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
         <div className="flex items-start justify-between gap-5">
           <div>
             <h2 className="text-lg font-bold text-[#241a22]">

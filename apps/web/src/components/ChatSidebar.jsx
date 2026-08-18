@@ -284,13 +284,13 @@ export default function ChatSidebar({ contacts = [] }) {
     <>
       {/* ── Always-in-flow strip (holds layout width, shows minimised avatars) */}
       <aside
-        className="hidden md:flex flex-col shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-l border-pink-100 bg-white z-30 w-[82px]"
+        className="member-glass-rail member-glass-rail-right hidden md:flex flex-col shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-l border-pink-100 bg-white z-30 w-[82px]"
         aria-label="Chat sidebar"
       >
         {/* Expand / collapse toggle */}
         <button
           onClick={handleExpandToggle}
-          className="flex h-10 w-full items-center justify-center border-b border-pink-50 text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
+          className="member-chat-expand-toggle flex h-10 w-full items-center justify-center border-b border-pink-50 text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
           aria-label={chatVisible ? "Collapse inbox" : "Expand inbox"}
           aria-expanded={chatVisible}
         >
@@ -309,7 +309,7 @@ export default function ChatSidebar({ contacts = [] }) {
 
         {/* Minimised avatar rail */}
         <div className="flex-1 overflow-y-auto hide-scrollbar">
-          <div className="flex flex-col items-center gap-4 py-3">
+          <div className="flex flex-col items-center gap-7 py-4">
             {localContacts.map((contact) => (
               <button
                 key={contact.id}
@@ -342,6 +342,7 @@ export default function ChatSidebar({ contacts = [] }) {
                   size={56}
                   status={contact.status}
                   unreadCount={contact.unread}
+                  decoration={contact.avatarDecoration}
                   showStatusTooltip={false}
                 />
               </button>
@@ -355,7 +356,7 @@ export default function ChatSidebar({ contacts = [] }) {
         <>
           {/* Full-viewport dim backdrop — covers header + left nav */}
           <div
-            className={`fixed inset-0 bg-black/50 z-[60] transition-opacity duration-300 ease-in-out ${
+            className={`member-chat-backdrop fixed inset-0 bg-black/50 z-[60] transition-opacity duration-300 ease-in-out ${
               chatVisible ? "opacity-100" : "opacity-0"
             }`}
             onClick={closeChat}
@@ -364,7 +365,7 @@ export default function ChatSidebar({ contacts = [] }) {
 
           {/* Two-pane chat panel */}
           <div
-            className={`fixed right-0 bottom-0 z-[65] flex bg-white border-l border-pink-100 shadow-2xl transition-transform duration-300 ease-in-out ${
+            className={`member-glass-chat-panel fixed right-0 bottom-0 z-[65] flex bg-white border-l border-pink-100 shadow-2xl transition-transform duration-300 ease-in-out ${
               chatVisible ? "translate-x-0" : "translate-x-full"
             }`}
             style={{ top: "4rem", width: "min(900px, calc(100vw - 1rem))" }}
@@ -476,6 +477,7 @@ export default function ChatSidebar({ contacts = [] }) {
                         size={42}
                         status={contact.status}
                         unreadCount={contact.unread}
+                        decoration={contact.avatarDecoration}
                         showStatusTooltip={false}
                       />
                       <div className="min-w-0 flex-1">
@@ -512,6 +514,7 @@ export default function ChatSidebar({ contacts = [] }) {
                       alt={activeContact.name}
                       size={40}
                       status={activeContact.status}
+                      decoration={activeContact.avatarDecoration}
                       showStatusTooltip={false}
                       showStatus={false}
                     />

@@ -103,13 +103,16 @@ export default function MomentComposer({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center sm:p-4"
+      className="member-moment-overlay fixed inset-0 z-[70] flex items-end sm:items-center justify-center sm:p-4"
       style={{ background: "rgba(20,10,18,0.7)", backdropFilter: "blur(6px)" }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-sm overflow-hidden sm:rounded-3xl rounded-t-3xl bg-white shadow-2xl">
+      <div
+        className="member-glass-modal-panel w-full max-w-sm overflow-hidden sm:rounded-3xl rounded-t-3xl bg-white shadow-2xl"
+        data-subscriber-only={subscriberOnly}
+      >
         {/* Header */}
         <div
           className="relative flex items-center justify-between px-6 py-4"

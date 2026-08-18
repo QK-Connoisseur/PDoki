@@ -248,7 +248,7 @@ export default function ConnectCreatorCard({ creator, serviceType = null }) {
             to the viewer and CSS absolute positions map 1:1 (right-2 = viewer's right).
         */}
         <div
-          className="absolute inset-0 rounded-2xl overflow-hidden border border-pink-100 shadow-sm bg-white flex flex-col items-center justify-center px-4 py-5"
+          className="sakura-glass-surface absolute inset-0 rounded-2xl overflow-hidden border border-pink-100 shadow-sm bg-white flex flex-col items-center justify-center px-4 py-5"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",

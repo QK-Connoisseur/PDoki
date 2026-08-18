@@ -278,7 +278,7 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`hidden md:flex flex-col shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-r border-pink-100 bg-white z-40 transition-all duration-300 ease-in-out ${
+      className={`member-glass-rail member-glass-rail-left hidden md:flex flex-col shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-r border-pink-100 bg-white z-40 transition-[width] duration-300 ease-in-out ${
         sidebarOpen ? "w-[220px]" : "w-[72px]"
       }`}
       onMouseEnter={() => {
@@ -291,17 +291,19 @@ export default function Sidebar({
       }}
     >
       <div className="flex-[1]" />
-      <nav className="flex flex-col gap-1 px-3">
+      <nav className="member-rail-nav flex flex-col gap-1 px-3">
         {NAV_ITEMS.map((item) => {
           const isActive = activePage === item.id;
           const { Icon } = item;
 
           if (item.id === "compose") {
+            if (!onComposePost && !onComposeMoment) return null;
+
             return (
               <div key={item.id} className="relative" data-dropdown>
                 <button
                   onClick={() => setShowComposeMenu(!showComposeMenu)}
-                  className="flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden text-[#111] hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
+                  className="member-nav-item member-nav-item-trigger flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden text-[#111] hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
                   aria-label="Create"
                 >
                   <div className="shrink-0">
@@ -319,47 +321,51 @@ export default function Sidebar({
                 </button>
                 {showComposeMenu && (
                   <div className="absolute left-0 bottom-full mb-2 w-[200px] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
-                    <button
-                      onClick={() => {
-                        onComposePost && onComposePost();
-                        setShowComposeMenu(false);
-                      }}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4.5 w-4.5 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                    {onComposePost && (
+                      <button
+                        onClick={() => {
+                          onComposePost();
+                          setShowComposeMenu(false);
+                        }}
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
                       >
-                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                      Create Post
-                    </button>
-                    <button
-                      onClick={() => {
-                        onComposeMoment && onComposeMoment();
-                        setShowComposeMenu(false);
-                      }}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4.5 w-4.5 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4.5 w-4.5 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        Create Post
+                      </button>
+                    )}
+                    {onComposeMoment && (
+                      <button
+                        onClick={() => {
+                          onComposeMoment();
+                          setShowComposeMenu(false);
+                        }}
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 hover:text-[#f9a8c8] cursor-pointer"
                       >
-                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                      </svg>
-                      Create Moment
-                    </button>
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4.5 w-4.5 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                        </svg>
+                        Create Moment
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -370,12 +376,13 @@ export default function Sidebar({
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden cursor-pointer ${
+              className={`member-nav-item ${isActive ? "member-nav-item-active" : "member-nav-item-inactive"} flex items-center gap-4 rounded-xl px-3 h-12 transition-all duration-200 overflow-hidden cursor-pointer ${
                 isActive
                   ? "bg-pink-50/60 text-[#111]"
                   : "text-[#111] hover:bg-pink-50/60 hover:text-[#f9a8c8]"
               }`}
               aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
             >
               <div
                 className={`shrink-0 transition-transform duration-200 ${isActive ? "scale-110" : ""}`}
@@ -423,7 +430,7 @@ export default function Sidebar({
       <div ref={moreMenuRef} className="relative px-3 pb-4" data-dropdown>
         <button
           onClick={() => setShowMoreMenu(!showMoreMenu)}
-          className={`flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden cursor-pointer ${
+          className={`member-nav-item member-nav-item-trigger flex items-center gap-4 rounded-xl px-3 h-12 w-full transition-all duration-200 overflow-hidden cursor-pointer ${
             showMoreMenu
               ? "bg-pink-50 text-[#111]"
               : "text-[#111] hover:bg-pink-50/60 hover:text-[#f9a8c8]"
@@ -550,65 +557,71 @@ export function MobileNav({
   totalUnread = 0,
 }) {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-pink-100 bg-white/95 backdrop-blur-md">
+    <nav className="member-glass-mobile-nav md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-pink-100 bg-white/95 backdrop-blur-md">
       <div className="flex h-14 items-center justify-around px-2">
         {NAV_ITEMS.map((item) => {
           const isActive = activePage === item.id;
           const { Icon } = item;
 
           if (item.id === "compose") {
+            if (!onComposePost && !onComposeMoment) return null;
+
             return (
               <div key={item.id} className="relative" data-dropdown>
                 <button
                   onClick={() => setShowComposeMenu(!showComposeMenu)}
-                  className="flex h-11 w-11 items-center justify-center rounded-xl transition text-[#111] active:text-[#f9a8c8] cursor-pointer"
+                  className="member-mobile-nav-item member-nav-item-trigger flex h-11 w-11 items-center justify-center rounded-xl transition text-[#111] active:text-[#f9a8c8] cursor-pointer"
                   aria-label="Create"
                 >
                   <Icon active={false} />
                 </button>
                 {showComposeMenu && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[180px] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
-                    <button
-                      onClick={() => {
-                        onComposePost && onComposePost();
-                        setShowComposeMenu(false);
-                      }}
-                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 cursor-pointer"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                  <div className="absolute bottom-full right-0 mb-2 w-[180px] max-w-[calc(100vw-1rem)] rounded-2xl border border-pink-100 bg-white py-2 shadow-xl overflow-hidden z-50">
+                    {onComposePost && (
+                      <button
+                        onClick={() => {
+                          onComposePost();
+                          setShowComposeMenu(false);
+                        }}
+                        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 cursor-pointer"
                       >
-                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                      Create Post
-                    </button>
-                    <button
-                      onClick={() => {
-                        onComposeMoment && onComposeMoment();
-                        setShowComposeMenu(false);
-                      }}
-                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 cursor-pointer"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        Create Post
+                      </button>
+                    )}
+                    {onComposeMoment && (
+                      <button
+                        onClick={() => {
+                          onComposeMoment();
+                          setShowComposeMenu(false);
+                        }}
+                        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 cursor-pointer"
                       >
-                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                      </svg>
-                      Create Moment
-                    </button>
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                        </svg>
+                        Create Moment
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -619,10 +632,11 @@ export function MobileNav({
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`flex h-11 w-11 items-center justify-center rounded-xl transition cursor-pointer ${
+              className={`member-mobile-nav-item ${isActive ? "member-nav-item-active" : "member-nav-item-inactive"} flex h-11 w-11 items-center justify-center rounded-xl transition cursor-pointer ${
                 isActive ? "text-[#111]" : "text-[#111] active:text-[#f9a8c8]"
               }`}
               aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
             >
               <Icon active={isActive} />
             </button>
@@ -631,12 +645,13 @@ export function MobileNav({
         {/* Mobile Chat Icon */}
         <button
           onClick={() => onNavigate("chat")}
-          className={`relative flex h-11 w-11 items-center justify-center rounded-xl transition cursor-pointer ${
+          className={`member-mobile-nav-item ${activePage === "chat" ? "member-nav-item-active" : "member-nav-item-inactive"} relative flex h-11 w-11 items-center justify-center rounded-xl transition cursor-pointer ${
             activePage === "chat"
               ? "text-[#111]"
               : "text-[#111] active:text-[#f9a8c8]"
           }`}
           aria-label="Messages"
+          aria-current={activePage === "chat" ? "page" : undefined}
         >
           <svg
             viewBox="0 0 24 24"

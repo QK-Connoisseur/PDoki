@@ -601,7 +601,7 @@ export default function ConnectPage({ userStatus = "online", onStatusChange }) {
 
                   {/* See All Creators */}
                   <div className="mb-8">
-                    <div className="rounded-2xl border border-pink-100 bg-white p-6 text-center shadow-sm">
+                    <div className="sakura-glass-surface rounded-2xl border border-pink-100 bg-white p-6 text-center shadow-sm">
                       <div className="mx-auto mb-4 flex -space-x-3 justify-center">
                         {creators.slice(0, 6).map((c) => (
                           <img

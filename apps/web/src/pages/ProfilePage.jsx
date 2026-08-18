@@ -6,6 +6,7 @@ import { useSimulatedFetch } from "../lib/useSimulatedFetch";
 import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import CreatePostModal from "../components/CreatePostModal";
 import FollowButton from "../components/FollowButton";
+import Avatar from "../components/Avatar";
 import { StaticStatusBadge } from "../components/UserStatusSwitcher";
 import MomentAvatar from "../components/MomentAvatar";
 import MomentComposer from "../components/MomentComposer";
@@ -276,7 +277,6 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
   return (
     <MemberLayout
       activePage="profile"
-      bgClassName="bg-[#F8F9FA]"
       userStatus={userStatus}
       onStatusChange={onStatusChange}
       onComposePost={() => setShowCompose(true)}
@@ -526,7 +526,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
             </div>
 
             {/* ─── Moments (under banner, ePal-style semi-transparent boxes) ── */}
-            <div className="bg-white py-4 border-b border-pink-50">
+            <div className="py-4">
               <div
                 ref={momentsRef}
                 className="flex gap-3 overflow-x-auto hide-scrollbar justify-center max-w-[1500px] mx-auto px-4"
@@ -596,7 +596,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                 <div className="flex flex-col lg:flex-row gap-5">
                   {/* ── Left: Service Sidebar ────────────────────────── */}
                   <div className="w-[280px] shrink-0 hidden lg:block">
-                    <div className="sticky top-20 space-y-2 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <div className="sakura-glass-surface sticky top-20 space-y-2 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                       {/* Search */}
                       <div className="relative mb-3">
                         <svg
@@ -728,7 +728,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
 
                   {/* ── Center: Content Area ──────────────────────────── */}
                   <div className="flex-1 min-w-0">
-                    <div className="rounded-2xl border border-pink-100 bg-white overflow-hidden shadow-sm">
+                    <div className="sakura-glass-surface rounded-2xl border border-pink-100 bg-white overflow-hidden shadow-sm">
                       {/* ── About Me View ──────────────────────────────── */}
                       {!selectedServiceId && (
                         <div className="p-6">
@@ -1352,7 +1352,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
 
                   {/* ── Right: Creator Card ───────────────────────────── */}
                   <div className="w-[260px] shrink-0 hidden xl:block">
-                    <div className="sticky top-20 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <div className="sakura-glass-surface sticky top-20 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                       <img
                         src={profile.avatar}
                         alt={profile.name}
@@ -1386,13 +1386,14 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                   return (
                     <article
                       key={post.id}
-                      className="rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden"
+                      className="sakura-glass-surface rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden"
                     >
                       <div className="flex items-center gap-3 px-4 py-3">
-                        <img
+                        <Avatar
                           src={profile.avatar}
                           alt={profile.name}
-                          className="h-10 w-10 rounded-full object-cover border border-pink-100"
+                          size={40}
+                          decoration={profile.avatarDecoration}
                         />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
@@ -1741,7 +1742,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                     {filteredStoreItems.map((item) => (
                       <div
                         key={item.id}
-                        className="group rounded-2xl border border-pink-100 bg-white overflow-hidden shadow-sm hover:shadow-md transition"
+                        className="sakura-glass-surface group rounded-2xl border border-pink-100 bg-white overflow-hidden shadow-sm hover:shadow-md transition"
                       >
                         {/* Thumbnail */}
                         <div className="relative aspect-video overflow-hidden bg-[#f5e6ed]">
@@ -1882,7 +1883,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                     {filteredStoreItems.map((item) => (
                       <div
                         key={item.id}
-                        className="group flex gap-4 rounded-2xl border border-pink-100 bg-white overflow-hidden shadow-sm hover:shadow-md transition p-3"
+                        className="sakura-glass-surface group flex gap-4 rounded-2xl border border-pink-100 bg-white overflow-hidden shadow-sm hover:shadow-md transition p-3"
                       >
                         {/* Thumbnail */}
                         <div className="relative w-48 shrink-0 aspect-video rounded-xl overflow-hidden bg-[#f5e6ed]">

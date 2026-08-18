@@ -84,7 +84,7 @@ function PromoCard({ promo, now }) {
   const isEndingSoon = daysRemaining <= 7;
 
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-pink-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-pink-100/50">
+    <article className="sakura-glass-surface group relative overflow-hidden rounded-2xl border border-pink-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-pink-100/50">
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
           src={promo.cover}

@@ -6,6 +6,7 @@ import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import FollowButton from "../components/FollowButton";
 import FeedMedia from "../components/FeedMedia";
 import VesoIcon from "../components/VesoIcon";
+import Avatar from "../components/Avatar";
 import MomentAvatar from "../components/MomentAvatar";
 import MomentComposer from "../components/MomentComposer";
 import { sortMomentRail } from "../utils/sortMomentRail";
@@ -106,8 +107,9 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
   }, []);
 
   useEffect(() => {
+    if (page.status !== "ready") return undefined;
     const el = storiesRef.current;
-    if (!el) return;
+    if (!el) return undefined;
     updateScrollState();
     el.addEventListener("scroll", updateScrollState, { passive: true });
     const ro = new ResizeObserver(updateScrollState);
@@ -116,7 +118,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
       el.removeEventListener("scroll", updateScrollState);
       ro.disconnect();
     };
-  }, [updateScrollState]);
+  }, [page.status, updateScrollState]);
 
   const handleMomentClick = (moment) => {
     if (moment.type === "own") {
@@ -145,22 +147,10 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
     [viewedMoments]
   );
 
-  const unseenMomentByUsername = useMemo(() => {
-    const map = {};
-    moments.forEach((m) => {
-      if (m.type === "own" || !m.username || viewedMoments.has(m.id)) return;
-      const existing = map[m.username];
-      // private/gold takes priority over regular/pink
-      if (!existing || (m.type === "private" && existing.type !== "private")) {
-        map[m.username] = m;
-      }
-    });
-    return map;
-  }, [viewedMoments]);
-
   return (
     <MemberLayout
       activePage="home"
+      visualVariant="sakura-glass"
       userStatus={userStatus}
       onStatusChange={onStatusChange}
       onLogoClick={() => {
@@ -204,7 +194,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
           <>
             <div className="max-w-[650px] mx-auto px-4 pt-4">
               {/* ─── Moments Row ─────────────────────────────────────── */}
-              <div className="mb-4 rounded-2xl border border-pink-100 bg-white p-4 shadow-sm">
+              <div className="mb-4 px-1 py-3" data-moments-rail>
                 <div className="relative">
                   {/* Left scroll arrow */}
                   {canScrollLeft && (
@@ -215,7 +205,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                           behavior: "smooth",
                         })
                       }
-                      className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition -translate-x-3"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition"
                       aria-label="Scroll left"
                     >
                       <svg
@@ -234,7 +224,8 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
 
                   <div
                     ref={storiesRef}
-                    className="flex overflow-x-auto hide-scrollbar"
+                    data-moments-scroller
+                    className="mx-10 flex overflow-x-auto hide-scrollbar"
                     style={{
                       gap: `${MOMENT_GAP}px`,
                       paddingTop: "4px",
@@ -259,7 +250,11 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                               viewed={isViewed}
                             />
                             {moment.type === "own" && (
-                              <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#f472b6] text-white ring-2 ring-white shadow-sm">
+                              <div
+                                className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#f472b6] text-white ring-2 ring-white shadow-sm"
+                                data-add-moment-plus
+                                aria-hidden="true"
+                              >
                                 <svg
                                   viewBox="0 0 24 24"
                                   className="w-4 h-4"
@@ -297,7 +292,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                           behavior: "smooth",
                         })
                       }
-                      className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition translate-x-3"
+                      className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition"
                       aria-label="Scroll right"
                     >
                       <svg
@@ -359,44 +354,25 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   const isBookmarked = bookmarkStates[post.id] || false;
                   const isUnlocked = unlockedPosts[post.id] || false;
                   const showLocked = post.locked && !isUnlocked;
-                  const unseenMoment = unseenMomentByUsername[post.username];
-
                   return (
                     <article
                       key={post.id}
-                      className="rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden"
+                      className="sakura-feed-card rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden"
                     >
                       {/* Post Header */}
                       <div className="flex items-center gap-3 px-4 py-3">
-                        {/* Avatar — story ring when creator has an unseen moment */}
+                        {/* Publication avatar decoration is separate from Moments. */}
                         <button
                           onClick={onViewProfile}
-                          className="shrink-0 cursor-pointer"
+                          className="shrink-0 cursor-pointer rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f472b6] focus-visible:ring-offset-2"
                           aria-label={`View ${post.creator}'s profile`}
                         >
-                          {unseenMoment ? (
-                            <div
-                              className="p-[2.5px] rounded-full"
-                              style={{
-                                background:
-                                  unseenMoment.type === "private"
-                                    ? "linear-gradient(135deg, #6B3A00, #C08815, #ECC040, #FFF5D5, #C89018)"
-                                    : "linear-gradient(135deg, #FF4D8D, #FF73B5, #FFA3D7)",
-                              }}
-                            >
-                              <img
-                                src={post.avatar}
-                                alt={post.creator}
-                                className="h-10 w-10 rounded-full object-cover border-[1.5px] border-white"
-                              />
-                            </div>
-                          ) : (
-                            <img
-                              src={post.avatar}
-                              alt={post.creator}
-                              className="h-10 w-10 rounded-full object-cover border border-pink-100 transition hover:border-pink-300"
-                            />
-                          )}
+                          <Avatar
+                            src={post.avatar}
+                            alt={post.creator}
+                            size={40}
+                            decoration={post.avatarDecoration}
+                          />
                         </button>
 
                         {/* Name line + username */}
@@ -684,7 +660,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
       {/* ─── Compose Modal ─────────────────────────────────────────── */}
       {showCompose && (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+          className="member-create-overlay fixed inset-0 z-[60] flex items-center justify-center p-4"
           style={{
             background:
               "radial-gradient(ellipse at 60% 40%, rgba(249,168,200,0.18) 0%, rgba(0,0,0,0.52) 100%)",
@@ -701,7 +677,8 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
         >
           {/* Outer glow ring — gold when locked, pink when open */}
           <div
-            className="w-full max-w-lg rounded-[28px] p-[2px] transition-all duration-500"
+            className="member-create-frame w-full max-w-lg rounded-[28px] p-[2px] transition-all duration-500"
+            data-locked={composeLocked}
             style={{
               background: composeLocked
                 ? "linear-gradient(135deg, #f5b63b 0%, #f9a8c8 40%, #df5f97 70%, #f5b63b 100%)"
@@ -712,11 +689,11 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
             }}
           >
             <div
-              className="rounded-[26px] overflow-hidden"
+              className="member-glass-modal-panel rounded-[26px] overflow-hidden bg-white"
               style={{
                 background: composeLocked
                   ? "linear-gradient(160deg, #fffdf8 0%, #fff8fc 60%, #fff9f0 100%)"
-                  : "#ffffff",
+                  : undefined,
               }}
             >
               {/* ─── Header ─── */}
