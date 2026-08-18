@@ -2,7 +2,7 @@
 
 @CLAUDE.md
 
-Last updated: August 13, 2026
+Last updated: August 18, 2026
 
 ## 1. Purpose
 
@@ -257,6 +257,27 @@ Provisional recommendation:
 - Prefer a clearly disclosed creator share of net eligible receipts if high-risk processor fees make gross accounting unsustainable.
 - Keep member Veso, creator earnings, and platform revenue in separate ledgers.
 
+### 3.9 Durable async work, shared throttling, and idempotency
+
+Decision locked — founder-confirmed August 18, 2026:
+
+- PostgreSQL is the durable authority for job/outbox acceptance,
+  operation-specific idempotency, provider-event receipts, and consequential
+  business effects.
+- Redis is limited to shared throttling and ephemeral coordination. It is never
+  the sole record for sessions, accepted/completed work, payments, Veso,
+  entitlements, or creator-review outcomes.
+- Workers process at least once. Handlers must be idempotent, retries and leases
+  are bounded, poison work is isolated, and replay is separately authorized and
+  evidenced.
+- Redis outages follow explicit conservative route policies and never create an
+  unlimited path.
+- This approval covers the provider-neutral
+  [Phase 2 architecture record](docs/architecture/phase2-async-work-throttling-idempotency.md)
+  and local verification only. It does not select a library/provider, authorize
+  spend or provisioning, deploy infrastructure, change live configuration, or
+  activate private operations.
+
 ## 4. Phase 0 — Baseline, tracker, and scope control
 
 ### Tasks
@@ -375,6 +396,16 @@ and bundle measurements.
 16. Configure automated backups.
 17. Test one database restoration.
 18. Add Sentry or an equivalent error tracker.
+
+Architecture status — August 18, 2026:
+
+- The provider-neutral design for tasks 11 and 12 is founder-approved and
+  recorded in
+  `docs/architecture/phase2-async-work-throttling-idempotency.md`.
+- No queue/outbox schema, worker, shared throttle store, Redis dependency, or
+  reusable idempotency framework is implemented by that decision record.
+- Phase 2 remains partially complete until the implementation tasks and the
+  existing HTTPS staging, restore, and monitoring exit criteria pass.
 
 ### Initial data domains
 
@@ -1097,7 +1128,8 @@ follow-up date.
 | ------------------------------------------------ | --------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | AWS staging shape and account access             | Founder + Engineering | 2026-07-23 | Overdue: use the non-secret staging decision matrix and future verification runbook in `docs/operations/`; deployment shape, credentials boundary, and approval remain undecided, so Phase 2 remains partial.                    |
 | Sentry or equivalent                             | Founder + Engineering | 2026-07-23 | Overdue: the provider scorecard is drafted in `docs/operations/`; select a provider and approve environment separation, PII minimization, retention, alerting, and cost before integration.                                      |
-| Redis, queue, and idempotency approach           | Engineering           | 2026-07-23 | Overdue: the responsibility/outage matrix is drafted in `docs/operations/`; select the beta approach and preserve PostgreSQL as the durable financial/idempotency record.                                                        |
+| Redis, queue, and idempotency architecture       | Engineering           | 2026-08-18 | Decision complete: PostgreSQL-backed durable jobs/outbox and idempotency; Redis only for shared throttling/ephemeral coordination; no unlimited outage path.                                                                     |
+| Async-foundation implementation/provider review  | Engineering + Founder | 2026-08-25 | Seek separate approval for, then review, the local compatibility/privilege spike before selecting a library or provider. No provisioning, spending, deployment, or live configuration is authorized.                             |
 | Transactional email provider and local Mailpit   | Founder + Engineering | 2026-07-23 | Local Mailpit and provider-neutral mail are complete; the provider scorecard is drafted, while production adult-business fit, data terms, authentication, bounce/complaint handling, and deliverability remain overdue.          |
 | LLC attorney/CPA shortlist and entity state      | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                                                                                                               |
 | CCBill requirements and fee quote                | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                                                                                                                  |
@@ -1130,8 +1162,9 @@ follow-up date.
    operational-mailbox decisions.
 6. Preserve the dependency sequencing for notifications, theme, billing,
    export/deletion, and explicit-content query enforcement.
-7. Keep Phase 2 labeled partially complete and use the decision register and
-   operations packet to close the AWS, monitoring, Redis/queue/idempotency, and
-   transactional-email choices.
+7. Review and publish the provider-neutral Phase 2 async-work ADR, then require
+   separate approval for its local compatibility/privilege spike and each
+   implementation slice. Keep Phase 2 labeled partially complete; provider,
+   AWS, monitoring, and transactional-email choices remain open.
 8. Build the commission and payout model using real processor quotes when
    available.

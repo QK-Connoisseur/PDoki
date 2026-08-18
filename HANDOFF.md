@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-16 · Working branch: `codex/operations-readiness-packet` · Base: `dev`
+Last updated: 2026-08-18 · Working branch: `codex/phase2-async-foundation-adr` · Base: `dev` at `b3e60b6`
 
 ## Current phase
 
@@ -33,12 +33,18 @@ and private operations review remain open.
 
 Phase 2 remains **partially complete (local foundation)**. Staging/RDS,
 backups and a restore drill, Sentry/equivalent monitoring, a background-job
-queue, and the full idempotency framework remain deferred.
+queue, shared throttling, and the full idempotency framework remain
+unimplemented. The founder approved a provider-neutral architecture direction
+on August 18, 2026: PostgreSQL is the durable jobs/outbox and idempotency
+authority; Redis is limited to shared throttling and ephemeral coordination;
+and dependency outages must never create an unlimited path. The current branch
+records that decision only and authorizes no provider, dependency, spend,
+provisioning, deployment, live configuration, or private-operations activation.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at PR #2 merge commit `1189404`, which contains
-  PR #1 merge commit `e7352c8`.
+- `dev` and `origin/dev` are at PR #5 merge commit `b3e60b6`. The current ADR
+  branch starts directly from that clean baseline.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -59,12 +65,27 @@ queue, and the full idempotency framework remain deferred.
 - [Pull request #2](https://github.com/QK-Connoisseur/PDoki/pull/2)
   merged into `dev` as `1189404`. Final-head GitHub Actions run `31948805621`
   passed the same three jobs at `3e5646d`.
-- [Draft pull request #3](https://github.com/QK-Connoisseur/PDoki/pull/3), on
-  branch `codex/operations-readiness-packet`, adds non-secret planning
-  templates for private-admin activation, hardware-key recovery, Google
-  Workspace recovery privacy, environment inputs, provider decisions, and
-  future staging verification. It makes no live account change, selects no
-  provider, and does not authorize deployment or router activation.
+- [Pull request #3](https://github.com/QK-Connoisseur/PDoki/pull/3) merged the
+  non-secret operations-readiness packet as `80efce5`. It changes no live
+  account, selects no provider, and authorizes no deployment/router activation.
+- [Pull request #6](https://github.com/QK-Connoisseur/PDoki/pull/6) reconciled
+  the product master tracker as `7749ef6` without implementing the pending
+  operational/product rows.
+- [Pull request #7](https://github.com/QK-Connoisseur/PDoki/pull/7) merged the
+  approved Sakura Glass member-shell design and avatar-decoration foundation as
+  `ee7fe83`.
+- [Pull request #4](https://github.com/QK-Connoisseur/PDoki/pull/4) merged
+  bounded API graceful shutdown as `bac4803`.
+- [Pull request #5](https://github.com/QK-Connoisseur/PDoki/pull/5) merged
+  bounded post-commit creator-application receipts as `b3e60b6`, including
+  loopback-only Mailpit exposure and transaction-current verified-recipient
+  protection. Its final-head GitHub Actions run `32106491183` passed all jobs.
+- The current documentation-only ADR branch passes Prettier, ESLint, 38 web
+  test files with 166 tests, web/private-admin/API builds, relative Markdown
+  link validation, `git diff --check`, and focused secret/personal-contact
+  scans. Database-backed API integration and Playwright suites were not rerun
+  because this branch changes only architecture and planning records; the base
+  remains the fully green PR #5 merge above.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -508,22 +529,24 @@ these checks does not authorize a deployed operations workflow.
 
 ## Next exact task
 
-1. Treat PR #1 merge commit `e7352c8`, PR #2 merge commit `1189404`, and their
-   green final-head CI runs `31947756634` and `31948805621` as the shared `dev`
-   baseline.
-2. Review [draft pull request #3](https://github.com/QK-Connoisseur/PDoki/pull/3)
-   against current `dev`. Merge only after current-dev conflict reconciliation,
-   the documented secret/personal-identifier, relative-link, formatting, and
-   whitespace checks, and green final-head CI.
-3. Keep the creator-review router unmounted from the public API and keep
+1. Review the founder-approved
+   [Phase 2 async-work ADR](docs/architecture/phase2-async-work-throttling-idempotency.md)
+   against `dev` at `b3e60b6`. This branch must remain documentation-only.
+2. After the ADR is published, request separate approval for the local
+   PostgreSQL worker compatibility/privilege spike. Do not add a worker, Redis,
+   schema, dependency, runtime upgrade, or user-facing behavior on the ADR
+   branch.
+3. Keep Phase 2 labeled partially complete until its implementation, HTTPS
+   staging, migration/restore, backup, and monitoring exit criteria pass.
+4. Keep the creator-review router unmounted from the public API and keep
    `APPROVED`, role promotion, and identity collection absent.
-4. Use the non-secret [operations readiness packet](docs/operations/README.md)
+5. Use the non-secret [operations readiness packet](docs/operations/README.md)
    to implement and verify the private operations origin, signed Access/IdP
    assertion verifier, operator provisioning, hardware MFA and recovery,
    mutation-origin/CSRF checks, trusted-proxy policy, and restricted runtime
    database privileges described in the Slice 2 architecture record. Keep live
    identifiers and evidence out of Git, and do not activate from a checklist
    alone.
-5. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
+6. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.

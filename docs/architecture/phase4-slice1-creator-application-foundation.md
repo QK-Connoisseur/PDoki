@@ -25,7 +25,10 @@ creator approval remain blocked on founder/legal/vendor decisions.
 - After that transaction commits, the API makes one bounded, best-effort
   attempt to send a data-minimized receipt. Preparation, timeout, or transport
   failure does not roll back the application or change the successful response;
-  delivery remains unguaranteed until a transactional outbox exists.
+  recipient delivery remains unguaranteed. The
+  [Phase 2 transactional outbox architecture](phase2-async-work-throttling-idempotency.md)
+  can later add durable intent and bounded retry, but it cannot guarantee that
+  a provider or recipient accepts the message.
 - The submission transaction locks and revalidates the user's current verified
   email before creating the application, and captures that address for the
   post-commit receipt. A concurrent email change that commits first revokes the
