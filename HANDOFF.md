@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-18 · Working branch: `codex/phase2-async-foundation-adr` · Base: `dev` at `b3e60b6`
+Last updated: 2026-08-18 · Working branch: `codex/phase2-worker-compatibility-spike` · Base: `dev` at `a126554`
 
 ## Current phase
 
@@ -38,13 +38,14 @@ unimplemented. The founder approved a provider-neutral architecture direction
 on August 18, 2026: PostgreSQL is the durable jobs/outbox and idempotency
 authority; Redis is limited to shared throttling and ephemeral coordination;
 and dependency outages must never create an unlimited path. The current branch
-records that decision only and authorizes no provider, dependency, spend,
-provisioning, deployment, live configuration, or private-operations activation.
+adds only the separately authorized local worker compatibility/privilege proof.
+It authorizes no provider, production dependency, spend, provisioning,
+deployment, live configuration, or private-operations activation.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at PR #5 merge commit `b3e60b6`. The current ADR
-  branch starts directly from that clean baseline.
+- `dev` and `origin/dev` are at PR #8 merge commit `a126554`. The current local
+  compatibility-spike branch starts directly from that clean baseline.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -80,12 +81,22 @@ provisioning, deployment, live configuration, or private-operations activation.
   bounded post-commit creator-application receipts as `b3e60b6`, including
   loopback-only Mailpit exposure and transaction-current verified-recipient
   protection. Its final-head GitHub Actions run `32106491183` passed all jobs.
-- The current documentation-only ADR branch passes Prettier, ESLint, 38 web
-  test files with 166 tests, web/private-admin/API builds, relative Markdown
-  link validation, `git diff --check`, and focused secret/personal-contact
-  scans. Database-backed API integration and Playwright suites were not rerun
-  because this branch changes only architecture and planning records; the base
-  remains the fully green PR #5 merge above.
+- [Pull request #8](https://github.com/QK-Connoisseur/PDoki/pull/8) merged the
+  founder-approved provider-neutral Phase 2 async-foundation ADR as `a126554`.
+  GitHub Actions run `32138399232` passed all three jobs at reviewed head
+  `2ba21a9`. It selected no provider and implemented no queue, Redis store,
+  idempotency framework, deployment, or live configuration.
+- The current local transaction/privilege sub-proof adds no production
+  dependency, schema, migration, worker, runtime configuration, or behavior.
+  Its dedicated PostgreSQL 17 proof passes 5/5 tests: Prisma atomic
+  commit/rollback (including enqueue failure), synthetic
+  migration/API/worker role separation, two-worker `SKIP LOCKED`, and
+  stale-lease-token fencing. A separate cleanup query found no remaining
+  generated role or schema. This dedicated run used local Node `v26.7.0`; it
+  does not claim execution on CI's Node 20 baseline. The result provisionally favors an
+  application-owned PostgreSQL outbox; candidate selection remains open because
+  an isolated migration fixture and worker retry/shutdown lifecycle were not
+  evaluated.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -529,24 +540,35 @@ these checks does not authorize a deployed operations workflow.
 
 ## Next exact task
 
-1. Review the founder-approved
-   [Phase 2 async-work ADR](docs/architecture/phase2-async-work-throttling-idempotency.md)
-   against `dev` at `b3e60b6`. This branch must remain documentation-only.
-2. After the ADR is published, request separate approval for the local
-   PostgreSQL worker compatibility/privilege spike. Do not add a worker, Redis,
-   schema, dependency, runtime upgrade, or user-facing behavior on the ADR
-   branch.
-3. Keep Phase 2 labeled partially complete until its implementation, HTTPS
+1. Review the passed
+   [Phase 2 worker compatibility/privilege spike](docs/architecture/phase2-worker-compatibility-spike.md).
+   Its transaction/privilege sub-proof provisionally favors an
+   application-owned outbox but does not complete candidate evaluation or
+   authorize the durable worker foundation.
+2. Publish the separately authorized Node 24 LTS baseline PR before building
+   new infrastructure on the repository's end-of-life Node 20 CI baseline.
+   Keep that narrow engines, CI/runtime-guidance, compatibility, and full-test
+   change outside this spike branch.
+3. On the supported runtime, finish the local candidate spike: re-evaluate the
+   current Graphile Worker and pg-boss releases and test the chosen/app-owned
+   path's exact least-privilege grants, stale-attempt fencing, isolated
+   migration fixture, and retry/graceful-shutdown lifecycle. Keep the fixture
+   and lifecycle harness excluded from normal `db:deploy` and runtime paths.
+4. Only after that result, seek separate approval for the durable local worker
+   foundation: persistence, a separate worker process, and a non-secret
+   idempotent canary. Do not migrate token-bearing email, select a provider,
+   add Redis, or deploy in that slice.
+5. Keep Phase 2 labeled partially complete until its implementation, HTTPS
    staging, migration/restore, backup, and monitoring exit criteria pass.
-4. Keep the creator-review router unmounted from the public API and keep
+6. Keep the creator-review router unmounted from the public API and keep
    `APPROVED`, role promotion, and identity collection absent.
-5. Use the non-secret [operations readiness packet](docs/operations/README.md)
+7. Use the non-secret [operations readiness packet](docs/operations/README.md)
    to implement and verify the private operations origin, signed Access/IdP
    assertion verifier, operator provisioning, hardware MFA and recovery,
    mutation-origin/CSRF checks, trusted-proxy policy, and restricted runtime
    database privileges described in the Slice 2 architecture record. Keep live
    identifiers and evidence out of Git, and do not activate from a checklist
    alone.
-6. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
+8. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.
