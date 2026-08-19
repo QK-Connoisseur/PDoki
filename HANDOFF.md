@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-18 · Working branch: `codex/node24-baseline` · Base: stacked on `codex/phase2-worker-compatibility-spike` at `68387d7`
+Last updated: 2026-08-19 · Working branch: `codex/node24-baseline` · PR base: `dev` at PR #9 merge `5c19af0`
 
 ## Current phase
 
@@ -37,19 +37,17 @@ queue, shared throttling, and the full idempotency framework remain
 unimplemented. The founder approved a provider-neutral architecture direction
 on August 18, 2026: PostgreSQL is the durable jobs/outbox and idempotency
 authority; Redis is limited to shared throttling and ephemeral coordination;
-and dependency outages must never create an unlimited path. The stacked spike
-branch adds only the separately authorized local compatibility/privilege proof;
-this branch adds the separately authorized Node 24 runtime baseline. Neither
+and dependency outages must never create an unlimited path. Merged PR #9 adds
+only the separately authorized local compatibility/privilege proof; this branch
+adds the separately authorized Node 24 runtime baseline. Neither
 authorizes a provider, production worker dependency, spend, provisioning,
 deployment, live configuration, or private-operations activation.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at PR #8 merge commit `a126554`. Draft PR #9
-  publishes the compatibility spike from reviewed head `68387d7`; the current
-  Node 24 branch is stacked directly on that head to keep the PR diffs separate.
-  GitHub Actions run `32194178253` passed all three jobs for that exact PR #9
-  head.
+- `origin/dev` is at PR #9 merge commit `5c19af0`, which preserves
+  reviewed spike head `68387d7` as its second parent. GitHub Actions run
+  `32194178253` passed all three jobs for that exact head.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -90,7 +88,8 @@ deployment, live configuration, or private-operations activation.
   GitHub Actions run `32138399232` passed all three jobs at reviewed head
   `2ba21a9`. It selected no provider and implemented no queue, Redis store,
   idempotency framework, deployment, or live configuration.
-- The transaction/privilege sub-proof in draft PR #9 adds no production
+- [Pull request #9](https://github.com/QK-Connoisseur/PDoki/pull/9) merged the
+  transaction/privilege sub-proof as `5c19af0`. It adds no production
   dependency, schema, migration, worker, runtime configuration, or behavior.
   Its dedicated PostgreSQL 17 proof passes 5/5 tests: Prisma atomic
   commit/rollback (including enqueue failure), synthetic
@@ -108,7 +107,8 @@ deployment, live configuration, or private-operations activation.
   5 spike tests, 46 real-stack Chromium tests, every production build, all six
   migrations, and the idempotent seed. CI now reads `.nvmrc`; current action
   majors also use Node 24. No provider, worker, schema, deployment, or live
-  configuration is added.
+  configuration is added. Draft PR #10 is retargeted to `dev`, remains an
+  isolated 20-file runtime change, and awaits final-head CI before publication.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -552,36 +552,30 @@ these checks does not authorize a deployed operations workflow.
 
 ## Next exact task
 
-1. Review the passed
+1. Complete final-head verification and publication of the separately approved
+   Node 24 baseline in PR #10. Its diff remains isolated from the already merged
    [Phase 2 worker compatibility/privilege spike](docs/architecture/phase2-worker-compatibility-spike.md).
-   Its transaction/privilege sub-proof provisionally favors an
-   application-owned outbox but does not complete candidate evaluation or
-   authorize the durable worker foundation.
-2. Review draft PR #9. If its merge is separately approved, merge it, retarget
-   the stacked Node 24 baseline PR to `dev`, confirm its isolated diff, and
-   require all final-head CI jobs to pass before requesting separate merge
-   approval.
-3. After the supported runtime is published, finish the local candidate spike:
+2. After the supported runtime is published, finish the local candidate spike:
    re-evaluate the
    current Graphile Worker and pg-boss releases and test the chosen/app-owned
    path's exact least-privilege grants, stale-attempt fencing, isolated
    migration fixture, and retry/graceful-shutdown lifecycle. Keep the fixture
    and lifecycle harness excluded from normal `db:deploy` and runtime paths.
-4. Only after that result, seek separate approval for the durable local worker
+3. Only after that result, seek separate approval for the durable local worker
    foundation: persistence, a separate worker process, and a non-secret
    idempotent canary. Do not migrate token-bearing email, select a provider,
    add Redis, or deploy in that slice.
-5. Keep Phase 2 labeled partially complete until its implementation, HTTPS
+4. Keep Phase 2 labeled partially complete until its implementation, HTTPS
    staging, migration/restore, backup, and monitoring exit criteria pass.
-6. Keep the creator-review router unmounted from the public API and keep
+5. Keep the creator-review router unmounted from the public API and keep
    `APPROVED`, role promotion, and identity collection absent.
-7. Use the non-secret [operations readiness packet](docs/operations/README.md)
+6. Use the non-secret [operations readiness packet](docs/operations/README.md)
    to implement and verify the private operations origin, signed Access/IdP
    assertion verifier, operator provisioning, hardware MFA and recovery,
    mutation-origin/CSRF checks, trusted-proxy policy, and restricted runtime
    database privileges described in the Slice 2 architecture record. Keep live
    identifiers and evidence out of Git, and do not activate from a checklist
    alone.
-8. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
+7. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.

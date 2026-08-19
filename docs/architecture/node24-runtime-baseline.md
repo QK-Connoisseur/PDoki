@@ -1,6 +1,6 @@
 # Node 24 runtime baseline
 
-Date: 2026-08-18 · Status: separately authorized and locally verified; publication pending
+Date: 2026-08-18 · Status: separately authorized, locally and CI-verified; PR #10 publication pending
 
 ## Decision and authority
 
@@ -65,10 +65,10 @@ reviewed change.
 
 ## Publication gate
 
-The stacked draft PR must pass all three GitHub Actions jobs on Node 24. After
-the worker-compatibility spike merges, retarget this PR to `dev`, confirm its
-diff contains only the runtime-baseline change, and require a fresh or
-content-equivalent green final-head run before merge.
+PR #9 published the worker-compatibility spike as merge commit `5c19af0`. PR
+#10 is retargeted to `dev`, and its isolated runtime-baseline diff is confirmed.
+Its final amended head must pass all three GitHub Actions jobs on Node 24 before
+merge.
 
 Only after publication may the next local candidate evaluation rely on Node 24
 for current Graphile Worker and pg-boss compatibility testing. Candidate
