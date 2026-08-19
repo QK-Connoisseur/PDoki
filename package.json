@@ -40,11 +40,12 @@
     "db:studio": "prisma studio --config packages/database/prisma.config.ts"
   },
   "engines": {
-    "node": ">=20.19"
+    "node": ">=24.19.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
+    "@types/node": "^24.13.3",
     "eslint": "^10.5.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",

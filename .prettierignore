@@ -8,5 +8,6 @@ test-results
 .claude
 .superpowers
 package-lock.json
+.nvmrc
 *.xlsx
 apps/web/src/assets/avatar-decorations/*.svg
