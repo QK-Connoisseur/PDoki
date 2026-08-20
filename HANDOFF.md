@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-19 · Working branch: `codex/node24-baseline` · PR base: `dev` at PR #9 merge `5c19af0`
+Last updated: 2026-08-19 · Working branch: `codex/phase2-worker-candidate-evaluation` · Base: `dev` at PR #10 merge `9a36b19`
 
 ## Current phase
 
@@ -38,16 +38,18 @@ unimplemented. The founder approved a provider-neutral architecture direction
 on August 18, 2026: PostgreSQL is the durable jobs/outbox and idempotency
 authority; Redis is limited to shared throttling and ephemeral coordination;
 and dependency outages must never create an unlimited path. Merged PR #9 adds
-only the separately authorized local compatibility/privilege proof; this branch
-adds the separately authorized Node 24 runtime baseline. Neither
-authorizes a provider, production worker dependency, spend, provisioning,
+only the separately authorized local compatibility/privilege proof, and merged
+PR #10 publishes the separately authorized Node 24 runtime baseline. This
+branch evaluates current worker candidates and a disposable application-owned
+migration/lifecycle fixture locally. None of these changes authorizes a
+provider, production worker dependency or schema, spend, provisioning,
 deployment, live configuration, or private-operations activation.
 
 ## Publication status
 
-- `origin/dev` is at PR #9 merge commit `5c19af0`, which preserves
-  reviewed spike head `68387d7` as its second parent. GitHub Actions run
-  `32194178253` passed all three jobs for that exact head.
+- `dev` and `origin/dev` are at PR #10 merge commit `9a36b19`, which preserves
+  reviewed Node 24 head `5ec94f6`. Final-head run `32306324892` and post-merge
+  `dev` run `32306625394` passed all three Node 24 jobs.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -96,10 +98,9 @@ deployment, live configuration, or private-operations activation.
   migration/API/worker role separation, two-worker `SKIP LOCKED`, and
   stale-lease-token fencing. A separate cleanup query found no remaining
   generated role or schema. Its initial dedicated run used local Node
-  `v26.7.0`, and the current runtime-baseline branch reran it successfully on
-  Node `v24.19.0`. The result provisionally favors an application-owned
-  PostgreSQL outbox; candidate selection remains open because an isolated
-  migration fixture and worker retry/shutdown lifecycle were not evaluated.
+  `v26.7.0`, and the Node 24 baseline branch reran it successfully on Node
+  `v24.19.0`. Its result provisionally favored an application-owned
+  PostgreSQL outbox and is now extended by the local candidate evaluation below.
 - The separately authorized
   [Node 24 runtime baseline](docs/architecture/node24-runtime-baseline.md) is
   locally green on exact Node `v24.19.0` / npm `11.17.0`: clean install and
@@ -107,8 +108,22 @@ deployment, live configuration, or private-operations activation.
   5 spike tests, 46 real-stack Chromium tests, every production build, all six
   migrations, and the idempotent seed. CI now reads `.nvmrc`; current action
   majors also use Node 24. No provider, worker, schema, deployment, or live
-  configuration is added. Draft PR #10 is retargeted to `dev`, remains an
-  isolated 20-file runtime change, and awaits final-head CI before publication.
+  configuration is added. PR #10 published the isolated runtime baseline as
+  `9a36b19`; final-head and post-merge CI are green.
+- The local
+  [worker candidate evaluation](docs/architecture/phase2-worker-candidate-evaluation.md)
+  rejects unchanged Graphile Worker `0.17.3` and pg-boss `12.27.0` under the
+  accepted ADR because neither has the required opaque per-attempt completion
+  fence; Graphile also lacks retry jitter. The application-owned synthetic
+  migration/lifecycle suite passes 13/13 tests on Node `v24.19.0`: direct
+  restricted test-role credentials and exact candidate-database grants,
+  indexed/bounded `SKIP LOCKED` terminalization, token-and-expiry fencing,
+  attempt-neutral safe release, bounded jittered retry, permanent/exhausted
+  `DEAD` outcomes, all-work drain, claim-versus-drain safety, and crash-like
+  lease recovery. The original 5/5 Prisma suite still passes, the normal
+  migration ledger is unchanged, and post-run generated databases/roles are
+  zero. This is a provisional local recommendation only; publication and
+  durable implementation remain separate approval gates.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -516,6 +531,35 @@ these checks does not authorize a deployed operations workflow.
 - CI now runs Prettier, uses read-only repository-token permissions, and applies
   bounded job timeouts. GitHub CI and human review remain required.
 
+## Current Phase 2 worker-candidate verification — 2026-08-19
+
+This branch adds only a dedicated application-owned PostgreSQL candidate
+harness, its isolated synthetic migration fixture, explicit scripts, and
+architecture/status records. The harness is excluded from the production API
+build, normal API test discovery, Prisma migrations, `db:deploy`, and runtime
+paths.
+
+| Command / check                           | Result                                                          |
+| ----------------------------------------- | --------------------------------------------------------------- |
+| `npm run test:phase2-worker-spike`        | ✅ published Prisma/privilege baseline, 5/5                     |
+| `npm run test:phase2-worker-candidates`   | ✅ isolated migration/lifecycle candidate, 13/13                |
+| Post-run PostgreSQL catalog audit         | ✅ 0 candidate databases / 0 candidate or compatibility roles   |
+| Normal Prisma migration-ledger snapshot   | ✅ unchanged, using allowlisted non-log fields                  |
+| `npm run test:api`                        | ✅ 17 files, 118/118 tests                                      |
+| `npm run test`                            | ✅ 38 files, 166/166 web tests                                  |
+| Contracts workspace tests                 | ✅ 1 file, 24/24 tests                                          |
+| `npm run build`, `build:admin`, API build | ✅ web, private operations, contracts, database, and API builds |
+| `npm run lint` / `npm run format:check`   | ✅ exit 0                                                       |
+| `git diff --check`                        | ✅ exit 0                                                       |
+
+The branch changes no application/runtime behavior, so the real-stack browser
+suite was not rerun locally for this evaluation. The unchanged base is PR #10
+merge `9a36b19`, whose post-merge Node 24 run `32306625394` passed all three
+jobs, including 46/46 Playwright tests. If this branch is later approved and
+pushed, publication CI must recheck normal regressions; the 13-test candidate
+suite remains an explicit local/opt-in evidence command rather than a standard
+CI job.
+
 ## Risks and remaining work
 
 - Dependency-bound notification, theme, billing, export, and deletion Settings
@@ -552,30 +596,26 @@ these checks does not authorize a deployed operations workflow.
 
 ## Next exact task
 
-1. Complete final-head verification and publication of the separately approved
-   Node 24 baseline in PR #10. Its diff remains isolated from the already merged
-   [Phase 2 worker compatibility/privilege spike](docs/architecture/phase2-worker-compatibility-spike.md).
-2. After the supported runtime is published, finish the local candidate spike:
-   re-evaluate the
-   current Graphile Worker and pg-boss releases and test the chosen/app-owned
-   path's exact least-privilege grants, stale-attempt fencing, isolated
-   migration fixture, and retry/graceful-shutdown lifecycle. Keep the fixture
-   and lifecycle harness excluded from normal `db:deploy` and runtime paths.
-3. Only after that result, seek separate approval for the durable local worker
-   foundation: persistence, a separate worker process, and a non-secret
-   idempotent canary. Do not migrate token-bearing email, select a provider,
-   add Redis, or deploy in that slice.
-4. Keep Phase 2 labeled partially complete until its implementation, HTTPS
+1. Seek explicit founder approval before committing, pushing, or opening a draft
+   PR for the reviewed
+   [Phase 2 worker candidate evaluation](docs/architecture/phase2-worker-candidate-evaluation.md).
+   Keep the fixture excluded from normal `db:deploy`, normal API test discovery,
+   the production build, and runtime.
+2. Only after that evidence is published and reviewed, seek a separate approval
+   for the durable local worker foundation: persistence, a separate worker
+   process, and a non-secret idempotent canary. Do not migrate token-bearing
+   email, select a provider, add Redis, or deploy in that slice.
+3. Keep Phase 2 labeled partially complete until its implementation, HTTPS
    staging, migration/restore, backup, and monitoring exit criteria pass.
-5. Keep the creator-review router unmounted from the public API and keep
+4. Keep the creator-review router unmounted from the public API and keep
    `APPROVED`, role promotion, and identity collection absent.
-6. Use the non-secret [operations readiness packet](docs/operations/README.md)
+5. Use the non-secret [operations readiness packet](docs/operations/README.md)
    to implement and verify the private operations origin, signed Access/IdP
    assertion verifier, operator provisioning, hardware MFA and recovery,
    mutation-origin/CSRF checks, trusted-proxy policy, and restricted runtime
    database privileges described in the Slice 2 architecture record. Keep live
    identifiers and evidence out of Git, and do not activate from a checklist
    alone.
-7. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
+6. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.

@@ -1,6 +1,6 @@
 # Node 24 runtime baseline
 
-Date: 2026-08-18 · Status: separately authorized, locally and CI-verified; PR #10 publication pending
+Date: 2026-08-18 · Status: published and CI-verified
 
 ## Decision and authority
 
@@ -63,14 +63,16 @@ The clean install reported 15 dependency advisories. This runtime-baseline PR
 does not claim to remediate them; dependency security work remains a separate
 reviewed change.
 
-## Publication gate
+## Publication result
 
 PR #9 published the worker-compatibility spike as merge commit `5c19af0`. PR
-#10 is retargeted to `dev`, and its isolated runtime-baseline diff is confirmed.
-Its final amended head must pass all three GitHub Actions jobs on Node 24 before
-merge.
+#10 then published this isolated runtime baseline as merge commit `9a36b19`,
+preserving reviewed head `5ec94f6`. GitHub Actions run `32306324892` passed all
+three jobs on that final head, and post-merge `dev` run `32306625394` passed the
+same Node 24 lint/build, API, and real-stack Playwright jobs.
 
-Only after publication may the next local candidate evaluation rely on Node 24
-for current Graphile Worker and pg-boss compatibility testing. Candidate
-selection, least-privilege proof, stale-attempt fencing, retry/shutdown
-lifecycle work, and the durable worker implementation remain separate gates.
+The subsequent local candidate evaluation relied on this Node 24 baseline to
+reassess current Graphile Worker and pg-boss releases and to exercise a
+disposable application-owned migration/lifecycle fixture. That evaluation
+remains a separate, unpublished local evidence gate; durable implementation,
+production grants, and deployment remain separately unauthorized.
