@@ -263,8 +263,28 @@ npm run db:seed
 npm run dev:api
 ```
 
-`db:up` starts PostgreSQL and Mailpit. Mailpit's development inbox is available
-at `http://localhost:8025`.
+`db:up` starts PostgreSQL and Mailpit with their host ports bound to IPv4
+loopback only. PostgreSQL uses `127.0.0.1:5432`; Mailpit's development inbox is
+available at `http://127.0.0.1:8025`.
+
+The locally implemented Phase 2 worker foundation is a separate process. The
+worker requires an explicit `WORKER_DATABASE_URL` and does not fall back to
+the API's `DATABASE_URL`; the producer CLI uses `DATABASE_URL` because it
+submits through the API-side Prisma transaction:
+
+```bash
+npm run dev:worker
+npm run enqueue:worker-canary -- --idempotency-key local-safe-canary
+```
+
+The canary is non-secret and local-only. No public route currently enqueues
+work, and no email, payment, Veso, identity, or creator-review flow uses this
+worker. The foundation is published only on its feature branch under a
+separate stage/commit/push approval; opening or merging a pull request remains
+separately gated. Final verification passed against a clean disposable
+database, which was removed afterward. Do not treat the ordinary
+`pumdoki_dev` migration as final evidence until the stale draft described in
+`HANDOFF.md` is separately approved for repair or recreation.
 
 ### Production build
 

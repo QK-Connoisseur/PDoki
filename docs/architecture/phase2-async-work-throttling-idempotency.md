@@ -1,6 +1,6 @@
 # Phase 2 ADR — durable async work, shared throttling, and idempotency
 
-Date: 2026-08-18 · Status: accepted design; implementation not started
+Date: 2026-08-18 · Status: accepted design; local canary foundation published on feature branch
 
 ## Scope and authority
 
@@ -10,9 +10,17 @@ only. It does not authorize a provider, account, purchase, cloud resource,
 secret, DNS change, staging or production deployment, live migration, or
 private-operations activation.
 
+On August 20, 2026, the founder separately approved local implementation and
+verification of the application-owned durable-worker pattern. That later
+authority was subsequently extended to staging, committing, and pushing its
+feature branch. It still does not include opening or merging a pull request,
+deployment, or any other boundary withheld above.
+
 Phase 2 remains partially complete. This ADR decides how the remaining
 background-job, shared-throttling, and idempotency foundations must preserve
-correctness; it does not claim that any of them exist yet.
+correctness. The local fixed-canary worker now instantiates a narrow part of
+the design, while shared throttling, general idempotency, product async flows,
+and operational deployment remain unimplemented.
 
 ## Context
 
@@ -23,9 +31,12 @@ general API limiters are process-local. Mail preparation and delivery happen
 after database work commits and are bounded from the request's perspective, but
 delivery remains unknown when the transport fails or times out.
 
-The repository has no Redis client, shared throttle store, outbox/job model,
-worker process, dead-letter path, or general request-idempotency record.
-Readiness currently checks PostgreSQL only. No payment webhook, Veso ledger, or
+The current feature branch has a PostgreSQL `DurableJob` model, fixed
+non-secret canary intent/effect, and separate local worker process. No public
+route or current product flow uses them. The repository still has no Redis
+client, shared throttle store, general request-idempotency record, authorized
+operator replay/cancellation path, or deployed worker identity. Readiness
+currently checks PostgreSQL only. No payment webhook, Veso ledger, or
 production email transport exists.
 
 These gaps are related operationally but are not one interchangeable system:
@@ -433,6 +444,11 @@ evidence.
 2. **Durable local worker foundation.** Add the job/outbox persistence, a
    separate worker process, and a non-secret idempotent canary. Prove atomic
    enqueue, recovery, retry, terminal handling, and bounded shutdown locally.
+   The founder separately approved this local-only step on August 20, 2026.
+   The application-owned implementation and its verification are recorded in
+   the [worker-foundation record](phase2-worker-foundation.md) and are
+   published on their feature branch. No pull request, deployment, or product
+   workflow migration is authorized by that publication.
 3. **Shared throttle abstraction.** Introduce a `ThrottleStore` boundary with an
    in-memory local/test adapter and a Redis adapter. Prove every route's outage
    behavior and prevent local fallback from being selected accidentally in a
@@ -503,10 +519,12 @@ to tolerate duplicates, and can reduce route availability when a required
 shared throttle is down. Those costs are accepted to preserve durable and
 security correctness.
 
-Still undecided and not authorized by this ADR:
+Still undecided and not authorized by this ADR or the local worker-foundation
+approval:
 
 - a Redis, queue, monitoring, cloud, or transactional-email provider;
-- a worker library or application-owned schema;
+- deployed migration/API/worker credentials, secret provisioning, and the
+  production rollout of the provisional application-owned schema/process;
 - AWS account shape, region, networking, credentials, or cost ceiling;
 - retention, residency, DPA, deletion, and legal policies;
 - production/staging provisioning, data migration, DNS, secrets, or rollout;

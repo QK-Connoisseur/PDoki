@@ -28,7 +28,7 @@ export default defineConfig({
         WEB_ORIGIN: "http://127.0.0.1:5173",
         DATABASE_URL:
           process.env.DATABASE_URL ??
-          "postgresql://pumdoki:pumdoki@localhost:5432/pumdoki_dev",
+          "postgresql://pumdoki:pumdoki@127.0.0.1:5432/pumdoki_dev",
         LOG_LEVEL: "warn",
         RATE_LIMIT_WINDOW_MS: "60000",
         RATE_LIMIT_MAX: "300",

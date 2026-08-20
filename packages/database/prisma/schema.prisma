@@ -52,6 +52,28 @@ enum VerificationTokenKind {
   PASSWORD_RESET
 }
 
+enum DurableJobKind {
+  PHASE2_CANARY_V1
+}
+
+enum DurableJobStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  DEAD
+  CANCELED
+  DISCARDED
+}
+
+enum DurableJobFailureCategory {
+  TRANSIENT
+  TIMEOUT
+  DATABASE
+  PAYLOAD_INVALID
+  HANDLER_PERMANENT
+  LEASE_EXPIRED_ATTEMPT_LIMIT
+}
+
 model User {
   id                             String                          @id @default(uuid()) @db.Uuid
   email                          String                          @unique
@@ -151,4 +173,62 @@ model VerificationToken {
   requestedIp String?               @db.VarChar(45)
 
   @@index([userId, kind])
+}
+
+model DurableJob {
+  id                    String                     @id @default(uuid()) @db.Uuid
+  kind                  DurableJobKind
+  payloadVersion        Int
+  payload               Json
+  deduplicationKeyHash  String                     @db.Char(64)
+  status                DurableJobStatus           @default(PENDING)
+  availableAt           DateTime                   @default(now()) @db.Timestamptz(3)
+  attemptCount          Int                        @default(0)
+  maxAttempts           Int
+  leaseToken            String?                    @unique @db.Uuid
+  leaseExpiresAt        DateTime?                  @db.Timestamptz(3)
+  requestId             String                     @db.VarChar(64)
+  correlationId         String?                    @db.VarChar(64)
+  originalJobId         String?                    @db.Uuid
+  originalJob           DurableJob?                @relation("DurableJobReplay", fields: [originalJobId], references: [id], onDelete: Restrict)
+  replayJobs            DurableJob[]               @relation("DurableJobReplay")
+  replaySequence        Int                        @default(0)
+  lastFailureCategory   DurableJobFailureCategory?
+  createdAt             DateTime                   @default(now()) @db.Timestamptz(3)
+  updatedAt             DateTime                   @updatedAt @db.Timestamptz(3)
+  completedAt           DateTime?                  @db.Timestamptz(3)
+  terminalAt            DateTime?                  @db.Timestamptz(3)
+  canaryLinks           WorkerCanaryJob[]
+  canaryEffectsAsSource WorkerCanaryEffect[]       @relation("WorkerCanaryEffectSourceJob")
+
+  @@unique([kind, deduplicationKeyHash])
+  @@unique([originalJobId, replaySequence])
+  @@index([kind, status])
+}
+
+model WorkerCanaryIntent {
+  id                 String              @id @default(uuid()) @db.Uuid
+  idempotencyKeyHash String              @unique @db.Char(64)
+  requestDigest      String              @db.Char(64)
+  requestId          String              @db.VarChar(64)
+  createdAt          DateTime            @default(now()) @db.Timestamptz(3)
+  jobs               WorkerCanaryJob[]
+  effect             WorkerCanaryEffect?
+}
+
+model WorkerCanaryJob {
+  jobId          String             @id @db.Uuid
+  job            DurableJob         @relation(fields: [jobId], references: [id], onDelete: Restrict)
+  canaryIntentId String             @db.Uuid
+  canaryIntent   WorkerCanaryIntent @relation(fields: [canaryIntentId], references: [id], onDelete: Restrict)
+
+  @@index([canaryIntentId])
+}
+
+model WorkerCanaryEffect {
+  canaryIntentId String             @id @db.Uuid
+  canaryIntent   WorkerCanaryIntent @relation(fields: [canaryIntentId], references: [id], onDelete: Restrict)
+  sourceJobId    String             @unique @db.Uuid
+  sourceJob      DurableJob         @relation("WorkerCanaryEffectSourceJob", fields: [sourceJobId], references: [id], onDelete: Restrict)
+  appliedAt      DateTime           @default(now()) @db.Timestamptz(3)
 }
