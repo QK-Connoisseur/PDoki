@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-19 · Working branch: `codex/phase2-worker-candidate-evaluation` · Base: `dev` at PR #10 merge `9a36b19`
+Last updated: 2026-08-20 · Working branch: `codex/phase2-worker-publication-reconciliation` · Base: `dev` at PR #11 merge `afdb59d`
 
 ## Current phase
 
@@ -37,19 +37,20 @@ queue, shared throttling, and the full idempotency framework remain
 unimplemented. The founder approved a provider-neutral architecture direction
 on August 18, 2026: PostgreSQL is the durable jobs/outbox and idempotency
 authority; Redis is limited to shared throttling and ephemeral coordination;
-and dependency outages must never create an unlimited path. Merged PR #9 adds
-only the separately authorized local compatibility/privilege proof, and merged
-PR #10 publishes the separately authorized Node 24 runtime baseline. This
-branch evaluates current worker candidates and a disposable application-owned
-migration/lifecycle fixture locally. None of these changes authorizes a
-provider, production worker dependency or schema, spend, provisioning,
-deployment, live configuration, or private-operations activation.
+and dependency outages must never create an unlimited path. Merged PR #9
+published the separately authorized local compatibility/privilege proof,
+merged PR #10 published the separately authorized Node 24 runtime baseline,
+and merged PR #11 published the separately authorized local worker-candidate
+evaluation and disposable application-owned migration/lifecycle fixture. None
+of these changes authorizes a provider, production worker dependency or schema,
+spend, provisioning, deployment, live configuration, or private-operations
+activation.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at PR #10 merge commit `9a36b19`, which preserves
-  reviewed Node 24 head `5ec94f6`. Final-head run `32306324892` and post-merge
-  `dev` run `32306625394` passed all three Node 24 jobs.
+- `dev` and `origin/dev` are at PR #11 merge commit `afdb59d`, which preserves
+  reviewed candidate-evaluation head `b858bd1`. Final-head run `32347088768`
+  and post-merge `dev` run `32347585996` passed all three jobs.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -110,7 +111,7 @@ deployment, live configuration, or private-operations activation.
   majors also use Node 24. No provider, worker, schema, deployment, or live
   configuration is added. PR #10 published the isolated runtime baseline as
   `9a36b19`; final-head and post-merge CI are green.
-- The local
+- The published
   [worker candidate evaluation](docs/architecture/phase2-worker-candidate-evaluation.md)
   rejects unchanged Graphile Worker `0.17.3` and pg-boss `12.27.0` under the
   accepted ADR because neither has the required opaque per-attempt completion
@@ -122,8 +123,8 @@ deployment, live configuration, or private-operations activation.
   `DEAD` outcomes, all-work drain, claim-versus-drain safety, and crash-like
   lease recovery. The original 5/5 Prisma suite still passes, the normal
   migration ledger is unchanged, and post-run generated databases/roles are
-  zero. This is a provisional local recommendation only; publication and
-  durable implementation remain separate approval gates.
+  zero. PR #11 published this provisional local recommendation as `afdb59d`;
+  durable implementation remains a separate approval gate.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -531,9 +532,9 @@ these checks does not authorize a deployed operations workflow.
 - CI now runs Prettier, uses read-only repository-token permissions, and applies
   bounded job timeouts. GitHub CI and human review remain required.
 
-## Current Phase 2 worker-candidate verification — 2026-08-19
+## Current Phase 2 worker-candidate evidence — verified 2026-08-19, published 2026-08-20
 
-This branch adds only a dedicated application-owned PostgreSQL candidate
+PR #11 published only a dedicated application-owned PostgreSQL candidate
 harness, its isolated synthetic migration fixture, explicit scripts, and
 architecture/status records. The harness is excluded from the production API
 build, normal API test discovery, Prisma migrations, `db:deploy`, and runtime
@@ -552,13 +553,12 @@ paths.
 | `npm run lint` / `npm run format:check`   | ✅ exit 0                                                       |
 | `git diff --check`                        | ✅ exit 0                                                       |
 
-The branch changes no application/runtime behavior, so the real-stack browser
-suite was not rerun locally for this evaluation. The unchanged base is PR #10
-merge `9a36b19`, whose post-merge Node 24 run `32306625394` passed all three
-jobs, including 46/46 Playwright tests. If this branch is later approved and
-pushed, publication CI must recheck normal regressions; the 13-test candidate
-suite remains an explicit local/opt-in evidence command rather than a standard
-CI job.
+PR #11 changed no application/runtime behavior, so the real-stack browser suite
+was not rerun during the local evaluation. Publication CI passed on reviewed
+head `b858bd1` in run `32347088768` and on merge commit `afdb59d` in run
+`32347585996`, including the normal real-stack Playwright job. The 13-test
+candidate suite remains an explicit local/opt-in evidence command rather than a
+standard CI job.
 
 ## Risks and remaining work
 
@@ -596,15 +596,14 @@ CI job.
 
 ## Next exact task
 
-1. Seek explicit founder approval before committing, pushing, or opening a draft
-   PR for the reviewed
-   [Phase 2 worker candidate evaluation](docs/architecture/phase2-worker-candidate-evaluation.md).
-   Keep the fixture excluded from normal `db:deploy`, normal API test discovery,
-   the production build, and runtime.
-2. Only after that evidence is published and reviewed, seek a separate approval
-   for the durable local worker foundation: persistence, a separate worker
-   process, and a non-secret idempotent canary. Do not migrate token-bearing
-   email, select a provider, add Redis, or deploy in that slice.
+1. Review the separately approved draft PR for this six-file publication-status
+   reconciliation. Approval to commit, push, and open the draft PR was granted
+   on August 20, 2026; merge remains separately gated.
+2. Only after that reconciliation is reviewed and merged, seek separate founder
+   approval before the durable local worker foundation:
+   persistence, a separate worker process, and a non-secret idempotent canary.
+   Do not migrate token-bearing email, select a provider, add Redis, or deploy
+   in that slice.
 3. Keep Phase 2 labeled partially complete until its implementation, HTTPS
    staging, migration/restore, backup, and monitoring exit criteria pass.
 4. Keep the creator-review router unmounted from the public API and keep

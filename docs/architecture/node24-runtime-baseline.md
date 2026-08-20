@@ -72,7 +72,8 @@ three jobs on that final head, and post-merge `dev` run `32306625394` passed the
 same Node 24 lint/build, API, and real-stack Playwright jobs.
 
 The subsequent local candidate evaluation relied on this Node 24 baseline to
-reassess current Graphile Worker and pg-boss releases and to exercise a
-disposable application-owned migration/lifecycle fixture. That evaluation
-remains a separate, unpublished local evidence gate; durable implementation,
-production grants, and deployment remain separately unauthorized.
+reassess current Graphile Worker and pg-boss releases and exercise a disposable
+application-owned migration/lifecycle fixture. PR #11 published that evidence
+as merge commit `afdb59d`; final-head run `32347088768` and post-merge run
+`32347585996` passed all three jobs. Durable implementation, production grants,
+and deployment remain separately unauthorized.

@@ -1,6 +1,6 @@
 # Phase 2 worker compatibility and privilege spike
 
-Date: 2026-08-18 · Status: transaction/privilege sub-proof published and rerun; candidate evaluation completed locally
+Date: 2026-08-18 · Status: transaction/privilege sub-proof published and rerun; candidate evaluation published through PR #11 with normal publication CI green
 
 ## Scope and authority
 
@@ -169,17 +169,14 @@ deployed database roles.
 
 1. The narrow [Node 24 runtime baseline](node24-runtime-baseline.md) was
    published through PR #10 as `9a36b19`.
-2. The local [candidate evaluation](phase2-worker-candidate-evaluation.md)
-   re-evaluated current Graphile Worker and pg-boss and passed the
-   application-owned synthetic migration/lifecycle suite. Its fixture remains
-   excluded from normal `db:deploy`, normal API test discovery, the production
-   build, and runtime paths.
-3. Seek explicit founder approval before committing, pushing, or opening a
-   draft PR for the candidate-evaluation evidence.
-4. Only after that evidence is published and reviewed, seek a separate founder
-   approval before a durable local
+2. PR #11 published the local
+   [candidate evaluation](phase2-worker-candidate-evaluation.md) as merge commit
+   `afdb59d`; final-head run `32347088768` and post-merge run `32347585996`
+   passed all three jobs. Its fixture remains excluded from normal `db:deploy`,
+   normal API test discovery, the production build, and runtime paths.
+3. Seek separate founder approval before a durable local
    worker-foundation PR with persistence, a worker process, and a non-secret
    idempotent canary. It still adds no provider or deployment.
-5. Keep Redis/shared throttling, creator-receipt migration, production email,
+4. Keep Redis/shared throttling, creator-receipt migration, production email,
    cloud provisioning, and operation-specific financial idempotency in their
    separately reviewed slices.
