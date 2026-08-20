@@ -425,6 +425,10 @@ evidence.
    candidate against the current runtime, Prisma transactions, schema
    ownership, least-privilege roles, graceful shutdown, and test environment.
    A runtime-version change is a separate proposal and is not approved here.
+   PR #9 published the initial sub-proof, and the follow-up
+   [local candidate evaluation](phase2-worker-candidate-evaluation.md)
+   provisionally recommends the application-owned pattern without selecting or
+   implementing a production worker.
 2. **Durable local worker foundation.** Add the job/outbox persistence, a
    separate worker process, and a non-secret idempotent canary. Prove atomic
    enqueue, recovery, retry, terminal handling, and bounded shutdown locally.
@@ -512,4 +516,5 @@ Still undecided and not authorized by this ADR:
 
 This ADR did not authorize a Node.js/runtime baseline change. The founder later
 authorized the separate [Node 24 runtime baseline](node24-runtime-baseline.md),
-whose draft PR, verification, and merge remain independent review gates.
+which was published through PR #10 as merge commit `9a36b19` after independent
+review and final-head CI.

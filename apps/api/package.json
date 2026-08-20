@@ -13,7 +13,8 @@
     "start": "node --env-file=../../.env dist/server.js",
     "start:e2e": "node dist/server.js",
     "test": "vitest run",
-    "test:phase2-worker-spike": "tsc -p tsconfig.spike.json --noEmit && vitest run --config vitest.spike.config.ts"
+    "test:phase2-worker-spike": "tsc -p tsconfig.spike.json --noEmit && vitest run --config vitest.spike.config.ts",
+    "test:phase2-worker-candidates": "tsc -p tsconfig.spike.json --noEmit && vitest run --config src/spikes/phase2WorkerCandidate.vitest.config.ts"
   },
   "dependencies": {
     "@pumdoki/contracts": "^0.1.0",

@@ -1,6 +1,6 @@
 # Phase 2 worker compatibility and privilege spike
 
-Date: 2026-08-18 · Status: transaction/privilege sub-proof passed; candidate evaluation open
+Date: 2026-08-18 · Status: transaction/privilege sub-proof published and rerun; candidate evaluation completed locally
 
 ## Scope and authority
 
@@ -12,8 +12,8 @@ runtime upgrade, secret, deployment, live configuration, or private-operations
 activation.
 
 The separately authorized [Node 24 runtime baseline](node24-runtime-baseline.md)
-is a later, isolated follow-up. It changes no worker-foundation authorization
-or conclusion in this spike.
+was later published through PR #10. It changes no worker-foundation
+authorization or conclusion in this spike.
 
 No existing email flow was moved to a queue. The spike harness reads or changes
 no user, creator, payment, Veso, identity, or review data.
@@ -28,24 +28,26 @@ requirements without weakening database ownership?
 
 The repository baseline is Node.js `>=24.19.0`, with exact local/CI selection
 through `.nvmrc`. It uses PostgreSQL 17 and already has Prisma 7 plus `pg` for
-database-backed tests. It has no job library, queue schema, worker process, or
-separate runtime database URLs.
+database-backed tests. It has no job library, production/runtime queue schema,
+worker process, or separate runtime database URLs.
 
 As of this spike:
 
-| Candidate                           | Compatibility result                                                                                                                                                                                                                                                                                                                                          | Outcome                                                                                                                                                                                     |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Graphile Worker                     | Tagged `0.17.3` declares Node 14+, and the current official requirements documentation requires Node 22.18+, which the Node 24 baseline satisfies. Its documented default expects the worker to execute as the database-owner role; lower-privilege use needs adjustments, and SQL enqueue requires owner privilege or a reviewed `SECURITY DEFINER` wrapper. | Not installed. Re-evaluate the current supported release and exact restricted-role migration behavior on Node 24.                                                                           |
-| pg-boss                             | Current `12.27.0` requires Node 22.12+, which the Node 24 baseline satisfies. It documents Prisma transaction enqueue and migration suppression, but its job/completion model still needs a focused proof that a stale attempt cannot acknowledge a reclaimed job under the ADR's opaque lease-token rule.                                                    | Not installed. Re-evaluate on Node 24, including stale-attempt fencing and exact least-privilege grants.                                                                                    |
-| Application-owned PostgreSQL outbox | The synthetic proof uses the existing Prisma transaction, permits exact API/worker grants, and represents the ADR's opaque lease token and token-matched acknowledgement directly. An isolated migration fixture and worker retry/shutdown lifecycle were not tested.                                                                                         | Provisional leading option for the current SQL boundary, not a final candidate selection. Complete test-only migration and lifecycle evaluation before the durable local foundation begins. |
+| Candidate                           | Compatibility result                                                                                                                                                                                                                                                                                                                                                        | Outcome                                                                                                      |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Graphile Worker `0.17.3`            | Node 24/PostgreSQL 17 are in range, but completion deletes by job ID without the ADR's opaque per-attempt token. Documented retry is deterministic exponential backoff without the required jitter. The supported/default migration-owner model also conflicts with the desired role split; an exact bespoke restricted-role setup remains unproven rather than impossible. | Not installed or run. Do not advance unchanged under this ADR because mandatory fencing and jitter fail.     |
+| pg-boss `12.27.0`                   | Node 24/PostgreSQL 17 are supported, and Prisma transaction enqueue, migration controls, configurable retry, and graceful stop are available. The tagged job model has no opaque per-attempt lease token; completion and heartbeat use queue/job/state predicates.                                                                                                          | Not installed or run. Do not advance unchanged under this ADR because mandatory stale-attempt fencing fails. |
+| Application-owned PostgreSQL outbox | This suite proves Prisma-transaction enqueue, exact synthetic role separation, `SKIP LOCKED`, and stale-token acknowledgement rejection. The follow-up [candidate evaluation](phase2-worker-candidate-evaluation.md) adds an isolated migration fixture, renewal/release/failure fences, bounded jittered retry, `DEAD` exhaustion, drain, and crash-like lease recovery.   | Provisional local leading candidate, not a production selection or durable implementation.                   |
 
 Primary references:
 
-- [Graphile Worker `0.17.3` package manifest](https://github.com/graphile/worker/blob/v0.17.3/package.json),
+- [Graphile Worker `0.17.3` release](https://github.com/graphile/worker/releases/tag/v0.17.3),
+  [package manifest](https://github.com/graphile/worker/blob/v0.17.3/package.json),
   [current requirements](https://worker.graphile.org/docs/requirements), and
-  [restricted-role guidance](https://worker.graphile.org/docs/schema)
+  [completion SQL](https://github.com/graphile/worker/blob/v0.17.3/src/sql/completeJobs.ts)
 - [Graphile SQL enqueue ownership requirement](https://worker.graphile.org/docs/sql-add-job)
-- [pg-boss `12.27.0` package](https://www.npmjs.com/package/pg-boss/v/12.27.0),
+- [pg-boss `12.27.0` release](https://github.com/timgit/pg-boss/releases/tag/12.27.0),
+  [tagged SQL plans](https://raw.githubusercontent.com/timgit/pg-boss/12.27.0/src/plans.ts),
   [Prisma transaction adapter](https://pgboss.io/api/adapters),
   [migration controls](https://pgboss.io/api/constructor), and
   [job schema](https://pgboss.io/sql/job-table)
@@ -149,28 +151,35 @@ A separate post-run database query found no remaining generated role or schema.
 
 The application-owned PostgreSQL pattern is compatible with the current Prisma
 transaction boundary and satisfies this sub-proof's privilege and lease-fencing
-criteria. It is the provisional leading option, not a completed worker-candidate
-selection. No third-party dependency or production schema is selected by this
-result.
+criteria. The separately recorded
+[candidate evaluation](phase2-worker-candidate-evaluation.md) closes the local
+synthetic migration, retry, terminal-state, and lifecycle questions. It remains
+the provisional local leading option, not a production selection. No
+third-party dependency or production schema is selected by either result.
 
 This proof does **not** establish the production design or Phase 2 completion.
-It does not execute an isolated job-migration fixture or implement retry and
-terminal-state policy, replay/cancellation evidence, payload schemas, worker lifecycle,
-backlog controls, readiness/telemetry, retention, recipient privacy, provider
-delivery, or deployed database roles.
+This five-test sub-proof by itself does not execute an isolated job-migration
+fixture or implement retry and terminal-state policy. The follow-up evaluates
+those synthetic seams but still does not establish replay/cancellation
+evidence, production payload schemas, a real worker process, backlog controls,
+readiness/telemetry, retention, recipient privacy, provider delivery, or
+deployed database roles.
 
 ## Next sequencing gates
 
-1. Publish the separately authorized narrow
-   [Node 24 runtime baseline](node24-runtime-baseline.md).
-2. After that baseline is published, finish the candidate spike: re-evaluate current
-   Graphile Worker and pg-boss, and test the chosen/app-owned path's exact
-   least-privilege grants, stale-attempt fencing, isolated migration fixture,
-   and retry/graceful-shutdown lifecycle. The fixture and lifecycle harness
-   must stay excluded from normal `db:deploy` and runtime paths.
-3. Only after that evaluation, review a separate durable local
+1. The narrow [Node 24 runtime baseline](node24-runtime-baseline.md) was
+   published through PR #10 as `9a36b19`.
+2. The local [candidate evaluation](phase2-worker-candidate-evaluation.md)
+   re-evaluated current Graphile Worker and pg-boss and passed the
+   application-owned synthetic migration/lifecycle suite. Its fixture remains
+   excluded from normal `db:deploy`, normal API test discovery, the production
+   build, and runtime paths.
+3. Seek explicit founder approval before committing, pushing, or opening a
+   draft PR for the candidate-evaluation evidence.
+4. Only after that evidence is published and reviewed, seek a separate founder
+   approval before a durable local
    worker-foundation PR with persistence, a worker process, and a non-secret
    idempotent canary. It still adds no provider or deployment.
-4. Keep Redis/shared throttling, creator-receipt migration, production email,
+5. Keep Redis/shared throttling, creator-receipt migration, production email,
    cloud provisioning, and operation-specific financial idempotency in their
    separately reviewed slices.
