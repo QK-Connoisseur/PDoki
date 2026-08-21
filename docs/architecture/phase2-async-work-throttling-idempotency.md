@@ -1,6 +1,6 @@
 # Phase 2 ADR — durable async work, shared throttling, and idempotency
 
-Date: 2026-08-18 · Status: accepted design; local canary foundation published on feature branch
+Date: 2026-08-18 · Status: accepted design; fixed-canary foundation published through PR #13
 
 ## Scope and authority
 
@@ -11,11 +11,10 @@ secret, DNS change, staging or production deployment, live migration, or
 private-operations activation.
 
 On August 20, 2026, the founder separately approved local implementation and
-verification of the application-owned durable-worker pattern. That later
-authority was subsequently extended to staging, committing, and pushing its
-feature branch, then to opening draft PR #13 against `dev`. That PR is now
-open; the authority still does not include merge, deployment, or any other
-boundary withheld above.
+verification of the application-owned durable-worker pattern. Later approvals
+covered staging, committing, and pushing its feature branch, opening draft PR
+#13, and then merging its reviewed head. PR #13 merged into `dev` as `6311522`;
+deployment and every other boundary withheld above remain unauthorized.
 
 Phase 2 remains partially complete. This ADR decides how the remaining
 background-job, shared-throttling, and idempotency foundations must preserve
@@ -32,7 +31,7 @@ general API limiters are process-local. Mail preparation and delivery happen
 after database work commits and are bounded from the request's perspective, but
 delivery remains unknown when the transport fails or times out.
 
-The current feature branch has a PostgreSQL `DurableJob` model, fixed
+The current `dev` branch has a PostgreSQL `DurableJob` model, fixed
 non-secret canary intent/effect, and separate local worker process. No public
 route or current product flow uses them. The repository still has no Redis
 client, shared throttle store, general request-idempotency record, authorized
@@ -447,9 +446,10 @@ evidence.
    enqueue, recovery, retry, terminal handling, and bounded shutdown locally.
    The founder separately approved this local-only step on August 20, 2026.
    The application-owned implementation and its verification are recorded in
-   the [worker-foundation record](phase2-worker-foundation.md) and are
-   published in draft PR #13 against `dev`; merge, deployment, and product
-   workflow migration are not authorized.
+   the [worker-foundation record](phase2-worker-foundation.md). PR #13 merged
+   reviewed head `8a8688f` into `dev` as `6311522`; exact-head run
+   `32518256241` and post-merge run `32535922437` passed all three jobs.
+   Deployment and product workflow migration are not authorized.
 3. **Shared throttle abstraction.** Introduce a `ThrottleStore` boundary with an
    in-memory local/test adapter and a Redis adapter. Prove every route's outage
    behavior and prevent local fallback from being selected accidentally in a

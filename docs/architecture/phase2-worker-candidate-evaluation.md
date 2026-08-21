@@ -176,8 +176,9 @@ as merge commit `afdb59d`, preserving reviewed head `b858bd1`. Final-head run
 Publication did not authorize a production selection or durable implementation.
 The founder later approved local implementation and verification of the
 provisional application-owned foundation on August 20, 2026. That work is
-recorded in the [worker-foundation record](phase2-worker-foundation.md) and is
-published on its feature branch under a later stage/commit/push approval. It
-still adds no provider, Redis, email/token migration, payment/Veso behavior,
-deployment, or live configuration. Draft PR #13 is open against `dev`; merge
-remains separately gated.
+recorded in the [worker-foundation record](phase2-worker-foundation.md). Later
+approvals covered its feature-branch publication, draft PR, and merge. PR #13
+published reviewed head `8a8688f` to `dev` as `6311522`; exact-head and
+post-merge CI passed all three jobs. It still adds no provider, Redis,
+email/token migration, payment/Veso behavior, deployment, or live
+configuration.

@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-21 · Working branch: `codex/phase2-worker-foundation` · Base: `dev` at PR #12 merge `6a04b0c`
+Last updated: 2026-08-21 · Working branch: `codex/phase2-worker-merge-reconciliation` · Base: `dev` at PR #13 merge `6311522`
 
 ## Current phase
 
@@ -31,7 +31,7 @@ a member with no Dashboard access. No ID, selfie, tax, or banking files are
 requested. Counsel-approved policies, provider integration, country/tax gates,
 and private operations review remain open.
 
-Phase 2 remains **partially complete (local foundation)**. Staging/RDS,
+Phase 2 remains **partially complete (published fixed-canary foundation)**. Staging/RDS,
 backups and a restore drill, Sentry/equivalent monitoring, shared throttling,
 and the general idempotency framework remain unimplemented. The founder
 approved a provider-neutral architecture direction
@@ -47,23 +47,28 @@ spend, provisioning, deployment, live configuration, or private-operations
 activation. On August 20, 2026, the founder separately approved local-only
 implementation and verification of that provisional application-owned worker
 foundation. The founder later approved staging, committing, and pushing
-`codex/phase2-worker-foundation`. The feature branch moves no current product
-flow to async work. Draft PR #13 is open against `dev`; merge remains
-separately gated, and every changed head requires fresh exact-head CI.
+`codex/phase2-worker-foundation`, then opening draft PR #13, and later merging
+that reviewed head. PR #13 merged into `dev` as `6311522`, preserving reviewed
+head `8a8688f`; exact-head run `32518256241` and post-merge run `32535922437`
+passed all three jobs. The published foundation moves no current product flow
+to async work.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at PR #12 merge commit `6a04b0c`, which preserves
-  the six-file publication-reconciliation head `0f3636c`. PR #12 exact-head
-  CI was green before merge. The worker-foundation feature branch starts from
-  that merge and is published remotely under the separate stage/commit/push
-  approval. Draft PR #13 is open against `dev`; merge is not authorized.
+- `dev` and `origin/dev` are at PR #13 merge commit `6311522`, which preserves
+  reviewed worker-foundation head `8a8688f`. Exact-head run `32518256241` and
+  post-merge run `32535922437` passed the API, lint/test/build, and real-stack
+  Playwright jobs. The current merge-reconciliation branch is local only;
+  pushing it or opening another pull request remains separately gated.
 - The August 21 tracker rework preserves all 148 legacy task rows and every
   original backlog, note, assumption, and expense cell. Its PLAN-aligned
   Delivery Tracker contains 158 stable execution records across P00–P14 and
   POST, including explicit completed records for the two published Phase 4
   foundations. Dedicated Phase Roadmap, Review & Blocker Queue, Daily Log, and
   Decision Register views make current work and approvals easier to follow.
+  After the PR #13 merge reconciliation it reports 27 Done, 50 In Progress,
+  0 In Review, 1 Blocked, and 80 Not Started records (17.1% record progress).
+  The Review & Blocker Queue now contains only blocked item `P07-E2E-001`.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -580,9 +585,10 @@ standard CI job.
 ## Current Phase 2 durable-worker verification — 2026-08-20
 
 The separately approved application-owned foundation is implemented, verified,
-and published on feature branch `codex/phase2-worker-foundation` from
-`dev`/PR #12 merge `6a04b0c`. Draft PR #13 is open against `dev`; merge is not
-authorized. Exact Node `v24.19.0`, npm `11.17.0`, and PostgreSQL 17 evidence:
+and published through PR #13 merge `6311522`, preserving reviewed head
+`8a8688f`. Exact-head run `32518256241` and post-merge run `32535922437` passed
+all three jobs. Exact Node `v24.19.0`, npm `11.17.0`, and PostgreSQL 17 local
+evidence:
 
 | Command / check                               | Result                                                         |
 | --------------------------------------------- | -------------------------------------------------------------- |
@@ -673,23 +679,25 @@ connectivity passes.
 
 ## Next exact task
 
-1. Review draft PR #13's worker foundation, PLAN-aligned tracker, and exact-head
-   CI. Merge remains separately gated.
+1. Review this local documentation/tracker reconciliation. Seek separate
+   approval before pushing its branch or opening another pull request.
 2. Seek separate approval before repairing or recreating the ordinary local
    `pumdoki_dev` database: an early uncommitted draft of the new migration was
    applied there, no data was reset, and final evidence deliberately uses a
    disposable database instead.
-3. Keep Phase 2 labeled partially complete until publication, HTTPS
-   staging, migration/restore, backup, and monitoring exit criteria pass.
+3. Keep Phase 2 labeled partially complete until HTTPS staging,
+   migration/restore, backup, monitoring, shared-throttling, and general
+   idempotency exit criteria pass.
 4. Keep the creator-review router unmounted from the public API and keep
    `APPROVED`, role promotion, and identity collection absent.
-5. Use the non-secret [operations readiness packet](docs/operations/README.md)
-   to implement and verify the private operations origin, signed Access/IdP
-   assertion verifier, operator provisioning, hardware MFA and recovery,
+5. If separately authorized, use the non-secret
+   [operations readiness packet](docs/operations/README.md) to design and
+   locally verify the private operations origin, signed Access/IdP assertion
+   verifier, operator provisioning, hardware MFA and recovery,
    mutation-origin/CSRF checks, trusted-proxy policy, and restricted runtime
-   database privileges described in the Slice 2 architecture record. Keep live
-   identifiers and evidence out of Git, and do not activate from a checklist
-   alone.
+   database privileges described in the Slice 2 architecture record. Keep the
+   router unmounted, live identifiers and evidence out of Git, and do not
+   activate from a checklist alone.
 6. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.

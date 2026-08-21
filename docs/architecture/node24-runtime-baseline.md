@@ -77,7 +77,8 @@ application-owned migration/lifecycle fixture. PR #11 published that evidence
 as merge commit `afdb59d`; final-head run `32347088768` and post-merge run
 `32347585996` passed all three jobs. The founder later approved local-only
 implementation and verification of the provisional application-owned
-foundation, followed by a separate approval to stage, commit, and push its
-feature branch and a later approval to open draft PR #13 against `dev`. That
-PR is now open; merge, production grants, and deployment remain separately
+foundation, followed by separate approvals for its feature-branch publication,
+draft PR, and merge. PR #13 merged reviewed head `8a8688f` into `dev` as
+`6311522`; exact-head run `32518256241` and post-merge run `32535922437` passed
+all three jobs. Production grants and deployment remain separately
 unauthorized.

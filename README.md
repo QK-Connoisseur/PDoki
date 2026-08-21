@@ -279,8 +279,9 @@ npm run enqueue:worker-canary -- --idempotency-key local-safe-canary
 
 The canary is non-secret and local-only. No public route currently enqueues
 work, and no email, payment, Veso, identity, or creator-review flow uses this
-worker. The foundation is published in draft PR #13 against `dev`; merge
-remains separately gated, and every changed PR head must pass exact-head CI.
+worker. PR #13 published the foundation to `dev` as merge commit `6311522`;
+exact-head and post-merge CI passed all three jobs. Deployment, live
+configuration, and product-flow migration remain separately gated.
 Final verification passed against a clean disposable database, which was
 removed afterward. Do not treat the ordinary
 `pumdoki_dev` migration as final evidence until the stale draft described in

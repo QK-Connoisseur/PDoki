@@ -1,6 +1,6 @@
 # Phase 2 durable worker foundation
 
-Date: 2026-08-20 · Status: implemented and verified; draft PR #13 open against dev
+Date: 2026-08-20 · Published: 2026-08-21 through PR #13 merge `6311522`; exact-head and post-merge CI green
 
 ## Authority and scope
 
@@ -11,12 +11,13 @@ pattern. This slice starts from `dev` merge commit `6a04b0c` on local branch
 
 On August 20, the founder separately approved staging the reviewed working
 tree, creating its feature-branch commit, and pushing
-`codex/phase2-worker-foundation`. This authority does not include opening or
-merging a pull request, staging or production deployment, live role or secret
-provisioning, Redis, a provider or vendor, email/token delivery, payment or
-Veso behavior, or private-operations activation. The founder subsequently
-authorized opening a draft PR against `dev`; PR #13 is now open, while merge
-and every other boundary listed here remain withheld.
+`codex/phase2-worker-foundation`. That approval did not include a pull request
+or merge. The founder subsequently authorized draft PR #13 and later its
+merge. PR #13 merged reviewed head `8a8688f` into `dev` as `6311522`;
+exact-head run `32518256241` and post-merge run `32535922437` passed all three
+jobs. Staging or production deployment, live role or secret provisioning,
+Redis, a provider or vendor, email/token delivery, payment or Veso behavior,
+and private-operations activation remain withheld.
 
 ## Outcome
 
@@ -228,9 +229,9 @@ and network controls remain a separate deployment gate.
 
 ## Remaining gates
 
-This feature-branch foundation is not a production queue or Phase 2
-completion. Draft PR #13 is open against `dev`; merge remains separately
-gated, and every changed head requires exact-head CI.
+This published fixed-canary foundation is not a production queue or Phase 2
+completion. PR #13 merged into `dev` as `6311522` after exact-head CI, and
+post-merge CI also passed all three jobs.
 Later slices still require independent review and authority
 for:
 
