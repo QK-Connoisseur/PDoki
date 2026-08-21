@@ -13,8 +13,8 @@ private-operations activation.
 On August 20, 2026, the founder separately approved local implementation and
 verification of the application-owned durable-worker pattern. That later
 authority was subsequently extended to staging, committing, and pushing its
-feature branch. It still does not include opening or merging a pull request,
-deployment, or any other boundary withheld above.
+feature branch, then to opening a draft PR against `dev`. It still does not
+include merge, deployment, or any other boundary withheld above.
 
 Phase 2 remains partially complete. This ADR decides how the remaining
 background-job, shared-throttling, and idempotency foundations must preserve
@@ -447,8 +447,8 @@ evidence.
    The founder separately approved this local-only step on August 20, 2026.
    The application-owned implementation and its verification are recorded in
    the [worker-foundation record](phase2-worker-foundation.md) and are
-   published on their feature branch. No pull request, deployment, or product
-   workflow migration is authorized by that publication.
+   published on their feature branch. A draft PR against `dev` is authorized;
+   merge, deployment, and product workflow migration are not.
 3. **Shared throttle abstraction.** Introduce a `ThrottleStore` boundary with an
    in-memory local/test adapter and a Redis adapter. Prove every route's outage
    behavior and prevent local fallback from being selected accidentally in a

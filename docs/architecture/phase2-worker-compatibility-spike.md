@@ -177,8 +177,8 @@ deployed database roles.
 3. The founder separately approved local implementation and verification of
    the application-owned foundation on August 20, 2026. The resulting
    [worker-foundation record](phase2-worker-foundation.md) is published on its
-   feature branch under a later stage/commit/push approval. Opening or merging
-   a pull request remains separately gated.
+   feature branch under a later stage/commit/push approval. A draft PR against
+   `dev` is authorized; merge remains separately gated.
 4. Keep Redis/shared throttling, creator-receipt migration, production email,
    cloud provisioning, and operation-specific financial idempotency in their
    separately reviewed slices.

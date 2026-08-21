@@ -78,5 +78,5 @@ as merge commit `afdb59d`; final-head run `32347088768` and post-merge run
 `32347585996` passed all three jobs. The founder later approved local-only
 implementation and verification of the provisional application-owned
 foundation, followed by a separate approval to stage, commit, and push its
-feature branch. Opening or merging a pull request, production grants, and
-deployment remain separately unauthorized.
+feature branch and a later approval to open a draft PR against `dev`. Merge,
+production grants, and deployment remain separately unauthorized.
