@@ -60,8 +60,10 @@ separately gated, and every changed head requires fresh exact-head CI.
   approval. Draft PR #13 is open against `dev`; merge is not authorized.
 - The August 21 tracker rework preserves all 148 legacy task rows and every
   original backlog, note, assumption, and expense cell. Its PLAN-aligned
-  Delivery Tracker contains 156 stable execution records across P00–P14 and
-  POST, plus dedicated Phase Roadmap, Daily Log, and Decision Register views.
+  Delivery Tracker contains 158 stable execution records across P00–P14 and
+  POST, including explicit completed records for the two published Phase 4
+  foundations. Dedicated Phase Roadmap, Review & Blocker Queue, Daily Log, and
+  Decision Register views make current work and approvals easier to follow.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -344,11 +346,12 @@ npm run db:down
 
 - `PLAN.md`, `CLAUDE.md`, `README.md`, and the Slice 3 architecture record
   describe the published frontend-auth state.
-- The master tracker marks account/login, roles, session management, email
-  verification, password reset, and login/signup screens Done.
-- Its formula-driven summary is 19/148 Done (12.8%), 46 In Progress, and 83 Not
-  Started. All five sheets were rendered and visually checked; the formula
-  error scan returned zero matches.
+- At this Phase 3 publication checkpoint, the legacy master tracker marked
+  account/login, roles, session management, email verification, password reset,
+  and login/signup screens Done. Its then-current formula summary was 19/148
+  Done (12.8%), 46 In Progress, and 83 Not Started across five sheets. Those
+  dated figures remain preserved in `Legacy Overview 2026-08-16`; current
+  execution status now lives in the PLAN-aligned Delivery Tracker and Overview.
 
 ## What Slices 4A and 4B implement
 

@@ -630,7 +630,7 @@ Settings list is implemented.
 12. Support more than one performer per media item without creating a complicated public UI.
 13. Link every explicit media item to required performer records.
 
-### Current Phase 4 implementation status — August 16, 2026
+### Current Phase 4 implementation status — reviewed August 21, 2026; activation state unchanged
 
 - Slice 1, the creator-application foundation, is implemented, published on
   `dev` as commit `ce6c9e4`, and CI-verified by GitHub Actions run

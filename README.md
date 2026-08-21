@@ -321,9 +321,10 @@ points the frontend API client at the backend. Never commit a real `.env`.
 - `README.md` describes the product, repository, and stable requirements.
 - `PLAN.md` contains the phased implementation roadmap and open decisions.
 - The master tracker is the PLAN.md-aligned operational view: use its Delivery
-  Tracker for current execution, Phase Roadmap for phase-level truth, Daily Log
-  for plain-language debriefs, and Decision Register for open approvals. Its
-  original tracker, backlog, notes, and expense sheets remain preserved.
+  Tracker for current execution, Review & Blocker Queue for daily attention,
+  Phase Roadmap for phase-level truth, Daily Log for plain-language debriefs,
+  and Decision Register for open approvals. Its original tracker, backlog,
+  notes, and expense sheets remain preserved.
 - Architecture decisions and durable slice designs live under `docs/architecture`.
 - Counsel-approved policies may later live under `docs/legal`.
 - Temporary implementation prompts should not be committed.
