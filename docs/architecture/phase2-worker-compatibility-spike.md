@@ -174,9 +174,11 @@ deployed database roles.
    `afdb59d`; final-head run `32347088768` and post-merge run `32347585996`
    passed all three jobs. Its fixture remains excluded from normal `db:deploy`,
    normal API test discovery, the production build, and runtime paths.
-3. Seek separate founder approval before a durable local
-   worker-foundation PR with persistence, a worker process, and a non-secret
-   idempotent canary. It still adds no provider or deployment.
+3. The founder separately approved local implementation and verification of
+   the application-owned foundation on August 20, 2026. The resulting
+   [worker-foundation record](phase2-worker-foundation.md) is published on its
+   feature branch under a later stage/commit/push approval. Draft PR #13 is
+   open against `dev`; merge remains separately gated.
 4. Keep Redis/shared throttling, creator-receipt migration, production email,
    cloud provisioning, and operation-specific financial idempotency in their
    separately reviewed slices.

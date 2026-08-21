@@ -75,5 +75,9 @@ The subsequent local candidate evaluation relied on this Node 24 baseline to
 reassess current Graphile Worker and pg-boss releases and exercise a disposable
 application-owned migration/lifecycle fixture. PR #11 published that evidence
 as merge commit `afdb59d`; final-head run `32347088768` and post-merge run
-`32347585996` passed all three jobs. Durable implementation, production grants,
-and deployment remain separately unauthorized.
+`32347585996` passed all three jobs. The founder later approved local-only
+implementation and verification of the provisional application-owned
+foundation, followed by a separate approval to stage, commit, and push its
+feature branch and a later approval to open draft PR #13 against `dev`. That
+PR is now open; merge, production grants, and deployment remain separately
+unauthorized.

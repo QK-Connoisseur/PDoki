@@ -172,6 +172,8 @@ test("Home renders the approved Sakura glass shell without extra rail bubbles", 
 test("the Sakura glass material is shared by member routes and Create", async ({
   page,
 }) => {
+  // This test verifies shared material, not promotion expiry behavior.
+  await page.clock.setFixedTime(new Date("2026-08-20T12:00:00Z"));
   await loginAs(page, "member");
 
   const routes = [

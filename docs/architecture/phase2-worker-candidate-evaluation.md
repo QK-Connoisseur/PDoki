@@ -173,9 +173,11 @@ The application-owned pattern is therefore the provisional local leading
 candidate, not a binding production selection. PR #11 published this evidence
 as merge commit `afdb59d`, preserving reviewed head `b858bd1`. Final-head run
 `32347088768` and post-merge `dev` run `32347585996` passed all three jobs.
-Publication does not authorize a production selection or durable
-implementation. The next gate remains separate founder approval for a durable
-local worker foundation with reviewed persistence, a separate worker process,
-and a non-secret idempotent canary. That later slice must still add no provider,
-Redis, email/token migration, payment/Veso behavior, deployment, or live
-configuration unless separately authorized.
+Publication did not authorize a production selection or durable implementation.
+The founder later approved local implementation and verification of the
+provisional application-owned foundation on August 20, 2026. That work is
+recorded in the [worker-foundation record](phase2-worker-foundation.md) and is
+published on its feature branch under a later stage/commit/push approval. It
+still adds no provider, Redis, email/token migration, payment/Veso behavior,
+deployment, or live configuration. Draft PR #13 is open against `dev`; merge
+remains separately gated.

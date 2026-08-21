@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-20 · Working branch: `codex/phase2-worker-publication-reconciliation` · Base: `dev` at PR #11 merge `afdb59d`
+Last updated: 2026-08-21 · Working branch: `codex/phase2-worker-foundation` · Base: `dev` at PR #12 merge `6a04b0c`
 
 ## Current phase
 
@@ -32,9 +32,9 @@ requested. Counsel-approved policies, provider integration, country/tax gates,
 and private operations review remain open.
 
 Phase 2 remains **partially complete (local foundation)**. Staging/RDS,
-backups and a restore drill, Sentry/equivalent monitoring, a background-job
-queue, shared throttling, and the full idempotency framework remain
-unimplemented. The founder approved a provider-neutral architecture direction
+backups and a restore drill, Sentry/equivalent monitoring, shared throttling,
+and the general idempotency framework remain unimplemented. The founder
+approved a provider-neutral architecture direction
 on August 18, 2026: PostgreSQL is the durable jobs/outbox and idempotency
 authority; Redis is limited to shared throttling and ephemeral coordination;
 and dependency outages must never create an unlimited path. Merged PR #9
@@ -44,13 +44,26 @@ and merged PR #11 published the separately authorized local worker-candidate
 evaluation and disposable application-owned migration/lifecycle fixture. None
 of these changes authorizes a provider, production worker dependency or schema,
 spend, provisioning, deployment, live configuration, or private-operations
-activation.
+activation. On August 20, 2026, the founder separately approved local-only
+implementation and verification of that provisional application-owned worker
+foundation. The founder later approved staging, committing, and pushing
+`codex/phase2-worker-foundation`. The feature branch moves no current product
+flow to async work. Draft PR #13 is open against `dev`; merge remains
+separately gated, and every changed head requires fresh exact-head CI.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at PR #11 merge commit `afdb59d`, which preserves
-  reviewed candidate-evaluation head `b858bd1`. Final-head run `32347088768`
-  and post-merge `dev` run `32347585996` passed all three jobs.
+- `dev` and `origin/dev` are at PR #12 merge commit `6a04b0c`, which preserves
+  the six-file publication-reconciliation head `0f3636c`. PR #12 exact-head
+  CI was green before merge. The worker-foundation feature branch starts from
+  that merge and is published remotely under the separate stage/commit/push
+  approval. Draft PR #13 is open against `dev`; merge is not authorized.
+- The August 21 tracker rework preserves all 148 legacy task rows and every
+  original backlog, note, assumption, and expense cell. Its PLAN-aligned
+  Delivery Tracker contains 158 stable execution records across P00–P14 and
+  POST, including explicit completed records for the two published Phase 4
+  foundations. Dedicated Phase Roadmap, Review & Blocker Queue, Daily Log, and
+  Decision Register views make current work and approvals easier to follow.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -124,7 +137,10 @@ activation.
   lease recovery. The original 5/5 Prisma suite still passes, the normal
   migration ledger is unchanged, and post-run generated databases/roles are
   zero. PR #11 published this provisional local recommendation as `afdb59d`;
-  durable implementation remains a separate approval gate.
+  local-only implementation/verification was separately approved on August
+  20, followed by a separate stage/commit/push approval for the foundation
+  branch. Pull-request publication, production grants, and deployment remain
+  separate approval gates.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
@@ -330,11 +346,12 @@ npm run db:down
 
 - `PLAN.md`, `CLAUDE.md`, `README.md`, and the Slice 3 architecture record
   describe the published frontend-auth state.
-- The master tracker marks account/login, roles, session management, email
-  verification, password reset, and login/signup screens Done.
-- Its formula-driven summary is 19/148 Done (12.8%), 46 In Progress, and 83 Not
-  Started. All five sheets were rendered and visually checked; the formula
-  error scan returned zero matches.
+- At this Phase 3 publication checkpoint, the legacy master tracker marked
+  account/login, roles, session management, email verification, password reset,
+  and login/signup screens Done. Its then-current formula summary was 19/148
+  Done (12.8%), 46 In Progress, and 83 Not Started across five sheets. Those
+  dated figures remain preserved in `Legacy Overview 2026-08-16`; current
+  execution status now lives in the PLAN-aligned Delivery Tracker and Overview.
 
 ## What Slices 4A and 4B implement
 
@@ -560,6 +577,62 @@ head `b858bd1` in run `32347088768` and on merge commit `afdb59d` in run
 candidate suite remains an explicit local/opt-in evidence command rather than a
 standard CI job.
 
+## Current Phase 2 durable-worker verification — 2026-08-20
+
+The separately approved application-owned foundation is implemented, verified,
+and published on feature branch `codex/phase2-worker-foundation` from
+`dev`/PR #12 merge `6a04b0c`. Draft PR #13 is open against `dev`; merge is not
+authorized. Exact Node `v24.19.0`, npm `11.17.0`, and PostgreSQL 17 evidence:
+
+| Command / check                               | Result                                                         |
+| --------------------------------------------- | -------------------------------------------------------------- |
+| Clean disposable `db:deploy`                  | ✅ all 7 repository migrations applied                         |
+| Worker unit suites                            | ✅ 8 files, 87/87 tests                                        |
+| Durable foundation integration                | ✅ 1 file, 10/10 tests                                         |
+| Opt-in exact-role privilege proof             | ✅ 1/1; isolated database/roles removed                        |
+| Full API suite                                | ✅ 26 files + 1 opt-in skip; 215/215 run tests passed          |
+| Web suite                                     | ✅ 38 files, 166/166 tests                                     |
+| Contracts suite                               | ✅ 1 file, 24/24 tests                                         |
+| Published compatibility/candidate suites      | ✅ 5/5 and 13/13                                               |
+| API/contracts/database, web, and admin builds | ✅ all production builds                                       |
+| Hostile ambient `PGOPTIONS` startup smoke     | ✅ worker pins `READ COMMITTED`/timeouts and reaches ready     |
+| Compiled canary + `SIGTERM` process smoke     | ✅ one effect, `SUCCEEDED`, clean pool close, exit 0           |
+| Compiled fatal-transition process smoke       | ✅ one effect retained, job leased, bounded pool close, exit 1 |
+| Prisma validation, lint, Prettier, diff check | ✅ exit 0                                                      |
+| Post-run PostgreSQL catalog audit             | ✅ 0 generated Phase 2 databases and 0 generated Phase 2 roles |
+
+The 100-canary capacity boundary is covered by racing the 100th and 101st
+submissions: one succeeds, one receives the fixed capacity failure, and the
+losing transaction leaves no orphan intent or job. The 1,000 global ceiling is
+a future cross-kind defense and is not independently reachable while the
+canary is the only job kind.
+
+The final compiled-process checks exercise both normal and fatal lifecycle
+paths. A deliberately hostile ambient `PGOPTIONS` value requested weaker
+timeouts and non-`READ COMMITTED` isolation; the fixed pool startup
+configuration overrode it, and the repository probe confirmed the required
+isolation and grants before the worker reported ready. Normal work then created
+one idempotent effect and drained on `SIGTERM`. An intentionally removed
+completion routine in the disposable database made the worker stop claiming,
+report degraded state without raw database details, drain, close its pool, and
+exit 1 while leaving the effect-bearing job leased for recovery. The disposable
+database was then removed.
+
+The ordinary `pumdoki_dev` database was not reset or used as final migration
+evidence. An early draft of the new migration had already been applied there
+before hash-only idempotency and effect reconciliation were finalized. Its
+ledger was not edited; repair or recreation still requires separate approval.
+
+Following separate founder approval on August 20, the tracked working-copy
+PostgreSQL Compose mapping now publishes `127.0.0.1:5432:5432`. The local `db`
+container was recreated without removing its named volume. Before/after evidence matches:
+PostgreSQL cluster identifier `7673277215565467682`, database OID `16384`,
+PostgreSQL `17.10`, seven successful migrations, and sampled domain counts of
+115 users, 849 sessions, 393 acceptance records, and 20 creator applications.
+The recreated container is healthy, normalized Compose configuration and Docker
+runtime publishers contain only `127.0.0.1`, and direct IPv4-loopback
+connectivity passes.
+
 ## Risks and remaining work
 
 - Dependency-bound notification, theme, billing, export, and deletion Settings
@@ -573,6 +646,10 @@ standard CI job.
   storage. The database/session security behavior itself is enforced server-
   side.
 - Phase 2 cloud/operations work remains incomplete.
+- PostgreSQL and Mailpit host ports are now bound to IPv4 loopback. This removes
+  the prior LAN-facing wildcard publisher, but it does not protect against
+  other processes on the same host or containers on the Compose network.
+  Restricted deployed credentials and network controls remain separate gates.
 - Counsel must define acceptance-evidence retention and pseudonymization.
 - Counsel-approved creator/payout/content policies, country eligibility, tax
   intake, and an identity provider with approved security/retention controls
@@ -596,15 +673,13 @@ standard CI job.
 
 ## Next exact task
 
-1. Review the separately approved draft PR for this six-file publication-status
-   reconciliation. Approval to commit, push, and open the draft PR was granted
-   on August 20, 2026; merge remains separately gated.
-2. Only after that reconciliation is reviewed and merged, seek separate founder
-   approval before the durable local worker foundation:
-   persistence, a separate worker process, and a non-secret idempotent canary.
-   Do not migrate token-bearing email, select a provider, add Redis, or deploy
-   in that slice.
-3. Keep Phase 2 labeled partially complete until its implementation, HTTPS
+1. Review draft PR #13's worker foundation, PLAN-aligned tracker, and exact-head
+   CI. Merge remains separately gated.
+2. Seek separate approval before repairing or recreating the ordinary local
+   `pumdoki_dev` database: an early uncommitted draft of the new migration was
+   applied there, no data was reset, and final evidence deliberately uses a
+   disposable database instead.
+3. Keep Phase 2 labeled partially complete until publication, HTTPS
    staging, migration/restore, backup, and monitoring exit criteria pass.
 4. Keep the creator-review router unmounted from the public API and keep
    `APPROVED`, role promotion, and identity collection absent.
