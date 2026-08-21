@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-20 · Working branch: `codex/phase2-worker-foundation` · Base: `dev` at PR #12 merge `6a04b0c`
+Last updated: 2026-08-21 · Working branch: `codex/phase2-worker-foundation` · Base: `dev` at PR #12 merge `6a04b0c`
 
 ## Current phase
 
@@ -48,8 +48,8 @@ activation. On August 20, 2026, the founder separately approved local-only
 implementation and verification of that provisional application-owned worker
 foundation. The founder later approved staging, committing, and pushing
 `codex/phase2-worker-foundation`. The feature branch moves no current product
-flow to async work. A draft PR against `dev` is authorized; merge remains
-separately gated.
+flow to async work. Draft PR #13 is open against `dev`; merge remains
+separately gated, and every changed head requires fresh exact-head CI.
 
 ## Publication status
 
@@ -57,7 +57,11 @@ separately gated.
   the six-file publication-reconciliation head `0f3636c`. PR #12 exact-head
   CI was green before merge. The worker-foundation feature branch starts from
   that merge and is published remotely under the separate stage/commit/push
-  approval. Draft-PR publication against `dev` is now authorized; merge is not.
+  approval. Draft PR #13 is open against `dev`; merge is not authorized.
+- The August 21 tracker rework preserves all 148 legacy task rows and every
+  original backlog, note, assumption, and expense cell. Its PLAN-aligned
+  Delivery Tracker contains 156 stable execution records across P00–P14 and
+  POST, plus dedicated Phase Roadmap, Daily Log, and Decision Register views.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -574,8 +578,8 @@ standard CI job.
 
 The separately approved application-owned foundation is implemented, verified,
 and published on feature branch `codex/phase2-worker-foundation` from
-`dev`/PR #12 merge `6a04b0c`. A draft PR against `dev` is authorized; merge is
-not. Exact Node `v24.19.0`, npm `11.17.0`, and PostgreSQL 17 evidence:
+`dev`/PR #12 merge `6a04b0c`. Draft PR #13 is open against `dev`; merge is not
+authorized. Exact Node `v24.19.0`, npm `11.17.0`, and PostgreSQL 17 evidence:
 
 | Command / check                               | Result                                                         |
 | --------------------------------------------- | -------------------------------------------------------------- |
@@ -666,8 +670,8 @@ connectivity passes.
 
 ## Next exact task
 
-1. Review the authorized draft worker-foundation PR and its exact-head CI.
-   Merge remains separately gated.
+1. Review draft PR #13's worker foundation, PLAN-aligned tracker, and exact-head
+   CI. Merge remains separately gated.
 2. Seek separate approval before repairing or recreating the ordinary local
    `pumdoki_dev` database: an early uncommitted draft of the new migration was
    applied there, no data was reset, and final evidence deliberately uses a

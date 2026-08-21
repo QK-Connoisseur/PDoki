@@ -1,6 +1,6 @@
 # Phase 2 durable worker foundation
 
-Date: 2026-08-20 · Status: implemented and verified; draft PR against dev authorized
+Date: 2026-08-20 · Status: implemented and verified; draft PR #13 open against dev
 
 ## Authority and scope
 
@@ -15,8 +15,8 @@ tree, creating its feature-branch commit, and pushing
 merging a pull request, staging or production deployment, live role or secret
 provisioning, Redis, a provider or vendor, email/token delivery, payment or
 Veso behavior, or private-operations activation. The founder subsequently
-authorized opening a draft PR against `dev`; merge and every other boundary
-listed here remain withheld.
+authorized opening a draft PR against `dev`; PR #13 is now open, while merge
+and every other boundary listed here remain withheld.
 
 ## Outcome
 
@@ -229,8 +229,9 @@ and network controls remain a separate deployment gate.
 ## Remaining gates
 
 This feature-branch foundation is not a production queue or Phase 2
-completion. Draft-PR publication against `dev` is authorized; merge remains
-separately gated. Later slices still require independent review and authority
+completion. Draft PR #13 is open against `dev`; merge remains separately
+gated, and every changed head requires exact-head CI.
+Later slices still require independent review and authority
 for:
 
 - deployed migration/API/worker credentials and secrets;

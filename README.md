@@ -279,10 +279,10 @@ npm run enqueue:worker-canary -- --idempotency-key local-safe-canary
 
 The canary is non-secret and local-only. No public route currently enqueues
 work, and no email, payment, Veso, identity, or creator-review flow uses this
-worker. The foundation is published only on its feature branch under a
-separate stage/commit/push approval. A draft PR against `dev` is authorized;
-merge remains separately gated. Final verification passed against a clean disposable
-database, which was removed afterward. Do not treat the ordinary
+worker. The foundation is published in draft PR #13 against `dev`; merge
+remains separately gated, and every changed PR head must pass exact-head CI.
+Final verification passed against a clean disposable database, which was
+removed afterward. Do not treat the ordinary
 `pumdoki_dev` migration as final evidence until the stale draft described in
 `HANDOFF.md` is separately approved for repair or recreation.
 
@@ -320,7 +320,10 @@ points the frontend API client at the backend. Never commit a real `.env`.
 
 - `README.md` describes the product, repository, and stable requirements.
 - `PLAN.md` contains the phased implementation roadmap and open decisions.
-- The master tracker is the operational checklist.
+- The master tracker is the PLAN.md-aligned operational view: use its Delivery
+  Tracker for current execution, Phase Roadmap for phase-level truth, Daily Log
+  for plain-language debriefs, and Decision Register for open approvals. Its
+  original tracker, backlog, notes, and expense sheets remain preserved.
 - Architecture decisions and durable slice designs live under `docs/architecture`.
 - Counsel-approved policies may later live under `docs/legal`.
 - Temporary implementation prompts should not be committed.

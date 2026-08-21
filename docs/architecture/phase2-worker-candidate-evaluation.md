@@ -179,5 +179,5 @@ provisional application-owned foundation on August 20, 2026. That work is
 recorded in the [worker-foundation record](phase2-worker-foundation.md) and is
 published on its feature branch under a later stage/commit/push approval. It
 still adds no provider, Redis, email/token migration, payment/Veso behavior,
-deployment, or live configuration. A draft PR against `dev` is authorized;
-merge remains separately gated.
+deployment, or live configuration. Draft PR #13 is open against `dev`; merge
+remains separately gated.
