@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-21 · Working branch: `codex/phase2-worker-merge-reconciliation` · Base: `dev` at PR #13 merge `6311522`
+Last updated: 2026-08-23 · Working branch: `codex/phase4-private-ops-access-foundation` · Base: `origin/dev` at PR #14 merge `492d62c` · Implementation commit: `9904334`
 
 ## Current phase
 
@@ -12,6 +12,14 @@ public API exposure and concurrency defects are repaired, and its full local
 migration, API, browser, build, and quality gates are green. It remains
 deliberately unusable as an operations workflow until the documented
 private-origin authentication and deployment controls exist.
+
+**Phase 4 Slice 3 is locally implemented and verified as `9904334`.** It adds
+provider-neutral signed-assertion verification, database-owned exact operator
+and permission authorization, transaction-time reauthorization, and test-only
+request-integrity seams. The normal API/server still do not mount the creator-
+review router. Draft-PR publication is authorized; merge, provider/live
+configuration, runtime database roles, deployment, and activation remain
+separately gated. G1–G12 remain `NOT EVALUATED`.
 
 The founder-approved Phase 3 core scope is complete:
 
@@ -55,20 +63,23 @@ to async work.
 
 ## Publication status
 
-- `dev` and `origin/dev` are at PR #13 merge commit `6311522`, which preserves
-  reviewed worker-foundation head `8a8688f`. Exact-head run `32518256241` and
-  post-merge run `32535922437` passed the API, lint/test/build, and real-stack
-  Playwright jobs. The current merge-reconciliation branch is local only;
-  pushing it or opening another pull request remains separately gated.
+- `origin/dev` is at PR #14 merge commit `492d62c`, which preserves
+  reviewed reconciliation head `7a97d57`. Exact-head run `32640222452` and
+  post-merge run `32642650020` passed the API, lint/test/build, and real-stack
+  Playwright jobs. The current Phase 4 branch is based on that merge and
+  contains implementation commit `9904334`; branch push and opening its draft
+  PR are authorized, while marking it ready or merging remains separately
+  gated.
 - The August 21 tracker rework preserves all 148 legacy task rows and every
   original backlog, note, assumption, and expense cell. Its PLAN-aligned
-  Delivery Tracker contains 158 stable execution records across P00–P14 and
+  Delivery Tracker contains 161 stable execution records across P00–P14 and
   POST, including explicit completed records for the two published Phase 4
   foundations. Dedicated Phase Roadmap, Review & Blocker Queue, Daily Log, and
   Decision Register views make current work and approvals easier to follow.
-  After the PR #13 merge reconciliation it reports 27 Done, 50 In Progress,
-  0 In Review, 1 Blocked, and 80 Not Started records (17.1% record progress).
-  The Review & Blocker Queue now contains only blocked item `P07-E2E-001`.
+  After the Slice 3 local debrief it reports 27 Done, 50 In Progress, 3 In
+  Review, 1 Blocked, and 80 Not Started records (16.8% record progress). The
+  Review & Blocker Queue contains the three Slice 3 review records plus blocked
+  item `P07-E2E-001`; no prior record or history row was deleted.
 - GitHub Actions run `30739645872` passed the API build/test, web/private-admin
   lint/test/build, and real-stack Playwright jobs for Slice 1.
 - Phase 4 Slice 2 is published through PR #1 merge commit `e7352c8`; its
@@ -144,11 +155,37 @@ to async work.
   zero. PR #11 published this provisional local recommendation as `afdb59d`;
   local-only implementation/verification was separately approved on August
   20, followed by a separate stage/commit/push approval for the foundation
-  branch. Pull-request publication, production grants, and deployment remain
-  separate approval gates.
+  branch. Pull-request publication and merge were later separately approved
+  through PR #13; production grants and deployment remain separate approval
+  gates.
 - Local backup branch
   `codex/backup-dev-before-squash-20260729` preserves the pre-publication
   history.
+
+## Phase 4 Slice 3 local verification — 2026-08-23
+
+Plain-language outcome: the dormant creator-review seam no longer has to trust
+an adapter-supplied user ID or permissions in local tests. A signed external
+identity is validated first, then an exact Pumdoki-owned operator mapping and
+permission are resolved from PostgreSQL and rechecked inside the same review
+transaction. Exact-origin, JSON/body-limit, injected-CSRF, direct-peer audit,
+and credential-redaction seams are covered without creating an operations
+server or exposing the router.
+
+- Exact Node `24.19.0` / npm `11.17.0` verification passed 287/287 API tests
+  across 30 files, 166/166 web tests, 24/24 contract tests, and 15/15 focused
+  operations migration/review cases.
+- All eight repository migrations applied to a clean disposable PostgreSQL 17
+  database, a second deploy was a no-op, and API/database/contracts/web/admin
+  builds, lint, formatting, Prisma validation, and diff checks passed.
+- The ordinary `pumdoki_dev` database was not migrated, repaired, or reset. It
+  still records seven migrations and has no `OperationsOperator` table. Test
+  schemas/rows and both explicitly named disposable databases were removed.
+- Nothing operational was activated: there is no public router mount,
+  operations server/session, provider adapter, live issuer/key/origin,
+  provisioned operator, runtime DB role, live configuration, deployment,
+  `APPROVED`, role promotion, identity mutation/file collection, or publishing
+  workflow. G1–G12 remain `NOT EVALUATED`.
 
 ## Manual local review setup
 
@@ -660,11 +697,14 @@ connectivity passes.
 - Counsel-approved creator/payout/content policies, country eligibility, tax
   intake, and an identity provider with approved security/retention controls
   do not exist yet. Do not enable ID collection or creator approval.
-- The private operations shell has no production signed operations
-  authentication, hardware-backed assurance, creator-review UI, deployed API
-  verifier, or globally immutable audit log.
-  Slice 2's dormant application-level evidence seam must remain unmounted until
-  those controls are implemented and verified.
+- Local provider-neutral signed-assertion verification, exact operator/grant
+  authorization, transaction-time rechecks, and request-integrity seams now
+  exist on the Phase 4 feature branch. They are not production controls: there
+  is still no live provider/issuer/key/origin, hardware-key enrollment/recovery,
+  operations session/server, restricted hosting, runtime DB grant, creator-
+  review UI, globally immutable audit log, or deployment. Slice 2's dormant
+  application-level evidence seam must remain unmounted, and G1–G12 remain
+  `NOT EVALUATED`.
 - Founder began the Cloudflare and Yubico prerequisites on 2026-08-03. This is
   in progress and does not yet constitute verified private-admin restricted
   access or hardware-backed assurance integration. The readiness packet in
@@ -679,25 +719,25 @@ connectivity passes.
 
 ## Next exact task
 
-1. Review this local documentation/tracker reconciliation. Seek separate
-   approval before pushing its branch or opening another pull request.
+1. Push `codex/phase4-private-ops-access-foundation`, open the authorized draft
+   PR against `dev`, and require all exact-head CI jobs to pass. Review the
+   strict assertion, database authorization, transaction recheck, request-
+   integrity, tracker, and scope-boundary evidence. Do not mark the PR ready or
+   merge without separate approval.
 2. Seek separate approval before repairing or recreating the ordinary local
    `pumdoki_dev` database: an early uncommitted draft of the new migration was
    applied there, no data was reset, and final evidence deliberately uses a
    disposable database instead.
-3. Keep Phase 2 labeled partially complete until HTTPS staging,
+3. Keep the creator-review router unmounted and G1–G12 `NOT EVALUATED`. After
+   separate approval, select and verify provider claim semantics, live issuer/
+   JWKS/origin, hardware-key enrollment/recovery, an independent operations
+   session and CSRF mechanism, trusted-proxy/rate-limit policy, restricted
+   runtime database grants, audit/incident evidence, and deployment shape.
+4. Keep Phase 2 labeled partially complete until HTTPS staging,
    migration/restore, backup, monitoring, shared-throttling, and general
    idempotency exit criteria pass.
-4. Keep the creator-review router unmounted from the public API and keep
+5. Keep the creator-review router unmounted from the public API and keep
    `APPROVED`, role promotion, and identity collection absent.
-5. If separately authorized, use the non-secret
-   [operations readiness packet](docs/operations/README.md) to design and
-   locally verify the private operations origin, signed Access/IdP assertion
-   verifier, operator provisioning, hardware MFA and recovery,
-   mutation-origin/CSRF checks, trusted-proxy policy, and restricted runtime
-   database privileges described in the Slice 2 architecture record. Keep the
-   router unmounted, live identifiers and evidence out of Git, and do not
-   activate from a checklist alone.
 6. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
    counsel, CCBill, identity-provider, retention, tax, and country-allowlist
    workstreams in parallel. Do not collect identity files in the meantime.

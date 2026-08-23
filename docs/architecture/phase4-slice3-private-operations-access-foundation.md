@@ -2,6 +2,10 @@
 
 Date: 2026-08-23 · Status: locally implemented and verified; draft-PR publication authorized · Deployment disabled
 
+Implementation commit: `9904334`, based on published `dev` merge `492d62c`
+(PR #14). The publication branch is
+`codex/phase4-private-ops-access-foundation`; merge remains separately gated.
+
 ## Goal
 
 Build and locally verify the provider-neutral identity and request-integrity
@@ -280,7 +284,8 @@ The provider-neutral foundation passed local verification on exact Node
   suites, and both explicitly named disposable databases were dropped and
   confirmed absent.
 
-The ordinary `pumdoki_dev` public schema was not migrated, repaired, or reset.
+The ordinary `pumdoki_dev` public schema was not migrated, repaired, or reset;
+it still records seven migrations and has no `OperationsOperator` table.
 Docker's local PostgreSQL and Mailpit containers remain a development resource,
 not deployment evidence.
 
