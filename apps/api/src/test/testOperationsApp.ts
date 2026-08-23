@@ -6,14 +6,25 @@ import { HttpError } from "../errors.js";
 import { errorHandler } from "../middleware/errorHandler.js";
 import { requestId } from "../middleware/requestId.js";
 import type { OperationsAccessVerifier } from "../operations/access.js";
+import {
+  operationsJsonBody,
+  requireOperationsRequestIntegrity,
+  type OperationsCsrfVerifier,
+} from "../operations/requestIntegrity.js";
 import { adminCreatorApplicationsRouter } from "../routes/adminCreatorApplications.js";
+
+export const TEST_OPERATIONS_ORIGIN = "https://private-operations.pumdoki.test";
+export const TEST_OPERATIONS_CSRF = "test-only-operations-csrf-proof";
 
 export function testOperationsApp({
   db,
   operationsAccessVerifier,
+  verifyCsrf = async (req) =>
+    req.get("x-operations-csrf") === TEST_OPERATIONS_CSRF,
 }: {
   db: PrismaClient;
   operationsAccessVerifier: OperationsAccessVerifier;
+  verifyCsrf?: OperationsCsrfVerifier;
 }): Express {
   const env = loadEnv({
     NODE_ENV: "test",
@@ -23,7 +34,13 @@ export function testOperationsApp({
   const app = express();
 
   app.use(requestId);
-  app.use(express.json({ limit: "100kb" }));
+  app.use(
+    requireOperationsRequestIntegrity({
+      allowedOrigin: TEST_OPERATIONS_ORIGIN,
+      verifyCsrf,
+    })
+  );
+  app.use(operationsJsonBody());
   app.use(
     "/api/v1",
     adminCreatorApplicationsRouter({ db, env, operationsAccessVerifier })

@@ -10,6 +10,7 @@ import type {
   PrismaClient,
 } from "@pumdoki/database";
 import { HttpError } from "../errors.js";
+import type { OperationsReviewActor } from "../operations/types.js";
 
 function toContract(
   application: CreatorApplication
@@ -149,7 +150,7 @@ export function createCreatorApplicationService(db: PrismaClient) {
 
     async review(
       applicationId: string,
-      reviewerUserId: string,
+      actor: OperationsReviewActor,
       input: ReviewCreatorApplicationRequest,
       requestId: string,
       requestIp: string | null
@@ -160,6 +161,36 @@ export function createCreatorApplicationService(db: PrismaClient) {
       const nextStatus =
         input.action === "NEEDS_INFORMATION" ? "NEEDS_INFORMATION" : "REJECTED";
       const updated = await db.$transaction(async (tx) => {
+        const authorizedOperators = await tx.$queryRaw<
+          Array<{ userId: string }>
+        >`
+          SELECT operations_operator."userId" AS "userId"
+          FROM public."OperationsOperator" AS operations_operator
+          INNER JOIN public."User" AS internal_user
+            ON internal_user."id" = operations_operator."userId"
+          INNER JOIN public."OperationsPermissionGrant" AS permission_grant
+            ON permission_grant."operatorId" = operations_operator."id"
+          WHERE operations_operator."id" = ${actor.operatorId}::uuid
+            AND operations_operator."userId" = ${actor.userId}::uuid
+            AND operations_operator."issuer" = ${actor.issuer}
+            AND operations_operator."subject" = ${actor.subject}
+            AND operations_operator."disabledAt" IS NULL
+            AND internal_user."status" = 'ACTIVE'
+            AND internal_user."role" = 'ADMIN'
+            AND permission_grant."permission" = 'creator_applications.review'
+            AND permission_grant."revokedAt" IS NULL
+          LIMIT 1
+          FOR SHARE OF operations_operator, internal_user, permission_grant
+        `;
+        const authorizedOperator = authorizedOperators[0];
+        if (!authorizedOperator) {
+          throw new HttpError(
+            403,
+            "FORBIDDEN",
+            "Insufficient operational permissions"
+          );
+        }
+
         const [application] = await tx.creatorApplication.updateManyAndReturn({
           where: {
             id: applicationId,
@@ -189,7 +220,7 @@ export function createCreatorApplicationService(db: PrismaClient) {
         const reviewEvent = await tx.creatorApplicationReviewEvent.create({
           data: {
             creatorApplicationId: application.id,
-            reviewerUserId,
+            reviewerUserId: authorizedOperator.userId,
             fromStatus: input.expectedStatus,
             toStatus: nextStatus,
             reason: input.reason,
