@@ -176,9 +176,9 @@ deployed database roles.
    normal API test discovery, the production build, and runtime paths.
 3. The founder separately approved local implementation and verification of
    the application-owned foundation on August 20, 2026. The resulting
-   [worker-foundation record](phase2-worker-foundation.md) is published on its
-   feature branch under a later stage/commit/push approval. Draft PR #13 is
-   open against `dev`; merge remains separately gated.
+   [worker-foundation record](phase2-worker-foundation.md) was later published
+   through PR #13. Reviewed head `8a8688f` merged into `dev` as `6311522`;
+   exact-head and post-merge CI passed all three jobs.
 4. Keep Redis/shared throttling, creator-receipt migration, production email,
    cloud provisioning, and operation-specific financial idempotency in their
    separately reviewed slices.
