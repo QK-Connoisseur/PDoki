@@ -3,41 +3,38 @@ import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { z } from "zod";
 import type { Env } from "../env.js";
 import { HttpError } from "../errors.js";
+import {
+  CREATOR_APPLICATION_REVIEW_PERMISSION,
+  OperationsAuthenticationError,
+  type OperationsPermission,
+  type VerifiedOperationsIdentity,
+} from "./types.js";
 
-export const CREATOR_APPLICATION_REVIEW_PERMISSION =
-  "creator_applications.review" as const;
+export {
+  CREATOR_APPLICATION_REVIEW_PERMISSION,
+  OperationsAuthenticationError,
+} from "./types.js";
+export type { OperationsPermission } from "./types.js";
 
-export type OperationsPermission = typeof CREATOR_APPLICATION_REVIEW_PERMISSION;
-
-const OperationsPrincipalSchema = z
+const VerifiedOperationsIdentitySchema = z
   .object({
-    userId: z.uuid(),
+    issuer: z
+      .string()
+      .min(1)
+      .max(512)
+      .refine((value) => value === value.trim()),
     subject: z
       .string()
       .min(1)
       .max(512)
       .refine((value) => value === value.trim()),
     assurance: z.enum(["MFA", "TEST"]),
-    permissions: z
-      .array(z.literal(CREATOR_APPLICATION_REVIEW_PERMISSION))
-      .max(1)
-      .readonly(),
   })
   .strict();
 
-export type OperationsPrincipal = z.infer<typeof OperationsPrincipalSchema>;
-
-export class OperationsAuthenticationError extends Error {
-  constructor(message = "Invalid operational authentication") {
-    super(message);
-    this.name = "OperationsAuthenticationError";
-  }
-}
-
 /**
- * A verifier may return a principal only after validating the complete
- * private-operations request boundary. The public API server intentionally
- * provides no implementation in this slice.
+ * The verifier authenticates only the external identity. Internal users,
+ * operator provisioning, and permissions are always loaded from PostgreSQL.
  */
 export type OperationsAccessVerifier = (req: Request) => Promise<unknown>;
 
@@ -46,6 +43,13 @@ interface RequireOperationsAccessOptions {
   env: Env;
   verifier: OperationsAccessVerifier;
   permission: OperationsPermission;
+}
+
+function databasePermission(permission: OperationsPermission) {
+  switch (permission) {
+    case CREATOR_APPLICATION_REVIEW_PERMISSION:
+      return "CREATOR_APPLICATION_REVIEW" as const;
+  }
 }
 
 export function requireOperationsAccess({
@@ -74,7 +78,7 @@ export function requireOperationsAccess({
         throw error;
       }
 
-      const parsed = OperationsPrincipalSchema.safeParse(candidate);
+      const parsed = VerifiedOperationsIdentitySchema.safeParse(candidate);
       if (!parsed.success) {
         throw new HttpError(
           401,
@@ -82,11 +86,11 @@ export function requireOperationsAccess({
           "Operational authentication required"
         );
       }
-      const principal = parsed.data;
+      const identity: VerifiedOperationsIdentity = parsed.data;
       const assuranceAccepted =
-        principal.assurance === "MFA" ||
-        (env.NODE_ENV === "test" && principal.assurance === "TEST");
-      if (!assuranceAccepted || !principal.permissions.includes(permission)) {
+        identity.assurance === "MFA" ||
+        (env.NODE_ENV === "test" && identity.assurance === "TEST");
+      if (!assuranceAccepted) {
         throw new HttpError(
           403,
           "FORBIDDEN",
@@ -94,10 +98,31 @@ export function requireOperationsAccess({
         );
       }
 
-      const user = await db.user.findUnique({
-        where: { id: principal.userId },
+      const operator = await db.operationsOperator.findUnique({
+        where: {
+          issuer_subject: {
+            issuer: identity.issuer,
+            subject: identity.subject,
+          },
+        },
+        include: {
+          user: true,
+          permissionGrants: {
+            where: {
+              permission: databasePermission(permission),
+              revokedAt: null,
+            },
+            select: { permission: true },
+          },
+        },
       });
-      if (!user || user.status !== "ACTIVE" || user.role !== "ADMIN") {
+      if (
+        !operator ||
+        operator.disabledAt !== null ||
+        operator.user.status !== "ACTIVE" ||
+        operator.user.role !== "ADMIN" ||
+        operator.permissionGrants.length !== 1
+      ) {
         throw new HttpError(
           403,
           "FORBIDDEN",
@@ -106,7 +131,15 @@ export function requireOperationsAccess({
       }
 
       Object.defineProperty(req, "operationsAuth", {
-        value: { principal, user },
+        value: {
+          identity,
+          operator: {
+            id: operator.id,
+            userId: operator.userId,
+            permissions: [permission],
+          },
+          user: operator.user,
+        },
         configurable: true,
         enumerable: true,
         writable: true,

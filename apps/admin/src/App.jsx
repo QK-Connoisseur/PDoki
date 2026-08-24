@@ -5,11 +5,11 @@ const boundaries = [
   },
   {
     label: "Authorization",
-    value: "Backend ADMIN permissions remain required",
+    value: "Explicit operator grant and active ADMIN account required",
   },
   {
     label: "Production access",
-    value: "MFA or SSO and restricted hosting required",
+    value: "Signed hardware-backed access is not configured",
   },
 ];
 
@@ -23,9 +23,9 @@ export default function App() {
         <p className="eyebrow">Private workspace</p>
         <h1 id="operations-title">Pumdoki Operations</h1>
         <p className="lede">
-          The independent operations application boundary is ready. Operational
-          workflows remain disabled until Phase 11 security and audit controls
-          are implemented.
+          This is only an independently buildable shell. Operational
+          authentication and workflows remain disabled until Phase 11 security
+          and audit controls are implemented.
         </p>
 
         <dl className="boundary-list">

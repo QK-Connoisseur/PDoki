@@ -51,9 +51,15 @@ export function adminCreatorApplicationsRouter({
     }),
     async (req, res) => {
       const params = req.validated?.params as CreatorApplicationReviewParams;
+      const operationsAuth = req.operationsAuth!;
       const review = await service.review(
         params.applicationId,
-        req.operationsAuth!.user.id,
+        {
+          operatorId: operationsAuth.operator.id,
+          userId: operationsAuth.user.id,
+          issuer: operationsAuth.identity.issuer,
+          subject: operationsAuth.identity.subject,
+        },
         req.validated?.body as ReviewCreatorApplicationRequest,
         req.requestId,
         requestPeerIp(req)

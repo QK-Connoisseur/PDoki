@@ -14,9 +14,12 @@ import {
 } from "./access.js";
 
 const ADMIN_ID = "42bfa9d5-d99b-4ad4-9e45-a62a7be60ed0";
+const OPERATOR_ID = "8b0d7a3f-5864-4e85-aedd-7773b80579a1";
+const ISSUER = "https://access.pumdoki.example";
+const SUBJECT = "upstream-operator-123";
 
 function admin(overrides: Partial<User> = {}): User {
-  const now = new Date("2026-08-12T00:00:00.000Z");
+  const now = new Date("2026-08-23T00:00:00.000Z");
   return {
     id: ADMIN_ID,
     email: "operator@pumdoki.example",
@@ -31,6 +34,34 @@ function admin(overrides: Partial<User> = {}): User {
   };
 }
 
+function provisionedOperator({
+  user = admin(),
+  disabledAt = null,
+  permitted = true,
+}: {
+  user?: User;
+  disabledAt?: Date | null;
+  permitted?: boolean;
+} = {}) {
+  const now = new Date("2026-08-23T00:00:00.000Z");
+  return {
+    id: OPERATOR_ID,
+    issuer: ISSUER,
+    subject: SUBJECT,
+    userId: user.id,
+    createdAt: now,
+    disabledAt,
+    user,
+    permissionGrants: permitted
+      ? [{ permission: "CREATOR_APPLICATION_REVIEW" }]
+      : [],
+  };
+}
+
+function identity(assurance: "MFA" | "TEST" = "MFA") {
+  return { issuer: ISSUER, subject: SUBJECT, assurance } as const;
+}
+
 function environment(nodeEnv: "test" | "production"): Env {
   return loadEnv({
     NODE_ENV: nodeEnv,
@@ -42,14 +73,15 @@ function environment(nodeEnv: "test" | "production"): Env {
 function appWith({
   env,
   verifier,
-  findUser = async () => admin(),
+  findOperator = async () => provisionedOperator(),
 }: {
   env: Env;
   verifier: OperationsAccessVerifier;
-  findUser?: () => Promise<User | null>;
-}): Express {
+  findOperator?: () => Promise<ReturnType<typeof provisionedOperator> | null>;
+}): { app: Express; findOperator: ReturnType<typeof vi.fn> } {
+  const findUnique = vi.fn(findOperator);
   const db = {
-    user: { findUnique: vi.fn(findUser) },
+    operationsOperator: { findUnique },
   } as unknown as PrismaClient;
   const logger = pino({ level: "silent" });
   const app = express();
@@ -63,169 +95,162 @@ function appWith({
       verifier,
       permission: CREATOR_APPLICATION_REVIEW_PERMISSION,
     }),
-    (req, res) => res.json({ userId: req.operationsAuth!.user.id })
+    (req, res) =>
+      res.json({
+        userId: req.operationsAuth!.user.id,
+        operatorId: req.operationsAuth!.operator.id,
+        issuer: req.operationsAuth!.identity.issuer,
+        permissions: req.operationsAuth!.operator.permissions,
+      })
   );
   app.use(errorHandler(logger));
-  return app;
+  return { app, findOperator: findUnique };
 }
 
 describe("operations access boundary", () => {
-  it("rejects a missing operational identity", async () => {
-    const response = await request(
-      appWith({ env: environment("test"), verifier: async () => null })
-    ).get("/operations-check");
+  it("rejects a missing operational identity without a database lookup", async () => {
+    const { app, findOperator } = appWith({
+      env: environment("test"),
+      verifier: async () => null,
+    });
+    const response = await request(app).get("/operations-check");
 
     expect(response.status).toBe(401);
     expect(response.body.error.code).toBe("UNAUTHORIZED");
+    expect(findOperator).not.toHaveBeenCalled();
   });
 
   it("cannot use the test assurance outside NODE_ENV=test", async () => {
-    const response = await request(
-      appWith({
+    const { app, findOperator } = appWith({
+      env: environment("production"),
+      verifier: async () => identity("TEST"),
+    });
+    const response = await request(app).get("/operations-check");
+
+    expect(response.status).toBe(403);
+    expect(response.body.error.code).toBe("FORBIDDEN");
+    expect(findOperator).not.toHaveBeenCalled();
+  });
+
+  it("strictly rejects malformed or authority-injecting identities", async () => {
+    const malformedIdentities: unknown[] = [
+      { issuer: ISSUER, subject: SUBJECT },
+      { issuer: ISSUER, subject: SUBJECT, assurance: "PASSWORD" },
+      { issuer: "", subject: SUBJECT, assurance: "MFA" },
+      { issuer: ` ${ISSUER}`, subject: SUBJECT, assurance: "MFA" },
+      { issuer: ISSUER, subject: "   ", assurance: "MFA" },
+      { issuer: ISSUER, subject: ` ${SUBJECT} `, assurance: "MFA" },
+      { ...identity(), userId: ADMIN_ID },
+      {
+        ...identity(),
+        permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
+      },
+      { ...identity(), email: "untrusted@pumdoki.example" },
+    ];
+
+    for (const candidate of malformedIdentities) {
+      const { app, findOperator } = appWith({
         env: environment("production"),
-        verifier: async () => ({
-          userId: ADMIN_ID,
-          subject: `test:${ADMIN_ID}`,
-          assurance: "TEST",
-          permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
-        }),
-      })
-    ).get("/operations-check");
+        verifier: async () => candidate,
+      });
+      const response = await request(app).get("/operations-check");
+
+      expect(response.status).toBe(401);
+      expect(response.body.error.code).toBe("UNAUTHORIZED");
+      expect(findOperator).not.toHaveBeenCalled();
+    }
+  });
+
+  it("normalizes assertion failures but preserves infrastructure failures", async () => {
+    const invalid = appWith({
+      env: environment("production"),
+      verifier: async () => {
+        throw new OperationsAuthenticationError("expired assertion");
+      },
+    });
+    const invalidAssertion = await request(invalid.app).get(
+      "/operations-check"
+    );
+    expect(invalidAssertion.status).toBe(401);
+    expect(invalidAssertion.body.error.code).toBe("UNAUTHORIZED");
+
+    const unavailable = appWith({
+      env: environment("production"),
+      verifier: async () => {
+        throw new Error("identity infrastructure unavailable");
+      },
+    });
+    const infrastructureFailure = await request(unavailable.app).get(
+      "/operations-check"
+    );
+    expect(infrastructureFailure.status).toBe(500);
+    expect(infrastructureFailure.body.error.code).toBe("INTERNAL");
+  });
+
+  it("accepts a verified identity only after exact database provisioning", async () => {
+    const { app, findOperator } = appWith({
+      env: environment("production"),
+      verifier: async () => identity(),
+    });
+    const response = await request(app).get("/operations-check");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      userId: ADMIN_ID,
+      operatorId: OPERATOR_ID,
+      issuer: ISSUER,
+      permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
+    });
+    expect(findOperator).toHaveBeenCalledWith({
+      where: { issuer_subject: { issuer: ISSUER, subject: SUBJECT } },
+      include: {
+        user: true,
+        permissionGrants: {
+          where: {
+            permission: "CREATOR_APPLICATION_REVIEW",
+            revokedAt: null,
+          },
+          select: { permission: true },
+        },
+      },
+    });
+  });
+
+  it.each([
+    ["unknown identity", null],
+    [
+      "disabled operator",
+      provisionedOperator({ disabledAt: new Date("2026-08-23T01:00:00Z") }),
+    ],
+    ["missing grant", provisionedOperator({ permitted: false })],
+    [
+      "suspended user",
+      provisionedOperator({ user: admin({ status: "SUSPENDED" }) }),
+    ],
+    ["banned user", provisionedOperator({ user: admin({ status: "BANNED" }) })],
+    [
+      "non-admin user",
+      provisionedOperator({ user: admin({ role: "MEMBER" }) }),
+    ],
+  ])("rejects a %s", async (_label, operator) => {
+    const { app } = appWith({
+      env: environment("production"),
+      verifier: async () => identity(),
+      findOperator: async () => operator,
+    });
+    const response = await request(app).get("/operations-check");
 
     expect(response.status).toBe(403);
     expect(response.body.error.code).toBe("FORBIDDEN");
   });
 
-  it("rejects malformed principals before consulting the internal account", async () => {
-    const malformedPrincipals: unknown[] = [
-      {
-        userId: ADMIN_ID,
-        subject: "cloudflare-access-subject",
-        permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
-      },
-      {
-        userId: ADMIN_ID,
-        subject: "cloudflare-access-subject",
-        assurance: "PASSWORD",
-        permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
-      },
-      {
-        userId: "not-a-uuid",
-        subject: "cloudflare-access-subject",
-        assurance: "MFA",
-        permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
-      },
-      {
-        userId: ADMIN_ID,
-        subject: "   ",
-        assurance: "MFA",
-        permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
-      },
-      {
-        userId: ADMIN_ID,
-        subject: " padded-cloudflare-access-subject ",
-        assurance: "MFA",
-        permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
-      },
-      {
-        userId: ADMIN_ID,
-        subject: "cloudflare-access-subject",
-        assurance: "MFA",
-        permissions: ["creator_applications.approve"],
-      },
-      {
-        userId: ADMIN_ID,
-        subject: "cloudflare-access-subject",
-        assurance: "MFA",
-        permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
-        email: "untrusted@pumdoki.example",
-      },
-    ];
-
-    for (const candidate of malformedPrincipals) {
-      const findUser = vi.fn(async () => admin());
-      const response = await request(
-        appWith({
-          env: environment("production"),
-          verifier: async () => candidate,
-          findUser,
-        })
-      ).get("/operations-check");
-
-      expect(response.status).toBe(401);
-      expect(response.body.error.code).toBe("UNAUTHORIZED");
-      expect(findUser).not.toHaveBeenCalled();
-    }
-  });
-
-  it("normalizes verifier authentication failures but preserves infrastructure failures", async () => {
-    const invalidAssertion = await request(
-      appWith({
-        env: environment("production"),
-        verifier: async () => {
-          throw new OperationsAuthenticationError("expired assertion");
-        },
-      })
-    ).get("/operations-check");
-    expect(invalidAssertion.status).toBe(401);
-    expect(invalidAssertion.body.error.code).toBe("UNAUTHORIZED");
-
-    const infrastructureFailure = await request(
-      appWith({
-        env: environment("production"),
-        verifier: async () => {
-          throw new Error("identity provider unavailable");
-        },
-      })
-    ).get("/operations-check");
-    expect(infrastructureFailure.status).toBe(500);
-    expect(infrastructureFailure.body.error.code).toBe("INTERNAL");
-  });
-
-  it("accepts a permitted MFA principal mapped to an active internal admin", async () => {
-    const response = await request(
-      appWith({
-        env: environment("production"),
-        verifier: async () => ({
-          userId: ADMIN_ID,
-          subject: "cloudflare-access-subject",
-          assurance: "MFA",
-          permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
-        }),
-      })
-    ).get("/operations-check");
+  it("accepts TEST assurance only in the injected test boundary", async () => {
+    const { app } = appWith({
+      env: environment("test"),
+      verifier: async () => identity("TEST"),
+    });
+    const response = await request(app).get("/operations-check");
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ userId: ADMIN_ID });
-  });
-
-  it("rejects a principal without permission or an eligible internal account", async () => {
-    const noPermission = await request(
-      appWith({
-        env: environment("production"),
-        verifier: async () => ({
-          userId: ADMIN_ID,
-          subject: "cloudflare-access-subject",
-          assurance: "MFA",
-          permissions: [],
-        }),
-      })
-    ).get("/operations-check");
-    expect(noPermission.status).toBe(403);
-
-    const inactive = await request(
-      appWith({
-        env: environment("production"),
-        verifier: async () => ({
-          userId: ADMIN_ID,
-          subject: "cloudflare-access-subject",
-          assurance: "MFA",
-          permissions: [CREATOR_APPLICATION_REVIEW_PERMISSION],
-        }),
-        findUser: async () => admin({ status: "SUSPENDED" }),
-      })
-    ).get("/operations-check");
-    expect(inactive.status).toBe(403);
-    expect(inactive.body.error.code).toBe("FORBIDDEN");
   });
 });

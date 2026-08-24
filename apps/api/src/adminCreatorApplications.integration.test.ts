@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { Client } from "pg";
 import request from "supertest";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import {
@@ -9,16 +10,18 @@ import {
 } from "@pumdoki/contracts";
 import type { PrismaClient } from "@pumdoki/database";
 import { createCreatorApplicationService } from "./creatorApplications/service.js";
-import {
-  CREATOR_APPLICATION_REVIEW_PERMISSION,
-  type OperationsAccessVerifier,
-  type OperationsPermission,
-} from "./operations/access.js";
+import type { OperationsAccessVerifier } from "./operations/access.js";
+import type { OperationsReviewActor } from "./operations/types.js";
 import { loadTestDatabase } from "./test/database.js";
 import { testApp } from "./test/testApp.js";
-import { testOperationsApp } from "./test/testOperationsApp.js";
+import {
+  TEST_OPERATIONS_CSRF,
+  TEST_OPERATIONS_ORIGIN,
+  testOperationsApp,
+} from "./test/testOperationsApp.js";
 
 const TEST_DOMAIN = "@creator-review.pumdoki.test";
+const TEST_ISSUER = "urn:pumdoki:test:operations";
 const OPERATOR_HEADER = "x-pumdoki-test-operator";
 const PASSWORD = "creator-review-password";
 const REVIEW_PATH = "/api/v1/admin/creator-applications";
@@ -61,26 +64,65 @@ function pendingRejection(
 }
 
 async function cleanup(): Promise<void> {
-  await db.creatorApplicationReviewEvent.deleteMany({
-    where: {
-      OR: [
-        {
-          creatorApplication: {
-            user: { email: { endsWith: TEST_DOMAIN } },
+  // Operations history is non-deletable in normal sessions. The local/CI
+  // bootstrap role is deliberately a superuser, so this test-only cleanup may
+  // disable triggers for one transaction and only for this suite's unique
+  // domain. No runtime code has this path or privilege.
+  await db.$transaction(async (tx) => {
+    const before = await tx.$queryRaw<
+      Array<{ sessionReplicationRole: string }>
+    >`
+      SELECT current_setting('session_replication_role') AS "sessionReplicationRole"
+    `;
+    expect(before).toEqual([{ sessionReplicationRole: "origin" }]);
+    await tx.$executeRawUnsafe("SET LOCAL session_replication_role = replica");
+
+    await tx.creatorApplicationReviewEvent.deleteMany({
+      where: {
+        OR: [
+          {
+            creatorApplication: {
+              user: { email: { endsWith: TEST_DOMAIN } },
+            },
           },
-        },
-        { reviewerUser: { email: { endsWith: TEST_DOMAIN } } },
-      ],
-    },
-  });
-  await db.creatorApplication.deleteMany({
-    where: { user: { email: { endsWith: TEST_DOMAIN } } },
-  });
-  await db.acceptanceRecord.deleteMany({
-    where: { user: { email: { endsWith: TEST_DOMAIN } } },
-  });
-  await db.user.deleteMany({
-    where: { email: { endsWith: TEST_DOMAIN } },
+          { reviewerUser: { email: { endsWith: TEST_DOMAIN } } },
+        ],
+      },
+    });
+    await tx.creatorApplication.deleteMany({
+      where: { user: { email: { endsWith: TEST_DOMAIN } } },
+    });
+    await tx.acceptanceRecord.deleteMany({
+      where: { user: { email: { endsWith: TEST_DOMAIN } } },
+    });
+    await tx.session.deleteMany({
+      where: { user: { email: { endsWith: TEST_DOMAIN } } },
+    });
+    await tx.verificationToken.deleteMany({
+      where: { user: { email: { endsWith: TEST_DOMAIN } } },
+    });
+    await tx.userPreference.deleteMany({
+      where: { user: { email: { endsWith: TEST_DOMAIN } } },
+    });
+    await tx.operationsPermissionGrant.deleteMany({
+      where: {
+        operator: { user: { email: { endsWith: TEST_DOMAIN } } },
+      },
+    });
+    await tx.operationsOperator.deleteMany({
+      where: { user: { email: { endsWith: TEST_DOMAIN } } },
+    });
+    await tx.user.deleteMany({
+      where: { email: { endsWith: TEST_DOMAIN } },
+    });
+
+    await tx.$executeRawUnsafe("SET LOCAL session_replication_role = origin");
+    const restored = await tx.$queryRaw<
+      Array<{ sessionReplicationRole: string }>
+    >`
+      SELECT current_setting('session_replication_role') AS "sessionReplicationRole"
+    `;
+    expect(restored).toEqual([{ sessionReplicationRole: "origin" }]);
   });
 }
 
@@ -120,6 +162,54 @@ async function register(
   };
 }
 
+async function provisionOperator(
+  userId: string,
+  { permission = true }: { permission?: boolean } = {}
+): Promise<OperationsReviewActor> {
+  const identity = {
+    issuer: TEST_ISSUER,
+    subject: `test:${userId}`,
+  };
+  const operator = await db.operationsOperator.create({
+    data: {
+      userId,
+      ...identity,
+      ...(permission
+        ? {
+            permissionGrants: {
+              create: {
+                permission: "CREATOR_APPLICATION_REVIEW",
+              },
+            },
+          }
+        : {}),
+    },
+  });
+  return {
+    operatorId: operator.id,
+    userId,
+    ...identity,
+  };
+}
+
+async function registerOperator(
+  label: string,
+  options: {
+    role?: "MEMBER" | "CREATOR" | "MODERATOR" | "ADMIN";
+    status?: "ACTIVE" | "SUSPENDED" | "BANNED";
+    permission?: boolean;
+  } = {}
+) {
+  const registered = await register(label, {
+    role: options.role ?? "ADMIN",
+    status: options.status,
+  });
+  const actor = await provisionOperator(registered.userId, {
+    permission: options.permission,
+  });
+  return { ...registered, actor };
+}
+
 async function submitApplication(member: { cookie: string; userId: string }) {
   const response = await request(testApp({ db }))
     .post("/api/v1/creator-applications")
@@ -131,30 +221,51 @@ async function submitApplication(member: { cookie: string; userId: string }) {
   });
 }
 
-function testVerifier(
-  permissions: readonly OperationsPermission[] = [
-    CREATOR_APPLICATION_REVIEW_PERMISSION,
-  ]
-): OperationsAccessVerifier {
+function testVerifier(): OperationsAccessVerifier {
   return async (req) => {
     const userId = req.header(OPERATOR_HEADER);
     if (!userId) return null;
     return {
-      userId,
+      issuer: TEST_ISSUER,
       subject: `test:${userId}`,
       assurance: "TEST",
-      permissions,
     };
   };
 }
 
-function operationsApp(
-  permissions?: readonly OperationsPermission[]
-): ReturnType<typeof testOperationsApp> {
+function operationsApp(): ReturnType<typeof testOperationsApp> {
   return testOperationsApp({
     db,
-    operationsAccessVerifier: testVerifier(permissions),
+    operationsAccessVerifier: testVerifier(),
   });
+}
+
+function operationsPatch(
+  app: ReturnType<typeof testOperationsApp>,
+  path: string
+) {
+  return request(app)
+    .patch(path)
+    .set("Origin", TEST_OPERATIONS_ORIGIN)
+    .set("Content-Type", "application/json")
+    .set("X-Operations-CSRF", TEST_OPERATIONS_CSRF);
+}
+
+async function waitForBlockedReview(client: Client): Promise<void> {
+  const deadline = Date.now() + 2_000;
+  while (Date.now() < deadline) {
+    const waiting = await client.query<{ count: number }>(`
+      SELECT count(*)::integer AS count
+      FROM pg_catalog.pg_stat_activity
+      WHERE pid <> pg_catalog.pg_backend_pid()
+        AND state = 'active'
+        AND wait_event_type = 'Lock'
+        AND query LIKE '%OperationsOperator%'
+    `);
+    if (waiting.rows[0]?.count) return;
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+  throw new Error("Review transaction did not wait for the revocation lock");
 }
 
 beforeAll(async () => {
@@ -186,30 +297,69 @@ describe("private creator application reviews", () => {
     ).toBe(0);
   });
 
+  it("applies request-integrity checks before operational authentication", async () => {
+    const member = await register("request-integrity-member");
+    const application = await submitApplication(member);
+    const app = operationsApp();
+
+    const missingOrigin = await request(app)
+      .patch(`${REVIEW_PATH}/${application.id}`)
+      .set("Content-Type", "application/json")
+      .set("X-Operations-CSRF", TEST_OPERATIONS_CSRF)
+      .send(pendingRejection());
+    expect(missingOrigin.status).toBe(403);
+    expect(missingOrigin.body.error.code).toBe("FORBIDDEN");
+
+    const invalidCsrf = await operationsPatch(
+      app,
+      `${REVIEW_PATH}/${application.id}`
+    )
+      .set("X-Operations-CSRF", "invalid-proof")
+      .send(pendingRejection());
+    expect(invalidCsrf.status).toBe(403);
+    expect(invalidCsrf.body.error.code).toBe("FORBIDDEN");
+
+    expect(
+      await db.creatorApplicationReviewEvent.count({
+        where: { creatorApplicationId: application.id },
+      })
+    ).toBe(0);
+  });
+
   it("requires the operational identity, permission, active status, and admin role", async () => {
     const member = await register("authorization-member");
     const application = await submitApplication(member);
-    const admin = await register("authorization-admin", { role: "ADMIN" });
+    const admin = await registerOperator("authorization-admin", {
+      permission: false,
+    });
 
-    const anonymous = await request(operationsApp())
-      .patch(`${REVIEW_PATH}/${application.id}`)
-      .send(pendingRejection());
+    const anonymous = await operationsPatch(
+      operationsApp(),
+      `${REVIEW_PATH}/${application.id}`
+    ).send(pendingRejection());
     expect(anonymous.status).toBe(401);
     expect(anonymous.body.error.code).toBe("UNAUTHORIZED");
 
-    const noPermission = await request(operationsApp([]))
-      .patch(`${REVIEW_PATH}/${application.id}`)
+    const noPermission = await operationsPatch(
+      operationsApp(),
+      `${REVIEW_PATH}/${application.id}`
+    )
       .set(OPERATOR_HEADER, admin.userId)
       .send(pendingRejection());
     expect(noPermission.status).toBe(403);
     expect(noPermission.body.error.code).toBe("FORBIDDEN");
 
     for (const role of ["MEMBER", "CREATOR", "MODERATOR"] as const) {
-      const operator = await register(`authorization-${role.toLowerCase()}`, {
-        role,
-      });
-      const response = await request(operationsApp())
-        .patch(`${REVIEW_PATH}/${application.id}`)
+      const operator = await registerOperator(
+        `authorization-${role.toLowerCase()}`,
+        {
+          role,
+        }
+      );
+      const response = await operationsPatch(
+        operationsApp(),
+        `${REVIEW_PATH}/${application.id}`
+      )
         .set(OPERATOR_HEADER, operator.userId)
         .send(pendingRejection());
       expect(response.status).toBe(403);
@@ -217,12 +367,14 @@ describe("private creator application reviews", () => {
     }
 
     for (const status of ["SUSPENDED", "BANNED"] as const) {
-      const operator = await register(`authorization-${status.toLowerCase()}`, {
-        role: "ADMIN",
-        status,
-      });
-      const response = await request(operationsApp())
-        .patch(`${REVIEW_PATH}/${application.id}`)
+      const operator = await registerOperator(
+        `authorization-${status.toLowerCase()}`,
+        { status }
+      );
+      const response = await operationsPatch(
+        operationsApp(),
+        `${REVIEW_PATH}/${application.id}`
+      )
         .set(OPERATOR_HEADER, operator.userId)
         .send(pendingRejection());
       expect(response.status).toBe(403);
@@ -238,15 +390,19 @@ describe("private creator application reviews", () => {
 
   it("records the permitted pending-to-needs-information-to-rejected chain", async () => {
     const member = await register("chain-member");
-    const admin = await register("chain-admin", { role: "ADMIN" });
+    const admin = await registerOperator("chain-admin");
     const application = await submitApplication(member);
     const app = operationsApp();
     const firstReviewStartedAt = Date.now();
 
-    const needsInformation = await request(app)
-      .patch(`${REVIEW_PATH}/${application.id}`)
+    const needsInformation = await operationsPatch(
+      app,
+      `${REVIEW_PATH}/${application.id}`
+    )
       .set(OPERATOR_HEADER, admin.userId)
       .set("x-request-id", "creator-review-needs-information")
+      .set("Forwarded", "for=203.0.113.8;proto=https")
+      .set("X-Forwarded-For", "203.0.113.8")
       .send({
         action: "NEEDS_INFORMATION",
         expectedStatus: "PENDING",
@@ -267,12 +423,15 @@ describe("private creator application reviews", () => {
       requestId: "creator-review-needs-information",
     });
     expect(first.reviewEvent.requestIp).not.toBeNull();
+    expect(first.reviewEvent.requestIp).not.toBe("203.0.113.8");
     const firstReviewedAt = new Date(first.reviewEvent.reviewedAt).getTime();
     expect(firstReviewedAt).toBeGreaterThanOrEqual(firstReviewStartedAt - 1000);
     expect(firstReviewedAt).toBeLessThanOrEqual(firstReviewFinishedAt + 1000);
 
-    const rejected = await request(app)
-      .patch(`${REVIEW_PATH}/${application.id}`)
+    const rejected = await operationsPatch(
+      app,
+      `${REVIEW_PATH}/${application.id}`
+    )
       .set(OPERATOR_HEADER, admin.userId)
       .set("x-request-id", "creator-review-rejected")
       .send({
@@ -317,11 +476,13 @@ describe("private creator application reviews", () => {
 
   it("allows a direct pending-to-rejected transition", async () => {
     const member = await register("direct-reject-member");
-    const admin = await register("direct-reject-admin", { role: "ADMIN" });
+    const admin = await registerOperator("direct-reject-admin");
     const application = await submitApplication(member);
 
-    const response = await request(operationsApp())
-      .patch(`${REVIEW_PATH}/${application.id}`)
+    const response = await operationsPatch(
+      operationsApp(),
+      `${REVIEW_PATH}/${application.id}`
+    )
       .set(OPERATOR_HEADER, admin.userId)
       .send(pendingRejection());
 
@@ -333,8 +494,10 @@ describe("private creator application reviews", () => {
       toStatus: "REJECTED",
     });
 
-    const duplicate = await request(operationsApp())
-      .patch(`${REVIEW_PATH}/${application.id}`)
+    const duplicate = await operationsPatch(
+      operationsApp(),
+      `${REVIEW_PATH}/${application.id}`
+    )
       .set(OPERATOR_HEADER, admin.userId)
       .send(pendingRejection());
     expect(duplicate.status).toBe(409);
@@ -347,11 +510,10 @@ describe("private creator application reviews", () => {
   });
 
   it("rejects malformed parameters, approval, impossible bodies, and missing applications", async () => {
-    const admin = await register("validation-admin", { role: "ADMIN" });
+    const admin = await registerOperator("validation-admin");
     const app = operationsApp();
 
-    const malformedId = await request(app)
-      .patch(`${REVIEW_PATH}/not-a-uuid`)
+    const malformedId = await operationsPatch(app, `${REVIEW_PATH}/not-a-uuid`)
       .set(OPERATOR_HEADER, admin.userId)
       .send(pendingRejection());
     expect(malformedId.status).toBe(400);
@@ -386,16 +548,17 @@ describe("private creator application reviews", () => {
       pendingRejection("x".repeat(501)),
     ];
     for (const body of invalidBodies) {
-      const response = await request(app)
-        .patch(`${REVIEW_PATH}/${randomUUID()}`)
+      const response = await operationsPatch(
+        app,
+        `${REVIEW_PATH}/${randomUUID()}`
+      )
         .set(OPERATOR_HEADER, admin.userId)
         .send(body);
       expect(response.status).toBe(400);
       expect(response.body.error.code).toBe("BAD_REQUEST");
     }
 
-    const missing = await request(app)
-      .patch(`${REVIEW_PATH}/${randomUUID()}`)
+    const missing = await operationsPatch(app, `${REVIEW_PATH}/${randomUUID()}`)
       .set(OPERATOR_HEADER, admin.userId)
       .send(pendingRejection());
     expect(missing.status).toBe(404);
@@ -407,7 +570,7 @@ describe("private creator application reviews", () => {
     const needsInformationMember = await register("matrix-needs-info-member");
     const rejectedMember = await register("matrix-rejected-member");
     const approvedMember = await register("matrix-approved-member");
-    const admin = await register("conflict-admin", { role: "ADMIN" });
+    const admin = await registerOperator("conflict-admin");
     const pendingApplication = await submitApplication(pendingMember);
     const needsInformationApplication = await submitApplication(
       needsInformationMember
@@ -497,8 +660,10 @@ describe("private creator application reviews", () => {
     ] as const;
 
     for (const { applicationId, body } of unavailable) {
-      const response = await request(app)
-        .patch(`${REVIEW_PATH}/${applicationId}`)
+      const response = await operationsPatch(
+        app,
+        `${REVIEW_PATH}/${applicationId}`
+      )
         .set(OPERATOR_HEADER, admin.userId)
         .send(body);
       expect(response.status).toBe(409);
@@ -523,26 +688,20 @@ describe("private creator application reviews", () => {
 
   it("allows exactly one winner when two reviewers use the same expected status", async () => {
     const member = await register("concurrency-member");
-    const firstAdmin = await register("concurrency-admin-one", {
-      role: "ADMIN",
-    });
-    const secondAdmin = await register("concurrency-admin-two", {
-      role: "ADMIN",
-    });
+    const firstAdmin = await registerOperator("concurrency-admin-one");
+    const secondAdmin = await registerOperator("concurrency-admin-two");
     const application = await submitApplication(member);
     const app = operationsApp();
 
     const [first, second] = await Promise.all([
-      request(app)
-        .patch(`${REVIEW_PATH}/${application.id}`)
+      operationsPatch(app, `${REVIEW_PATH}/${application.id}`)
         .set(OPERATOR_HEADER, firstAdmin.userId)
         .send({
           action: "NEEDS_INFORMATION",
           expectedStatus: "PENDING",
           reason: "Please provide one additional application detail.",
         }),
-      request(app)
-        .patch(`${REVIEW_PATH}/${application.id}`)
+      operationsPatch(app, `${REVIEW_PATH}/${application.id}`)
         .set(OPERATOR_HEADER, secondAdmin.userId)
         .send(pendingRejection("The application cannot proceed after review.")),
     ]);
@@ -557,17 +716,196 @@ describe("private creator application reviews", () => {
     expect(persisted.reviewEvents[0]!.fromStatus).toBe("PENDING");
   });
 
+  it("rechecks operator, grant, active status, and admin role inside the review transaction", async () => {
+    const cases = [
+      {
+        label: "revoked-permission",
+        invalidate: async (
+          operator: Awaited<ReturnType<typeof registerOperator>>
+        ) => {
+          await db.operationsPermissionGrant.updateMany({
+            where: {
+              operatorId: operator.actor.operatorId,
+              revokedAt: null,
+            },
+            data: { revokedAt: new Date() },
+          });
+        },
+      },
+      {
+        label: "disabled-operator",
+        invalidate: async (
+          operator: Awaited<ReturnType<typeof registerOperator>>
+        ) => {
+          await db.operationsOperator.update({
+            where: { id: operator.actor.operatorId },
+            data: { disabledAt: new Date() },
+          });
+        },
+      },
+      {
+        label: "suspended-user",
+        invalidate: async (
+          operator: Awaited<ReturnType<typeof registerOperator>>
+        ) => {
+          await db.user.update({
+            where: { id: operator.userId },
+            data: { status: "SUSPENDED" },
+          });
+        },
+      },
+      {
+        label: "non-admin-user",
+        invalidate: async (
+          operator: Awaited<ReturnType<typeof registerOperator>>
+        ) => {
+          await db.user.update({
+            where: { id: operator.userId },
+            data: { role: "MODERATOR" },
+          });
+        },
+      },
+    ] as const;
+
+    for (const testCase of cases) {
+      const member = await register(`${testCase.label}-member`);
+      const operator = await registerOperator(`${testCase.label}-operator`);
+      const application = await submitApplication(member);
+      await testCase.invalidate(operator);
+
+      await expect(
+        createCreatorApplicationService(db).review(
+          application.id,
+          operator.actor,
+          pendingRejection(),
+          `transaction-reauthorization-${testCase.label}`,
+          null
+        )
+      ).rejects.toMatchObject({
+        status: 403,
+        code: "FORBIDDEN",
+      });
+
+      const persisted = await db.creatorApplication.findUniqueOrThrow({
+        where: { id: application.id },
+      });
+      expect(persisted.status).toBe("PENDING");
+      expect(
+        await db.creatorApplicationReviewEvent.count({
+          where: { creatorApplicationId: application.id },
+        })
+      ).toBe(0);
+    }
+  });
+
+  it("requires the transaction actor to match the exact provisioned identity", async () => {
+    const member = await register("exact-identity-member");
+    const operator = await registerOperator("exact-identity-operator");
+    const application = await submitApplication(member);
+    const service = createCreatorApplicationService(db);
+    const mismatchedActors: OperationsReviewActor[] = [
+      { ...operator.actor, operatorId: randomUUID() },
+      { ...operator.actor, userId: randomUUID() },
+      { ...operator.actor, issuer: `${operator.actor.issuer}:other` },
+      { ...operator.actor, subject: `${operator.actor.subject}:other` },
+    ];
+
+    for (const actor of mismatchedActors) {
+      await expect(
+        service.review(
+          application.id,
+          actor,
+          pendingRejection(),
+          "transaction-exact-identity",
+          null
+        )
+      ).rejects.toMatchObject({ status: 403, code: "FORBIDDEN" });
+    }
+
+    expect(
+      await db.creatorApplication.findUniqueOrThrow({
+        where: { id: application.id },
+        select: { status: true },
+      })
+    ).toEqual({ status: "PENDING" });
+    expect(
+      await db.creatorApplicationReviewEvent.count({
+        where: { creatorApplicationId: application.id },
+      })
+    ).toBe(0);
+  });
+
+  it("serializes a review behind an in-flight permission revocation and then denies it", async () => {
+    const member = await register("concurrent-revocation-member");
+    const operator = await registerOperator("concurrent-revocation-operator");
+    const application = await submitApplication(member);
+    const grant = await db.operationsPermissionGrant.findFirstOrThrow({
+      where: {
+        operatorId: operator.actor.operatorId,
+        revokedAt: null,
+      },
+    });
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) throw new Error("DATABASE_URL is required");
+    const revoker = new Client({ connectionString });
+    await revoker.connect();
+    let transactionOpen = false;
+
+    try {
+      await revoker.query("BEGIN");
+      transactionOpen = true;
+      await revoker.query(
+        `UPDATE public."OperationsPermissionGrant"
+         SET "revokedAt" = CURRENT_TIMESTAMP
+         WHERE "id" = $1`,
+        [grant.id]
+      );
+
+      const review = createCreatorApplicationService(db).review(
+        application.id,
+        operator.actor,
+        pendingRejection(),
+        "concurrent-permission-revocation",
+        null
+      );
+      await waitForBlockedReview(revoker);
+      await revoker.query("COMMIT");
+      transactionOpen = false;
+
+      await expect(review).rejects.toMatchObject({
+        status: 403,
+        code: "FORBIDDEN",
+      });
+    } finally {
+      if (transactionOpen) await revoker.query("ROLLBACK");
+      await revoker.end();
+    }
+
+    expect(
+      await db.creatorApplication.findUniqueOrThrow({
+        where: { id: application.id },
+        select: { status: true },
+      })
+    ).toEqual({ status: "PENDING" });
+    expect(
+      await db.creatorApplicationReviewEvent.count({
+        where: { creatorApplicationId: application.id },
+      })
+    ).toBe(0);
+  });
+
   it("rolls the status update back when evidence insertion fails", async () => {
     const member = await register("rollback-member");
+    const operator = await registerOperator("rollback-operator");
     const application = await submitApplication(member);
     const service = createCreatorApplicationService(db);
 
     await expect(
       service.review(
         application.id,
-        randomUUID(),
+        operator.actor,
         pendingRejection("This transition must roll back with its evidence."),
-        "creator-review-rollback",
+        "x".repeat(65),
         null
       )
     ).rejects.toThrow();
@@ -585,11 +923,13 @@ describe("private creator application reviews", () => {
 
   it("enforces transition evidence constraints and restrictive parent deletion", async () => {
     const member = await register("constraints-member");
-    const admin = await register("constraints-admin", { role: "ADMIN" });
+    const admin = await registerOperator("constraints-admin");
     const application = await submitApplication(member);
 
-    const reviewed = await request(operationsApp())
-      .patch(`${REVIEW_PATH}/${application.id}`)
+    const reviewed = await operationsPatch(
+      operationsApp(),
+      `${REVIEW_PATH}/${application.id}`
+    )
       .set(OPERATOR_HEADER, admin.userId)
       .send(pendingRejection());
     expect(reviewed.status).toBe(200);

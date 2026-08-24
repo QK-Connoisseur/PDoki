@@ -52,6 +52,10 @@ enum VerificationTokenKind {
   PASSWORD_RESET
 }
 
+enum OperationsPermissionKind {
+  CREATOR_APPLICATION_REVIEW @map("creator_applications.review")
+}
+
 enum DurableJobKind {
   PHASE2_CANARY_V1
 }
@@ -90,6 +94,33 @@ model User {
   preference                     UserPreference?
   creatorApplication             CreatorApplication?
   creatorApplicationReviewEvents CreatorApplicationReviewEvent[]
+  operationsOperators            OperationsOperator[]
+}
+
+model OperationsOperator {
+  id         String    @id @default(uuid()) @db.Uuid
+  issuer     String    @db.VarChar(512)
+  subject    String    @db.VarChar(512)
+  userId     String    @db.Uuid
+  user       User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  createdAt  DateTime  @default(now()) @db.Timestamptz(3)
+  disabledAt DateTime? @db.Timestamptz(3)
+
+  permissionGrants OperationsPermissionGrant[]
+
+  @@unique([issuer, subject])
+  @@index([userId])
+}
+
+model OperationsPermissionGrant {
+  id         String                   @id @default(uuid()) @db.Uuid
+  operatorId String                   @db.Uuid
+  operator   OperationsOperator       @relation(fields: [operatorId], references: [id], onDelete: Restrict)
+  permission OperationsPermissionKind
+  grantedAt  DateTime                 @default(now()) @db.Timestamptz(3)
+  revokedAt  DateTime?                @db.Timestamptz(3)
+
+  @@index([operatorId, permission])
 }
 
 model CreatorApplication {

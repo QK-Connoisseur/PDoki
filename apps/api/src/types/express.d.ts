@@ -1,5 +1,8 @@
 import type { Session, User } from "@pumdoki/database";
-import type { OperationsPrincipal } from "../operations/access.js";
+import type {
+  OperationsPermission,
+  VerifiedOperationsIdentity,
+} from "../operations/types.js";
 
 declare global {
   namespace Express {
@@ -15,7 +18,12 @@ declare global {
         session: Session;
       };
       operationsAuth?: {
-        principal: OperationsPrincipal;
+        identity: VerifiedOperationsIdentity;
+        operator: {
+          id: string;
+          userId: string;
+          permissions: readonly OperationsPermission[];
+        };
         user: User;
       };
     }

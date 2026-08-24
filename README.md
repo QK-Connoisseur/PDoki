@@ -208,6 +208,14 @@ creator-application foundation, is published and CI-verified as commit
 Phase 4 Slice 2 and the frontend routing hardening are published on `dev`
 through merge commit `1189404`. Slice 2 remains a fail-closed backend
 state/evidence foundation rather than a deployable private-operations workflow.
+Phase 4 Slice 3 is locally committed and verified on
+`codex/phase4-private-ops-access-foundation` as implementation commit
+`9904334`. It adds provider-neutral signed-assertion verification, database-
+owned exact operator/permission authorization, and test-only request-integrity
+seams for the dormant review router. The public API still does not mount that
+router, and no operational identity provider, session, private origin, runtime
+database role, live configuration, or deployment exists. G1–G12 remain
+`NOT EVALUATED`.
 Production
 infrastructure, identity verification, operational authentication/review,
 server-side content filtering, dependency-bound Settings, and other product
