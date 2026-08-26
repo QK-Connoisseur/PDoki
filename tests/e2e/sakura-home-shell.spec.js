@@ -242,6 +242,12 @@ test("the unchanged Sakura wallpaper supports a subtle motion overlay behind liv
   const leftRail = page.locator("aside.member-glass-rail-left");
   const rightRail = page.locator("aside.member-glass-rail-right");
   const feedCard = page.locator("article.sakura-feed-card").first();
+  const visiblePetalCount = () =>
+    motionPetals.evaluateAll(
+      (petals) =>
+        petals.filter((petal) => getComputedStyle(petal).display !== "none")
+          .length
+    );
   await expect(backdrop).toHaveAttribute("data-scene", "ambient-motion");
   await expect(backdrop).toHaveCSS("position", "fixed");
   await expect(backdrop).toHaveCSS("animation-name", "none");
@@ -292,16 +298,15 @@ test("the unchanged Sakura wallpaper supports a subtle motion overlay behind liv
   expect(scrolledHeaderFill).toBe(initialHeaderFill);
   expect(scrolledHeaderScreenshot.equals(initialHeaderScreenshot)).toBe(false);
 
+  await page.setViewportSize({ width: 1023, height: 844 });
+  expect(await visiblePetalCount()).toBe(3);
+  await page.setViewportSize({ width: 1024, height: 844 });
+  expect(await visiblePetalCount()).toBe(5);
+
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(backdrop).toHaveCSS("background-image", /sakura-feed-mobile/);
   await waitForBackgroundImage(backdrop);
-  expect(
-    await motionPetals.evaluateAll(
-      (petals) =>
-        petals.filter((petal) => getComputedStyle(petal).display !== "none")
-          .length
-    )
-  ).toBe(3);
+  expect(await visiblePetalCount()).toBe(3);
   expect(
     await header.evaluate(
       (element) => getComputedStyle(element).backgroundImage

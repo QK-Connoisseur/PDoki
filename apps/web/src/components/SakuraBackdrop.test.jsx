@@ -35,9 +35,10 @@ afterEach(() => {
 });
 
 describe("SakuraBackdrop", () => {
-  it("adds five faint decorative petals without making the scene interactive", () => {
+  it("adds five soft responsive petals without making the scene interactive", () => {
     renderBackdrop();
     const backdrop = screen.getByTestId("sakura-backdrop");
+    const petals = [...backdrop.querySelectorAll("[data-motion-petal]")];
 
     expect(backdrop).toHaveAttribute("aria-hidden", "true");
     expect(backdrop).toHaveAttribute("data-scene", "ambient-motion");
@@ -45,7 +46,31 @@ describe("SakuraBackdrop", () => {
     expect(backdrop).toHaveClass("sakura-backdrop");
     expect(backdrop.querySelector("button, a, input")).toBeNull();
     expect(screen.getByTestId("sakura-motion-overlay")).toBeInTheDocument();
-    expect(backdrop.querySelectorAll("[data-motion-petal]")).toHaveLength(5);
+    expect(petals).toHaveLength(5);
+    expect(
+      petals.every((petal) =>
+        petal.style.getPropertyValue("--petal-left").includes("clamp(")
+      )
+    ).toBe(true);
+    expect(
+      petals
+        .slice(0, 3)
+        .every((petal) =>
+          Boolean(petal.style.getPropertyValue("--petal-mobile-left"))
+        )
+    ).toBe(true);
+    expect(
+      petals.filter((petal) =>
+        petal.classList.contains("sakura-backdrop__floating-petal--desktop")
+      )
+    ).toHaveLength(2);
+    expect(
+      Math.max(
+        ...petals.map((petal) =>
+          Number(petal.style.getPropertyValue("--petal-opacity"))
+        )
+      )
+    ).toBeLessThanOrEqual(0.58);
   });
 
   it("keeps the original scene static when the browser opt-out is saved", () => {
