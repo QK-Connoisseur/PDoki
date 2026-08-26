@@ -238,7 +238,7 @@
   opacity: 0;
   transform-origin: 54% 72%;
   will-change: transform, opacity;
-  animation: sakura-petal-drift var(--petal-duration) ease-in-out
+  animation: sakura-petal-drift var(--petal-duration) linear
     var(--petal-delay) infinite;
 }
 
@@ -248,25 +248,32 @@
     transform: translate3d(0, 0, 0) rotate(var(--petal-rotation));
   }
 
-  12% {
+  10% {
     opacity: var(--petal-opacity);
   }
 
-  58% {
+  34% {
     opacity: var(--petal-opacity);
-    transform: translate3d(var(--petal-drift-x), var(--petal-drift-y), 0)
-      rotate(calc(var(--petal-rotation) + 36deg));
+    transform: translate3d(var(--petal-sway-x), var(--petal-sway-y), 0)
+      rotate(calc(var(--petal-rotation) + 24deg));
   }
 
-  82% {
+  68% {
     opacity: var(--petal-opacity);
     transform: translate3d(var(--petal-drift-x), var(--petal-drift-y), 0)
-      rotate(calc(var(--petal-rotation) + 50deg));
+      rotate(calc(var(--petal-rotation) + 48deg));
+  }
+
+  88% {
+    opacity: var(--petal-opacity);
+    transform: translate3d(var(--petal-end-x), var(--petal-end-y), 0)
+      rotate(calc(var(--petal-rotation) + 68deg));
   }
 
   100% {
     opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(calc(var(--petal-rotation) + 72deg));
+    transform: translate3d(var(--petal-end-x), var(--petal-end-y), 0)
+      rotate(calc(var(--petal-rotation) + 82deg));
   }
 }
 
