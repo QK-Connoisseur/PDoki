@@ -46,7 +46,10 @@ beforeEach(() => {
 describe("MemberLayout", () => {
   it("uses the Sakura scene across the member shell with an explicit opt-out", () => {
     const sakura = renderLayout();
-    expect(screen.getByTestId("sakura-backdrop")).toBeInTheDocument();
+    expect(screen.getByTestId("sakura-backdrop")).toHaveAttribute(
+      "data-scene",
+      "static"
+    );
     expect(
       sakura.container.querySelector('[data-member-visual="sakura-glass"]')
     ).toBeInTheDocument();

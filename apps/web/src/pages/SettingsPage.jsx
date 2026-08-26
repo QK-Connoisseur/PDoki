@@ -3,6 +3,7 @@ import { useAuth } from "../auth/authContext";
 import MemberLayout from "../components/MemberLayout";
 import { ErrorState, LoadingState } from "../components/StateViews";
 import { settingsApi } from "../settings/settingsApi";
+import { useBackgroundMotion } from "../appearance/backgroundMotionContext";
 
 const inputClass =
   "mt-2 w-full rounded-2xl border border-pink-100 bg-[#fffafb] px-4 py-3 text-sm text-[#4f3647] outline-none transition focus:border-pink-400 focus:ring-2 focus:ring-pink-100";
@@ -371,6 +372,70 @@ function SessionSettings({ api, refreshKey }) {
   );
 }
 
+function AppearancePreferences() {
+  const {
+    motionRequested,
+    motionEnabled,
+    systemReducedMotion,
+    setMotionRequested,
+  } = useBackgroundMotion();
+
+  const motionStatus = systemReducedMotion
+    ? "Motion is currently off because your device requests reduced motion."
+    : motionEnabled
+      ? "Motion is on."
+      : "Motion is off.";
+
+  return (
+    <section className="sakura-glass-surface mt-5 rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
+      <div className="flex items-start justify-between gap-5">
+        <div>
+          <h2 className="text-lg font-bold text-[#241a22]">Appearance</h2>
+          <h3 className="mt-5 font-bold text-[#5b4153]">
+            Ambient background motion
+          </h3>
+          <p
+            id="background-motion-description"
+            className="mt-1 max-w-xl text-sm leading-6 text-[#8c6d7f]"
+          >
+            Adds a few faint, slow-moving petals over the original Sakura
+            artwork. The desktop and mobile wallpapers remain unchanged.
+          </p>
+          <p className="mt-2 text-xs leading-5 text-[#a48999]">
+            Saved on this browser. Pumdoki always follows your device&apos;s
+            Reduce Motion setting.
+          </p>
+          <p
+            className="mt-2 text-xs font-semibold text-[#7d536b]"
+            role="status"
+            aria-live="polite"
+          >
+            {motionStatus}
+          </p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={motionEnabled}
+          aria-label="Ambient background motion"
+          aria-describedby="background-motion-description"
+          disabled={systemReducedMotion}
+          onClick={() => setMotionRequested(!motionRequested)}
+          className={`relative mt-12 h-7 w-12 shrink-0 rounded-full transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500 motion-reduce:transition-none ${
+            motionEnabled ? "bg-pink-500" : "bg-gray-300"
+          } disabled:cursor-not-allowed disabled:opacity-60`}
+        >
+          <span
+            className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition motion-reduce:transition-none ${
+              motionEnabled ? "left-6" : "left-1"
+            }`}
+          />
+        </button>
+      </div>
+    </section>
+  );
+}
+
 function ContentPreferences({ api }) {
   const [state, setState] = useState("loading");
   const [showExplicitContent, setShowExplicitContent] = useState(false);
@@ -548,7 +613,7 @@ export default function SettingsPage({
               Settings
             </h1>
             <p className="mt-2 text-sm text-[#8c6d7f]">
-              Manage your account, security, and content experience.
+              Manage your account, security, appearance, and content experience.
             </p>
           </div>
 
@@ -560,6 +625,7 @@ export default function SettingsPage({
           />
           <PasswordSettings api={api} onSecurityChange={refreshSessions} />
           <SessionSettings api={api} refreshKey={sessionRefreshKey} />
+          <AppearancePreferences />
           <ContentPreferences api={api} />
         </div>
       </main>

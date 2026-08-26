@@ -212,6 +212,64 @@
   background-size: var(--member-scene-size, cover);
 }
 
+.sakura-backdrop__motion-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.sakura-backdrop__floating-petal {
+  position: absolute;
+  display: block;
+  top: var(--petal-top);
+  left: var(--petal-left);
+  width: var(--petal-size);
+  aspect-ratio: 1 / 1.48;
+  border-radius: 82% 18% 74% 26%;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.92) 8%,
+    rgba(255, 226, 239, 0.76) 58%,
+    rgba(238, 151, 193, 0.5)
+  );
+  box-shadow: 0 2px 7px rgba(168, 78, 121, 0.08);
+  opacity: 0;
+  transform-origin: 54% 72%;
+  will-change: transform, opacity;
+  animation: sakura-petal-drift var(--petal-duration) ease-in-out
+    var(--petal-delay) infinite;
+}
+
+@keyframes sakura-petal-drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--petal-rotation));
+  }
+
+  12% {
+    opacity: var(--petal-opacity);
+  }
+
+  58% {
+    opacity: var(--petal-opacity);
+    transform: translate3d(var(--petal-drift-x), var(--petal-drift-y), 0)
+      rotate(calc(var(--petal-rotation) + 36deg));
+  }
+
+  82% {
+    opacity: var(--petal-opacity);
+    transform: translate3d(var(--petal-drift-x), var(--petal-drift-y), 0)
+      rotate(calc(var(--petal-rotation) + 50deg));
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(calc(var(--petal-rotation) + 72deg));
+  }
+}
+
 [data-member-visual="sakura-glass"] .member-glass-header,
 [data-member-visual="sakura-glass"] .member-glass-rail,
 [data-member-visual="sakura-glass"] .member-glass-mobile-nav,
@@ -357,6 +415,14 @@
     --member-header-filter: blur(10px) saturate(112%);
   }
 
+  .sakura-backdrop__motion-layer {
+    opacity: 0.78;
+  }
+
+  .sakura-backdrop__floating-petal--desktop {
+    display: none;
+  }
+
   [data-member-visual="sakura-glass"] .member-glass-header {
     border-radius: 0 0 1rem 1rem;
   }
@@ -407,6 +473,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sakura-backdrop__motion-layer {
+    display: none;
+  }
+
+  .sakura-backdrop__floating-petal {
+    animation: none;
+  }
+
   [data-member-visual="sakura-glass"] .member-nav-item-inactive:hover,
   [data-member-visual="sakura-glass"] .member-nav-item-trigger:hover {
     transform: none;

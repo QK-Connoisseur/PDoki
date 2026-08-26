@@ -230,19 +230,27 @@ test("the Sakura glass material is shared by member routes and Create", async ({
   expect(mobileComposeBox.x + mobileComposeBox.width).toBeLessThanOrEqual(321);
 });
 
-test("the static Sakura scene shows through live header glass while scrolling", async ({
+test("the unchanged Sakura wallpaper supports a subtle motion overlay behind live glass", async ({
   page,
 }) => {
   await loginAs(page, "member");
 
   const backdrop = page.getByTestId("sakura-backdrop");
+  const motionOverlay = page.getByTestId("sakura-motion-overlay");
+  const motionPetals = backdrop.locator("[data-motion-petal]");
   const header = page.locator("header.member-glass-header");
   const leftRail = page.locator("aside.member-glass-rail-left");
   const rightRail = page.locator("aside.member-glass-rail-right");
   const feedCard = page.locator("article.sakura-feed-card").first();
-  await expect(backdrop).toHaveAttribute("data-scene", "static");
+  await expect(backdrop).toHaveAttribute("data-scene", "ambient-motion");
   await expect(backdrop).toHaveCSS("position", "fixed");
   await expect(backdrop).toHaveCSS("animation-name", "none");
+  await expect(motionOverlay).toBeVisible();
+  await expect(motionPetals).toHaveCount(5);
+  await expect(motionPetals.first()).toHaveCSS(
+    "animation-name",
+    "sakura-petal-drift"
+  );
   await expect(backdrop).toHaveCSS("background-size", "cover");
   await expect(backdrop).toHaveCSS("background-image", /sakura-feed-desktop/);
   await waitForBackgroundImage(backdrop);
@@ -287,6 +295,13 @@ test("the static Sakura scene shows through live header glass while scrolling", 
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(backdrop).toHaveCSS("background-image", /sakura-feed-mobile/);
   await waitForBackgroundImage(backdrop);
+  expect(
+    await motionPetals.evaluateAll(
+      (petals) =>
+        petals.filter((petal) => getComputedStyle(petal).display !== "none")
+          .length
+    )
+  ).toBe(3);
   expect(
     await header.evaluate(
       (element) => getComputedStyle(element).backgroundImage
@@ -336,6 +351,43 @@ test("the static Sakura scene shows through live header glass while scrolling", 
   await expect(backdrop).toBeHidden();
   await expect(header).toHaveCSS("background-image", "none");
   await expect(header).toHaveCSS("backdrop-filter", "none");
+});
+
+test("members can disable ambient motion and reduced-motion always wins", async ({
+  page,
+}) => {
+  await loginAs(page, "member");
+  await page.goto("/settings");
+
+  const backdrop = page.getByTestId("sakura-backdrop");
+  const motionToggle = page.getByRole("switch", {
+    name: "Ambient background motion",
+  });
+
+  await expect(backdrop).toHaveAttribute("data-scene", "ambient-motion");
+  await expect(motionToggle).toHaveAttribute("aria-checked", "true");
+
+  await motionToggle.click();
+  await expect(backdrop).toHaveAttribute("data-scene", "static");
+  await expect(page.getByTestId("sakura-motion-overlay")).toHaveCount(0);
+
+  await page.reload();
+  await expect(backdrop).toHaveAttribute("data-scene", "static");
+  await expect(motionToggle).toHaveAttribute("aria-checked", "false");
+
+  await motionToggle.click();
+  await expect(backdrop).toHaveAttribute("data-scene", "ambient-motion");
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(backdrop).toHaveAttribute("data-scene", "static");
+  await expect(page.getByTestId("sakura-motion-overlay")).toHaveCount(0);
+  await expect(motionToggle).toHaveAttribute("aria-checked", "false");
+  await expect(motionToggle).toBeDisabled();
+  await expect(
+    page.getByText(
+      "Motion is currently off because your device requests reduced motion."
+    )
+  ).toBeVisible();
 });
 
 test("header popovers stay inside a narrow member viewport", async ({
