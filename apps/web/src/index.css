@@ -221,7 +221,7 @@
   );
   --member-border-subtle: rgba(211, 171, 102, 0.2);
   --member-border-emphasis: rgba(206, 153, 76, 0.36);
-  --member-rim: rgba(125, 45, 57, 0.34);
+  --member-rim: rgba(73, 111, 184, 0.38);
   --member-highlight: rgba(245, 224, 183, 0.1);
   --member-lowlight: rgba(0, 0, 0, 0.46);
   --member-shadow: rgba(0, 0, 0, 0.34);
@@ -409,17 +409,17 @@
   background:
     radial-gradient(
       ellipse at 16% 54%,
-      rgba(138, 151, 166, 0.12),
+      rgba(112, 140, 196, 0.12),
       transparent 31%
     ),
     radial-gradient(
       ellipse at 57% 40%,
-      rgba(109, 126, 145, 0.1),
+      rgba(72, 103, 166, 0.11),
       transparent 34%
     ),
     radial-gradient(
       ellipse at 86% 58%,
-      rgba(154, 155, 156, 0.08),
+      rgba(139, 159, 200, 0.08),
       transparent 28%
     );
   opacity: 0.72;
@@ -434,12 +434,12 @@
   background:
     radial-gradient(
       ellipse at 25% 50%,
-      rgba(111, 45, 54, 0.12),
+      rgba(73, 111, 184, 0.15),
       transparent 34%
     ),
     radial-gradient(
       ellipse at 70% 42%,
-      rgba(133, 145, 157, 0.08),
+      rgba(91, 120, 177, 0.09),
       transparent 38%
     );
   opacity: 0.68;
@@ -454,12 +454,12 @@
   background:
     radial-gradient(
       ellipse at 22% 70%,
-      rgba(174, 181, 185, 0.11),
+      rgba(146, 164, 200, 0.11),
       transparent 35%
     ),
     radial-gradient(
       ellipse at 69% 70%,
-      rgba(137, 153, 164, 0.1),
+      rgba(102, 129, 183, 0.11),
       transparent 39%
     );
   opacity: 0.74;
@@ -473,7 +473,7 @@
   height: 18%;
   background: radial-gradient(
     ellipse at 50% 60%,
-    rgba(194, 198, 196, 0.085),
+    rgba(154, 171, 205, 0.09),
     transparent 58%
   );
   opacity: 0.62;
@@ -481,7 +481,7 @@
     alternate-reverse;
 }
 
-.dark-knight-backdrop__atmosphere--crimson-glow {
+.dark-knight-backdrop__atmosphere--cape-blue-glow {
   right: -8%;
   bottom: 9%;
   width: 46%;
@@ -489,8 +489,8 @@
   border-radius: 50%;
   background: radial-gradient(
     ellipse,
-    rgba(122, 45, 56, 0.13),
-    rgba(78, 32, 41, 0.045) 48%,
+    rgba(73, 111, 184, 0.16),
+    rgba(38, 62, 120, 0.065) 48%,
     transparent 72%
   );
   animation: dark-knight-glow-breathe 38s ease-in-out -9s infinite alternate;
@@ -651,23 +651,23 @@
 [data-member-theme="dark-knight"] [class~="bg-pink-600"],
 [data-member-theme="dark-knight"] [class~="bg-[#f472b6]"],
 [data-member-theme="dark-knight"] [class~="bg-[#f9a8c8]"] {
-  background-color: #7a2d38;
+  background-color: #3f63a8;
 }
 
 [data-member-theme="dark-knight"] [class~="from-[#f9a8c8]"] {
-  --tw-gradient-from: #a64b46;
+  --tw-gradient-from: #496fb8;
 }
 
 [data-member-theme="dark-knight"] [class~="via-[#f472b6]"] {
-  --tw-gradient-via: #87363e;
+  --tw-gradient-via: #3f63a8;
 }
 
 [data-member-theme="dark-knight"] [class~="to-[#f472b6]"] {
-  --tw-gradient-to: #a84942;
+  --tw-gradient-to: #35568f;
 }
 
 [data-member-theme="dark-knight"] [class~="to-[#ec4899]"] {
-  --tw-gradient-to: #6f2632;
+  --tw-gradient-to: #263e78;
 }
 
 [data-member-theme="dark-knight"]
@@ -676,11 +676,11 @@
 }
 
 [data-member-theme="dark-knight"] [class~="hover:from-[#f472b6]"]:hover {
-  --tw-gradient-from: #8d343d;
+  --tw-gradient-from: #3f63a8;
 }
 
 [data-member-theme="dark-knight"] [class~="hover:to-[#ec4899]"]:hover {
-  --tw-gradient-to: #67232e;
+  --tw-gradient-to: #213667;
 }
 
 [data-member-theme="dark-knight"] [class~="hover:bg-pink-50"]:hover,
@@ -814,8 +814,8 @@
 
 [data-member-theme="dark-knight"] .member-service-filter[data-active="true"] {
   border-color: rgba(229, 199, 141, 0.34);
-  background: linear-gradient(135deg, #8c3940 0%, #682631 100%);
-  box-shadow: 0 5px 16px rgba(49, 8, 16, 0.42);
+  background: linear-gradient(135deg, #3f63a8 0%, #263e78 100%);
+  box-shadow: 0 5px 16px rgba(4, 11, 31, 0.5);
 }
 
 [data-member-theme="dark-knight"] .member-service-filter__icon {
@@ -890,7 +890,7 @@
   .member-theme-option--selected
   .member-theme-option__check {
   border-color: #c8954b;
-  background: #7a2d38;
+  background: #3f63a8;
   color: #fff;
 }
 

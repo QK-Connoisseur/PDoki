@@ -411,7 +411,7 @@ function AppearancePreferences() {
               value: MEMBER_THEMES.DARK_KNIGHT,
               label: "Dark Knight",
               description:
-                "Art Deco skyline, crimson night, and slow atmospheric haze.",
+                "Cartoon Art Deco skyline, cape-blue night, and slow atmospheric haze.",
             },
           ].map((theme) => {
             const selected = memberTheme === theme.value;

@@ -8,7 +8,7 @@ const ATMOSPHERIC_LAYERS = [
   { id: "far-haze", modifier: "far-haze" },
   { id: "low-fog", modifier: "low-fog" },
   { id: "near-fog", modifier: "near-fog", desktopOnly: true },
-  { id: "crimson-glow", modifier: "crimson-glow", desktopOnly: true },
+  { id: "cape-blue-glow", modifier: "cape-blue-glow", desktopOnly: true },
 ];
 
 export default function DarkKnightBackdrop() {
