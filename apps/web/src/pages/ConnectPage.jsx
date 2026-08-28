@@ -356,44 +356,18 @@ export default function ConnectPage({ userStatus = "online", onStatusChange }) {
                     <button
                       key={tab.id}
                       onClick={() => setActiveFilter(tab.id)}
-                      className="flex-shrink-0 flex items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all border cursor-pointer hover:scale-[1.02] hover:shadow-md"
-                      style={{
-                        minWidth: 148,
-                        background: isActive
-                          ? "linear-gradient(135deg, #f9a8c8 0%, #f472b6 100%)"
-                          : "linear-gradient(135deg, #ffffff 0%, #fff0f7 100%)",
-                        borderColor: isActive ? "transparent" : "#fce7f3",
-                        boxShadow: isActive
-                          ? "0 4px 14px rgba(244,114,182,0.35)"
-                          : "0 1px 3px rgba(0,0,0,0.04)",
-                      }}
+                      className="member-service-filter flex-shrink-0 flex items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all border cursor-pointer hover:scale-[1.02] hover:shadow-md"
+                      data-active={isActive ? "true" : "false"}
+                      style={{ minWidth: 148 }}
                     >
-                      <span
-                        className="flex items-center justify-center w-9 h-9 rounded-xl flex-shrink-0"
-                        style={{
-                          background: isActive
-                            ? "rgba(255,255,255,0.22)"
-                            : "rgba(249,168,200,0.18)",
-                          color: isActive ? "#ffffff" : "#f472b6",
-                        }}
-                      >
+                      <span className="member-service-filter__icon flex items-center justify-center w-9 h-9 rounded-xl flex-shrink-0">
                         <RailIcon type={tab.id} size={17} />
                       </span>
                       <div className="min-w-0">
-                        <p
-                          className="text-sm font-semibold leading-none mb-1 truncate"
-                          style={{ color: isActive ? "#ffffff" : "#241a22" }}
-                        >
+                        <p className="member-service-filter__label text-sm font-semibold leading-none mb-1 truncate">
                           {tab.label}
                         </p>
-                        <p
-                          className="text-[11px] leading-none truncate"
-                          style={{
-                            color: isActive
-                              ? "rgba(255,255,255,0.78)"
-                              : "#b89aa8",
-                          }}
-                        >
+                        <p className="member-service-filter__description text-[11px] leading-none truncate">
                           {tab.description}
                         </p>
                       </div>

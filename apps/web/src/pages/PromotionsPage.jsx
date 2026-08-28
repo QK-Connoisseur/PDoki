@@ -52,7 +52,8 @@ function PromoBadge({ type, label }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold shadow-sm ${styles[type]}`}
+      className={`member-promo-badge inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold shadow-sm ${styles[type]}`}
+      data-promo-type={type}
     >
       {label}
     </span>
@@ -63,11 +64,12 @@ function RelationshipBadge({ relationship }) {
   if (!relationship) return null;
   return (
     <span
-      className={`rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide backdrop-blur-sm ${
+      className={`member-relationship-badge rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide backdrop-blur-sm ${
         relationship === "Subscribed"
           ? "border-amber-200/70 bg-amber-50/95 text-amber-700"
           : "border-pink-200/70 bg-white/95 text-[#df5f97]"
       }`}
+      data-relationship={relationship.toLowerCase()}
     >
       {relationship}
     </span>

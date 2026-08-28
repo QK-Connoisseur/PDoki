@@ -75,6 +75,19 @@ describe("MemberLayout", () => {
     ).toBeInTheDocument();
   });
 
+  it("selects the Dark Knight city backdrop exclusively", () => {
+    const darkKnight = renderLayout({ memberTheme: "dark-knight" });
+
+    expect(
+      darkKnight.container.querySelector('[data-member-theme="dark-knight"]')
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("dark-knight-backdrop")).toHaveAttribute(
+      "data-scene",
+      "static"
+    );
+    expect(screen.queryByTestId("sakura-backdrop")).not.toBeInTheDocument();
+  });
+
   it("keeps the verification reminder in the center column between the rails", () => {
     const view = renderLayout({
       visualVariant: "sakura-glass",

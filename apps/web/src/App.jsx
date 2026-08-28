@@ -19,6 +19,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicOnlyRoute from "./components/PublicOnlyRoute";
 import RouteSuspense from "./components/RouteSuspense";
 import BackgroundMotionProvider from "./appearance/BackgroundMotionProvider";
+import MemberThemeProvider from "./appearance/MemberThemeProvider";
 
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
@@ -282,11 +283,13 @@ export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <BackgroundMotionProvider>
-          <AuthProvider>
-            <AppShell />
-          </AuthProvider>
-        </BackgroundMotionProvider>
+        <MemberThemeProvider>
+          <BackgroundMotionProvider>
+            <AuthProvider>
+              <AppShell />
+            </AuthProvider>
+          </BackgroundMotionProvider>
+        </MemberThemeProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );

@@ -5,9 +5,15 @@ import EmailVerificationBanner from "./EmailVerificationBanner";
 import Sidebar, { MobileNav } from "./Sidebar";
 import ChatSidebar from "./ChatSidebar";
 import SakuraBackdrop from "./SakuraBackdrop";
+import DarkKnightBackdrop from "./DarkKnightBackdrop";
 import { chatContacts } from "../fixtures/chatContacts";
 import { useOptionalAuth } from "../auth/authContext";
 import { AUTH_ROLES } from "../auth/authApi";
+import {
+  DEFAULT_MEMBER_THEME,
+  MEMBER_THEMES,
+  useOptionalMemberTheme,
+} from "../appearance/memberThemeContext";
 
 /**
  * Shared member application shell.
@@ -31,7 +37,7 @@ import { AUTH_ROLES } from "../auth/authApi";
  *   onLogoClick?: () => void,
  *   bgClassName?: string,
  *   visualVariant?: "default" | "sakura-glass",
- *   memberTheme?: "sakura" | "none",
+ *   memberTheme?: "sakura" | "dark-knight" | "none",
  *   children: React.ReactNode,
  *   modals?: React.ReactNode,
  * }} props
@@ -45,12 +51,15 @@ export default function MemberLayout({
   onLogoClick,
   bgClassName = "bg-[#fff8fb]",
   visualVariant = "sakura-glass",
-  memberTheme = "sakura",
+  memberTheme,
   children,
   modals,
 }) {
   const navigate = useNavigate();
   const auth = useOptionalAuth();
+  const themePreference = useOptionalMemberTheme();
+  const resolvedMemberTheme =
+    memberTheme ?? themePreference?.memberTheme ?? DEFAULT_MEMBER_THEME;
   const showCreatorDashboard = auth?.user?.role === AUTH_ROLES.CREATOR;
   const showCreatorApplication = auth?.user?.role === AUTH_ROLES.MEMBER;
   const [showComposeMenu, setShowComposeMenu] = useState(false);
@@ -84,11 +93,14 @@ export default function MemberLayout({
     <div
       className={`relative isolate min-h-screen ${bgClassName} text-[#5b4153]`}
       data-member-visual={visualVariant}
-      data-member-theme={memberTheme}
+      data-member-theme={resolvedMemberTheme}
     >
-      {visualVariant === "sakura-glass" && memberTheme === "sakura" && (
-        <SakuraBackdrop />
-      )}
+      {visualVariant === "sakura-glass" &&
+        resolvedMemberTheme === MEMBER_THEMES.SAKURA && <SakuraBackdrop />}
+      {visualVariant === "sakura-glass" &&
+        resolvedMemberTheme === MEMBER_THEMES.DARK_KNIGHT && (
+          <DarkKnightBackdrop />
+        )}
 
       <AppHeader
         userStatus={userStatus}

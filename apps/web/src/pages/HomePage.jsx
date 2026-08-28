@@ -205,7 +205,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                           behavior: "smooth",
                         })
                       }
-                      className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition"
+                      className="member-moment-scroll-control absolute left-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition"
                       aria-label="Scroll left"
                     >
                       <svg
@@ -292,7 +292,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                           behavior: "smooth",
                         })
                       }
-                      className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition"
+                      className="member-moment-scroll-control absolute right-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-pink-200/60 text-[#e87cb8] shadow-lg shadow-pink-100/60 hover:bg-white/95 hover:shadow-pink-200/70 hover:text-[#df5f97] transition"
                       aria-label="Scroll right"
                     >
                       <svg
@@ -437,8 +437,13 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
 
                       {/* Caption with custom text style */}
                       <p
-                        className="px-4 pb-3 text-sm text-[#4a3340] leading-relaxed"
-                        style={post.style || {}}
+                        className="member-post-caption px-4 pb-3 text-sm text-[#4a3340] leading-relaxed"
+                        style={{
+                          ...post.style,
+                          "--authored-caption-color": post.style?.color,
+                          color:
+                            "var(--member-caption-color, var(--authored-caption-color, #4a3340))",
+                        }}
                       >
                         {post.caption}
                       </p>
@@ -1241,7 +1246,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
             {/* Mock progress bar */}
             <div className="flex gap-1 mb-3">
               <div className="h-0.5 flex-1 rounded-full bg-white/25 overflow-hidden">
-                <div className="h-full w-3/5 rounded-full bg-white" />
+                <div className="member-moment-progress-current h-full w-3/5 rounded-full bg-white" />
               </div>
             </div>
 

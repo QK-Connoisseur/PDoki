@@ -5,6 +5,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthContext } from "../auth/authContext";
 import BackgroundMotionProvider from "../appearance/BackgroundMotionProvider";
 import { BACKGROUND_MOTION_STORAGE_KEY } from "../appearance/backgroundMotionContext";
+import MemberThemeProvider from "../appearance/MemberThemeProvider";
+import {
+  MEMBER_THEMES,
+  MEMBER_THEME_STORAGE_KEY,
+} from "../appearance/memberThemeContext";
 import SettingsPage from "./SettingsPage";
 
 const auth = {
@@ -64,16 +69,40 @@ function makeApi(overrides = {}) {
 function renderSettings(api = makeApi()) {
   return render(
     <MemoryRouter>
-      <BackgroundMotionProvider>
-        <AuthContext.Provider value={auth}>
-          <SettingsPage api={api} />
-        </AuthContext.Provider>
-      </BackgroundMotionProvider>
+      <MemberThemeProvider>
+        <BackgroundMotionProvider>
+          <AuthContext.Provider value={auth}>
+            <SettingsPage api={api} />
+          </AuthContext.Provider>
+        </BackgroundMotionProvider>
+      </MemberThemeProvider>
     </MemoryRouter>
   );
 }
 
 describe("SettingsPage", () => {
+  it("switches to Dark Knight immediately and saves the theme locally", async () => {
+    const user = userEvent.setup();
+    const view = renderSettings();
+    const sakura = screen.getByRole("radio", { name: /Sakura/ });
+    const darkKnight = screen.getByRole("radio", { name: /Dark Knight/ });
+
+    expect(sakura).toBeChecked();
+    expect(screen.getByTestId("sakura-backdrop")).toBeInTheDocument();
+
+    await user.click(darkKnight);
+
+    expect(darkKnight).toBeChecked();
+    expect(
+      view.container.querySelector('[data-member-theme="dark-knight"]')
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("dark-knight-backdrop")).toBeInTheDocument();
+    expect(screen.queryByTestId("sakura-backdrop")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem(MEMBER_THEME_STORAGE_KEY)).toBe(
+      MEMBER_THEMES.DARK_KNIGHT
+    );
+  });
+
   it("persists the ambient-background opt-out and stops only its overlay", async () => {
     const user = userEvent.setup();
     renderSettings();

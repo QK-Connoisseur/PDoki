@@ -184,6 +184,56 @@
   --member-popover-shadow: rgba(91, 45, 70, 0.16);
 }
 
+[data-member-theme="dark-knight"] {
+  color: #d5d8dc;
+  --member-caption-color: #d2d6d8;
+  --member-canvas: #070a12;
+  --member-scene-image: url("./assets/backgrounds/dark-knight-feed-desktop.jpg");
+  --member-scene-position: center center;
+  --member-scene-size: cover;
+  --member-surface-glass:
+    linear-gradient(
+      135deg,
+      rgba(41, 54, 73, 0.86),
+      rgba(16, 24, 38, 0.76) 46%,
+      rgba(8, 13, 23, 0.8)
+    ),
+    linear-gradient(155deg, rgba(25, 35, 52, 0.9), rgba(7, 10, 18, 0.88));
+  --member-surface-stable: linear-gradient(
+    155deg,
+    #1a2536,
+    #101826 54%,
+    #090e18
+  );
+  --member-header-fill:
+    linear-gradient(
+      135deg,
+      rgba(42, 55, 73, 0.9),
+      rgba(13, 20, 32, 0.88) 48%,
+      rgba(7, 10, 18, 0.92)
+    ),
+    rgba(7, 10, 18, 0.9);
+  --member-header-filter: blur(14px) saturate(108%);
+  --member-header-no-blur-fill: linear-gradient(
+    155deg,
+    rgba(26, 37, 54, 0.97),
+    rgba(9, 14, 24, 0.97)
+  );
+  --member-border-subtle: rgba(211, 171, 102, 0.2);
+  --member-border-emphasis: rgba(206, 153, 76, 0.36);
+  --member-rim: rgba(125, 45, 57, 0.34);
+  --member-highlight: rgba(245, 224, 183, 0.1);
+  --member-lowlight: rgba(0, 0, 0, 0.46);
+  --member-shadow: rgba(0, 0, 0, 0.34);
+  --member-control-fg: #d8cfbe;
+  --member-control-hover-fg: #e5c78d;
+  --member-control-hover-bg: rgba(200, 149, 75, 0.1);
+  --member-control-focus: #d1a35e;
+  --member-popover-fill: #111a29;
+  --member-popover-border: rgba(211, 171, 102, 0.28);
+  --member-popover-shadow: rgba(0, 0, 0, 0.5);
+}
+
 [data-member-visual="sakura-glass"] {
   --glass-fill: var(--member-surface-glass);
   --glass-stable-fill: var(--member-surface-stable);
@@ -195,6 +245,7 @@
   background: var(--member-canvas, #fff0f7);
 }
 
+.member-backdrop,
 .sakura-backdrop {
   position: fixed;
   inset: 0;
@@ -331,6 +382,516 @@
     transform: translate3d(var(--petal-end-x), var(--petal-end-y), 0)
       rotate(calc(var(--petal-rotation) + 82deg));
   }
+}
+
+/* ─── Dark Knight atmosphere: slow clouds, haze, and low fog ────────── */
+
+.dark-knight-backdrop__motion-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.dark-knight-backdrop__atmosphere {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.dark-knight-backdrop__atmosphere--high-cloud {
+  top: 5%;
+  left: -34%;
+  width: 152%;
+  height: 20%;
+  background:
+    radial-gradient(
+      ellipse at 16% 54%,
+      rgba(138, 151, 166, 0.12),
+      transparent 31%
+    ),
+    radial-gradient(
+      ellipse at 57% 40%,
+      rgba(109, 126, 145, 0.1),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 86% 58%,
+      rgba(154, 155, 156, 0.08),
+      transparent 28%
+    );
+  opacity: 0.72;
+  animation: dark-knight-cloud-drift 78s ease-in-out infinite alternate;
+}
+
+.dark-knight-backdrop__atmosphere--far-haze {
+  top: 31%;
+  right: -30%;
+  width: 146%;
+  height: 23%;
+  background:
+    radial-gradient(
+      ellipse at 25% 50%,
+      rgba(111, 45, 54, 0.12),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 70% 42%,
+      rgba(133, 145, 157, 0.08),
+      transparent 38%
+    );
+  opacity: 0.68;
+  animation: dark-knight-haze-drift 92s ease-in-out -31s infinite alternate;
+}
+
+.dark-knight-backdrop__atmosphere--low-fog {
+  right: -26%;
+  bottom: -5%;
+  width: 142%;
+  height: 26%;
+  background:
+    radial-gradient(
+      ellipse at 22% 70%,
+      rgba(174, 181, 185, 0.11),
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 69% 70%,
+      rgba(137, 153, 164, 0.1),
+      transparent 39%
+    );
+  opacity: 0.74;
+  animation: dark-knight-fog-drift 66s ease-in-out -18s infinite alternate;
+}
+
+.dark-knight-backdrop__atmosphere--near-fog {
+  left: -30%;
+  bottom: 17%;
+  width: 138%;
+  height: 18%;
+  background: radial-gradient(
+    ellipse at 50% 60%,
+    rgba(194, 198, 196, 0.085),
+    transparent 58%
+  );
+  opacity: 0.62;
+  animation: dark-knight-cloud-drift 58s ease-in-out -22s infinite
+    alternate-reverse;
+}
+
+.dark-knight-backdrop__atmosphere--crimson-glow {
+  right: -8%;
+  bottom: 9%;
+  width: 46%;
+  height: 42%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(122, 45, 56, 0.13),
+    rgba(78, 32, 41, 0.045) 48%,
+    transparent 72%
+  );
+  animation: dark-knight-glow-breathe 38s ease-in-out -9s infinite alternate;
+}
+
+@keyframes dark-knight-cloud-drift {
+  from {
+    transform: translate3d(-2.5%, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(8%, 1.5%, 0) scale(1.035);
+  }
+}
+
+@keyframes dark-knight-haze-drift {
+  from {
+    transform: translate3d(3%, -1%, 0) scale(1.01);
+  }
+  to {
+    transform: translate3d(-9%, 1%, 0) scale(1.04);
+  }
+}
+
+@keyframes dark-knight-fog-drift {
+  from {
+    transform: translate3d(4%, 0, 0) scale(1.02);
+  }
+  to {
+    transform: translate3d(-7%, -1.5%, 0) scale(1.06);
+  }
+}
+
+@keyframes dark-knight-glow-breathe {
+  from {
+    opacity: 0.52;
+    transform: translate3d(0, 1%, 0) scale(0.96);
+  }
+  to {
+    opacity: 0.88;
+    transform: translate3d(-3%, -2%, 0) scale(1.06);
+  }
+}
+
+/* Dark Knight keeps the same component markup while remapping its member UI. */
+[data-member-theme="dark-knight"] [class~="text-[#241a22]"],
+[data-member-theme="dark-knight"] [class~="text-[#2d1e2b]"],
+[data-member-theme="dark-knight"] [class~="text-[#111]"] {
+  color: #f0e3c7;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#5b4153]"],
+[data-member-theme="dark-knight"] [class~="text-[#4a3340]"],
+[data-member-theme="dark-knight"] [class~="text-[#4f3647]"] {
+  color: #d2d6d8;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#8c6d7f]"],
+[data-member-theme="dark-knight"] [class~="text-[#6f5667]"],
+[data-member-theme="dark-knight"] [class~="text-[#7d536b]"] {
+  color: #adb8c5;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#b89aa8]"],
+[data-member-theme="dark-knight"] [class~="text-[#a48999]"],
+[data-member-theme="dark-knight"] [class~="text-[#d4b8c7]"],
+[data-member-theme="dark-knight"] [class~="text-[#c59aae]"],
+[data-member-theme="dark-knight"] [class~="text-[#c4a8b8]"],
+[data-member-theme="dark-knight"] [class~="text-[#c9aab8]"],
+[data-member-theme="dark-knight"] [class~="text-[#b5aab2]"],
+[data-member-theme="dark-knight"] [class~="text-[#b0a0a8]"],
+[data-member-theme="dark-knight"] [class~="text-[#9e8090]"] {
+  color: #98a5b2;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#f472b6]"],
+[data-member-theme="dark-knight"] [class~="text-[#df5f97]"],
+[data-member-theme="dark-knight"] [class~="text-[#ec4899]"],
+[data-member-theme="dark-knight"] [class~="text-[#f9a8c8]"],
+[data-member-theme="dark-knight"] [class~="text-[#e87cb8]"],
+[data-member-theme="dark-knight"] [class~="text-pink-500"],
+[data-member-theme="dark-knight"] [class~="text-pink-600"],
+[data-member-theme="dark-knight"] [class~="text-pink-700"] {
+  color: #d1a35e;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#e8384f]"] {
+  color: #ff8590;
+}
+
+[data-member-theme="dark-knight"] [class~="text-gray-700"] {
+  color: #e0e3e4;
+}
+
+[data-member-theme="dark-knight"] [class~="text-gray-500"] {
+  color: #a9b3be;
+}
+
+[data-member-theme="dark-knight"] [class~="text-red-600"],
+[data-member-theme="dark-knight"] [class~="text-rose-600"] {
+  color: #ff9aa7;
+}
+
+[data-member-theme="dark-knight"] [class~="text-green-700"],
+[data-member-theme="dark-knight"] [class~="text-emerald-600"] {
+  color: #7fdda9;
+}
+
+[data-member-theme="dark-knight"] [class~="text-amber-600"],
+[data-member-theme="dark-knight"] [class~="text-amber-700"] {
+  color: #e5c78d;
+}
+
+[data-member-theme="dark-knight"] [class~="text-violet-600"] {
+  color: #c4a7ff;
+}
+
+[data-member-theme="dark-knight"] [class~="border-pink-50"],
+[data-member-theme="dark-knight"] [class~="border-pink-100"],
+[data-member-theme="dark-knight"] [class~="border-pink-200"],
+[data-member-theme="dark-knight"] [class~="border-pink-300"],
+[data-member-theme="dark-knight"] [class~="border-pink-400"],
+[data-member-theme="dark-knight"] [class~="border-pink-500"],
+[data-member-theme="dark-knight"] [class~="border-gray-100"],
+[data-member-theme="dark-knight"] [class~="border-[#f472b6]"],
+[data-member-theme="dark-knight"] [class~="border-[#d4b8c7]"] {
+  border-color: rgba(207, 163, 94, 0.27);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-white"],
+[data-member-theme="dark-knight"] [class~="bg-[#fffafc]"],
+[data-member-theme="dark-knight"] [class~="bg-[#fffafb]"],
+[data-member-theme="dark-knight"] [class~="bg-[#fff9fc]"] {
+  background-color: rgba(12, 19, 31, 0.94);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-pink-50"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/40"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/50"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/60"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/70"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/80"],
+[data-member-theme="dark-knight"] [class~="bg-pink-100"],
+[data-member-theme="dark-knight"] [class~="bg-[#f5e6ed]"] {
+  background-color: rgba(200, 149, 75, 0.09);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-green-50"],
+[data-member-theme="dark-knight"] [class~="bg-green-100"] {
+  background-color: rgba(52, 156, 102, 0.14);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-amber-50"],
+[data-member-theme="dark-knight"] [class~="bg-amber-50/95"] {
+  background-color: rgba(200, 149, 75, 0.14);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-pink-500"],
+[data-member-theme="dark-knight"] [class~="bg-pink-600"],
+[data-member-theme="dark-knight"] [class~="bg-[#f472b6]"],
+[data-member-theme="dark-knight"] [class~="bg-[#f9a8c8]"] {
+  background-color: #7a2d38;
+}
+
+[data-member-theme="dark-knight"] [class~="from-[#f9a8c8]"] {
+  --tw-gradient-from: #a64b46;
+}
+
+[data-member-theme="dark-knight"] [class~="via-[#f472b6]"] {
+  --tw-gradient-via: #87363e;
+}
+
+[data-member-theme="dark-knight"] [class~="to-[#f472b6]"] {
+  --tw-gradient-to: #a84942;
+}
+
+[data-member-theme="dark-knight"] [class~="to-[#ec4899]"] {
+  --tw-gradient-to: #6f2632;
+}
+
+[data-member-theme="dark-knight"]
+  [class~="from-[#f9a8c8]"][class~="to-[#f472b6]"][class~="text-white"] {
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"] [class~="hover:from-[#f472b6]"]:hover {
+  --tw-gradient-from: #8d343d;
+}
+
+[data-member-theme="dark-knight"] [class~="hover:to-[#ec4899]"]:hover {
+  --tw-gradient-to: #67232e;
+}
+
+[data-member-theme="dark-knight"] [class~="hover:bg-pink-50"]:hover,
+[data-member-theme="dark-knight"] [class~="hover:bg-pink-50/60"]:hover {
+  background-color: rgba(200, 149, 75, 0.12);
+}
+
+[data-member-theme="dark-knight"] [class~="hover:text-[#df5f97]"]:hover,
+[data-member-theme="dark-knight"] [class~="hover:text-[#f9a8c8]"]:hover {
+  color: #e5c78d;
+}
+
+[data-member-theme="dark-knight"] [class~="focus:border-pink-300"]:focus,
+[data-member-theme="dark-knight"] [class~="focus:border-pink-400"]:focus {
+  border-color: #c8954b;
+}
+
+[data-member-theme="dark-knight"] [class~="ring-pink-100"],
+[data-member-theme="dark-knight"] [class~="focus:ring-pink-100"]:focus {
+  --tw-ring-color: rgba(200, 149, 75, 0.28);
+}
+
+[data-member-theme="dark-knight"]
+  input:not([type="checkbox"]):not([type="radio"]),
+[data-member-theme="dark-knight"] textarea,
+[data-member-theme="dark-knight"] select {
+  color: #e2e0d8;
+}
+
+[data-member-theme="dark-knight"] input::placeholder,
+[data-member-theme="dark-knight"] textarea::placeholder {
+  color: #7f8c9c;
+}
+
+[data-member-theme="dark-knight"] [role="switch"] > [class~="bg-white"],
+[data-member-theme="dark-knight"] .member-moment-progress-current {
+  background: #f0e3c7;
+}
+
+[data-member-theme="dark-knight"] .member-moment-scroll-control,
+[data-member-theme="dark-knight"] .member-media-play-control,
+[data-member-theme="dark-knight"] .member-relationship-badge {
+  border-color: rgba(211, 171, 102, 0.32);
+  background: rgba(10, 16, 27, 0.92);
+  color: #d1a35e;
+}
+
+[data-member-theme="dark-knight"] .member-moment-scroll-control:hover {
+  background: #162236;
+  color: #e5c78d;
+}
+
+[data-member-theme="dark-knight"]
+  .member-promo-badge[data-promo-type="free-trial"] {
+  background: #1c634e;
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"]
+  .member-promo-badge[data-promo-type="discount"] {
+  background: #76501d;
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"]
+  .member-promo-badge[data-promo-type="bundle"] {
+  background: #55397b;
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+  .member-nav-item-active {
+  border-color: rgba(221, 187, 123, 0.38);
+  background: rgba(200, 149, 75, 0.13);
+  color: #f0e3c7;
+  box-shadow:
+    inset 0 1px 0 rgba(245, 224, 183, 0.12),
+    0 7px 18px rgba(0, 0, 0, 0.22);
+}
+
+[data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+  .member-nav-item-inactive:hover,
+[data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+  .member-nav-item-trigger:hover {
+  color: #e5c78d;
+}
+
+.member-service-filter {
+  border-color: #fce7f3;
+  background: linear-gradient(135deg, #fff 0%, #fff0f7 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.member-service-filter[data-active="true"] {
+  border-color: transparent;
+  background: linear-gradient(135deg, #f9a8c8 0%, #f472b6 100%);
+  box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);
+}
+
+.member-service-filter__icon {
+  background: rgba(249, 168, 200, 0.18);
+  color: #f472b6;
+}
+
+.member-service-filter[data-active="true"] .member-service-filter__icon {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.member-service-filter__label {
+  color: #241a22;
+}
+
+.member-service-filter__description {
+  color: #b89aa8;
+}
+
+.member-service-filter[data-active="true"] .member-service-filter__label {
+  color: #fff;
+}
+
+.member-service-filter[data-active="true"] .member-service-filter__description {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+[data-member-theme="dark-knight"] .member-service-filter {
+  border-color: rgba(211, 171, 102, 0.26);
+  background: linear-gradient(135deg, #192537 0%, #0d1522 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+}
+
+[data-member-theme="dark-knight"] .member-service-filter[data-active="true"] {
+  border-color: rgba(229, 199, 141, 0.34);
+  background: linear-gradient(135deg, #8c3940 0%, #682631 100%);
+  box-shadow: 0 5px 16px rgba(49, 8, 16, 0.42);
+}
+
+[data-member-theme="dark-knight"] .member-service-filter__icon {
+  background: rgba(200, 149, 75, 0.12);
+  color: #d1a35e;
+}
+
+[data-member-theme="dark-knight"]
+  .member-service-filter[data-active="true"]
+  .member-service-filter__icon {
+  background: rgba(245, 224, 183, 0.14);
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"] .member-service-filter__label,
+[data-member-theme="dark-knight"]
+  .member-service-filter[data-active="true"]
+  .member-service-filter__label {
+  color: #f0e3c7;
+}
+
+[data-member-theme="dark-knight"] .member-service-filter__description,
+[data-member-theme="dark-knight"]
+  .member-service-filter[data-active="true"]
+  .member-service-filter__description {
+  color: #aeb8c4;
+}
+
+.member-theme-option {
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.member-theme-option:focus-within {
+  outline: 2px solid var(--member-control-focus);
+  outline-offset: 2px;
+}
+
+.member-theme-option__preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  border-radius: 0.75rem;
+  border: 1px solid var(--member-border-subtle);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.member-theme-option__preview--sakura {
+  background-image: url("./assets/backgrounds/sakura-feed-desktop.jpg");
+}
+
+.member-theme-option__preview--dark-knight {
+  background-image: url("./assets/backgrounds/dark-knight-feed-desktop.jpg");
+}
+
+[data-member-theme="dark-knight"] .member-theme-option {
+  background: rgba(6, 10, 18, 0.46);
+}
+
+[data-member-theme="dark-knight"] .member-theme-option--selected {
+  border-color: #c8954b;
+  box-shadow: 0 0 0 2px rgba(200, 149, 75, 0.2);
+}
+
+[data-member-theme="dark-knight"] .member-theme-option__check {
+  border-color: rgba(211, 171, 102, 0.42);
+}
+
+[data-member-theme="dark-knight"]
+  .member-theme-option--selected
+  .member-theme-option__check {
+  border-color: #c8954b;
+  background: #7a2d38;
+  color: #fff;
 }
 
 [data-member-visual="sakura-glass"] .member-glass-header,
@@ -473,6 +1034,10 @@
   .sakura-backdrop__floating-petal--desktop {
     display: none;
   }
+
+  .dark-knight-backdrop__atmosphere--desktop {
+    display: none;
+  }
 }
 
 @media (max-width: 767px) {
@@ -488,8 +1053,33 @@
     --member-header-filter: blur(10px) saturate(112%);
   }
 
+  [data-member-theme="dark-knight"] {
+    --member-scene-image: url("./assets/backgrounds/dark-knight-feed-mobile.jpg");
+    --member-scene-position: center top;
+    --member-header-filter: blur(10px) saturate(106%);
+  }
+
   .sakura-backdrop__motion-layer {
     opacity: 0.78;
+  }
+
+  .dark-knight-backdrop__motion-layer {
+    opacity: 0.78;
+  }
+
+  .dark-knight-backdrop__atmosphere--high-cloud {
+    top: 8%;
+    height: 18%;
+  }
+
+  .dark-knight-backdrop__atmosphere--far-haze {
+    top: 39%;
+    height: 19%;
+  }
+
+  .dark-knight-backdrop__atmosphere--low-fog {
+    bottom: 3%;
+    height: 21%;
   }
 
   [data-member-visual="sakura-glass"] .member-glass-header {
@@ -539,6 +1129,10 @@
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
+
+  .dark-knight-backdrop__motion-layer {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -546,7 +1140,15 @@
     display: none;
   }
 
+  .dark-knight-backdrop__motion-layer {
+    display: none;
+  }
+
   .sakura-backdrop__floating-petal {
+    animation: none;
+  }
+
+  .dark-knight-backdrop__atmosphere {
     animation: none;
   }
 
@@ -557,6 +1159,7 @@
 }
 
 @media (prefers-contrast: more) {
+  .member-backdrop,
   .sakura-backdrop {
     opacity: 0.34;
   }
@@ -577,9 +1180,29 @@
     backdrop-filter: none;
     box-shadow: none;
   }
+
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-header,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-rail,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-mobile-nav,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-chat-panel,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .sakura-glass-surface,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .sakura-feed-card,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-header-popover {
+    border-color: #e5c78d;
+    background: #0b111d;
+    color: #fff7e4;
+  }
 }
 
 @media (forced-colors: active) {
+  .member-backdrop,
   .sakura-backdrop {
     display: none;
   }
