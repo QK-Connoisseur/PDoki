@@ -19,7 +19,7 @@ function ThemeProbe() {
         type="button"
         onClick={() => setMemberTheme(MEMBER_THEMES.DARK_KNIGHT)}
       >
-        Use Dark Knight
+        Use Dark Nite
       </button>
     </div>
   );
@@ -47,7 +47,7 @@ afterEach(() => {
 });
 
 describe("MemberThemeProvider", () => {
-  it("defaults to Sakura and persists a valid Dark Knight selection", async () => {
+  it("defaults to Sakura and persists a valid Dark Nite selection", async () => {
     const user = userEvent.setup();
     renderProvider();
 
@@ -55,7 +55,7 @@ describe("MemberThemeProvider", () => {
       DEFAULT_MEMBER_THEME
     );
 
-    await user.click(screen.getByRole("button", { name: "Use Dark Knight" }));
+    await user.click(screen.getByRole("button", { name: "Use Dark Nite" }));
 
     expect(screen.getByLabelText("Selected theme")).toHaveTextContent(
       MEMBER_THEMES.DARK_KNIGHT
@@ -65,7 +65,7 @@ describe("MemberThemeProvider", () => {
     );
   });
 
-  it("restores a saved Dark Knight selection without a Sakura-first render", () => {
+  it("restores a saved Dark Nite selection without a Sakura-first render", () => {
     window.localStorage.setItem(
       MEMBER_THEME_STORAGE_KEY,
       MEMBER_THEMES.DARK_KNIGHT

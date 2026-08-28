@@ -384,7 +384,7 @@
   }
 }
 
-/* ─── Dark Knight atmosphere: slow clouds, haze, and low fog ────────── */
+/* ─── Dark Nite atmosphere: slow clouds, haze, and low fog ──────────── */
 
 .dark-knight-backdrop__motion-layer {
   position: absolute;
@@ -534,7 +534,7 @@
   }
 }
 
-/* Dark Knight keeps the same component markup while remapping its member UI. */
+/* Dark Nite keeps the same component markup while remapping its member UI. */
 [data-member-theme="dark-knight"] [class~="text-[#241a22]"],
 [data-member-theme="dark-knight"] [class~="text-[#2d1e2b]"],
 [data-member-theme="dark-knight"] [class~="text-[#111]"] {

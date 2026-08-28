@@ -75,7 +75,7 @@ describe("MemberLayout", () => {
     ).toBeInTheDocument();
   });
 
-  it("selects the Dark Knight city backdrop exclusively", () => {
+  it("selects the Dark Nite city backdrop exclusively", () => {
     const darkKnight = renderLayout({ memberTheme: "dark-knight" });
 
     expect(

@@ -81,11 +81,11 @@ function renderSettings(api = makeApi()) {
 }
 
 describe("SettingsPage", () => {
-  it("switches to Dark Knight immediately and saves the theme locally", async () => {
+  it("switches to Dark Nite immediately and saves the theme locally", async () => {
     const user = userEvent.setup();
     const view = renderSettings();
     const sakura = screen.getByRole("radio", { name: /Sakura/ });
-    const darkKnight = screen.getByRole("radio", { name: /Dark Knight/ });
+    const darkKnight = screen.getByRole("radio", { name: /Dark Nite/ });
 
     expect(sakura).toBeChecked();
     expect(screen.getByTestId("sakura-backdrop")).toBeInTheDocument();

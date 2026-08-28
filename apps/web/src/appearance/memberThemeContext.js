@@ -4,6 +4,7 @@ export const MEMBER_THEME_STORAGE_KEY = "pumdoki:member-theme:v1";
 
 export const MEMBER_THEMES = Object.freeze({
   SAKURA: "sakura",
+  // Retain this persisted identifier after the product-facing rename to Dark Nite.
   DARK_KNIGHT: "dark-knight",
 });
 

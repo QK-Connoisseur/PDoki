@@ -409,7 +409,7 @@ function AppearancePreferences() {
             },
             {
               value: MEMBER_THEMES.DARK_KNIGHT,
-              label: "Dark Knight",
+              label: "Dark Nite",
               description:
                 "Cartoon Art Deco skyline, cape-blue night, and slow atmospheric haze.",
             },
@@ -474,7 +474,7 @@ function AppearancePreferences() {
             className="mt-1 max-w-xl text-sm leading-6 text-[#8c6d7f]"
           >
             Adds quiet, theme-specific movement over the background: petals in
-            Sakura, or slow clouds and fog in Dark Knight. The wallpaper itself
+            Sakura, or slow clouds and fog in Dark Nite. The wallpaper itself
             remains unchanged.
           </p>
           <p className="mt-2 text-xs leading-5 text-[#a48999]">
