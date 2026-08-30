@@ -8,6 +8,7 @@ export function createLogger(
     level,
     redact: [
       "req.headers.authorization",
+      "req.headers.cf-access-jwt-assertion",
       "req.headers.cookie",
       "req.headers.x-csrf-token",
       "req.headers.x-operations-csrf",
