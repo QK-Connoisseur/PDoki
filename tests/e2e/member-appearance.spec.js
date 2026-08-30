@@ -101,6 +101,11 @@ test("the mobile palette stays inside a 320px viewport and uses the mobile city 
 }) => {
   await page.setViewportSize({ width: 320, height: 700 });
   await loginAs(page, "member");
+  const cookieConsent = page.getByRole("dialog", { name: "Cookie consent" });
+  await cookieConsent
+    .getByRole("button", { name: "Reject Non-Essential", exact: true })
+    .click();
+  await expect(cookieConsent).toHaveCount(0);
   const panel = await openAppearance(page, true);
   await panel.getByText("Midnight City", { exact: true }).click();
   const backdrop = await expectLoadedCityBackdrop(page, "mobile");
