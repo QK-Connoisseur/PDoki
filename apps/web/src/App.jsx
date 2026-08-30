@@ -18,6 +18,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicOnlyRoute from "./components/PublicOnlyRoute";
 import RouteSuspense from "./components/RouteSuspense";
+import BackgroundMotionProvider from "./appearance/BackgroundMotionProvider";
+import MemberThemeProvider from "./appearance/MemberThemeProvider";
 
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
@@ -281,9 +283,13 @@ export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <AuthProvider>
-          <AppShell />
-        </AuthProvider>
+        <MemberThemeProvider>
+          <BackgroundMotionProvider>
+            <AuthProvider>
+              <AppShell />
+            </AuthProvider>
+          </BackgroundMotionProvider>
+        </MemberThemeProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );

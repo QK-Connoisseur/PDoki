@@ -5,9 +5,17 @@ import EmailVerificationBanner from "./EmailVerificationBanner";
 import Sidebar, { MobileNav } from "./Sidebar";
 import ChatSidebar from "./ChatSidebar";
 import SakuraBackdrop from "./SakuraBackdrop";
+import DarkKnightBackdrop from "./DarkKnightBackdrop";
+import MomentComposer from "./MomentComposer";
+import PostComposer from "./PostComposer";
 import { chatContacts } from "../fixtures/chatContacts";
 import { useOptionalAuth } from "../auth/authContext";
 import { AUTH_ROLES } from "../auth/authApi";
+import {
+  DEFAULT_MEMBER_THEME,
+  MEMBER_THEMES,
+  useOptionalMemberTheme,
+} from "../appearance/memberThemeContext";
 
 /**
  * Shared member application shell.
@@ -18,9 +26,10 @@ import { AUTH_ROLES } from "../auth/authApi";
  * source of truth. Navigation runs through React Router.
  *
  * Pages render their own `<main>` as `children` and pass any page-specific
- * overlays (compose modals, lightboxes) via `modals`. The compose menu lives in
- * the shell; it calls back into `onComposePost` / `onComposeMoment` so the page
- * keeps ownership of its modal state.
+ * overlays (compose modals, lightboxes) via `modals`. The compose menu in
+ * the shell always offers both creation actions. Pages can keep ownership of
+ * their editors via `onComposePost` / `onComposeMoment`; otherwise the shell
+ * opens the same shared prototype editors without changing the current route.
  *
  * @param {{
  *   activePage: string,
@@ -31,7 +40,7 @@ import { AUTH_ROLES } from "../auth/authApi";
  *   onLogoClick?: () => void,
  *   bgClassName?: string,
  *   visualVariant?: "default" | "sakura-glass",
- *   memberTheme?: "sakura" | "none",
+ *   memberTheme?: "sakura" | "dark-knight" | "none",
  *   children: React.ReactNode,
  *   modals?: React.ReactNode,
  * }} props
@@ -45,16 +54,23 @@ export default function MemberLayout({
   onLogoClick,
   bgClassName = "bg-[#fff8fb]",
   visualVariant = "sakura-glass",
-  memberTheme = "sakura",
+  memberTheme,
   children,
   modals,
 }) {
   const navigate = useNavigate();
   const auth = useOptionalAuth();
+  const themePreference = useOptionalMemberTheme();
+  const resolvedMemberTheme =
+    memberTheme ?? themePreference?.memberTheme ?? DEFAULT_MEMBER_THEME;
   const showCreatorDashboard = auth?.user?.role === AUTH_ROLES.CREATOR;
   const showCreatorApplication = auth?.user?.role === AUTH_ROLES.MEMBER;
   const [showComposeMenu, setShowComposeMenu] = useState(false);
+  const [activeComposer, setActiveComposer] = useState(null);
   const [logoutError, setLogoutError] = useState("");
+  const handleComposePost = onComposePost ?? (() => setActiveComposer("post"));
+  const handleComposeMoment =
+    onComposeMoment ?? (() => setActiveComposer("moment"));
 
   const handleNavigate = (id) => {
     if (id === "home") navigate("/home");
@@ -84,11 +100,14 @@ export default function MemberLayout({
     <div
       className={`relative isolate min-h-screen ${bgClassName} text-[#5b4153]`}
       data-member-visual={visualVariant}
-      data-member-theme={memberTheme}
+      data-member-theme={resolvedMemberTheme}
     >
-      {visualVariant === "sakura-glass" && memberTheme === "sakura" && (
-        <SakuraBackdrop />
-      )}
+      {visualVariant === "sakura-glass" &&
+        resolvedMemberTheme === MEMBER_THEMES.SAKURA && <SakuraBackdrop />}
+      {visualVariant === "sakura-glass" &&
+        resolvedMemberTheme === MEMBER_THEMES.DARK_KNIGHT && (
+          <DarkKnightBackdrop />
+        )}
 
       <AppHeader
         userStatus={userStatus}
@@ -122,8 +141,8 @@ export default function MemberLayout({
             onNavigateLegal={handleNavigateLegal}
             showComposeMenu={showComposeMenu}
             setShowComposeMenu={setShowComposeMenu}
-            onComposePost={onComposePost}
-            onComposeMoment={onComposeMoment}
+            onComposePost={handleComposePost}
+            onComposeMoment={handleComposeMoment}
           />
 
           <div
@@ -143,12 +162,18 @@ export default function MemberLayout({
         onNavigate={handleNavigate}
         showComposeMenu={showComposeMenu}
         setShowComposeMenu={setShowComposeMenu}
-        onComposePost={onComposePost}
-        onComposeMoment={onComposeMoment}
+        onComposePost={handleComposePost}
+        onComposeMoment={handleComposeMoment}
         totalUnread={totalUnread}
       />
 
       {modals}
+      {activeComposer === "post" && (
+        <PostComposer onClose={() => setActiveComposer(null)} />
+      )}
+      {activeComposer === "moment" && (
+        <MomentComposer onClose={() => setActiveComposer(null)} />
+      )}
     </div>
   );
 }

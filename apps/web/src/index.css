@@ -184,6 +184,57 @@
   --member-popover-shadow: rgba(91, 45, 70, 0.16);
 }
 
+[data-member-theme="dark-knight"] {
+  color: #d5d8dc;
+  --member-caption-color: #d2d6d8;
+  --member-canvas: #070a12;
+  --member-scene-image: url("./assets/backgrounds/midnight-city-feed-desktop.jpg");
+  --member-scene-position: center center;
+  --member-scene-size: cover;
+  --member-surface-glass:
+    linear-gradient(
+      135deg,
+      rgba(41, 54, 73, 0.86),
+      rgba(16, 24, 38, 0.76) 46%,
+      rgba(8, 13, 23, 0.8)
+    ),
+    linear-gradient(155deg, rgba(25, 35, 52, 0.9), rgba(7, 10, 18, 0.88));
+  --member-surface-stable: linear-gradient(
+    155deg,
+    #1a2536,
+    #101826 54%,
+    #090e18
+  );
+  --member-header-fill:
+    linear-gradient(
+      135deg,
+      rgba(42, 55, 73, 0.9),
+      rgba(13, 20, 32, 0.88) 48%,
+      rgba(7, 10, 18, 0.92)
+    ),
+    rgba(7, 10, 18, 0.9);
+  --member-header-filter: blur(14px) saturate(108%);
+  --member-header-no-blur-fill: linear-gradient(
+    155deg,
+    rgba(26, 37, 54, 0.97),
+    rgba(9, 14, 24, 0.97)
+  );
+  --member-border-subtle: rgba(211, 171, 102, 0.2);
+  --member-border-emphasis: rgba(206, 153, 76, 0.36);
+  --member-rim: rgba(73, 111, 184, 0.38);
+  --member-highlight: rgba(245, 224, 183, 0.1);
+  --member-lowlight: rgba(0, 0, 0, 0.46);
+  --member-shadow: rgba(0, 0, 0, 0.34);
+  --member-control-fg: #d8cfbe;
+  --member-control-hover-fg: #e5c78d;
+  --member-control-hover-bg: rgba(200, 149, 75, 0.1);
+  --member-control-focus: #d1a35e;
+  --member-popover-fill: #111a29;
+  --member-popover-border: rgba(211, 171, 102, 0.28);
+  --member-popover-shadow: rgba(0, 0, 0, 0.5);
+  --member-locked-post-fill: var(--member-surface-stable);
+}
+
 [data-member-visual="sakura-glass"] {
   --glass-fill: var(--member-surface-glass);
   --glass-stable-fill: var(--member-surface-stable);
@@ -195,6 +246,7 @@
   background: var(--member-canvas, #fff0f7);
 }
 
+.member-backdrop,
 .sakura-backdrop {
   position: fixed;
   inset: 0;
@@ -210,6 +262,700 @@
   background-position: var(--member-scene-position, center center);
   background-repeat: no-repeat;
   background-size: var(--member-scene-size, cover);
+}
+
+.sakura-backdrop__motion-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.sakura-backdrop__floating-petal {
+  position: absolute;
+  display: block;
+  top: var(--petal-top);
+  left: var(--petal-left);
+  width: var(--petal-size);
+  aspect-ratio: 0.9 / 1;
+  clip-path: polygon(
+    50% 100%,
+    30% 86%,
+    12% 69%,
+    4% 46%,
+    10% 25%,
+    24% 9%,
+    40% 3%,
+    50% 17%,
+    60% 3%,
+    76% 9%,
+    90% 25%,
+    96% 46%,
+    88% 69%,
+    70% 86%
+  );
+  background:
+    radial-gradient(
+      circle at 31% 27%,
+      rgba(255, 255, 255, 0.66) 0 10%,
+      transparent 34%
+    ),
+    linear-gradient(
+      168deg,
+      rgba(255, 250, 253, 0.78),
+      rgba(249, 183, 213, 0.58) 68%,
+      rgba(202, 87, 145, 0.38)
+    );
+  box-shadow: inset 0 -1px 0 rgba(169, 67, 121, 0.1);
+  filter: drop-shadow(0 3px 9px rgba(145, 52, 98, 0.07)) blur(0.2px);
+  opacity: 0;
+  translate: -50% 0;
+  transform-origin: 50% 88%;
+  will-change: transform, opacity;
+  animation: sakura-petal-drift var(--petal-duration) linear var(--petal-delay)
+    infinite;
+}
+
+.sakura-backdrop__floating-petal::before,
+.sakura-backdrop__floating-petal::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.sakura-backdrop__floating-petal::before {
+  bottom: 13%;
+  left: 50%;
+  width: 1px;
+  height: 58%;
+  border-radius: 999px;
+  background: linear-gradient(
+    to top,
+    rgba(161, 57, 108, 0.34),
+    rgba(211, 117, 163, 0.18) 58%,
+    transparent
+  );
+  transform: translateX(-50%) rotate(-4deg);
+  transform-origin: bottom;
+}
+
+.sakura-backdrop__floating-petal::after {
+  inset: 13% 22% 43%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(255, 255, 255, 0.42),
+    transparent 72%
+  );
+}
+
+@keyframes sakura-petal-drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--petal-rotation));
+  }
+
+  10% {
+    opacity: var(--petal-opacity);
+  }
+
+  34% {
+    opacity: var(--petal-opacity);
+    transform: translate3d(var(--petal-sway-x), var(--petal-sway-y), 0)
+      rotate(calc(var(--petal-rotation) + 24deg));
+  }
+
+  68% {
+    opacity: var(--petal-opacity);
+    transform: translate3d(var(--petal-drift-x), var(--petal-drift-y), 0)
+      rotate(calc(var(--petal-rotation) + 48deg));
+  }
+
+  88% {
+    opacity: var(--petal-opacity);
+    transform: translate3d(var(--petal-end-x), var(--petal-end-y), 0)
+      rotate(calc(var(--petal-rotation) + 68deg));
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--petal-end-x), var(--petal-end-y), 0)
+      rotate(calc(var(--petal-rotation) + 82deg));
+  }
+}
+
+/* ─── Midnight City atmosphere: slow clouds, haze, and low fog ──────── */
+
+.dark-knight-backdrop__motion-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.dark-knight-backdrop__atmosphere {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.dark-knight-backdrop__atmosphere--high-cloud {
+  top: 5%;
+  left: -34%;
+  width: 152%;
+  height: 20%;
+  background:
+    radial-gradient(
+      ellipse at 16% 54%,
+      rgba(112, 140, 196, 0.12),
+      transparent 31%
+    ),
+    radial-gradient(
+      ellipse at 57% 40%,
+      rgba(72, 103, 166, 0.11),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 86% 58%,
+      rgba(139, 159, 200, 0.08),
+      transparent 28%
+    );
+  opacity: 0.72;
+  animation: dark-knight-cloud-drift 78s ease-in-out infinite alternate;
+}
+
+.dark-knight-backdrop__atmosphere--far-haze {
+  top: 31%;
+  right: -30%;
+  width: 146%;
+  height: 23%;
+  background:
+    radial-gradient(
+      ellipse at 25% 50%,
+      rgba(73, 111, 184, 0.15),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 70% 42%,
+      rgba(91, 120, 177, 0.09),
+      transparent 38%
+    );
+  opacity: 0.68;
+  animation: dark-knight-haze-drift 92s ease-in-out -31s infinite alternate;
+}
+
+.dark-knight-backdrop__atmosphere--low-fog {
+  right: -26%;
+  bottom: -5%;
+  width: 142%;
+  height: 26%;
+  background:
+    radial-gradient(
+      ellipse at 22% 70%,
+      rgba(146, 164, 200, 0.11),
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 69% 70%,
+      rgba(102, 129, 183, 0.11),
+      transparent 39%
+    );
+  opacity: 0.74;
+  animation: dark-knight-fog-drift 66s ease-in-out -18s infinite alternate;
+}
+
+.dark-knight-backdrop__atmosphere--near-fog {
+  left: -30%;
+  bottom: 17%;
+  width: 138%;
+  height: 18%;
+  background: radial-gradient(
+    ellipse at 50% 60%,
+    rgba(154, 171, 205, 0.09),
+    transparent 58%
+  );
+  opacity: 0.62;
+  animation: dark-knight-cloud-drift 58s ease-in-out -22s infinite
+    alternate-reverse;
+}
+
+.dark-knight-backdrop__atmosphere--cape-blue-glow {
+  right: -8%;
+  bottom: 9%;
+  width: 46%;
+  height: 42%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(73, 111, 184, 0.16),
+    rgba(38, 62, 120, 0.065) 48%,
+    transparent 72%
+  );
+  animation: dark-knight-glow-breathe 38s ease-in-out -9s infinite alternate;
+}
+
+@keyframes dark-knight-cloud-drift {
+  from {
+    transform: translate3d(-2.5%, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(8%, 1.5%, 0) scale(1.035);
+  }
+}
+
+@keyframes dark-knight-haze-drift {
+  from {
+    transform: translate3d(3%, -1%, 0) scale(1.01);
+  }
+  to {
+    transform: translate3d(-9%, 1%, 0) scale(1.04);
+  }
+}
+
+@keyframes dark-knight-fog-drift {
+  from {
+    transform: translate3d(4%, 0, 0) scale(1.02);
+  }
+  to {
+    transform: translate3d(-7%, -1.5%, 0) scale(1.06);
+  }
+}
+
+@keyframes dark-knight-glow-breathe {
+  from {
+    opacity: 0.52;
+    transform: translate3d(0, 1%, 0) scale(0.96);
+  }
+  to {
+    opacity: 0.88;
+    transform: translate3d(-3%, -2%, 0) scale(1.06);
+  }
+}
+
+/* Midnight City retains the legacy theme key for saved preferences. */
+[data-member-theme="dark-knight"] [class~="text-[#241a22]"],
+[data-member-theme="dark-knight"] [class~="text-[#2d1e2b]"],
+[data-member-theme="dark-knight"] [class~="text-[#111]"] {
+  color: #f0e3c7;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#5b4153]"],
+[data-member-theme="dark-knight"] [class~="text-[#4a3340]"],
+[data-member-theme="dark-knight"] [class~="text-[#4f3647]"] {
+  color: #d2d6d8;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#8c6d7f]"],
+[data-member-theme="dark-knight"] [class~="text-[#6f5667]"],
+[data-member-theme="dark-knight"] [class~="text-[#7d536b]"] {
+  color: #adb8c5;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#b89aa8]"],
+[data-member-theme="dark-knight"] [class~="text-[#a48999]"],
+[data-member-theme="dark-knight"] [class~="text-[#d4b8c7]"],
+[data-member-theme="dark-knight"] [class~="text-[#c59aae]"],
+[data-member-theme="dark-knight"] [class~="text-[#c4a8b8]"],
+[data-member-theme="dark-knight"] [class~="text-[#c9aab8]"],
+[data-member-theme="dark-knight"] [class~="text-[#b5aab2]"],
+[data-member-theme="dark-knight"] [class~="text-[#b0a0a8]"],
+[data-member-theme="dark-knight"] [class~="text-[#9e8090]"] {
+  color: #98a5b2;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#f472b6]"],
+[data-member-theme="dark-knight"] [class~="text-[#df5f97]"],
+[data-member-theme="dark-knight"] [class~="text-[#ec4899]"],
+[data-member-theme="dark-knight"] [class~="text-[#f9a8c8]"],
+[data-member-theme="dark-knight"] [class~="text-[#e87cb8]"],
+[data-member-theme="dark-knight"] [class~="text-pink-500"],
+[data-member-theme="dark-knight"] [class~="text-pink-600"],
+[data-member-theme="dark-knight"] [class~="text-pink-700"] {
+  color: #d1a35e;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#e8384f]"] {
+  color: #ff8590;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#e8384f]/55"],
+[data-member-theme="dark-knight"] [class~="text-[#e8384f]/65"],
+[data-member-theme="dark-knight"] [class~="text-[#e8384f]/70"] {
+  color: #f1a4ae;
+}
+
+[data-member-theme="dark-knight"] [class~="text-gray-700"] {
+  color: #e0e3e4;
+}
+
+[data-member-theme="dark-knight"] [class~="text-gray-500"] {
+  color: #a9b3be;
+}
+
+[data-member-theme="dark-knight"] [class~="text-red-600"],
+[data-member-theme="dark-knight"] [class~="text-rose-600"] {
+  color: #ff9aa7;
+}
+
+[data-member-theme="dark-knight"] [class~="text-green-700"],
+[data-member-theme="dark-knight"] [class~="text-emerald-600"] {
+  color: #7fdda9;
+}
+
+[data-member-theme="dark-knight"] [class~="text-amber-600"],
+[data-member-theme="dark-knight"] [class~="text-amber-700"] {
+  color: #e5c78d;
+}
+
+[data-member-theme="dark-knight"] [class~="text-violet-600"] {
+  color: #c4a7ff;
+}
+
+[data-member-theme="dark-knight"] [class~="border-pink-50"],
+[data-member-theme="dark-knight"] [class~="border-pink-100"],
+[data-member-theme="dark-knight"] [class~="border-pink-200"],
+[data-member-theme="dark-knight"] [class~="border-pink-300"],
+[data-member-theme="dark-knight"] [class~="border-pink-400"],
+[data-member-theme="dark-knight"] [class~="border-pink-500"],
+[data-member-theme="dark-knight"] [class~="border-gray-100"],
+[data-member-theme="dark-knight"] [class~="border-[#f472b6]"],
+[data-member-theme="dark-knight"] [class~="border-[#d4b8c7]"] {
+  border-color: rgba(207, 163, 94, 0.27);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-white"],
+[data-member-theme="dark-knight"] [class~="bg-[#fffafc]"],
+[data-member-theme="dark-knight"] [class~="bg-[#fffafb]"],
+[data-member-theme="dark-knight"] [class~="bg-[#fff9fc]"] {
+  background-color: rgba(12, 19, 31, 0.94);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-pink-50"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/40"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/50"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/60"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/70"],
+[data-member-theme="dark-knight"] [class~="bg-pink-50/80"],
+[data-member-theme="dark-knight"] [class~="bg-pink-100"],
+[data-member-theme="dark-knight"] [class~="bg-[#f5e6ed]"] {
+  background-color: rgba(200, 149, 75, 0.09);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-green-50"],
+[data-member-theme="dark-knight"] [class~="bg-green-100"] {
+  background-color: rgba(52, 156, 102, 0.14);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-amber-50"],
+[data-member-theme="dark-knight"] [class~="bg-amber-50/95"] {
+  background-color: rgba(200, 149, 75, 0.14);
+}
+
+[data-member-theme="dark-knight"] [class~="bg-pink-500"],
+[data-member-theme="dark-knight"] [class~="bg-pink-600"],
+[data-member-theme="dark-knight"] [class~="bg-[#f472b6]"],
+[data-member-theme="dark-knight"] [class~="bg-[#f9a8c8]"] {
+  background-color: #3f63a8;
+}
+
+[data-member-theme="dark-knight"] [class~="from-[#f9a8c8]"] {
+  --tw-gradient-from: #496fb8;
+}
+
+[data-member-theme="dark-knight"] [class~="via-[#f472b6]"] {
+  --tw-gradient-via: #3f63a8;
+}
+
+[data-member-theme="dark-knight"] [class~="to-[#f472b6]"] {
+  --tw-gradient-to: #35568f;
+}
+
+[data-member-theme="dark-knight"] [class~="to-[#ec4899]"] {
+  --tw-gradient-to: #263e78;
+}
+
+[data-member-theme="dark-knight"]
+  [class~="from-[#f9a8c8]"][class~="to-[#f472b6]"][class~="text-white"] {
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"] [class~="hover:from-[#f472b6]"]:hover {
+  --tw-gradient-from: #3f63a8;
+}
+
+[data-member-theme="dark-knight"] [class~="hover:to-[#ec4899]"]:hover {
+  --tw-gradient-to: #213667;
+}
+
+[data-member-theme="dark-knight"] [class~="hover:bg-pink-50"]:hover,
+[data-member-theme="dark-knight"] [class~="hover:bg-pink-50/60"]:hover {
+  background-color: rgba(200, 149, 75, 0.12);
+}
+
+[data-member-theme="dark-knight"] [class~="hover:text-[#df5f97]"]:hover,
+[data-member-theme="dark-knight"] [class~="hover:text-[#f9a8c8]"]:hover {
+  color: #e5c78d;
+}
+
+[data-member-theme="dark-knight"] [class~="focus:border-pink-300"]:focus,
+[data-member-theme="dark-knight"] [class~="focus:border-pink-400"]:focus {
+  border-color: #c8954b;
+}
+
+[data-member-theme="dark-knight"] [class~="ring-pink-100"],
+[data-member-theme="dark-knight"] [class~="focus:ring-pink-100"]:focus {
+  --tw-ring-color: rgba(200, 149, 75, 0.28);
+}
+
+[data-member-theme="dark-knight"]
+  input:not([type="checkbox"]):not([type="radio"]),
+[data-member-theme="dark-knight"] textarea,
+[data-member-theme="dark-knight"] select {
+  color: #e2e0d8;
+}
+
+[data-member-theme="dark-knight"] input::placeholder,
+[data-member-theme="dark-knight"] textarea::placeholder {
+  color: #7f8c9c;
+}
+
+[data-member-theme="dark-knight"] [role="switch"] > [class~="bg-white"],
+[data-member-theme="dark-knight"] .member-moment-progress-current {
+  background: #f0e3c7;
+}
+
+[data-member-theme="dark-knight"] .member-moment-scroll-control,
+[data-member-theme="dark-knight"] .member-media-play-control,
+[data-member-theme="dark-knight"] .member-relationship-badge {
+  border-color: rgba(211, 171, 102, 0.32);
+  background: rgba(10, 16, 27, 0.92);
+  color: #d1a35e;
+}
+
+[data-member-theme="dark-knight"] .member-moment-scroll-control:hover {
+  background: #162236;
+  color: #e5c78d;
+}
+
+[data-member-theme="dark-knight"]
+  .member-promo-badge[data-promo-type="free-trial"] {
+  background: #1c634e;
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"]
+  .member-promo-badge[data-promo-type="discount"] {
+  background: #76501d;
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"]
+  .member-promo-badge[data-promo-type="bundle"] {
+  background: #55397b;
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+  .member-nav-item-active {
+  border-color: rgba(221, 187, 123, 0.38);
+  background: rgba(200, 149, 75, 0.13);
+  color: #f0e3c7;
+  box-shadow:
+    inset 0 1px 0 rgba(245, 224, 183, 0.12),
+    0 7px 18px rgba(0, 0, 0, 0.22);
+}
+
+[data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+  .member-nav-item-inactive:hover,
+[data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+  .member-nav-item-trigger:hover {
+  color: #e5c78d;
+}
+
+.member-service-filter {
+  border-color: #fce7f3;
+  background: linear-gradient(135deg, #fff 0%, #fff0f7 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.member-service-filter[data-active="true"] {
+  border-color: transparent;
+  background: linear-gradient(135deg, #f9a8c8 0%, #f472b6 100%);
+  box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);
+}
+
+.member-service-filter__icon {
+  background: rgba(249, 168, 200, 0.18);
+  color: #f472b6;
+}
+
+.member-service-filter[data-active="true"] .member-service-filter__icon {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.member-service-filter__label {
+  color: #241a22;
+}
+
+.member-service-filter__description {
+  color: #b89aa8;
+}
+
+.member-service-filter[data-active="true"] .member-service-filter__label {
+  color: #fff;
+}
+
+.member-service-filter[data-active="true"] .member-service-filter__description {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+[data-member-theme="dark-knight"] .member-service-filter {
+  border-color: rgba(211, 171, 102, 0.26);
+  background: linear-gradient(135deg, #192537 0%, #0d1522 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+}
+
+[data-member-theme="dark-knight"] .member-service-filter[data-active="true"] {
+  border-color: rgba(229, 199, 141, 0.34);
+  background: linear-gradient(135deg, #3f63a8 0%, #263e78 100%);
+  box-shadow: 0 5px 16px rgba(4, 11, 31, 0.5);
+}
+
+[data-member-theme="dark-knight"] .member-service-filter__icon {
+  background: rgba(200, 149, 75, 0.12);
+  color: #d1a35e;
+}
+
+[data-member-theme="dark-knight"]
+  .member-service-filter[data-active="true"]
+  .member-service-filter__icon {
+  background: rgba(245, 224, 183, 0.14);
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"] .member-service-filter__label,
+[data-member-theme="dark-knight"]
+  .member-service-filter[data-active="true"]
+  .member-service-filter__label {
+  color: #f0e3c7;
+}
+
+[data-member-theme="dark-knight"] .member-service-filter__description,
+[data-member-theme="dark-knight"]
+  .member-service-filter[data-active="true"]
+  .member-service-filter__description {
+  color: #aeb8c4;
+}
+
+[data-member-theme="dark-knight"]
+  .member-service-filter[data-active="true"]
+  .member-service-filter__description {
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"] .member-composer-title {
+  color: #f8fafc;
+}
+
+[data-member-theme="dark-knight"] .member-composer-tool,
+[data-member-theme="dark-knight"] .member-composer-close {
+  color: #dbe5f3 !important;
+  border-color: #60799c !important;
+}
+
+[data-member-theme="dark-knight"] .member-composer-tool:hover,
+[data-member-theme="dark-knight"] .member-composer-close:hover {
+  color: #fff !important;
+  background: #243c62 !important;
+}
+
+[data-member-theme="dark-knight"] .member-composer-tool[aria-pressed="true"],
+[data-member-theme="dark-knight"] .member-composer-submit {
+  color: #fff !important;
+  background: #355a9b !important;
+  border-color: #a8c5ff !important;
+}
+
+[data-member-theme="dark-knight"]
+  .member-post-editor-panel
+  textarea::placeholder,
+[data-member-theme="dark-knight"] .member-post-editor-panel input::placeholder {
+  color: #4a3340;
+}
+
+[data-member-theme="dark-knight"] .member-composer-confirmation {
+  background: #111a29;
+  border-color: #60799c;
+}
+
+[data-member-theme="dark-knight"] .member-composer-confirmation span,
+[data-member-theme="dark-knight"] .member-composer-confirmation strong {
+  color: #dbe5f3;
+}
+
+[data-member-theme="dark-knight"] .member-moment-type {
+  color: #c4d1e4 !important;
+  border-color: #60799c !important;
+}
+
+[data-member-theme="dark-knight"] .member-moment-type[data-selected="true"] {
+  background: #243c62 !important;
+  color: #fff7ea !important;
+  border-color: #a8c5ff !important;
+}
+
+.member-theme-option {
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.member-theme-option:focus-within {
+  outline: 2px solid var(--member-control-focus);
+  outline-offset: 2px;
+}
+
+.member-theme-option__preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  border-radius: 0.75rem;
+  border: 1px solid var(--member-border-subtle);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.member-theme-option__preview--sakura {
+  background-image: url("./assets/backgrounds/sakura-feed-desktop.jpg");
+}
+
+.member-theme-option__preview--dark-knight {
+  background-image: url("./assets/backgrounds/midnight-city-feed-desktop.jpg");
+}
+
+[data-member-theme="dark-knight"] .member-theme-option {
+  background: rgba(6, 10, 18, 0.46);
+}
+
+[data-member-theme="dark-knight"] .member-theme-option--selected {
+  border-color: #c8954b;
+  box-shadow: 0 0 0 2px rgba(200, 149, 75, 0.2);
+}
+
+[data-member-theme="dark-knight"] .member-theme-option__check {
+  border-color: rgba(211, 171, 102, 0.42);
+}
+
+[data-member-theme="dark-knight"]
+  .member-theme-option--selected
+  .member-theme-option__check {
+  border-color: #c8954b;
+  background: #3f63a8;
+  color: #fff;
 }
 
 [data-member-visual="sakura-glass"] .member-glass-header,
@@ -268,6 +1014,7 @@
 
 [data-member-visual="sakura-glass"] .email-verification-bubble {
   border-color: var(--member-border-emphasis);
+  background: var(--verification-surface);
   box-shadow: 0 8px 24px rgba(91, 45, 70, 0.11);
 }
 
@@ -337,11 +1084,68 @@
 }
 
 .email-verification-bubble {
+  --verification-surface: #fffaf4;
+  --verification-text: #451a03;
+  --verification-body: #78350f;
+  --verification-action: #78350f;
+  --verification-hover: #451a03;
+  --verification-feedback: #92400e;
+  --verification-error: #b91c1c;
+  color: var(--verification-text);
   border-color: rgba(229, 174, 102, 0.5);
-  background: rgba(255, 250, 244, 0.94);
+  background: var(--verification-surface);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.94),
     0 8px 24px rgba(120, 72, 20, 0.1);
+}
+
+[data-member-theme="dark-knight"] .email-verification-bubble {
+  --verification-surface: #111a29;
+  --verification-text: #f8fafc;
+  --verification-body: #dbe5f3;
+  --verification-action: #f8d69a;
+  --verification-hover: #fff2d5;
+  --verification-feedback: #f8d69a;
+  --verification-error: #ffb4c1;
+}
+
+.email-verification-body {
+  color: var(--verification-body);
+}
+
+.email-verification-action {
+  color: var(--verification-action);
+}
+
+.email-verification-action:hover {
+  color: var(--verification-hover);
+}
+
+.email-verification-action:focus-visible {
+  outline: 2px solid var(--verification-action);
+  outline-offset: 3px;
+}
+
+.email-verification-feedback {
+  color: var(--verification-feedback);
+}
+
+.email-verification-feedback[data-tone="error"] {
+  color: var(--verification-error);
+}
+
+@media (max-width: 1023px) {
+  .sakura-backdrop__floating-petal {
+    left: var(--petal-mobile-left);
+  }
+
+  .sakura-backdrop__floating-petal--desktop {
+    display: none;
+  }
+
+  .dark-knight-backdrop__atmosphere--desktop {
+    display: none;
+  }
 }
 
 @media (max-width: 767px) {
@@ -355,6 +1159,35 @@
       rgba(252, 233, 243, 0.82)
     );
     --member-header-filter: blur(10px) saturate(112%);
+  }
+
+  [data-member-theme="dark-knight"] {
+    --member-scene-image: url("./assets/backgrounds/midnight-city-feed-mobile.jpg");
+    --member-scene-position: center top;
+    --member-header-filter: blur(10px) saturate(106%);
+  }
+
+  .sakura-backdrop__motion-layer {
+    opacity: 0.78;
+  }
+
+  .dark-knight-backdrop__motion-layer {
+    opacity: 0.78;
+  }
+
+  .dark-knight-backdrop__atmosphere--high-cloud {
+    top: 8%;
+    height: 18%;
+  }
+
+  .dark-knight-backdrop__atmosphere--far-haze {
+    top: 39%;
+    height: 19%;
+  }
+
+  .dark-knight-backdrop__atmosphere--low-fog {
+    bottom: 3%;
+    height: 21%;
   }
 
   [data-member-visual="sakura-glass"] .member-glass-header {
@@ -404,9 +1237,29 @@
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
+
+  .dark-knight-backdrop__motion-layer {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sakura-backdrop__motion-layer {
+    display: none;
+  }
+
+  .dark-knight-backdrop__motion-layer {
+    display: none;
+  }
+
+  .sakura-backdrop__floating-petal {
+    animation: none;
+  }
+
+  .dark-knight-backdrop__atmosphere {
+    animation: none;
+  }
+
   [data-member-visual="sakura-glass"] .member-nav-item-inactive:hover,
   [data-member-visual="sakura-glass"] .member-nav-item-trigger:hover {
     transform: none;
@@ -414,6 +1267,7 @@
 }
 
 @media (prefers-contrast: more) {
+  .member-backdrop,
   .sakura-backdrop {
     opacity: 0.34;
   }
@@ -434,9 +1288,33 @@
     backdrop-filter: none;
     box-shadow: none;
   }
+
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-header,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-rail,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-mobile-nav,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-chat-panel,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .sakura-glass-surface,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-modal-panel,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .email-verification-bubble,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .sakura-feed-card,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-header-popover {
+    border-color: #e5c78d;
+    background: #0b111d;
+    color: #fff7e4;
+  }
 }
 
 @media (forced-colors: active) {
+  .member-backdrop,
   .sakura-backdrop {
     display: none;
   }

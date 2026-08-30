@@ -1,8 +1,15 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthContext } from "../auth/authContext";
+import BackgroundMotionProvider from "../appearance/BackgroundMotionProvider";
+import { BACKGROUND_MOTION_STORAGE_KEY } from "../appearance/backgroundMotionContext";
+import MemberThemeProvider from "../appearance/MemberThemeProvider";
+import {
+  MEMBER_THEMES,
+  MEMBER_THEME_STORAGE_KEY,
+} from "../appearance/memberThemeContext";
 import SettingsPage from "./SettingsPage";
 
 const auth = {
@@ -29,11 +36,21 @@ const currentSession = {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  const values = new Map();
+  vi.stubGlobal("localStorage", {
+    getItem: vi.fn((key) => values.get(key) ?? null),
+    setItem: vi.fn((key, value) => values.set(key, String(value))),
+    clear: vi.fn(() => values.clear()),
+  });
   window.matchMedia = vi.fn().mockReturnValue({
     matches: false,
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
   });
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
 });
 
 function makeApi(overrides = {}) {
@@ -52,14 +69,88 @@ function makeApi(overrides = {}) {
 function renderSettings(api = makeApi()) {
   return render(
     <MemoryRouter>
-      <AuthContext.Provider value={auth}>
-        <SettingsPage api={api} />
-      </AuthContext.Provider>
+      <MemberThemeProvider>
+        <BackgroundMotionProvider>
+          <AuthContext.Provider value={auth}>
+            <SettingsPage api={api} />
+          </AuthContext.Provider>
+        </BackgroundMotionProvider>
+      </MemberThemeProvider>
     </MemoryRouter>
   );
 }
 
 describe("SettingsPage", () => {
+  it("switches to Midnight City immediately and saves the theme locally", async () => {
+    const user = userEvent.setup();
+    const view = renderSettings();
+    const sakura = screen.getByRole("radio", { name: /Sakura/ });
+    const darkKnight = screen.getByRole("radio", { name: /Midnight City/ });
+
+    expect(sakura).toBeChecked();
+    expect(screen.getByTestId("sakura-backdrop")).toBeInTheDocument();
+
+    await user.click(darkKnight);
+
+    expect(darkKnight).toBeChecked();
+    expect(
+      view.container.querySelector('[data-member-theme="dark-knight"]')
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("dark-knight-backdrop")).toBeInTheDocument();
+    expect(screen.queryByTestId("sakura-backdrop")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem(MEMBER_THEME_STORAGE_KEY)).toBe(
+      MEMBER_THEMES.DARK_KNIGHT
+    );
+  });
+
+  it("persists the ambient-background opt-out and stops only its overlay", async () => {
+    const user = userEvent.setup();
+    renderSettings();
+
+    const toggle = screen.getByRole("switch", {
+      name: "Ambient background motion",
+    });
+    const backdrop = screen.getByTestId("sakura-backdrop");
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+    expect(backdrop).toHaveAttribute("data-scene", "ambient-motion");
+
+    await user.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+    expect(backdrop).toHaveAttribute("data-scene", "static");
+    expect(
+      screen.queryByTestId("sakura-motion-overlay")
+    ).not.toBeInTheDocument();
+    expect(window.localStorage.getItem(BACKGROUND_MOTION_STORAGE_KEY)).toBe(
+      "off"
+    );
+    expect(screen.getByText("Motion is off.")).toBeInTheDocument();
+  });
+
+  it("shows background motion as off when the device requests reduced motion", () => {
+    window.matchMedia = vi.fn().mockReturnValue({
+      matches: true,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    });
+    renderSettings();
+
+    const toggle = screen.getByRole("switch", {
+      name: "Ambient background motion",
+    });
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+    expect(toggle).toBeDisabled();
+    expect(screen.getByTestId("sakura-backdrop")).toHaveAttribute(
+      "data-scene",
+      "static"
+    );
+    expect(
+      screen.getByText(
+        "Motion is currently off because your device requests reduced motion."
+      )
+    ).toBeInTheDocument();
+  });
+
   it("requires confirmation before opting in and persists the choice", async () => {
     const user = userEvent.setup();
     const api = makeApi();

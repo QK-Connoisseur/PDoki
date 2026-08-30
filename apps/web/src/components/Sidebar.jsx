@@ -1,23 +1,31 @@
 import { useState, useRef, useEffect } from "react";
+import AppearanceMenu from "./AppearanceMenu";
+
+const ACTIVE_ICON_FILL = "var(--member-nav-icon-fill, #111)";
+const ACTIVE_ICON_DETAIL = "var(--member-nav-icon-detail, white)";
 
 /* ─── Icon Definitions ──────────────────────────────────────────────── */
 
 function HomeIcon({ active }) {
   if (active) {
     return (
-      <svg viewBox="0 0 24 24" className="w-6 h-6">
+      <svg
+        viewBox="0 0 24 24"
+        className="member-nav-icon w-6 h-6"
+        aria-hidden="true"
+      >
         <path
           d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"
-          fill="#111"
-          stroke="#111"
+          fill={ACTIVE_ICON_FILL}
+          stroke={ACTIVE_ICON_FILL}
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <path
           d="M9 21V12h6v9"
-          fill="white"
-          stroke="white"
+          fill={ACTIVE_ICON_DETAIL}
+          stroke={ACTIVE_ICON_DETAIL}
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -44,11 +52,15 @@ function HomeIcon({ active }) {
 function ConnectIcon({ active }) {
   if (active) {
     return (
-      <svg viewBox="0 0 24 24" className="w-6 h-6">
+      <svg
+        viewBox="0 0 24 24"
+        className="member-nav-icon w-6 h-6"
+        aria-hidden="true"
+      >
         <path
           d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"
-          fill="#111"
-          stroke="#111"
+          fill={ACTIVE_ICON_FILL}
+          stroke={ACTIVE_ICON_FILL}
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -57,14 +69,14 @@ function ConnectIcon({ active }) {
           cx="9"
           cy="7"
           r="4"
-          fill="#111"
-          stroke="#111"
+          fill={ACTIVE_ICON_FILL}
+          stroke={ACTIVE_ICON_FILL}
           strokeWidth="1.8"
         />
         <path
           d="M22 21v-2a4 4 0 00-3-3.87"
           fill="none"
-          stroke="#111"
+          stroke={ACTIVE_ICON_FILL}
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -72,7 +84,7 @@ function ConnectIcon({ active }) {
         <path
           d="M16 3.13a4 4 0 010 7.75"
           fill="none"
-          stroke="#111"
+          stroke={ACTIVE_ICON_FILL}
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -101,18 +113,22 @@ function ConnectIcon({ active }) {
 function StoreIcon({ active }) {
   if (active) {
     return (
-      <svg viewBox="0 0 24 24" className="w-6 h-6">
+      <svg
+        viewBox="0 0 24 24"
+        className="member-nav-icon w-6 h-6"
+        aria-hidden="true"
+      >
         <path
           d="M6 2L3 7v13a1 1 0 001 1h16a1 1 0 001-1V7l-3-5H6z"
-          fill="#111"
-          stroke="#111"
+          fill={ACTIVE_ICON_FILL}
+          stroke={ACTIVE_ICON_FILL}
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <path
           d="M3 7h18"
-          stroke="white"
+          stroke={ACTIVE_ICON_DETAIL}
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -120,7 +136,7 @@ function StoreIcon({ active }) {
         <path
           d="M16 11a4 4 0 01-8 0"
           fill="none"
-          stroke="white"
+          stroke={ACTIVE_ICON_DETAIL}
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -148,16 +164,20 @@ function StoreIcon({ active }) {
 function PromosIcon({ active }) {
   if (active) {
     return (
-      <svg viewBox="0 0 24 24" className="w-6 h-6">
+      <svg
+        viewBox="0 0 24 24"
+        className="member-nav-icon w-6 h-6"
+        aria-hidden="true"
+      >
         <path
           d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"
-          fill="#111"
-          stroke="#111"
+          fill={ACTIVE_ICON_FILL}
+          stroke={ACTIVE_ICON_FILL}
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <circle cx="7" cy="7" r="1.5" fill="white" />
+        <circle cx="7" cy="7" r="1.5" fill={ACTIVE_ICON_DETAIL} />
       </svg>
     );
   }
@@ -180,20 +200,24 @@ function PromosIcon({ active }) {
 function CreateIcon({ active }) {
   if (active) {
     return (
-      <svg viewBox="0 0 24 24" className="w-6 h-6">
+      <svg
+        viewBox="0 0 24 24"
+        className="member-nav-icon w-6 h-6"
+        aria-hidden="true"
+      >
         <rect
           x="3"
           y="3"
           width="18"
           height="18"
           rx="4"
-          fill="#111"
-          stroke="#111"
+          fill={ACTIVE_ICON_FILL}
+          stroke={ACTIVE_ICON_FILL}
           strokeWidth="1.8"
         />
         <path
           d="M12 8v8M8 12h8"
-          stroke="white"
+          stroke={ACTIVE_ICON_DETAIL}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -404,6 +428,14 @@ export default function Sidebar({
       </nav>
       <div className="flex-[2]" />
 
+      <AppearanceMenu
+        expanded={sidebarOpen}
+        onOpen={() => {
+          setShowMoreMenu(false);
+          setShowComposeMenu(false);
+        }}
+      />
+
       {/* ─── 18 USC §2257 Compliance Link ─── */}
       <div className="px-3 pb-1 overflow-hidden">
         <button
@@ -558,7 +590,7 @@ export function MobileNav({
 }) {
   return (
     <nav className="member-glass-mobile-nav md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-pink-100 bg-white/95 backdrop-blur-md">
-      <div className="flex h-14 items-center justify-around px-2">
+      <div className="flex h-14 items-center justify-around px-1">
         {NAV_ITEMS.map((item) => {
           const isActive = activePage === item.id;
           const { Icon } = item;
@@ -670,6 +702,7 @@ export function MobileNav({
             </span>
           )}
         </button>
+        <AppearanceMenu mobile onOpen={() => setShowComposeMenu(false)} />
       </div>
     </nav>
   );

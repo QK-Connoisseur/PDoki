@@ -57,13 +57,13 @@ function EmailVerificationReminder({ user, requestVerification, storageKey }) {
   return (
     <aside
       aria-label="Email verification"
-      className="email-verification-bubble relative mx-auto my-2 w-[calc(100%-1.5rem)] max-w-5xl rounded-2xl border px-4 py-3 pr-14 text-amber-950 sm:px-5 sm:pr-14"
+      className="email-verification-bubble relative mx-auto my-2 w-[calc(100%-1.5rem)] max-w-5xl rounded-2xl border px-4 py-3 pr-14 sm:px-5 sm:pr-14"
     >
       <button
         type="button"
         onClick={dismiss}
         aria-label="Dismiss email verification reminder"
-        className="absolute top-1.5 right-1.5 inline-flex h-11 w-11 items-center justify-center rounded-full text-2xl leading-none text-amber-700 transition hover:bg-amber-100/70 hover:text-amber-950 focus-visible:ring-2 focus-visible:ring-amber-700 focus-visible:ring-offset-2 focus-visible:outline-none"
+        className="email-verification-action absolute top-1.5 right-1.5 inline-flex h-11 w-11 items-center justify-center rounded-full text-2xl leading-none transition"
       >
         <span aria-hidden="true">×</span>
       </button>
@@ -73,17 +73,18 @@ function EmailVerificationReminder({ user, requestVerification, storageKey }) {
             Verify your email
           </p>
           <div className="min-w-0">
-            <p className="text-sm leading-5 text-amber-900">
+            <p className="email-verification-body text-sm leading-5">
               Verify <strong className="break-all">{user.email}</strong> before
               using protected creator or payment actions.
             </p>
             {message && (
               <p
                 role={state === "error" ? "alert" : "status"}
-                className={
+                className="email-verification-feedback mt-1.5 text-sm leading-5"
+                data-tone={
                   state === "error" || state === "throttled"
-                    ? "mt-1.5 text-sm leading-5 text-red-700"
-                    : "mt-1.5 text-sm leading-5 text-amber-800"
+                    ? "error"
+                    : "status"
                 }
               >
                 {message}
@@ -95,7 +96,7 @@ function EmailVerificationReminder({ user, requestVerification, storageKey }) {
           type="button"
           onClick={resend}
           disabled={state === "pending"}
-          className="inline-flex min-h-11 shrink-0 self-start items-center px-1 text-sm font-semibold text-amber-900 underline decoration-amber-500/60 underline-offset-4 transition hover:text-amber-700 focus-visible:ring-2 focus-visible:ring-amber-700 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60 sm:self-center"
+          className="email-verification-action inline-flex min-h-11 shrink-0 self-start items-center px-1 text-sm font-semibold underline underline-offset-4 transition disabled:cursor-wait sm:self-center"
         >
           {state === "pending" ? "Requesting…" : "Resend verification link"}
         </button>

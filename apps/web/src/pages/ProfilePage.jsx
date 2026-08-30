@@ -1436,8 +1436,13 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                         </button>
                       </div>
                       <p
-                        className="px-4 pb-3 text-sm text-[#4a3340] leading-relaxed"
-                        style={post.style || {}}
+                        className="member-post-caption px-4 pb-3 text-sm text-[#4a3340] leading-relaxed"
+                        style={{
+                          ...post.style,
+                          "--authored-caption-color": post.style?.color,
+                          color:
+                            "var(--member-caption-color, var(--authored-caption-color, #4a3340))",
+                        }}
                       >
                         {post.caption}
                       </p>
@@ -1801,7 +1806,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                           {/* Play button overlay for video */}
                           {item.type === "video" && (
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg">
+                              <div className="member-media-play-control flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg">
                                 <svg
                                   viewBox="0 0 24 24"
                                   className="w-5 h-5 text-[#f472b6] ml-0.5"
@@ -2021,7 +2026,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
           >
             <div className="flex gap-1 mb-3">
               <div className="h-0.5 flex-1 rounded-full bg-white/25 overflow-hidden">
-                <div className="h-full w-3/5 rounded-full bg-white" />
+                <div className="member-moment-progress-current h-full w-3/5 rounded-full bg-white" />
               </div>
             </div>
             <div className="flex items-center gap-2.5 mb-3">

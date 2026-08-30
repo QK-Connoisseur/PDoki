@@ -861,21 +861,27 @@ describe("private creator application reviews", () => {
         [grant.id]
       );
 
-      const review = createCreatorApplicationService(db).review(
-        application.id,
-        operator.actor,
-        pendingRejection(),
-        "concurrent-permission-revocation",
-        null
-      );
+      // Observe rejection immediately: releasing the database lock can settle
+      // the review before the COMMIT callback resumes this test.
+      const review = Promise.allSettled([
+        createCreatorApplicationService(db).review(
+          application.id,
+          operator.actor,
+          pendingRejection(),
+          "concurrent-permission-revocation",
+          null
+        ),
+      ]);
       await waitForBlockedReview(revoker);
       await revoker.query("COMMIT");
       transactionOpen = false;
 
-      await expect(review).rejects.toMatchObject({
-        status: 403,
-        code: "FORBIDDEN",
-      });
+      await expect(review).resolves.toMatchObject([
+        {
+          status: "rejected",
+          reason: { status: 403, code: "FORBIDDEN" },
+        },
+      ]);
     } finally {
       if (transactionOpen) await revoker.query("ROLLBACK");
       await revoker.end();

@@ -111,6 +111,9 @@ export default function MomentComposer({ onClose }) {
     >
       <div
         className="member-glass-modal-panel w-full max-w-sm overflow-hidden sm:rounded-3xl rounded-t-3xl bg-white shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Create Moment"
         data-subscriber-only={subscriberOnly}
       >
         {/* Header */}
@@ -202,7 +205,8 @@ export default function MomentComposer({ onClose }) {
                 <button
                   key={t.id}
                   onClick={() => setSelectedType(t.id)}
-                  className="flex flex-col items-center gap-2 rounded-2xl py-4 px-2 border-2 transition-all duration-150"
+                  className="member-moment-type flex flex-col items-center gap-2 rounded-2xl py-4 px-2 border-2 transition-all duration-150"
+                  data-selected={isSelected}
                   style={{
                     borderColor: isSelected
                       ? subscriberOnly
@@ -250,6 +254,7 @@ export default function MomentComposer({ onClose }) {
             </div>
             <button
               onClick={() => setSubscriberOnly((v) => !v)}
+              aria-label="Subscriber-only"
               className="relative ml-4 flex h-6 w-11 shrink-0 items-center rounded-full transition-all duration-200"
               style={{
                 background: subscriberOnly
@@ -274,7 +279,7 @@ export default function MomentComposer({ onClose }) {
         {/* Upload Disclaimer */}
         <div className="px-6 pb-3">
           <label
-            className={`flex cursor-pointer items-start gap-2.5 rounded-2xl border px-3.5 py-3 transition ${rightsConfirmed ? "border-pink-200 bg-pink-50/40" : "border-pink-100 bg-white/40"}`}
+            className={`member-composer-confirmation flex cursor-pointer items-start gap-2.5 rounded-2xl border px-3.5 py-3 transition ${rightsConfirmed ? "border-pink-200 bg-pink-50/40" : "border-pink-100 bg-white/40"}`}
           >
             <input
               type="checkbox"

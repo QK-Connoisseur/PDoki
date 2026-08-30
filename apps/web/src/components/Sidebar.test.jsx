@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import Sidebar, { MobileNav } from "./Sidebar";
+import { MemberThemeContext } from "../appearance/memberThemeContext";
+import { BackgroundMotionContext } from "../appearance/backgroundMotionContext";
 
 function renderSidebar(overrides = {}) {
   const props = {
@@ -23,6 +25,81 @@ function renderSidebar(overrides = {}) {
 }
 
 describe("Sidebar visual hooks", () => {
+  it("places the palette above the compliance link and More at the foot of the rail", () => {
+    render(
+      <MemberThemeContext.Provider
+        value={{ memberTheme: "sakura", setMemberTheme: vi.fn() }}
+      >
+        <BackgroundMotionContext.Provider
+          value={{
+            motionEnabled: true,
+            motionRequested: true,
+            setMotionRequested: vi.fn(),
+          }}
+        >
+          <Sidebar
+            activePage="home"
+            onNavigate={vi.fn()}
+            setShowComposeMenu={vi.fn()}
+          />
+        </BackgroundMotionContext.Provider>
+      </MemberThemeContext.Provider>
+    );
+    const appearance = screen.getByRole("button", { name: "Appearance" });
+    const more = screen.getByRole("button", { name: "More" });
+    const compliance = screen.getByTitle("18 USC §2257 Compliance Statement");
+    expect(
+      appearance.compareDocumentPosition(more) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      appearance.compareDocumentPosition(compliance) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(appearance).toHaveClass("member-nav-item-trigger");
+  });
+
+  it.each([
+    ["home", "Home", "path", "fill"],
+    ["store", "Store", "path:nth-child(2)", "stroke"],
+    ["promotions", "Promos", "circle", "fill"],
+  ])(
+    "keeps separate theme-aware silhouette and interior colors for %s",
+    (activePage, label, detailSelector, detailAttribute) => {
+      renderSidebar({ activePage });
+      const icon = screen
+        .getByRole("button", { name: label })
+        .querySelector("svg");
+      expect(icon).toHaveClass("member-nav-icon");
+      expect(icon.firstElementChild).toHaveAttribute(
+        "fill",
+        "var(--member-nav-icon-fill, #111)"
+      );
+      const detail =
+        activePage === "home"
+          ? icon.lastElementChild
+          : icon.querySelector(detailSelector);
+      expect(detail).toHaveAttribute(
+        detailAttribute,
+        "var(--member-nav-icon-detail, white)"
+      );
+    }
+  );
+
+  it("uses the theme-aware foreground for both active Connect figures", () => {
+    renderSidebar({ activePage: "connect" });
+    const icon = screen
+      .getByRole("button", { name: "Connect" })
+      .querySelector("svg");
+    expect(icon).toHaveClass("member-nav-icon");
+    Array.from(icon.children).forEach((shape) => {
+      expect(shape).toHaveAttribute(
+        "stroke",
+        "var(--member-nav-icon-fill, #111)"
+      );
+    });
+  });
+
   it("identifies the connected rail and only marks the active route current", async () => {
     const user = userEvent.setup();
     const { container, props } = renderSidebar();
