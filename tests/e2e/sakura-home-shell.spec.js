@@ -190,7 +190,11 @@ test("the Sakura glass material is shared by member routes and Create", async ({
     await expect(
       page.locator('[data-member-visual="sakura-glass"]')
     ).toBeVisible();
-    await expect(page.locator('[data-member-theme="sakura"]')).toBeVisible();
+    await expect(
+      page.locator(
+        '[data-member-visual="sakura-glass"][data-member-theme="sakura"]'
+      )
+    ).toBeVisible();
     await expect(page.getByTestId("sakura-backdrop")).toBeVisible();
 
     const surface = page.locator(route.surface).first();

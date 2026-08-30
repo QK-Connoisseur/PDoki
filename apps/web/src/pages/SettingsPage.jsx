@@ -5,7 +5,7 @@ import { ErrorState, LoadingState } from "../components/StateViews";
 import { settingsApi } from "../settings/settingsApi";
 import { useBackgroundMotion } from "../appearance/backgroundMotionContext";
 import {
-  MEMBER_THEMES,
+  MEMBER_THEME_OPTIONS,
   useMemberTheme,
 } from "../appearance/memberThemeContext";
 
@@ -401,19 +401,7 @@ function AppearancePreferences() {
           Choose the atmosphere behind your member experience.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {[
-            {
-              value: MEMBER_THEMES.SAKURA,
-              label: "Sakura",
-              description: "Pearl glass, blossom light, and drifting petals.",
-            },
-            {
-              value: MEMBER_THEMES.DARK_KNIGHT,
-              label: "Dark Nite",
-              description:
-                "Cartoon Art Deco skyline, cape-blue night, and slow atmospheric haze.",
-            },
-          ].map((theme) => {
+          {MEMBER_THEME_OPTIONS.map((theme) => {
             const selected = memberTheme === theme.value;
 
             return (
@@ -460,7 +448,7 @@ function AppearancePreferences() {
           })}
         </div>
         <p className="mt-3 text-xs leading-5 text-[#a48999]">
-          Saved on this browser. Sakura remains the default on new devices.
+          Saved on this browser. Sakura Kiss remains the default on new devices.
         </p>
       </fieldset>
 
@@ -474,8 +462,8 @@ function AppearancePreferences() {
             className="mt-1 max-w-xl text-sm leading-6 text-[#8c6d7f]"
           >
             Adds quiet, theme-specific movement over the background: petals in
-            Sakura, or slow clouds and fog in Dark Nite. The wallpaper itself
-            remains unchanged.
+            Sakura Kiss, or slow clouds and fog in Midnight City. The wallpaper
+            itself remains unchanged.
           </p>
           <p className="mt-2 text-xs leading-5 text-[#a48999]">
             Saved on this browser. Pumdoki always follows your device&apos;s

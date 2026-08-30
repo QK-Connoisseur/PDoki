@@ -1174,7 +1174,7 @@ Build in this order:
 - Advanced recommendation engine.
 - Native mobile applications.
 - Crypto payments.
-- Additional themes beyond Sakura and Dark Nite.
+- Additional themes beyond Sakura Kiss and Midnight City.
 - Advanced creator analytics.
 - Larger group-chat features.
 - External affiliate program.

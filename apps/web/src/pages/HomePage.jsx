@@ -677,12 +677,16 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
               setComposeLocked(false);
               setComposeVesoPrice("");
               setComposeText("");
+              setComposeRightsConfirmed(false);
             }
           }}
         >
           {/* Outer glow ring — gold when locked, pink when open */}
           <div
             className="member-create-frame w-full max-w-lg rounded-[28px] p-[2px] transition-all duration-500"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Create Post"
             data-locked={composeLocked}
             style={{
               background: composeLocked
@@ -694,10 +698,10 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
             }}
           >
             <div
-              className="member-glass-modal-panel rounded-[26px] overflow-hidden bg-white"
+              className="member-glass-modal-panel member-post-editor-panel rounded-[26px] overflow-hidden bg-white"
               style={{
                 background: composeLocked
-                  ? "linear-gradient(160deg, #fffdf8 0%, #fff8fc 60%, #fff9f0 100%)"
+                  ? "var(--member-locked-post-fill, linear-gradient(160deg, #fffdf8 0%, #fff8fc 60%, #fff9f0 100%))"
                   : undefined,
               }}
             >
@@ -758,8 +762,8 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   )}
                   {!composeLocked && (
                     <span
-                      className="text-sm font-semibold tracking-wide"
-                      style={{ color: "#241a22", letterSpacing: "0.04em" }}
+                      className="member-composer-title text-sm font-semibold tracking-wide text-[#241a22]"
+                      style={{ letterSpacing: "0.04em" }}
                     >
                       Create
                     </span>
@@ -772,8 +776,9 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                     setComposeLocked(false);
                     setComposeVesoPrice("");
                     setComposeText("");
+                    setComposeRightsConfirmed(false);
                   }}
-                  className="flex h-8 w-8 items-center justify-center rounded-full transition"
+                  className="member-composer-close flex h-8 w-8 items-center justify-center rounded-full transition"
                   style={{ color: "#8c6d7f" }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = "#fce4ec";
@@ -863,7 +868,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
 
                 {/* ─── Formatting toolbar ─── */}
                 <div
-                  className="mt-3 flex items-center gap-2 flex-wrap border-t pt-3"
+                  className="member-composer-toolbar mt-3 flex items-center gap-2 flex-wrap border-t pt-3"
                   style={{
                     borderColor: composeLocked
                       ? "rgba(245,182,59,0.18)"
@@ -883,7 +888,8 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                       <button
                         key={size.id}
                         onClick={() => setComposeFontSize(size.id)}
-                        className="px-2.5 py-1.5 text-xs font-semibold transition-all duration-150"
+                        aria-pressed={composeFontSize === size.id}
+                        className="member-composer-tool px-2.5 py-1.5 text-xs font-semibold transition-all duration-150"
                         style={{
                           background:
                             composeFontSize === size.id
@@ -902,7 +908,8 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   {/* Bold — ghost */}
                   <button
                     onClick={() => setComposeBold(!composeBold)}
-                    className="flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold transition-all"
+                    aria-pressed={composeBold}
+                    className="member-composer-tool flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold transition-all"
                     style={{
                       border: composeBold
                         ? "1.5px solid #f472b6"
@@ -919,7 +926,8 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   {/* Italic — ghost */}
                   <button
                     onClick={() => setComposeItalic(!composeItalic)}
-                    className="flex h-8 w-8 items-center justify-center rounded-xl text-xs transition-all"
+                    aria-pressed={composeItalic}
+                    className="member-composer-tool flex h-8 w-8 items-center justify-center rounded-xl text-xs transition-all"
                     style={{
                       border: composeItalic
                         ? "1.5px solid #f472b6"
@@ -1066,7 +1074,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                 >
                   {/* Photo */}
                   <button
-                    className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
+                    className="member-composer-tool flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
                     style={{
                       border: "1.5px solid #f9e4ef",
                       color: "#b89aa8",
@@ -1099,7 +1107,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
 
                   {/* Video */}
                   <button
-                    className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
+                    className="member-composer-tool flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
                     style={{
                       border: "1.5px solid #f9e4ef",
                       color: "#b89aa8",
@@ -1132,7 +1140,8 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   {/* Lock / Subscribers-only toggle */}
                   <button
                     onClick={() => setComposeLocked(!composeLocked)}
-                    className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200"
+                    aria-pressed={composeLocked}
+                    className="member-composer-tool flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200"
                     style={{
                       border: composeLocked
                         ? "1.5px solid #f5b63b"
@@ -1172,7 +1181,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
 
                 {/* Upload Disclaimer */}
                 <label
-                  className={`mt-2 flex cursor-pointer items-start gap-2.5 rounded-xl border px-3 py-2.5 transition ${composeRightsConfirmed ? "border-pink-200 bg-pink-50/40" : "border-pink-100 bg-white/30"}`}
+                  className={`member-composer-confirmation mt-2 flex cursor-pointer items-start gap-2.5 rounded-xl border px-3 py-2.5 transition ${composeRightsConfirmed ? "border-pink-200 bg-pink-50/40" : "border-pink-100 bg-white/30"}`}
                 >
                   <input
                     type="checkbox"
@@ -1205,7 +1214,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                       setComposeText("");
                       setComposeRightsConfirmed(false);
                     }}
-                    className="rounded-2xl px-6 py-2 text-sm font-bold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="member-composer-submit rounded-2xl px-6 py-2 text-sm font-bold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{
                       background: composeLocked
                         ? "linear-gradient(90deg,#f5b63b 0%,#f9a8c8 50%,#df5f97 100%)"

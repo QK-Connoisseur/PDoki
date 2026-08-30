@@ -4,9 +4,22 @@ export const MEMBER_THEME_STORAGE_KEY = "pumdoki:member-theme:v1";
 
 export const MEMBER_THEMES = Object.freeze({
   SAKURA: "sakura",
-  // Retain this persisted identifier after the product-facing rename to Dark Nite.
+  // Keep existing browser preferences through the rename to Midnight City.
   DARK_KNIGHT: "dark-knight",
 });
+
+export const MEMBER_THEME_OPTIONS = Object.freeze([
+  {
+    value: MEMBER_THEMES.SAKURA,
+    label: "Sakura Kiss",
+    description: "Pearl glass, blossom light, and drifting petals.",
+  },
+  {
+    value: MEMBER_THEMES.DARK_KNIGHT,
+    label: "Midnight City",
+    description: "Blue city rooftops, soft clouds, and quiet evening light.",
+  },
+]);
 
 export const DEFAULT_MEMBER_THEME = MEMBER_THEMES.SAKURA;
 

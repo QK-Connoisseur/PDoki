@@ -188,7 +188,7 @@
   color: #d5d8dc;
   --member-caption-color: #d2d6d8;
   --member-canvas: #070a12;
-  --member-scene-image: url("./assets/backgrounds/dark-knight-feed-desktop.jpg");
+  --member-scene-image: url("./assets/backgrounds/midnight-city-feed-desktop.jpg");
   --member-scene-position: center center;
   --member-scene-size: cover;
   --member-surface-glass:
@@ -232,6 +232,7 @@
   --member-popover-fill: #111a29;
   --member-popover-border: rgba(211, 171, 102, 0.28);
   --member-popover-shadow: rgba(0, 0, 0, 0.5);
+  --member-locked-post-fill: var(--member-surface-stable);
 }
 
 [data-member-visual="sakura-glass"] {
@@ -384,7 +385,7 @@
   }
 }
 
-/* ─── Dark Nite atmosphere: slow clouds, haze, and low fog ──────────── */
+/* ─── Midnight City atmosphere: slow clouds, haze, and low fog ──────── */
 
 .dark-knight-backdrop__motion-layer {
   position: absolute;
@@ -534,7 +535,7 @@
   }
 }
 
-/* Dark Nite keeps the same component markup while remapping its member UI. */
+/* Midnight City retains the legacy theme key for saved preferences. */
 [data-member-theme="dark-knight"] [class~="text-[#241a22]"],
 [data-member-theme="dark-knight"] [class~="text-[#2d1e2b]"],
 [data-member-theme="dark-knight"] [class~="text-[#111]"] {
@@ -578,6 +579,12 @@
 
 [data-member-theme="dark-knight"] [class~="text-[#e8384f]"] {
   color: #ff8590;
+}
+
+[data-member-theme="dark-knight"] [class~="text-[#e8384f]/55"],
+[data-member-theme="dark-knight"] [class~="text-[#e8384f]/65"],
+[data-member-theme="dark-knight"] [class~="text-[#e8384f]/70"] {
+  color: #f1a4ae;
 }
 
 [data-member-theme="dark-knight"] [class~="text-gray-700"] {
@@ -844,6 +851,63 @@
   color: #aeb8c4;
 }
 
+[data-member-theme="dark-knight"]
+  .member-service-filter[data-active="true"]
+  .member-service-filter__description {
+  color: #fff7ea;
+}
+
+[data-member-theme="dark-knight"] .member-composer-title {
+  color: #f8fafc;
+}
+
+[data-member-theme="dark-knight"] .member-composer-tool,
+[data-member-theme="dark-knight"] .member-composer-close {
+  color: #dbe5f3 !important;
+  border-color: #60799c !important;
+}
+
+[data-member-theme="dark-knight"] .member-composer-tool:hover,
+[data-member-theme="dark-knight"] .member-composer-close:hover {
+  color: #fff !important;
+  background: #243c62 !important;
+}
+
+[data-member-theme="dark-knight"] .member-composer-tool[aria-pressed="true"],
+[data-member-theme="dark-knight"] .member-composer-submit {
+  color: #fff !important;
+  background: #355a9b !important;
+  border-color: #a8c5ff !important;
+}
+
+[data-member-theme="dark-knight"]
+  .member-post-editor-panel
+  textarea::placeholder,
+[data-member-theme="dark-knight"] .member-post-editor-panel input::placeholder {
+  color: #4a3340;
+}
+
+[data-member-theme="dark-knight"] .member-composer-confirmation {
+  background: #111a29;
+  border-color: #60799c;
+}
+
+[data-member-theme="dark-knight"] .member-composer-confirmation span,
+[data-member-theme="dark-knight"] .member-composer-confirmation strong {
+  color: #dbe5f3;
+}
+
+[data-member-theme="dark-knight"] .member-moment-type {
+  color: #c4d1e4 !important;
+  border-color: #60799c !important;
+}
+
+[data-member-theme="dark-knight"] .member-moment-type[data-selected="true"] {
+  background: #243c62 !important;
+  color: #fff7ea !important;
+  border-color: #a8c5ff !important;
+}
+
 .member-theme-option {
   background: rgba(255, 255, 255, 0.34);
 }
@@ -870,7 +934,7 @@
 }
 
 .member-theme-option__preview--dark-knight {
-  background-image: url("./assets/backgrounds/dark-knight-feed-desktop.jpg");
+  background-image: url("./assets/backgrounds/midnight-city-feed-desktop.jpg");
 }
 
 [data-member-theme="dark-knight"] .member-theme-option {
@@ -950,6 +1014,7 @@
 
 [data-member-visual="sakura-glass"] .email-verification-bubble {
   border-color: var(--member-border-emphasis);
+  background: var(--verification-surface);
   box-shadow: 0 8px 24px rgba(91, 45, 70, 0.11);
 }
 
@@ -1019,11 +1084,54 @@
 }
 
 .email-verification-bubble {
+  --verification-surface: #fffaf4;
+  --verification-text: #451a03;
+  --verification-body: #78350f;
+  --verification-action: #78350f;
+  --verification-hover: #451a03;
+  --verification-feedback: #92400e;
+  --verification-error: #b91c1c;
+  color: var(--verification-text);
   border-color: rgba(229, 174, 102, 0.5);
-  background: rgba(255, 250, 244, 0.94);
+  background: var(--verification-surface);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.94),
     0 8px 24px rgba(120, 72, 20, 0.1);
+}
+
+[data-member-theme="dark-knight"] .email-verification-bubble {
+  --verification-surface: #111a29;
+  --verification-text: #f8fafc;
+  --verification-body: #dbe5f3;
+  --verification-action: #f8d69a;
+  --verification-hover: #fff2d5;
+  --verification-feedback: #f8d69a;
+  --verification-error: #ffb4c1;
+}
+
+.email-verification-body {
+  color: var(--verification-body);
+}
+
+.email-verification-action {
+  color: var(--verification-action);
+}
+
+.email-verification-action:hover {
+  color: var(--verification-hover);
+}
+
+.email-verification-action:focus-visible {
+  outline: 2px solid var(--verification-action);
+  outline-offset: 3px;
+}
+
+.email-verification-feedback {
+  color: var(--verification-feedback);
+}
+
+.email-verification-feedback[data-tone="error"] {
+  color: var(--verification-error);
 }
 
 @media (max-width: 1023px) {
@@ -1054,7 +1162,7 @@
   }
 
   [data-member-theme="dark-knight"] {
-    --member-scene-image: url("./assets/backgrounds/dark-knight-feed-mobile.jpg");
+    --member-scene-image: url("./assets/backgrounds/midnight-city-feed-mobile.jpg");
     --member-scene-position: center top;
     --member-header-filter: blur(10px) saturate(106%);
   }
@@ -1191,6 +1299,10 @@
     .member-glass-chat-panel,
   [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
     .sakura-glass-surface,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .member-glass-modal-panel,
+  [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
+    .email-verification-bubble,
   [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]
     .sakura-feed-card,
   [data-member-theme="dark-knight"][data-member-visual="sakura-glass"]

@@ -19,6 +19,7 @@ export default function CreatePostModal({
   setVesoPrice,
 }) {
   const [showVesoTooltip, setShowVesoTooltip] = useState(false);
+  const [rightsConfirmed, setRightsConfirmed] = useState(false);
 
   if (!open) return null;
 
@@ -26,6 +27,7 @@ export default function CreatePostModal({
     setLocked(false);
     setVesoPrice("");
     setText("");
+    setRightsConfirmed(false);
     onClose();
   };
 
@@ -44,6 +46,9 @@ export default function CreatePostModal({
       {/* Outer glow ring — gold when locked, pink when open */}
       <div
         className="member-create-frame w-full max-w-lg rounded-[28px] p-[2px] transition-all duration-500"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Create Post"
         data-locked={locked}
         style={{
           background: locked
@@ -55,10 +60,10 @@ export default function CreatePostModal({
         }}
       >
         <div
-          className="member-glass-modal-panel rounded-[26px] overflow-hidden bg-white"
+          className="member-glass-modal-panel member-post-editor-panel rounded-[26px] overflow-hidden bg-white"
           style={{
             background: locked
-              ? "linear-gradient(160deg, #fffdf8 0%, #fff8fc 60%, #fff9f0 100%)"
+              ? "var(--member-locked-post-fill, linear-gradient(160deg, #fffdf8 0%, #fff8fc 60%, #fff9f0 100%))"
               : undefined,
           }}
         >
@@ -118,8 +123,8 @@ export default function CreatePostModal({
                 </span>
               ) : (
                 <span
-                  className="text-sm font-semibold tracking-wide"
-                  style={{ color: "#241a22", letterSpacing: "0.04em" }}
+                  className="member-composer-title text-sm font-semibold tracking-wide text-[#241a22]"
+                  style={{ letterSpacing: "0.04em" }}
                 >
                   Create
                 </span>
@@ -128,7 +133,7 @@ export default function CreatePostModal({
 
             <button
               onClick={handleClose}
-              className="flex h-8 w-8 items-center justify-center rounded-full transition"
+              className="member-composer-close flex h-8 w-8 items-center justify-center rounded-full transition"
               style={{ color: "#8c6d7f" }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = "#fce4ec";
@@ -214,7 +219,7 @@ export default function CreatePostModal({
 
             {/* ─── Formatting toolbar ─── */}
             <div
-              className="mt-3 flex items-center gap-2 flex-wrap border-t pt-3"
+              className="member-composer-toolbar mt-3 flex items-center gap-2 flex-wrap border-t pt-3"
               style={{
                 borderColor: locked ? "rgba(245,182,59,0.18)" : "#fce4ec",
               }}
@@ -232,7 +237,8 @@ export default function CreatePostModal({
                   <button
                     key={size.id}
                     onClick={() => setFontSize(size.id)}
-                    className="px-2.5 py-1.5 text-xs font-semibold transition-all duration-150"
+                    aria-pressed={fontSize === size.id}
+                    className="member-composer-tool px-2.5 py-1.5 text-xs font-semibold transition-all duration-150"
                     style={{
                       background:
                         fontSize === size.id
@@ -250,7 +256,8 @@ export default function CreatePostModal({
               {/* Bold */}
               <button
                 onClick={() => setBold(!bold)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold transition-all"
+                aria-pressed={bold}
+                className="member-composer-tool flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold transition-all"
                 style={{
                   border: bold ? "1.5px solid #f472b6" : "1.5px solid #f9e4ef",
                   background: bold ? "rgba(244,114,182,0.08)" : "transparent",
@@ -263,7 +270,8 @@ export default function CreatePostModal({
               {/* Italic */}
               <button
                 onClick={() => setItalic(!italic)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl text-xs transition-all"
+                aria-pressed={italic}
+                className="member-composer-tool flex h-8 w-8 items-center justify-center rounded-xl text-xs transition-all"
                 style={{
                   border: italic
                     ? "1.5px solid #f472b6"
@@ -407,7 +415,7 @@ export default function CreatePostModal({
             >
               {/* Photo */}
               <button
-                className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
+                className="member-composer-tool flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
                 style={{
                   border: "1.5px solid #f9e4ef",
                   color: "#b89aa8",
@@ -440,7 +448,7 @@ export default function CreatePostModal({
 
               {/* Video */}
               <button
-                className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
+                className="member-composer-tool flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
                 style={{
                   border: "1.5px solid #f9e4ef",
                   color: "#b89aa8",
@@ -473,7 +481,8 @@ export default function CreatePostModal({
               {/* Lock / Subscribers-only toggle */}
               <button
                 onClick={() => setLocked(!locked)}
-                className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200"
+                aria-pressed={locked}
+                className="member-composer-tool flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200"
                 style={{
                   border: locked
                     ? "1.5px solid #f5b63b"
@@ -504,7 +513,8 @@ export default function CreatePostModal({
               {/* Post CTA */}
               <button
                 onClick={handleClose}
-                className="rounded-2xl px-6 py-2 text-sm font-bold text-white transition-all duration-200"
+                disabled={!rightsConfirmed}
+                className="member-composer-submit rounded-2xl px-6 py-2 text-sm font-bold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   background: locked
                     ? "linear-gradient(90deg,#f5b63b 0%,#f9a8c8 50%,#df5f97 100%)"
@@ -518,6 +528,23 @@ export default function CreatePostModal({
                 {locked ? "Post - Locked" : "Post"}
               </button>
             </div>
+            <label className="member-composer-confirmation mt-4 flex cursor-pointer items-start gap-2.5 rounded-xl border border-pink-100 bg-white/30 px-3 py-2.5">
+              <input
+                type="checkbox"
+                checked={rightsConfirmed}
+                onChange={(event) => setRightsConfirmed(event.target.checked)}
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 cursor-pointer rounded accent-[#df5f97]"
+              />
+              <span className="text-[11px] leading-relaxed text-[#8c6d7f]">
+                By uploading, I confirm I own the rights to this content and it
+                complies with the{" "}
+                <strong className="text-[#7f6274]">Acceptable Use</strong> and{" "}
+                <strong className="text-[#7f6274]">
+                  Non-Consensual Content Policies
+                </strong>
+                .
+              </span>
+            </label>
           </div>
         </div>
       </div>

@@ -6,6 +6,8 @@ import Sidebar, { MobileNav } from "./Sidebar";
 import ChatSidebar from "./ChatSidebar";
 import SakuraBackdrop from "./SakuraBackdrop";
 import DarkKnightBackdrop from "./DarkKnightBackdrop";
+import MomentComposer from "./MomentComposer";
+import PostComposer from "./PostComposer";
 import { chatContacts } from "../fixtures/chatContacts";
 import { useOptionalAuth } from "../auth/authContext";
 import { AUTH_ROLES } from "../auth/authApi";
@@ -24,9 +26,10 @@ import {
  * source of truth. Navigation runs through React Router.
  *
  * Pages render their own `<main>` as `children` and pass any page-specific
- * overlays (compose modals, lightboxes) via `modals`. The compose menu lives in
- * the shell; it calls back into `onComposePost` / `onComposeMoment` so the page
- * keeps ownership of its modal state.
+ * overlays (compose modals, lightboxes) via `modals`. The compose menu in
+ * the shell always offers both creation actions. Pages can keep ownership of
+ * their editors via `onComposePost` / `onComposeMoment`; otherwise the shell
+ * opens the same shared prototype editors without changing the current route.
  *
  * @param {{
  *   activePage: string,
@@ -63,7 +66,11 @@ export default function MemberLayout({
   const showCreatorDashboard = auth?.user?.role === AUTH_ROLES.CREATOR;
   const showCreatorApplication = auth?.user?.role === AUTH_ROLES.MEMBER;
   const [showComposeMenu, setShowComposeMenu] = useState(false);
+  const [activeComposer, setActiveComposer] = useState(null);
   const [logoutError, setLogoutError] = useState("");
+  const handleComposePost = onComposePost ?? (() => setActiveComposer("post"));
+  const handleComposeMoment =
+    onComposeMoment ?? (() => setActiveComposer("moment"));
 
   const handleNavigate = (id) => {
     if (id === "home") navigate("/home");
@@ -134,8 +141,8 @@ export default function MemberLayout({
             onNavigateLegal={handleNavigateLegal}
             showComposeMenu={showComposeMenu}
             setShowComposeMenu={setShowComposeMenu}
-            onComposePost={onComposePost}
-            onComposeMoment={onComposeMoment}
+            onComposePost={handleComposePost}
+            onComposeMoment={handleComposeMoment}
           />
 
           <div
@@ -155,12 +162,18 @@ export default function MemberLayout({
         onNavigate={handleNavigate}
         showComposeMenu={showComposeMenu}
         setShowComposeMenu={setShowComposeMenu}
-        onComposePost={onComposePost}
-        onComposeMoment={onComposeMoment}
+        onComposePost={handleComposePost}
+        onComposeMoment={handleComposeMoment}
         totalUnread={totalUnread}
       />
 
       {modals}
+      {activeComposer === "post" && (
+        <PostComposer onClose={() => setActiveComposer(null)} />
+      )}
+      {activeComposer === "moment" && (
+        <MomentComposer onClose={() => setActiveComposer(null)} />
+      )}
     </div>
   );
 }

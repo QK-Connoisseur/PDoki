@@ -89,7 +89,7 @@ controls are in place.
 Conventions:
 
 - Prototype content comes from `fixtures/`; media is loaded from external demo URLs. Page-local display configuration and interactive local state remain in components. Authentication uses the real API; financial buttons and most product-domain data remain simulated.
-- Styling is **Tailwind CSS v4** via `@tailwindcss/vite` (config-less; `@import "tailwindcss"` in `index.css`). Custom keyframe animations are hand-written in `index.css`. Visual identity is sakura-pink/pearl/off-white with rounded "premium" surfaces; Dark Nite is a planned second theme.
+- Styling is **Tailwind CSS v4** via `@tailwindcss/vite` (config-less; `@import "tailwindcss"` in `index.css`). Custom keyframe animations are hand-written in `index.css`. Visual identity is Sakura Kiss (sakura-pink/pearl/off-white) with rounded "premium" surfaces; Midnight City is the blue second theme. Both and the ambient-motion opt-out are browser-local preferences.
 - Plain JavaScript + JSX (no TypeScript in the frontend). PLAN.md mandates **TypeScript for all new backend/shared-contract code**, converting frontend files only when touched for backend integration.
 
 ## Domain rules that affect implementation

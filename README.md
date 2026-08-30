@@ -16,7 +16,7 @@ Pumdoki's current positioning is:
 
 > A space for creators, members, and real interaction.
 
-The visual identity uses a soft sakura-pink, pearl, and off-white palette with rounded, premium interfaces. Dark Nite will be the second free launch theme.
+The visual identity uses a soft sakura-pink, pearl, and off-white palette with rounded, premium interfaces. Sakura Kiss and Midnight City are the two free launch themes.
 
 ## Confirmed launch scope
 
@@ -186,7 +186,7 @@ Current limitations:
   password reset. Protected Settings uses real APIs for display name,
   email/reverification, password change, active-session listing/revocation,
   and a default-hidden explicit-content preference with deliberate opt-in.
-  Sakura and Dark Nite can be selected locally for the shared member shell;
+  Sakura Kiss and Midnight City can be selected locally for the shared member shell;
   the theme choice and the global ambient-motion opt-out are saved only in the
   current browser. Notifications, account-synced appearance, billing, export,
   and deletion remain sequenced to their later dependency phases.
