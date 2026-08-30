@@ -208,16 +208,38 @@ creator-application foundation, is published and CI-verified as commit
 Phase 4 Slice 2 and the frontend routing hardening are published on `dev`
 through merge commit `1189404`. Slice 2 remains a fail-closed backend
 state/evidence foundation rather than a deployable private-operations workflow.
-Phase 4 Slice 3 is locally committed and verified on
-`codex/phase4-private-ops-access-foundation` as implementation commit
-`9904334`. It adds provider-neutral signed-assertion verification, database-
-owned exact operator/permission authorization, and test-only request-integrity
-seams for the dormant review router. The public API still does not mount that
-router, and no operational identity provider, session, private origin, runtime
-database role, live configuration, or deployment exists. G1–G12 remain
-`NOT EVALUATED`.
-Production
-infrastructure, identity verification, operational authentication/review,
+Phase 4 Slice 3 is published through PR #15 merge commit `24e1653`; post-merge
+GitHub Actions run `32784338614` passed all three jobs. It adds provider-neutral
+signed-assertion verification, database-owned exact operator/permission
+authorization, and test-only request-integrity seams for the dormant review
+router. The founder has approved the seven private-operations policy decisions,
+including the two-lock identity-plus-Pumdoki-authorization model, in
+[the durable decision record](docs/architecture/phase4-private-operations-founder-policy-decisions.md).
+The public API still does not mount that router, and no operational identity
+provider, session, private origin, runtime database role, live configuration,
+or deployment exists. G1–G12 remain `NOT EVALUATED`.
+
+Phase 4 Slice 4, the locally verified
+[YubiKey claim-schema evaluation](docs/architecture/phase4-slice4-yubikey-claim-schema-evaluation.md),
+is pushed as implementation `317abda` in
+[draft PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17) against `dev`
+following founder publication approval on 2026-08-30. Implementation-head CI
+run `33337349347` passed on `317abda`. Every later reconciliation head requires
+fresh CI before review or merge; this does not claim final-head CI. The PR is
+not merged, and readiness or merge requires separate approval.
+Its unmounted candidate Cloudflare verifier and credential-redaction coverage
+passed `66/66` focused checks on Node `24.19.0`. Cloudflare is not selected, and
+the founder-attested 2026-08-25 Mac browser checks showed that both existing
+Cloudflare account hardware-key enrollments work independently. Those checks
+did not inspect the exact candidate Access application or a real signed
+assertion, so the proposed hardware-method claim, recovery separation, and
+G1–G12 evidence remain unproven.
+This publication closes out completed local work only. Further private-
+operations development remains parked under the newer local plan; the next
+proposed engineering priority is bounded content-domain design, not live
+Access testing.
+
+Production infrastructure, identity verification, operational authentication/review,
 server-side content filtering, dependency-bound Settings, and other product
 domains are not complete. The [operations readiness packet](docs/operations/README.md)
 contains non-secret planning templates for those future controls; it neither
@@ -334,6 +356,10 @@ points the frontend API client at the backend. Never commit a real `.env`.
   Phase Roadmap for phase-level truth, Daily Log for plain-language debriefs,
   and Decision Register for open approvals. Its original tracker, backlog,
   notes, and expense sheets remain preserved.
+- The founder approved the PLAN-aligned workbook at home. The 2026-08-25 Slice
+  4 reconciliation preserves its legacy tracker, backlog, notes, assumptions,
+  and expense values while adding only current decision and sanitized progress
+  evidence.
 - Architecture decisions and durable slice designs live under `docs/architecture`.
 - Counsel-approved policies may later live under `docs/legal`.
 - Temporary implementation prompts should not be committed.

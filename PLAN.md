@@ -630,7 +630,7 @@ Settings list is implemented.
 12. Support more than one performer per media item without creating a complicated public UI.
 13. Link every explicit media item to required performer records.
 
-### Current Phase 4 implementation status — reviewed August 23, 2026; activation state unchanged
+### Current Phase 4 implementation status — reviewed August 30, 2026; activation state unchanged
 
 - Slice 1, the creator-application foundation, is implemented, published on
   `dev` as commit `ce6c9e4`, and CI-verified by GitHub Actions run
@@ -672,21 +672,44 @@ Settings list is implemented.
   10/10, the full API suite passes 90/90, the web suite passes 133/133, and the
   real-stack Chromium suite passes 40/40. GitHub Actions run `31947756634`
   passed all three jobs at reviewed head `e83b027` before PR #1 merged.
-- Slice 3 is locally implemented and verified as commit `9904334` on
-  `codex/phase4-private-ops-access-foundation`. It adds strict provider-neutral
-  signed-assertion verification, database-owned exact operator/permission
+- Slice 3 is published on `dev` through PR #15 merge commit `24e1653`; its
+  implementation began at `9904334`. It adds strict provider-neutral signed-
+  assertion verification, database-owned exact operator/permission
   authorization, same-transaction reauthorization, and test-only request-
-  integrity seams for the dormant review router.
+  integrity seams for the dormant review router. Post-merge GitHub Actions run
+  `32784338614` passed the API, web/private-admin, and real-stack Playwright
+  jobs.
 - Slice 3 local verification passed 287/287 API tests, 166/166 web tests,
   24/24 contract tests, and 15/15 focused migration/review cases. All eight
   repository migrations applied to a clean disposable PostgreSQL 17 database,
-  and a second deploy was a no-op. Draft-PR publication is authorized; exact-
-  head CI and review remain required.
+  and a second deploy was a no-op.
 - Slice 3 does not mount the router or add a production provider, issuer/key
   service, operations session/server, private origin, runtime database role,
   operator, live configuration, deployment, `APPROVED`, role promotion, or
-  identity workflow. G1–G12 remain `NOT EVALUATED`; merge and activation are
-  separately gated.
+  identity workflow. G1–G12 remain `NOT EVALUATED`; publication did not
+  authorize deployment or activation.
+- On August 24 the founder approved all seven private-operations policy
+  decisions, including founder-only initial operation, two separately stored
+  hardware keys, an isolated origin/session, controlled provisioning and
+  offboarding, separated recovery and break glass, independent audit and
+  disablement, and the exact two-lock identity-plus-Pumdoki-authorization
+  policy. The durable record is
+  `docs/architecture/phase4-private-operations-founder-policy-decisions.md`.
+- Slice 4 is submitted for review in draft [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17),
+  with implementation commit `317abda` on
+  `codex/phase4-yubikey-claim-schema-evaluation`, based on published
+  `dev@24e1653`. The founder authorized this completed-slice publication on
+  August 30; merge remains separately gated and exact-head CI must pass.
+  Publication does not restart further private-operations development.
+  The unmounted candidate verifier and credential-redaction
+  coverage passed `66/66` focused tests on Node `24.19.0`, with focused
+  TypeScript, API build, scoped ESLint, Prettier, and import/mount checks green.
+  On August 25 the founder independently authenticated the existing primary
+  USB-C and backup USB-A Cloudflare account hardware-key enrollments on the new
+  Mac. This limited browser-compatibility evidence does not inspect the exact
+  candidate Access application, a signed assertion or hardware-method claim,
+  AAGUID, policy precedence, or controlled recovery separation. Cloudflare is
+  not selected and G1–G12 remain `NOT EVALUATED`.
 - The non-secret [operations readiness packet](docs/operations/README.md)
   provides activation, recovery, configuration, provider-decision, and future
   staging-verification templates. It records no live control, selects no
@@ -1186,56 +1209,44 @@ These are working management targets, not legal or processor deadlines. The
 founder may revise them, but each item must retain an owner and a concrete
 follow-up date.
 
-| Dependency or decision                           | Owner                 | Target     | Current state / next action                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------ | --------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AWS staging shape and account access             | Founder + Engineering | 2026-07-23 | Overdue: use the non-secret staging decision matrix and future verification runbook in `docs/operations/`; deployment shape, credentials boundary, and approval remain undecided, so Phase 2 remains partial.                                                                                                                                                                                                                                        |
-| Sentry or equivalent                             | Founder + Engineering | 2026-07-23 | Overdue: the provider scorecard is drafted in `docs/operations/`; select a provider and approve environment separation, PII minimization, retention, alerting, and cost before integration.                                                                                                                                                                                                                                                          |
-| Redis, queue, and idempotency architecture       | Engineering           | 2026-08-18 | Decision complete: PostgreSQL-backed durable jobs/outbox and idempotency; Redis only for shared throttling/ephemeral coordination; no unlimited outage path.                                                                                                                                                                                                                                                                                         |
-| Async-foundation implementation/provider review  | Engineering + Founder | 2026-08-25 | PR #9 published the transaction/privilege sub-proof, PR #10 published Node 24, and PR #11 published the provisional candidate evidence. PR #13 published the separately approved fixed-canary application-owned foundation as `6311522`; exact-head run `32518256241` and post-merge run `32535922437` passed all three jobs. Phase 2 remains partial, and every next implementation slice remains separately gated.                                 |
-| Transactional email provider and local Mailpit   | Founder + Engineering | 2026-07-23 | Local Mailpit and provider-neutral mail are complete; the provider scorecard is drafted, while production adult-business fit, data terms, authentication, bounce/complaint handling, and deliverability remain overdue.                                                                                                                                                                                                                              |
-| LLC attorney/CPA shortlist and entity state      | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                                                                                                                                                                                                                                                                                                                                   |
-| CCBill requirements and fee quote                | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                                                                                                                                                                                                                                                                                                                                      |
-| Identity-verification shortlist                  | Founder + Engineering | 2026-07-30 | Compare two or three providers for countries, AUP, security, and cost.                                                                                                                                                                                                                                                                                                                                                                               |
-| Epoch terms and written cascade behavior         | Founder               | 2026-08-06 | Confirm commercial and technical fallback behavior in writing.                                                                                                                                                                                                                                                                                                                                                                                       |
-| Initial country allowlist                        | Founder + Counsel     | 2026-08-06 | Start with the US and only supported Latin American countries.                                                                                                                                                                                                                                                                                                                                                                                       |
-| Commission, payout, refund, and Veso economics   | Founder + CPA/Counsel | 2026-08-13 | Model processor fees, chargebacks, taxes, reserves, and Founding discounts.                                                                                                                                                                                                                                                                                                                                                                          |
-| Acceptance/evidence retention schedule           | Founder + Counsel     | 2026-08-13 | Define retention, pseudonymization, lawful deletion, and litigation-hold rules before account deletion or creator onboarding ships.                                                                                                                                                                                                                                                                                                                  |
-| Private-admin restricted access and hardware MFA | Founder + Engineering | 2026-08-06 | A local provider-neutral assertion verifier, exact operator/grant mapping, transaction-time reauthorization, and request-integrity seams are implemented at `9904334`. Provider claim semantics, live issuer/JWKS/origin, hardware-key enrollment/recovery, an independent operations session/CSRF mechanism, proxy/rate-limit policy, runtime DB grants, audit/incident evidence, deployment, and approval remain open; G1–G12 are `NOT EVALUATED`. |
-| Google Workspace recovery-contact privacy        | Founder + Engineering | 2026-08-20 | A repository-safe checklist is drafted in `docs/operations/`. Review live directory/recovery surfaces privately and test independent backup access before replacing any temporary contact; record no personal details here.                                                                                                                                                                                                                          |
+| Dependency or decision                           | Owner                 | Target     | Current state / next action                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------ | --------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AWS staging shape and account access             | Founder + Engineering | 2026-07-23 | Overdue: use the non-secret staging decision matrix and future verification runbook in `docs/operations/`; deployment shape, credentials boundary, and approval remain undecided, so Phase 2 remains partial.                                                                                                                                                                                                        |
+| Sentry or equivalent                             | Founder + Engineering | 2026-07-23 | Overdue: the provider scorecard is drafted in `docs/operations/`; select a provider and approve environment separation, PII minimization, retention, alerting, and cost before integration.                                                                                                                                                                                                                          |
+| Redis, queue, and idempotency architecture       | Engineering           | 2026-08-18 | Decision complete: PostgreSQL-backed durable jobs/outbox and idempotency; Redis only for shared throttling/ephemeral coordination; no unlimited outage path.                                                                                                                                                                                                                                                         |
+| Async-foundation implementation/provider review  | Engineering + Founder | 2026-08-25 | PR #9 published the transaction/privilege sub-proof, PR #10 published Node 24, and PR #11 published the provisional candidate evidence. PR #13 published the separately approved fixed-canary application-owned foundation as `6311522`; exact-head run `32518256241` and post-merge run `32535922437` passed all three jobs. Phase 2 remains partial, and every next implementation slice remains separately gated. |
+| Transactional email provider and local Mailpit   | Founder + Engineering | 2026-07-23 | Local Mailpit and provider-neutral mail are complete; the provider scorecard is drafted, while production adult-business fit, data terms, authentication, bounce/complaint handling, and deliverability remain overdue.                                                                                                                                                                                              |
+| LLC attorney/CPA shortlist and entity state      | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                                                                                                                                                                                                                                                                                                   |
+| CCBill requirements and fee quote                | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                                                                                                                                                                                                                                                                                                      |
+| Identity-verification shortlist                  | Founder + Engineering | 2026-07-30 | Compare two or three providers for countries, AUP, security, and cost.                                                                                                                                                                                                                                                                                                                                               |
+| Epoch terms and written cascade behavior         | Founder               | 2026-08-06 | Confirm commercial and technical fallback behavior in writing.                                                                                                                                                                                                                                                                                                                                                       |
+| Initial country allowlist                        | Founder + Counsel     | 2026-08-06 | Start with the US and only supported Latin American countries.                                                                                                                                                                                                                                                                                                                                                       |
+| Commission, payout, refund, and Veso economics   | Founder + CPA/Counsel | 2026-08-13 | Model processor fees, chargebacks, taxes, reserves, and Founding discounts.                                                                                                                                                                                                                                                                                                                                          |
+| Acceptance/evidence retention schedule           | Founder + Counsel     | 2026-08-13 | Define retention, pseudonymization, lawful deletion, and litigation-hold rules before account deletion or creator onboarding ships.                                                                                                                                                                                                                                                                                  |
+| Private-admin restricted access and hardware MFA | Founder + Engineering | 2026-08-06 | PR #15 published Slice 3 as `24e1653`. Completed Slice 4 is submitted in draft PR #17 as implementation `317abda` under August 30 publication approval. Exact-head CI and review remain required; merge is separate. Further operations work stays parked; provider/live configuration, runtime roles, deployment, and activation remain unapproved. G1–G12 remain `NOT EVALUATED`.                                  |
+| Google Workspace recovery-contact privacy        | Founder + Engineering | 2026-08-20 | A repository-safe checklist is drafted in `docs/operations/`. Review live directory/recovery surfaces privately and test independent backup access before replacing any temporary contact; record no personal details here.                                                                                                                                                                                          |
 
 ## 21. Immediate next actions
 
-1. Keep the creator-review router unmounted from the public API. The merged
-   Slice 2 foundation and local Slice 3 primitives are not a deployable private-
-   operations workflow.
-2. Publish the authorized Slice 3 draft PR, require exact-head CI, and review
-   its strict assertion, database authorization, transaction recheck, and
-   request-integrity evidence without mounting or activating the router. Merge
-   remains separately gated, and G1–G12 remain `NOT EVALUATED`.
-3. After separate approval, use the non-secret
-   [operations readiness packet](docs/operations/README.md) to decide and
-   verify provider claim semantics, live issuer/JWKS/origin, hardware-key
-   enrollment/recovery, an independent operations session and CSRF mechanism,
-   trusted-proxy/rate-limit policy, restricted runtime database grants, audit/
-   incident evidence, and deployment shape. Templates and local tests are not
-   activation evidence; keep live identifiers and restricted evidence out of
-   Git.
-4. Keep `APPROVED`, role promotion, identity files, tax/banking intake, and
-   creator publishing disabled until identity, country, legal, and operations
-   gates are concrete.
-5. In parallel, advance the legal-entity/counsel, acceptance-retention,
-   identity-provider, country-allowlist, tax, processor, payout-economics, and
-   operational-mailbox decisions.
-6. Preserve the dependency sequencing for notifications, theme, billing,
-   export/deletion, and explicit-content query enforcement.
-7. PR #8 published the provider-neutral Phase 2 async-work ADR, PR #9
-   published the local transaction/privilege proof, PR #10 published Node 24,
-   PR #11 published the local candidate evaluation, and PR #13 published the
-   fixed-canary application-owned worker foundation as `6311522`. Exact-head
-   run `32518256241` and post-merge run `32535922437` passed all three jobs.
-   Keep Phase 2 partial; Redis/shared throttling, general idempotency,
-   product-flow migration, providers, AWS, monitoring, and transactional-email
-   choices remain open. Select and separately authorize any next implementation
-   slice.
-8. Build the commission and payout model using real processor quotes when
-   available.
+1. Review [draft PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17),
+   implementation `317abda`, for the completed Slice 4 claim-schema evaluation.
+   Require full CI on the exact final head. Merge requires separate approval.
+2. Treat this as publication close-out only. Further private-operations
+   development remains parked; do not start a real Access assertion test,
+   select a provider, configure a live boundary, deploy, or mount the router.
+3. The next suggested engineering step is a bounded Phase 5 content-domain
+   decision packet for `Post`, `Media`, and `Follow`: ownership, visibility,
+   moderation/quarantine states, and server-side access invariants. Confirm
+   founder decisions before separately authorizing schema/migration work.
+4. Preserve the newer local entity/content-spine planning and mixed tracker
+   edits outside this PR. Reconcile and publish those changes separately;
+   do not overwrite them with this publication snapshot.
+5. Keep G1–G12 `NOT EVALUATED`, the creator-review router unmounted, and
+   `APPROVED`, role promotion, identity files, tax/banking intake, and creator
+   publishing disabled until their gates are concrete.
+6. Keep Phase 2 partial. The merged fixed-canary worker foundation does not
+   complete staging, backups/restore, monitoring, shared throttling, general
+   idempotency, or product-flow migration.
+7. Preserve the dependency sequencing for notifications, theme, billing,
+   export/deletion, and explicit-content query enforcement. Founder/legal and
+   provider decisions remain separate from this code publication.
