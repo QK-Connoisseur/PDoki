@@ -254,6 +254,9 @@ function operationsPatch(
 async function waitForBlockedReview(client: Client): Promise<void> {
   const deadline = Date.now() + 2_000;
   while (Date.now() < deadline) {
+    // Activity state/query fields are cached within the revoker transaction.
+    // Refresh before every poll so an initially idle review can become visible.
+    await client.query("SELECT pg_catalog.pg_stat_clear_snapshot()");
     const waiting = await client.query<{ count: number }>(`
       SELECT count(*)::integer AS count
       FROM pg_catalog.pg_stat_activity
@@ -261,6 +264,7 @@ async function waitForBlockedReview(client: Client): Promise<void> {
         AND state = 'active'
         AND wait_event_type = 'Lock'
         AND query LIKE '%OperationsOperator%'
+        AND pg_catalog.pg_backend_pid() = ANY(pg_catalog.pg_blocking_pids(pid))
     `);
     if (waiting.rows[0]?.count) return;
     await new Promise((resolve) => setTimeout(resolve, 25));
@@ -860,6 +864,10 @@ describe("private creator application reviews", () => {
          WHERE "id" = $1`,
         [grant.id]
       );
+
+      // Prime a snapshot before the review starts. The polling helper must
+      // refresh it to observe the subsequent wait on this transaction's lock.
+      await revoker.query("SELECT pid FROM pg_catalog.pg_stat_activity");
 
       // Observe rejection immediately: releasing the database lock can settle
       // the review before the COMMIT callback resumes this test.
