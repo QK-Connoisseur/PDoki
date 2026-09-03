@@ -6,7 +6,7 @@ async function openAppearance(page, mobile = false) {
     mobile ? "nav.member-glass-mobile-nav" : "aside.member-glass-rail-left"
   );
   await rail.getByRole("button", { name: "Appearance", exact: true }).click();
-  const panel = rail.getByRole("dialog", { name: "Themes and motion" });
+  const panel = rail.getByRole("dialog", { name: "Themes" });
   await expect(panel).toBeVisible();
   return panel;
 }
@@ -31,69 +31,79 @@ async function expectLoadedCityBackdrop(page, variant) {
   return backdrop;
 }
 
-test("the desktop palette changes themes and persists an independent motion choice", async ({
+async function expectStaticBackdrop(page, backdrop) {
+  await expect(backdrop).toHaveAttribute("data-scene", "static");
+  await expect(backdrop).toHaveAttribute("aria-hidden", "true");
+  await expect(backdrop).toBeEmpty();
+  await expect(backdrop).toHaveCSS("animation-name", "none");
+  await expect(
+    page.locator(
+      '[data-testid="sakura-motion-overlay"], [data-testid="dark-knight-motion-overlay"], [data-testid="sakura-petal-video"], [data-testid="midnight-city-cloud-video"]'
+    )
+  ).toHaveCount(0);
+}
+
+test("the desktop palette keeps both static themes and persists the theme choice", async ({
   page,
 }) => {
   await loginAs(page, "member");
   await expect(page.getByTestId("sakura-backdrop")).toBeVisible();
+  await expectStaticBackdrop(page, page.getByTestId("sakura-backdrop"));
+
+  const rail = page.locator("aside.member-glass-rail-left");
+  const paletteBox = await rail
+    .getByRole("button", { name: "Appearance", exact: true })
+    .boundingBox();
+  const moreBox = await rail
+    .getByRole("button", { name: "More", exact: true })
+    .boundingBox();
+  expect(paletteBox).not.toBeNull();
+  expect(moreBox).not.toBeNull();
+  expect(paletteBox.y + paletteBox.height).toBeLessThanOrEqual(moreBox.y);
 
   let panel = await openAppearance(page);
   await expect(panel.getByRole("radio", { name: "Sakura Kiss" })).toBeChecked();
+  await expect(panel.getByRole("switch")).toHaveCount(0);
   await panel.getByText("Midnight City", { exact: true }).click();
   const backdrop = await expectLoadedCityBackdrop(page, "desktop");
   await expect(page.getByTestId("sakura-backdrop")).toHaveCount(0);
-  await expect(backdrop).toHaveAttribute("data-background-motion", "on");
-  await expect(backdrop.locator("[data-motion-element]")).toHaveCount(5);
-
-  await panel.getByRole("switch", { name: "Background motion" }).click();
-  await expect(backdrop).toHaveAttribute("data-background-motion", "off");
-  await expect(page.getByTestId("dark-knight-motion-overlay")).toHaveCount(0);
-  await expectLoadedCityBackdrop(page, "desktop");
+  await expectStaticBackdrop(page, backdrop);
 
   await page.reload();
   await expectLoadedCityBackdrop(page, "desktop");
-  await expect(backdrop).toHaveAttribute("data-background-motion", "off");
+  await expectStaticBackdrop(page, backdrop);
   panel = await openAppearance(page);
   await expect(
     panel.getByRole("radio", { name: "Midnight City" })
   ).toBeChecked();
-  await expect(
-    panel.getByRole("switch", { name: "Background motion" })
-  ).toHaveAttribute("aria-checked", "false");
+  await expect(panel.getByRole("switch")).toHaveCount(0);
 
   await panel.getByText("Sakura Kiss", { exact: true }).click();
   await expect(page.getByTestId("dark-knight-backdrop")).toHaveCount(0);
-  await expect(page.getByTestId("sakura-backdrop")).toHaveAttribute(
-    "data-background-motion",
-    "off"
-  );
-  await panel.getByRole("switch", { name: "Background motion" }).click();
-  await expect(page.getByTestId("sakura-motion-overlay")).toBeVisible();
+  await expectStaticBackdrop(page, page.getByTestId("sakura-backdrop"));
 });
 
-test("Midnight City obeys live device reduced-motion changes", async ({
+test("legacy motion preferences cannot reactivate either theme's background motion", async ({
   page,
 }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("pumdoki:sakura-background-motion:v1", "on");
+  });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await loginAs(page, "member");
+  await expectStaticBackdrop(page, page.getByTestId("sakura-backdrop"));
   const panel = await openAppearance(page);
   await panel.getByText("Midnight City", { exact: true }).click();
   const backdrop = await expectLoadedCityBackdrop(page, "desktop");
-  const motion = panel.getByRole("switch", { name: "Background motion" });
-
-  await expect(motion).toBeDisabled();
-  await expect(motion).toHaveAttribute("aria-checked", "false");
-  await expect(motion).toHaveAccessibleDescription(
-    "Off to respect your device’s reduced-motion setting."
-  );
-  await expect(backdrop).toHaveAttribute("data-background-motion", "off");
-  await expect(page.getByTestId("dark-knight-motion-overlay")).toHaveCount(0);
+  await expect(panel.getByRole("switch")).toHaveCount(0);
+  await expectStaticBackdrop(page, backdrop);
 
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await expect(motion).toBeEnabled();
-  await expect(motion).toHaveAttribute("aria-checked", "true");
-  await expect(backdrop).toHaveAttribute("data-background-motion", "on");
-  await expect(page.getByTestId("dark-knight-motion-overlay")).toBeVisible();
+  await expectStaticBackdrop(page, backdrop);
+  await panel.getByText("Sakura Kiss", { exact: true }).click();
+  await expectStaticBackdrop(page, page.getByTestId("sakura-backdrop"));
+  await page.reload();
+  await expectStaticBackdrop(page, page.getByTestId("sakura-backdrop"));
 });
 
 test("the mobile palette stays inside a 320px viewport and uses the mobile city artwork", async ({
@@ -109,16 +119,42 @@ test("the mobile palette stays inside a 320px viewport and uses the mobile city 
   const panel = await openAppearance(page, true);
   await panel.getByText("Midnight City", { exact: true }).click();
   const backdrop = await expectLoadedCityBackdrop(page, "mobile");
+  await expectStaticBackdrop(page, backdrop);
+  await expect(panel.getByRole("switch")).toHaveCount(0);
   const box = await panel.boundingBox();
   expect(box).not.toBeNull();
   expect(box.x).toBeGreaterThanOrEqual(0);
   expect(box.y).toBeGreaterThanOrEqual(0);
   expect(box.x + box.width).toBeLessThanOrEqual(320);
   expect(box.y + box.height).toBeLessThanOrEqual(700);
-  await panel.getByRole("switch", { name: "Background motion" }).click();
-  await expect(backdrop).toHaveAttribute("data-background-motion", "off");
   await panel.getByRole("button", { name: "Close appearance" }).click();
   await expect(panel).toHaveCount(0);
+});
+
+test("the static city artwork switches cleanly across the 767px responsive breakpoint", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await loginAs(page, "member");
+  const cookieConsent = page.getByRole("dialog", { name: "Cookie consent" });
+  await expect(cookieConsent).toBeVisible();
+  await cookieConsent
+    .getByRole("button", { name: "Reject Non-Essential", exact: true })
+    .click();
+  await expect(cookieConsent).toHaveCount(0);
+
+  const panel = await openAppearance(page);
+  await panel.getByText("Midnight City", { exact: true }).click();
+  const backdrop = await expectLoadedCityBackdrop(page, "desktop");
+  await expectStaticBackdrop(page, backdrop);
+
+  await page.setViewportSize({ width: 767, height: 1024 });
+  await expectLoadedCityBackdrop(page, "mobile");
+  await expectStaticBackdrop(page, backdrop);
+
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await expectLoadedCityBackdrop(page, "desktop");
+  await expectStaticBackdrop(page, backdrop);
 });
 
 test("non-feed member pages offer both prototype editors without navigating or publishing", async ({

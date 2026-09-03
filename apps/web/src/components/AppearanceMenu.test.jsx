@@ -1,13 +1,9 @@
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import MemberThemeProvider from "../appearance/MemberThemeProvider";
-import BackgroundMotionProvider from "../appearance/BackgroundMotionProvider";
 import { MEMBER_THEME_STORAGE_KEY } from "../appearance/memberThemeContext";
-import { BACKGROUND_MOTION_STORAGE_KEY } from "../appearance/backgroundMotionContext";
 import AppearanceMenu from "./AppearanceMenu";
-
-let motionListeners;
 
 beforeEach(() => {
   const values = new Map();
@@ -15,15 +11,6 @@ beforeEach(() => {
     getItem: vi.fn((key) => values.get(key) ?? null),
     setItem: vi.fn((key, value) => values.set(key, String(value))),
   });
-  motionListeners = new Set();
-  vi.stubGlobal(
-    "matchMedia",
-    vi.fn().mockReturnValue({
-      matches: false,
-      addEventListener: (_, listener) => motionListeners.add(listener),
-      removeEventListener: (_, listener) => motionListeners.delete(listener),
-    })
-  );
 });
 
 afterEach(() => vi.unstubAllGlobals());
@@ -31,10 +18,8 @@ afterEach(() => vi.unstubAllGlobals());
 function renderAppearance(props = {}) {
   return render(
     <MemberThemeProvider>
-      <BackgroundMotionProvider>
-        <AppearanceMenu {...props} />
-        <button type="button">Outside control</button>
-      </BackgroundMotionProvider>
+      <AppearanceMenu {...props} />
+      <button type="button">Outside control</button>
     </MemberThemeProvider>
   );
 }
@@ -46,13 +31,15 @@ describe("AppearanceMenu", () => {
     renderAppearance({ onOpen });
     const trigger = screen.getByRole("button", { name: "Appearance" });
     expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger).toHaveAttribute("title", "Themes");
 
     await user.click(trigger);
 
     expect(onOpen).toHaveBeenCalledOnce();
     expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("dialog", { name: "Themes" })).toBeInTheDocument();
     expect(
-      screen.getByRole("dialog", { name: "Themes and motion" })
+      screen.getByText("Your theme is remembered on this browser.")
     ).toBeInTheDocument();
     const sakura = screen.getByRole("radio", { name: "Sakura Kiss" });
     const city = screen.getByRole("radio", { name: "Midnight City" });
@@ -77,53 +64,19 @@ describe("AppearanceMenu", () => {
     );
   });
 
-  it("turns movement off without changing the theme and restores both saved choices", async () => {
+  it("restores the saved theme without exposing background motion controls", async () => {
     const user = userEvent.setup();
     window.localStorage.setItem(MEMBER_THEME_STORAGE_KEY, "dark-knight");
     const view = renderAppearance();
     await user.click(screen.getByRole("button", { name: "Appearance" }));
-    const motion = screen.getByRole("switch", { name: "Background motion" });
-    expect(motion).toBeChecked();
-
-    await user.click(motion);
-
-    expect(motion).not.toBeChecked();
     expect(screen.getByRole("radio", { name: "Midnight City" })).toBeChecked();
-    expect(window.localStorage.getItem(BACKGROUND_MOTION_STORAGE_KEY)).toBe(
-      "off"
-    );
+    expect(screen.queryByRole("switch")).not.toBeInTheDocument();
+    expect(screen.queryByText(/background motion/i)).not.toBeInTheDocument();
     view.unmount();
     renderAppearance();
     await user.click(screen.getByRole("button", { name: "Appearance" }));
     expect(screen.getByRole("radio", { name: "Midnight City" })).toBeChecked();
-    expect(
-      screen.getByRole("switch", { name: "Background motion" })
-    ).not.toBeChecked();
-  });
-
-  it("honors device reduced motion immediately and explains why motion is unavailable", async () => {
-    const user = userEvent.setup();
-    renderAppearance();
-    await user.click(screen.getByRole("button", { name: "Appearance" }));
-    const motion = screen.getByRole("switch", { name: "Background motion" });
-
-    act(() =>
-      motionListeners.forEach((listener) => listener({ matches: true }))
-    );
-
-    expect(motion).not.toBeChecked();
-    expect(motion).toBeDisabled();
-    expect(motion).toHaveAccessibleDescription(
-      "Off to respect your device’s reduced-motion setting."
-    );
-    await user.click(motion);
-    expect(window.localStorage.setItem).not.toHaveBeenCalled();
-
-    act(() =>
-      motionListeners.forEach((listener) => listener({ matches: false }))
-    );
-    expect(motion).toBeEnabled();
-    expect(motion).toBeChecked();
+    expect(screen.queryByRole("switch")).not.toBeInTheDocument();
   });
 
   it("closes with Escape and returns keyboard focus to the palette", async () => {
@@ -151,8 +104,6 @@ describe("AppearanceMenu", () => {
 
     await user.click(trigger);
     await user.tab();
-    expect(screen.getByRole("switch")).toHaveFocus();
-    await user.tab();
     expect(outside).toHaveFocus();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
@@ -175,9 +126,7 @@ describe("AppearanceMenu", () => {
     expect(
       screen.getByRole("radio", { name: "Midnight City" })
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("switch", { name: "Background motion" })
-    ).toBeInTheDocument();
+    expect(screen.queryByRole("switch")).not.toBeInTheDocument();
   });
 
   it("does not expose an inert palette in a shell without appearance providers", () => {

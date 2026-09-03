@@ -3,7 +3,6 @@ import {
   MEMBER_THEME_OPTIONS,
   useOptionalMemberTheme,
 } from "../appearance/memberThemeContext";
-import { useOptionalBackgroundMotion } from "../appearance/backgroundMotionContext";
 import "./AppearanceMenu.css";
 
 function PaletteIcon() {
@@ -34,7 +33,6 @@ export default function AppearanceMenu({
   onOpen,
 }) {
   const theme = useOptionalMemberTheme();
-  const motion = useOptionalBackgroundMotion();
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
   const triggerRef = useRef(null);
@@ -67,7 +65,7 @@ export default function AppearanceMenu({
   }, [open]);
 
   // Some isolated/specialized prototype shells do not provide appearance state.
-  if (!theme || !motion) return null;
+  if (!theme) return null;
 
   return (
     <div
@@ -80,7 +78,7 @@ export default function AppearanceMenu({
         ref={triggerRef}
         type="button"
         aria-label="Appearance"
-        title="Themes and motion"
+        title="Themes"
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={open ? `${id}-panel` : undefined}
@@ -105,7 +103,7 @@ export default function AppearanceMenu({
           ref={panelRef}
           id={`${id}-panel`}
           role="dialog"
-          aria-label="Themes and motion"
+          aria-label="Themes"
           className="member-appearance__panel"
         >
           <div className="member-appearance__heading">
@@ -167,31 +165,9 @@ export default function AppearanceMenu({
               ))}
             </div>
           </fieldset>
-          <div className="member-appearance__motion">
-            <div>
-              <h3>Background motion</h3>
-              <p id={`${id}-motion-description`}>
-                {motion.systemReducedMotion
-                  ? "Off to respect your device’s reduced-motion setting."
-                  : motion.motionEnabled
-                    ? "Gentle movement is on."
-                    : "Off. Your background stays still."}
-              </p>
-            </div>
-            <button
-              type="button"
-              role="switch"
-              aria-label="Background motion"
-              aria-describedby={`${id}-motion-description`}
-              aria-checked={motion.motionEnabled}
-              disabled={motion.systemReducedMotion}
-              onClick={() => motion.setMotionRequested(!motion.motionRequested)}
-              className="member-appearance__switch"
-            >
-              <span />
-            </button>
-          </div>
-          <p className="member-appearance__note">Saved in this browser.</p>
+          <p className="member-appearance__note">
+            Your theme is remembered on this browser.
+          </p>
         </section>
       )}
     </div>

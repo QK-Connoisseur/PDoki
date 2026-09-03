@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import Sidebar, { MobileNav } from "./Sidebar";
 import { MemberThemeContext } from "../appearance/memberThemeContext";
-import { BackgroundMotionContext } from "../appearance/backgroundMotionContext";
 
 function renderSidebar(overrides = {}) {
   const props = {
@@ -25,38 +24,37 @@ function renderSidebar(overrides = {}) {
 }
 
 describe("Sidebar visual hooks", () => {
-  it("places the palette above the compliance link and More at the foot of the rail", () => {
+  it("places Appearance directly above More and keeps USC 2257 in the More menu", async () => {
+    const user = userEvent.setup();
+    const onNavigateLegal = vi.fn();
     render(
       <MemberThemeContext.Provider
         value={{ memberTheme: "sakura", setMemberTheme: vi.fn() }}
       >
-        <BackgroundMotionContext.Provider
-          value={{
-            motionEnabled: true,
-            motionRequested: true,
-            setMotionRequested: vi.fn(),
-          }}
-        >
-          <Sidebar
-            activePage="home"
-            onNavigate={vi.fn()}
-            setShowComposeMenu={vi.fn()}
-          />
-        </BackgroundMotionContext.Provider>
+        <Sidebar
+          activePage="home"
+          onNavigate={vi.fn()}
+          onNavigateLegal={onNavigateLegal}
+          setShowComposeMenu={vi.fn()}
+        />
       </MemberThemeContext.Provider>
     );
     const appearance = screen.getByRole("button", { name: "Appearance" });
     const more = screen.getByRole("button", { name: "More" });
-    const compliance = screen.getByTitle("18 USC §2257 Compliance Statement");
-    expect(
-      appearance.compareDocumentPosition(more) &
-        Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy();
-    expect(
-      appearance.compareDocumentPosition(compliance) &
-        Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy();
+    expect(appearance.closest(".member-appearance")?.nextElementSibling).toBe(
+      more.closest("[data-dropdown]")
+    );
     expect(appearance).toHaveClass("member-nav-item-trigger");
+    expect(more).toHaveAttribute("aria-expanded", "false");
+
+    await user.click(more);
+    expect(more).toHaveAttribute("aria-expanded", "true");
+
+    await user.click(
+      screen.getByRole("button", { name: "18 USC §2257", exact: true })
+    );
+    expect(onNavigateLegal).toHaveBeenCalledWith("2257");
+    expect(more).toHaveAttribute("aria-expanded", "false");
   });
 
   it.each([
