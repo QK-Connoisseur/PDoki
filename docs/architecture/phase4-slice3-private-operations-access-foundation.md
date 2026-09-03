@@ -1,10 +1,10 @@
 # Phase 4 Slice 3 — Private operations access foundation
 
-Date: 2026-08-23 · Status: locally implemented and verified; draft-PR publication authorized · Deployment disabled
+Date: 2026-08-23 · Status: published and CI-verified; deployment disabled
 
-Implementation commit: `9904334`, based on published `dev` merge `492d62c`
-(PR #14). The publication branch is
-`codex/phase4-private-ops-access-foundation`; merge remains separately gated.
+Implementation commit: `9904334`, published through PR #15 merge commit
+`24e1653`. Post-merge GitHub Actions run `32784338614` passed the API,
+web/private-admin, and real-stack Playwright jobs.
 
 ## Goal
 
@@ -24,6 +24,8 @@ remain in
 [Phase 4 Slice 2 — Private creator-review state foundation](phase4-slice2-private-creator-review.md).
 The activation requirements remain in the
 [private operations activation gates](../operations/private-admin-activation-gates.md).
+The founder-approved operating policy is recorded in the
+[private operations founder decision record](phase4-private-operations-founder-policy-decisions.md).
 
 ## Authorization boundary
 
@@ -196,20 +198,20 @@ impossible and outside this slice.
 
 All gates remain `NOT EVALUATED` after this local slice:
 
-| Gate | Local contribution                                                      | Why it is not `PASS`                                                                                               |
-| ---- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| G1   | Public-route denial and test-only composition coverage                  | No restricted deployment, operations server, edge boundary, or environment-isolation evidence                      |
-| G2   | Strict `jose` verifier and ephemeral-key negative tests                 | No approved provider configuration, authenticated production JWKS retrieval, rotation, or deployed outage evidence |
-| G3   | Injected hardware-method allowlist and weak-method denials              | No approved provider claim semantics, effective policy review, hardware enrollment, or control-plane evidence      |
-| G4   | Database-owned synthetic mapping and permission checks                  | No controlled production provisioning, access review, or offboarding evidence                                      |
-| G5   | Exact-origin, JSON, and injected-CSRF middleware tests                  | No live origin, operations session, production CSRF mechanism, or deployed browser/edge test                       |
-| G6   | Direct-peer-only semantics and forwarded-header denial tests            | No reviewed deployed proxy chain or rate-limit evidence                                                            |
-| G7   | Product-session non-use remains invariant                               | No production assertion transport or independently scoped operations session exists                                |
-| G8   | Authorization data is database-owned                                    | No production runtime/migration roles, column grants, credential separation, or real-role denial proof is added    |
-| G9   | Assertion redaction and application-level event limits are testable     | No separately controlled audit destination, retention, delivery monitoring, or alerts exist                        |
-| G10  | Local abuse cases can be expanded around the new primitives             | Tests are not against an exact deployed release and security shape                                                 |
-| G11  | Existing policy template remains the requirement                        | No controlled policy adoption, two-key enrollment, recovery separation, or exercises occur                         |
-| G12  | The route remains absent from runtime and verifier failures fail closed | No independent disablement path, controlled incident runbook, or exercise exists                                   |
+| Gate | Local contribution                                                      | Why it is not `PASS`                                                                                                    |
+| ---- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| G1   | Public-route denial and test-only composition coverage                  | No restricted deployment, operations server, edge boundary, or environment-isolation evidence                           |
+| G2   | Strict `jose` verifier and ephemeral-key negative tests                 | No approved provider configuration, authenticated production JWKS retrieval, rotation, or deployed outage evidence      |
+| G3   | Injected hardware-method allowlist and weak-method denials              | No approved provider claim semantics, controlled operations-policy enrollment or enforcement, or control-plane evidence |
+| G4   | Database-owned synthetic mapping and permission checks                  | No controlled production provisioning, access review, or offboarding evidence                                           |
+| G5   | Exact-origin, JSON, and injected-CSRF middleware tests                  | No live origin, operations session, production CSRF mechanism, or deployed browser/edge test                            |
+| G6   | Direct-peer-only semantics and forwarded-header denial tests            | No reviewed deployed proxy chain or rate-limit evidence                                                                 |
+| G7   | Product-session non-use remains invariant                               | No production assertion transport or independently scoped operations session exists                                     |
+| G8   | Authorization data is database-owned                                    | No production runtime/migration roles, column grants, credential separation, or real-role denial proof is added         |
+| G9   | Assertion redaction and application-level event limits are testable     | No separately controlled audit destination, retention, delivery monitoring, or alerts exist                             |
+| G10  | Local abuse cases can be expanded around the new primitives             | Tests are not against an exact deployed release and security shape                                                      |
+| G11  | Existing policy template remains the requirement                        | No controlled operations-policy adoption, provider enforcement, recovery separation, or exercise evidence exists        |
+| G12  | The route remains absent from runtime and verifier failures fail closed | No independent disablement path, controlled incident runbook, or exercise exists                                        |
 
 No checklist, local result, or code seam may change these states. Activation
 requires current restricted evidence for the exact release and configuration.
@@ -291,7 +293,34 @@ not deployment evidence.
 
 This result does not alter the activation table above. The public application
 still does not import or mount the review router, the admin app remains an
-informational shell, and no live provider, operations session, runtime database
-role, operator, origin, key, credential, deployment, or product workflow exists.
+informational shell, and no selected or configured private-operations provider,
+operations account/operator mapping, provider signing key or credential,
+operations session, runtime database role, restricted origin, deployment, or
+product workflow exists.
 The founder authorized staging, committing, branch push, and opening a draft PR
-on 2026-08-23. Merge remains separately gated.
+on 2026-08-23, then separately approved PR #15 for merge on 2026-08-24. The
+merge and green post-merge CI do not alter the activation table above.
+
+On 2026-08-24 the founder also approved all seven private-operations policy
+decisions, including the exact two-lock identity-plus-Pumdoki-authorization
+model, and authorized the locally verified
+[Slice 4 YubiKey claim-schema evaluation](phase4-slice4-yubikey-claim-schema-evaluation.md).
+The founder separately approved publication on 2026-08-30; Slice 4 implementation
+`317abda` is pushed in [draft PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17)
+against `dev`. Implementation-head CI run `33337349347` passed on `317abda`;
+every later reconciliation head requires fresh CI before review or merge. No
+final-head CI or merge is claimed, and readiness and merge remain separately
+gated.
+Cloudflare remains an evaluation candidate rather than a selected provider, and
+the founder-attested 2026-08-25 account-level tests showed that both existing
+hardware-key enrollments authenticate independently on the new Mac. Exact
+candidate-application assertion semantics, a signed hardware-method claim,
+AAGUID review, controlled recovery separation, provider selection, and all
+G1–G12 evidence remain pending. The founder approved the PLAN-aligned tracker,
+which was reconciled without deleting preserved records or recording restricted
+key evidence.
+
+Slice 4 publication is close-out only. Further private-operations development
+remains parked under the newer local plan. Bounded content-domain design is the
+next proposed engineering priority; a real Access assertion review is not the
+next authorized task.

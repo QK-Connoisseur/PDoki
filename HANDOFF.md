@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last updated: 2026-08-23 · Working branch: `codex/phase4-private-ops-access-foundation` · Base: `origin/dev` at PR #14 merge `492d62c` · Implementation commit: `9904334`
+Last updated: 2026-08-30 · Working branch: `codex/phase4-yubikey-claim-schema-evaluation` · Base: published `origin/dev` at PR #15 merge `24e1653` · Slice 4: draft PR #17, implementation `317abda`; merge separately gated
 
 ## Current phase
 
@@ -13,13 +13,31 @@ migration, API, browser, build, and quality gates are green. It remains
 deliberately unusable as an operations workflow until the documented
 private-origin authentication and deployment controls exist.
 
-**Phase 4 Slice 3 is locally implemented and verified as `9904334`.** It adds
-provider-neutral signed-assertion verification, database-owned exact operator
-and permission authorization, transaction-time reauthorization, and test-only
-request-integrity seams. The normal API/server still do not mount the creator-
-review router. Draft-PR publication is authorized; merge, provider/live
-configuration, runtime database roles, deployment, and activation remain
-separately gated. G1–G12 remain `NOT EVALUATED`.
+**Phase 4 Slice 3 is published through PR #15 merge commit `24e1653`.** Its
+implementation began at `9904334` and adds provider-neutral signed-assertion
+verification, database-owned exact operator and permission authorization,
+transaction-time reauthorization, and test-only request-integrity seams. Post-
+merge GitHub Actions run `32784338614` passed the API, web/private-admin, and
+real-stack Playwright jobs. The normal API/server still do not mount the
+creator-review router. Provider/live configuration, runtime database roles,
+deployment, and activation remain separately gated. G1–G12 remain
+`NOT EVALUATED`.
+
+**Phase 4 Slice 4 is submitted in draft PR #17, implementation `317abda`.**
+The founder authorized staging, commit, push, and the draft PR on August 30.
+Merge remains separately gated; exact-head CI must pass before review closes.
+This publication does not restart further private-operations development. The
+founder approved all seven private-operations policy decisions, including the
+two-lock identity-plus-Pumdoki-authorization model, and authorized the YubiKey
+schema step. The unmounted Cloudflare candidate verifier and credential-
+redaction coverage passed `66/66` focused tests on Node `24.19.0`; focused
+TypeScript, API build, scoped ESLint, Prettier, and import/mount checks also
+passed. Cloudflare remains an evaluation candidate, `amr: ["hwk"]` is a proposed
+contract rather than proven provider behavior. On 2026-08-25 the founder
+independently authenticated both existing Cloudflare account hardware-key
+enrollments on the new Mac. That physical/browser result does not inspect the
+exact candidate Access application, a signed assertion or hardware-method
+claim, AAGUID, policy precedence, or controlled recovery separation.
 
 The founder-approved Phase 3 core scope is complete:
 
@@ -63,13 +81,18 @@ to async work.
 
 ## Publication status
 
-- `origin/dev` is at PR #14 merge commit `492d62c`, which preserves
-  reviewed reconciliation head `7a97d57`. Exact-head run `32640222452` and
-  post-merge run `32642650020` passed the API, lint/test/build, and real-stack
-  Playwright jobs. The current Phase 4 branch is based on that merge and
-  contains implementation commit `9904334`; branch push and opening its draft
-  PR are authorized, while marking it ready or merging remains separately
-  gated.
+- `origin/dev` is at PR #15 merge commit `24e1653`, which publishes Slice 3
+  implementation commit `9904334` and reviewed reconciliation head `48ebc1c`.
+  Post-merge run `32784338614` passed the API, lint/test/build, and real-stack
+  Playwright jobs. The current Slice 4 branch is based directly on that merge
+  and its implementation `317abda` is submitted in draft
+  [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17). Exact-head CI and
+  review remain required; merge and every live-control gate are separate.
+- Publication preserves the newer August 26 entity/content-spine planning
+  changes in the working tree without including them in this PR. The mixed
+  tracker is also left untouched and uncommitted; its later planning revision
+  needs a separate reconciliation/publication decision. The tracker counts
+  below describe previously published historical snapshots, not current PR #17 metrics.
 - The August 21 tracker rework preserves all 148 legacy task rows and every
   original backlog, note, assumption, and expense cell. Its PLAN-aligned
   Delivery Tracker contains 161 stable execution records across P00–P14 and
@@ -186,6 +209,70 @@ server or exposing the router.
   provisioned operator, runtime DB role, live configuration, deployment,
   `APPROVED`, role promotion, identity mutation/file collection, or publishing
   workflow. G1–G12 remain `NOT EVALUATED`.
+
+## Phase 4 founder decisions and Slice 4 scope — 2026-08-24
+
+Plain-language outcome: the founder has approved the policy for who may operate
+the private review boundary and how identity, permission, recovery, and auditing
+must work. The completed remote-safe Slice 4 step checked whether a candidate
+token shape could carry the required proof; it did not create or activate a
+private operations system.
+
+- Founder decisions D1–D7 are approved and recorded in
+  `docs/architecture/phase4-private-operations-founder-policy-decisions.md`:
+  founder-only initial operation, two separately stored hardware keys, an
+  isolated private origin/session, the exact two-lock authorization model,
+  controlled provisioning/offboarding, separated recovery/break glass, and
+  independent audit/disablement.
+- The two-lock rule requires both signed proof of the exact person using an
+  approved hardware-backed method and a Pumdoki-owned active operator mapping,
+  active `ADMIN` user, and exact action permission. Successful identity-provider
+  login, email, domain, group, upstream role, or public Pumdoki login alone is
+  never operations authorization.
+- The local Slice 4 evaluation may add only an unmounted candidate Cloudflare
+  assertion adapter and synthetic ephemeral-RSA tests for its documented
+  application-token shape and proposed top-level `amr: ["hwk"]` evidence.
+- The separate candidate suite passed `65/65` tests and the focused logger-
+  redaction check passed `1/1`, for `66/66` combined focused checks on Node
+  `24.19.0`. Focused TypeScript, the API build, scoped ESLint, Prettier, and
+  import/mount checks passed.
+- Cloudflare is not selected. Its public application-token example does not
+  currently document the proposed `amr` claim. Both existing account keys
+  passed founder-attested Mac browser authentication, but a controlled exact-
+  application assertion review is still required. If hardware use is not
+  proven by provider-supported signed evidence, the candidate fails G3.
+- The primary key received only the founder-entered local FIDO2 PIN described
+  above. No Cloudflare enrollment, provider signing key, Access application
+  configuration, operator mapping, restricted origin, deployment, router mount,
+  or product behavior changed. Phase 4 is partial and G1–G12 remain
+  `NOT EVALUATED`.
+- The founder approved the PLAN-aligned tracker at home. Its 2026-08-25
+  reconciliation preserves all legacy records and contains no restricted key
+  evidence.
+
+## Slice 4 publication debrief — 2026-08-30
+
+- Changed: committed the completed dormant candidate and redaction tests as
+  `317abda`, pushed the existing branch, and opened draft PR #17 against `dev`
+  under the founder's August 30 approval.
+- Why it matters: the bounded evaluation now has a reviewable remote artifact;
+  it is not a new private-operations implementation or provider decision.
+- Verification: fresh Node `24.19.0` checks passed `66/66` focused checks,
+  `273/273` non-database API tests, `166/166` web tests, `24/24` contract tests,
+  focused TypeScript, full lint, and API/web/admin builds. Implementation-head
+  CI run [`33337349347`](https://github.com/QK-Connoisseur/PDoki/actions/runs/33337349347)
+  passed all three jobs, including database-backed API and Playwright checks,
+  on `317abda`. Every later reconciliation head still requires fresh CI.
+- Preserved: no provider selection, real assertion inspection, restricted key
+  evidence, live configuration, deployment, mount, creator approval, role
+  promotion, or activation. G1–G12 remain `NOT EVALUATED`.
+- Not included: the newer mixed entity/content-spine planning and tracker edits
+  remain local and uncommitted. No tracker cell or historical record was changed
+  by this publication.
+- Next: review the draft and its exact-head CI; merge requires separate approval.
+  Keep further private-operations work parked. The next proposed engineering
+  step is the content-domain schema decision packet, before separately approved
+  implementation.
 
 ## Manual local review setup
 
@@ -697,19 +784,24 @@ connectivity passes.
 - Counsel-approved creator/payout/content policies, country eligibility, tax
   intake, and an identity provider with approved security/retention controls
   do not exist yet. Do not enable ID collection or creator approval.
-- Local provider-neutral signed-assertion verification, exact operator/grant
+- Published provider-neutral signed-assertion verification, exact operator/grant
   authorization, transaction-time rechecks, and request-integrity seams now
-  exist on the Phase 4 feature branch. They are not production controls: there
-  is still no live provider/issuer/key/origin, hardware-key enrollment/recovery,
-  operations session/server, restricted hosting, runtime DB grant, creator-
+  exist on `dev` through PR #15. They are not production controls: there
+  is still no live provider/issuer/key/origin, controlled operations-policy
+  hardware-key enrollment/recovery, exact Access assertion evidence, operations
+  session/server, restricted hosting, runtime DB grant, creator-
   review UI, globally immutable audit log, or deployment. Slice 2's dormant
   application-level evidence seam must remain unmounted, and G1–G12 remain
   `NOT EVALUATED`.
-- Founder began the Cloudflare and Yubico prerequisites on 2026-08-03. This is
-  in progress and does not yet constitute verified private-admin restricted
-  access or hardware-backed assurance integration. The readiness packet in
-  `docs/operations/` defines the future evidence gate without asserting
-  current account state.
+- The founder approved the seven private-operations policy decisions and the
+  bounded local YubiKey claim-schema evaluation on 2026-08-24. Cloudflare
+  remains an evaluation candidate. Both existing account hardware-key
+  enrollments passed founder-attested Mac browser authentication on 2026-08-25,
+  but no exact Access application assertion or signed hardware-method evidence
+  has been reviewed, so this does not constitute verified private-admin access
+  or hardware-backed assurance integration. The readiness packet in
+  `docs/operations/` defines the future evidence gate without asserting current
+  account state.
 - Revisit Google Workspace signup/recovery privacy without recording personal
   contact details in this repository. Confirm directory visibility and current
   recovery factors, enroll an independent backup key/recovery path, and verify
@@ -719,25 +811,22 @@ connectivity passes.
 
 ## Next exact task
 
-1. Push `codex/phase4-private-ops-access-foundation`, open the authorized draft
-   PR against `dev`, and require all exact-head CI jobs to pass. Review the
-   strict assertion, database authorization, transaction recheck, request-
-   integrity, tracker, and scope-boundary evidence. Do not mark the PR ready or
-   merge without separate approval.
-2. Seek separate approval before repairing or recreating the ordinary local
-   `pumdoki_dev` database: an early uncommitted draft of the new migration was
-   applied there, no data was reset, and final evidence deliberately uses a
-   disposable database instead.
-3. Keep the creator-review router unmounted and G1–G12 `NOT EVALUATED`. After
-   separate approval, select and verify provider claim semantics, live issuer/
-   JWKS/origin, hardware-key enrollment/recovery, an independent operations
-   session and CSRF mechanism, trusted-proxy/rate-limit policy, restricted
-   runtime database grants, audit/incident evidence, and deployment shape.
-4. Keep Phase 2 labeled partially complete until HTTPS staging,
-   migration/restore, backup, monitoring, shared-throttling, and general
-   idempotency exit criteria pass.
-5. Keep the creator-review router unmounted from the public API and keep
-   `APPROVED`, role promotion, and identity collection absent.
-6. Continue the overdue AWS/Sentry/Redis/email-provider work and the LLC/
-   counsel, CCBill, identity-provider, retention, tax, and country-allowlist
-   workstreams in parallel. Do not collect identity files in the meantime.
+1. Review draft PR #17 and require full database-backed/API, lint/test/build,
+   and Playwright CI on its exact final head. Do not mark it ready or merge
+   without separate founder approval.
+2. Keep further private-operations development parked. The August 30 approval
+   publishes the completed Slice 4 only; it does not authorize provider
+   selection, a real Access assertion test, live configuration, or deployment.
+3. The next proposed engineering step is the Phase 5 content-domain decision
+   packet for `Post`, `Media`, and `Follow`. Agree ownership, visibility,
+   moderation/quarantine states, and access invariants with the founder before
+   separately approved schema/migration implementation. No live R2 setup or
+   fixture deletion is authorized by this publication.
+4. Preserve the newer local entity/content-spine PLAN/HANDOFF revisions and
+   mixed tracker edits, which are excluded from this PR. Their reconciliation
+   and publication are a separate scope decision.
+5. Do not repair or recreate the ordinary `pumdoki_dev` database without
+   separate approval. Slice 3's database proof used disposable databases.
+6. Keep the router unmounted, G1–G12 `NOT EVALUATED`, and creator approval,
+   role promotion, identity collection, and publishing absent. Phase 2 remains
+   partial; its deployment and operational gates remain open.
