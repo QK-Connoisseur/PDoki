@@ -12,7 +12,7 @@ export const MEMBER_THEME_OPTIONS = Object.freeze([
   {
     value: MEMBER_THEMES.SAKURA,
     label: "Sakura Kiss",
-    description: "Pearl glass, blossom light, and drifting petals.",
+    description: "Pearl glass, blossom light, and soft pink petals.",
   },
   {
     value: MEMBER_THEMES.DARK_KNIGHT,

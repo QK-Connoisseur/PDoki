@@ -3,8 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthContext } from "../auth/authContext";
-import BackgroundMotionProvider from "../appearance/BackgroundMotionProvider";
-import { BACKGROUND_MOTION_STORAGE_KEY } from "../appearance/backgroundMotionContext";
 import MemberThemeProvider from "../appearance/MemberThemeProvider";
 import {
   MEMBER_THEMES,
@@ -70,11 +68,9 @@ function renderSettings(api = makeApi()) {
   return render(
     <MemoryRouter>
       <MemberThemeProvider>
-        <BackgroundMotionProvider>
-          <AuthContext.Provider value={auth}>
-            <SettingsPage api={api} />
-          </AuthContext.Provider>
-        </BackgroundMotionProvider>
+        <AuthContext.Provider value={auth}>
+          <SettingsPage api={api} />
+        </AuthContext.Provider>
       </MemberThemeProvider>
     </MemoryRouter>
   );
@@ -103,52 +99,18 @@ describe("SettingsPage", () => {
     );
   });
 
-  it("persists the ambient-background opt-out and stops only its overlay", async () => {
-    const user = userEvent.setup();
-    renderSettings();
+  it("keeps appearance static without a background motion control", () => {
+    const view = renderSettings();
 
-    const toggle = screen.getByRole("switch", {
-      name: "Ambient background motion",
-    });
-    const backdrop = screen.getByTestId("sakura-backdrop");
-    expect(toggle).toHaveAttribute("aria-checked", "true");
-    expect(backdrop).toHaveAttribute("data-scene", "ambient-motion");
-
-    await user.click(toggle);
-
-    expect(toggle).toHaveAttribute("aria-checked", "false");
-    expect(backdrop).toHaveAttribute("data-scene", "static");
     expect(
-      screen.queryByTestId("sakura-motion-overlay")
+      screen.queryByRole("switch", { name: /background motion/i })
     ).not.toBeInTheDocument();
-    expect(window.localStorage.getItem(BACKGROUND_MOTION_STORAGE_KEY)).toBe(
-      "off"
-    );
-    expect(screen.getByText("Motion is off.")).toBeInTheDocument();
-  });
-
-  it("shows background motion as off when the device requests reduced motion", () => {
-    window.matchMedia = vi.fn().mockReturnValue({
-      matches: true,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-    });
-    renderSettings();
-
-    const toggle = screen.getByRole("switch", {
-      name: "Ambient background motion",
-    });
-    expect(toggle).toHaveAttribute("aria-checked", "false");
-    expect(toggle).toBeDisabled();
+    expect(screen.queryByText(/background motion/i)).not.toBeInTheDocument();
     expect(screen.getByTestId("sakura-backdrop")).toHaveAttribute(
       "data-scene",
       "static"
     );
-    expect(
-      screen.getByText(
-        "Motion is currently off because your device requests reduced motion."
-      )
-    ).toBeInTheDocument();
+    expect(view.container.querySelector("video")).not.toBeInTheDocument();
   });
 
   it("requires confirmation before opting in and persists the choice", async () => {

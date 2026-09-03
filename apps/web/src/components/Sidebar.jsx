@@ -436,28 +436,6 @@ export default function Sidebar({
         }}
       />
 
-      {/* ─── 18 USC §2257 Compliance Link ─── */}
-      <div className="px-3 pb-1 overflow-hidden">
-        <button
-          onClick={() => onNavigateLegal && onNavigateLegal("2257")}
-          className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-medium text-[#c9aab8] transition hover:text-[#df5f97] w-full whitespace-nowrap overflow-hidden ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-          title="18 USC §2257 Compliance Statement"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="h-3 w-3 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          <span>18 USC §2257</span>
-        </button>
-      </div>
-
       {/* ─── More Menu ─── */}
       <div ref={moreMenuRef} className="relative px-3 pb-4" data-dropdown>
         <button
@@ -468,6 +446,7 @@ export default function Sidebar({
               : "text-[#111] hover:bg-pink-50/60 hover:text-[#f9a8c8]"
           }`}
           aria-label="More"
+          aria-expanded={showMoreMenu}
         >
           <div className="shrink-0">
             <svg
@@ -530,10 +509,24 @@ export default function Sidebar({
                 label: "Help & Support",
                 icon: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01",
               },
+              {
+                label: "18 USC §2257",
+                title: "18 USC §2257 Compliance Statement",
+                icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+                action: () => onNavigateLegal?.("2257"),
+              },
             ].map((item) => (
               <button
                 key={item.label}
-                onClick={item.action || undefined}
+                onClick={
+                  item.action
+                    ? () => {
+                        item.action();
+                        setShowMoreMenu(false);
+                      }
+                    : undefined
+                }
+                title={item.title}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#111] transition hover:bg-pink-50/60 hover:text-[#f9a8c8]"
               >
                 <svg

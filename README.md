@@ -187,8 +187,10 @@ Current limitations:
   email/reverification, password change, active-session listing/revocation,
   and a default-hidden explicit-content preference with deliberate opt-in.
   Sakura Kiss and Midnight City can be selected locally for the shared member shell;
-  the theme choice and the global ambient-motion opt-out are saved only in the
-  current browser. Notifications, account-synced appearance, billing, export,
+  the theme choice is saved only in the current browser. Both themes use static
+  desktop/mobile artwork. Background motion controls, overlays, and videos have
+  been removed; motion is deferred until a professionally reviewed implementation.
+  Notifications, account-synced appearance, billing, export,
   and deletion remain sequenced to their later dependency phases.
 - Verified members can now submit one real creator application. The application
   and versioned prototype-policy evidence persist in PostgreSQL, while the

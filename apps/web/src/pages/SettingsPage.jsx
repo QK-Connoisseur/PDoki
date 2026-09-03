@@ -3,7 +3,6 @@ import { useAuth } from "../auth/authContext";
 import MemberLayout from "../components/MemberLayout";
 import { ErrorState, LoadingState } from "../components/StateViews";
 import { settingsApi } from "../settings/settingsApi";
-import { useBackgroundMotion } from "../appearance/backgroundMotionContext";
 import {
   MEMBER_THEME_OPTIONS,
   useMemberTheme,
@@ -378,18 +377,6 @@ function SessionSettings({ api, refreshKey }) {
 
 function AppearancePreferences() {
   const { memberTheme, setMemberTheme } = useMemberTheme();
-  const {
-    motionRequested,
-    motionEnabled,
-    systemReducedMotion,
-    setMotionRequested,
-  } = useBackgroundMotion();
-
-  const motionStatus = systemReducedMotion
-    ? "Motion is currently off because your device requests reduced motion."
-    : motionEnabled
-      ? "Motion is on."
-      : "Motion is off.";
 
   return (
     <section className="sakura-glass-surface mt-5 rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
@@ -451,51 +438,6 @@ function AppearancePreferences() {
           Saved on this browser. Sakura Kiss remains the default on new devices.
         </p>
       </fieldset>
-
-      <div className="mt-7 flex items-start justify-between gap-5 border-t border-pink-100 pt-6">
-        <div>
-          <h3 className="mt-5 font-bold text-[#5b4153]">
-            Ambient background motion
-          </h3>
-          <p
-            id="background-motion-description"
-            className="mt-1 max-w-xl text-sm leading-6 text-[#8c6d7f]"
-          >
-            Adds quiet, theme-specific movement over the background: petals in
-            Sakura Kiss, or slow clouds and fog in Midnight City. The wallpaper
-            itself remains unchanged.
-          </p>
-          <p className="mt-2 text-xs leading-5 text-[#a48999]">
-            Saved on this browser. Pumdoki always follows your device&apos;s
-            Reduce Motion setting.
-          </p>
-          <p
-            className="mt-2 text-xs font-semibold text-[#7d536b]"
-            role="status"
-            aria-live="polite"
-          >
-            {motionStatus}
-          </p>
-        </div>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={motionEnabled}
-          aria-label="Ambient background motion"
-          aria-describedby="background-motion-description"
-          disabled={systemReducedMotion}
-          onClick={() => setMotionRequested(!motionRequested)}
-          className={`relative mt-12 h-7 w-12 shrink-0 rounded-full transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500 motion-reduce:transition-none ${
-            motionEnabled ? "bg-pink-500" : "bg-gray-300"
-          } disabled:cursor-not-allowed disabled:opacity-60`}
-        >
-          <span
-            className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition motion-reduce:transition-none ${
-              motionEnabled ? "left-6" : "left-1"
-            }`}
-          />
-        </button>
-      </div>
     </section>
   );
 }
