@@ -1,13 +1,13 @@
 # Phase 4 Slice 3 — Private operations access foundation
 
-> Current checkpoint — September 6, 2026: the founder authorized integrating
-> reviewed Slice 4 head `25057bd` (PR #17), current static themes and notification
-> work into dev/main after verification. Original final-head CI `33337682290`
-> passed all three jobs. HANDOFF.md records integration/publication status.
-> August publication restrictions below are historical, not a request to seek
-> merge permission again. Provider selection, live configuration and activation
-> remain separate; operations work is parked. The sole next founder task is the
-> one-page business definition in PLAN.md.
+> Current checkpoint — September 6, 2026: PR #17's reviewed head `25057bd`
+> was merged through consolidation `56cb0ad`, including the notification bell
+> and existing static themes. Combined CI `34026349075` passed all three jobs.
+> HANDOFF.md records publication evidence; Git refs identify current dev/main.
+> August publication restrictions below are historical. No Slice 4 merge
+> permission remains outstanding. Provider selection, live configuration and
+> activation remain separate; operations work is parked. The sole next founder
+> task is the one-page business definition in PLAN.md.
 
 Date: 2026-08-23 · Status: published and CI-verified; deployment disabled
 
@@ -315,10 +315,10 @@ decisions, including the exact two-lock identity-plus-Pumdoki-authorization
 model, and authorized the locally verified
 [Slice 4 YubiKey claim-schema evaluation](phase4-slice4-yubikey-claim-schema-evaluation.md).
 The founder separately approved publication on 2026-08-30; Slice 4 implementation
-`317abda` is pushed in [draft PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17)
+`317abda` was published in [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17)
 against `dev`. Original final-head CI run `33337682290` passed on `25057bd`.
-The September 6 founder instruction authorizes consolidation into dev/main;
-HANDOFF.md records verification/publication. Live activation remains separate.
+PR #17 merged through `56cb0ad` on September 6; combined CI `34026349075`
+passed. HANDOFF.md records publication evidence. Live activation remains separate.
 Cloudflare remains an evaluation candidate rather than a selected provider, and
 the founder-attested 2026-08-25 account-level tests showed that both existing
 hardware-key enrollments authenticate independently on the new Mac. Exact

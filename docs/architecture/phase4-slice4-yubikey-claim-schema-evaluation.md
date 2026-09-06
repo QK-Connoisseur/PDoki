@@ -1,24 +1,24 @@
 # Phase 4 Slice 4 — YubiKey claim-schema evaluation
 
-> Current checkpoint — September 6, 2026: the founder authorized integrating
-> reviewed Slice 4 head `25057bd` (PR #17), current static themes and notification
-> work into dev/main after verification. Original final-head CI `33337682290`
-> passed all three jobs. HANDOFF.md records integration/publication status.
-> August publication restrictions below are historical, not a request to seek
-> merge permission again. Provider selection, live configuration and activation
-> remain separate; operations work is parked. The sole next founder task is the
-> one-page business definition in PLAN.md.
+> Current checkpoint — September 6, 2026: PR #17's reviewed head `25057bd`
+> was merged through consolidation `56cb0ad`, including the notification bell
+> and existing static themes. Combined CI `34026349075` passed all three jobs.
+> HANDOFF.md records publication evidence; Git refs identify current dev/main.
+> August publication restrictions below are historical. No Slice 4 merge
+> permission remains outstanding. Provider selection, live configuration and
+> activation remain separate; operations work is parked. The sole next founder
+> task is the one-page business definition in PLAN.md.
 
-Date: 2026-08-24 · Updated: 2026-09-06 · Status: reviewed dormant candidate;
-consolidation authorized · Deployment disabled
+Date: 2026-08-24 · Updated: 2026-09-06 · Status: published dormant candidate · Deployment disabled
 
 Base: published `dev` merge `24e1653` (PR #15). Working branch:
 `codex/phase4-yubikey-claim-schema-evaluation`. The founder approved staging,
 commit, push, and draft-PR publication on 2026-08-30. Implementation `317abda`
-is pushed in [draft PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17)
-against `dev`. Original final-head CI run `33337682290` passed on `25057bd`.
-The combined integration is verified separately; see HANDOFF.md. At the August 30 checkpoint the PR was unmerged. September 6 integration
-authorization supersedes that merge gate; see the current checkpoint above.
+was published through [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17),
+then merged into dev as part of `56cb0ad` on September 6. Original CI
+`33337682290` passed on `25057bd`; combined CI `34026349075` passed all three
+jobs. At the August 30 checkpoint the PR was unmerged; that status is historical.
+See HANDOFF.md for current publication evidence.
 
 This publication closes out completed local work only. Further private-
 operations development remains parked under the newer local plan. Bounded

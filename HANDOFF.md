@@ -1,7 +1,7 @@
 # Session Handoff
 
-Updated: September 6, 2026. Current work: authorized legal/status/budget cleanup
-and consolidation of reviewed work into dev/main. This file is the current
+Updated: September 6, 2026. Reviewed source consolidation: `56cb0ad`.
+Legal/status/budget cleanup is complete; the current founder task is below. This file is the current
 checkpoint; historical command logs remain in Git, including the previous
 [Slice 4 handoff at 25057bd](https://github.com/QK-Connoisseur/PDoki/blob/25057bd/HANDOFF.md).
 
@@ -53,15 +53,15 @@ verified. No reviewer, provider, purchase or live deployment is selected here.
 The September 6 reconciliation read **Find next project step**, **Explore
 subtle animated backgrounds**, and **Improve notification bell**.
 
-| Work               | Evidence and disposition                                                                                                                                                                                                                                    |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase 3            | Published through d55f5f3; real auth and account-security Settings.                                                                                                                                                                                         |
-| Phase 4 Slices 1–2 | Published; creator applications persist pending; review remains dormant and non-approving.                                                                                                                                                                  |
-| Phase 4 Slice 3    | Already merged by PR #15 as 24e1653. It is not awaiting publication.                                                                                                                                                                                        |
-| Phase 4 Slice 4    | PR #17, implementation `317abda` / reviewed `25057bd`. Original final-head CI `33337682290` passed all three jobs. Included in this consolidation under September 6 merge authorization. Candidate remains synthetic/unmounted; Cloudflare is not selected. |
-| Backgrounds        | PR #19 merged final static themes as `0f01961`. Intermediate videos/petals were deliberately retired after founder review. The final motion-retirement branch has the same tree as this baseline.                                                           |
-| Notification bell  | Existing local All/Unread, read controls, activity icons and themed indicators included. Fixture-only; reading is temporary component state.                                                                                                                |
-| Other old branches | UI/avatar changes are patch-equivalent to dev; pre-squash backup matches a published Phase 3 tree. Obsolete March top-level src code must not be merged back.                                                                                               |
+| Work               | Evidence and disposition                                                                                                                                                                                                                                 |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Phase 3            | Published through d55f5f3; real auth and account-security Settings.                                                                                                                                                                                      |
+| Phase 4 Slices 1–2 | Published; creator applications persist pending; review remains dormant and non-approving.                                                                                                                                                               |
+| Phase 4 Slice 3    | Already merged by PR #15 as 24e1653. It is not awaiting publication.                                                                                                                                                                                     |
+| Phase 4 Slice 4    | PR #17, implementation `317abda` / reviewed `25057bd`. Original final-head CI `33337682290` passed all three jobs. Merged/closed through `56cb0ad`; combined CI `34026349075` passed. Candidate remains synthetic/unmounted; Cloudflare is not selected. |
+| Backgrounds        | PR #19 merged final static themes as `0f01961`. Intermediate videos/petals were deliberately retired after founder review. The final motion-retirement branch has the same tree as this baseline.                                                        |
+| Notification bell  | Existing local All/Unread, read controls, activity icons and themed indicators included. Fixture-only; reading is temporary component state.                                                                                                             |
+| Other old branches | UI/avatar changes are patch-equivalent to dev; pre-squash backup matches a published Phase 3 tree. Obsolete March top-level src code must not be merged back.                                                                                            |
 
 The old task's mixed August 26 PLAN/HANDOFF/tracker edits were not present in the
 September 6 working tree. Their documented direction (park operations; prioritize
@@ -73,32 +73,39 @@ operational activation was verified.
 
 ## Publication and verification checkpoint
 
-Before consolidation, remote dev was `0f01961` and main was `88e587c`, with dev 93 commits
-ahead and zero behind. The founder explicitly authorized reviewed latest work
-to be committed, integrated and pushed to dev/main. The integration branch is
-`codex/founder-launch-reset`, preserving PR #17's ancestry. Publish dev, require
-all current-head CI jobs, then fast-forward main to that same verified revision.
-Use `git log -1`, `git ls-remote --heads origin dev main` and GitHub CI to verify
-the current tips rather than treating an old hash in narrative as current.
+Before consolidation, remote dev was `0f01961` and main was `88e587c`, with
+dev 93 commits ahead and zero behind. The authorized consolidation `56cb0ad`
+preserves PR #17's ancestry, the static-theme result and the notification work.
+It was pushed to dev, GitHub marked PR #17 merged/closed, and all three jobs
+passed in [combined CI run 34026349075](https://github.com/QK-Connoisseur/PDoki/actions/runs/34026349075).
+
+This documentation/tracker follow-up records that verified application revision
+and corrects two remaining service-order notification descriptions. It changes
+no application code. The release target is matching dev/main tips containing
+`56cb0ad` plus this checkpoint. Use `git log -1`,
+`git ls-remote --heads origin dev main` and the branch CI runs for the current
+tips and final publication evidence; the evidence hash above is intentionally
+stable rather than pretending to identify a document's own future commit.
+No new Slice 4 PR, founder merge decision or operations sprint is needed.
 
 Local Node 24.19.0 checks for the combined code:
 
-| Check                               | Result                                                             |
-| ----------------------------------- | ------------------------------------------------------------------ |
-| Web unit/component suite            | 219/219 passed                                                     |
-| Shared contracts                    | 24/24 passed                                                       |
-| API excluding DB integration/spikes | 273/273 passed; includes dormant Slice 4                           |
-| API/contracts/database build        | Passed                                                             |
-| Web and private-admin builds        | Passed                                                             |
-| Global lint / formatting            | Passed                                                             |
-| Tracker/budget                      | Passed; formulas, preservation and visual review                   |
-| Fresh DB integration and Playwright | Run in published integration CI; not claimed from local unit tests |
+| Check                               | Result                                           |
+| ----------------------------------- | ------------------------------------------------ |
+| Web unit/component suite            | 219/219 passed                                   |
+| Shared contracts                    | 24/24 passed                                     |
+| API excluding DB integration/spikes | 273/273 passed; includes dormant Slice 4         |
+| API/contracts/database build        | Passed                                           |
+| Web and private-admin builds        | Passed                                           |
+| Global lint / formatting            | Passed                                           |
+| Tracker/budget                      | Passed; formulas, preservation and visual review |
+| Fresh DB integration and Playwright | Passed in combined CI 34026349075                |
 
 The initial socket-limited API attempt failed with sandbox `listen EPERM`;
 the authorized rerun passed. No existing database was reset. Prior dev CI run
 33809241413 passed all three jobs; it does not verify new changes by itself.
-Source status and final publication evidence are reported in this task's final
-response. No source push in the inspected repository workflow deploys the site:
+Final dev/main branch publication is reported in this task's final response.
+The CI workflow runs on both branches; inspect those runs for the latest checkpoint. No source push in the inspected repository workflow deploys the site:
 the only workflow is CI. No hosting/provider configuration changed.
 
 ## Legal UI and email timing

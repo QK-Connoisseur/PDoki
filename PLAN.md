@@ -160,7 +160,7 @@ Required transactional messages:
 - Veso recharge receipt.
 - Creator application received/approved/rejected.
 - Content moderation and appeal notices.
-- Booking confirmation/reminder/cancellation.
+- Chat-arranged service-order confirmation, cancellation and refund updates as required. Scheduled booking reminders remain deferred.
 - Payout and tax-document notices.
 
 Local implementation status:
@@ -695,13 +695,12 @@ Settings list is implemented.
   disablement, and the exact two-lock identity-plus-Pumdoki-authorization
   policy. The durable record is
   `docs/architecture/phase4-private-operations-founder-policy-decisions.md`.
-- Slice 4 is submitted for review in draft [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17),
-  with implementation commit `317abda` on
-  `codex/phase4-yubikey-claim-schema-evaluation`, based on published
-  `dev@24e1653`. The founder authorized this completed-slice publication on
-  August 30. Reviewed head `25057bd` passed all three CI jobs in run
-  `33337682290`. The September 6 founder instruction authorizes integration
-  and publication to dev/main after current integration checks; see HANDOFF.md.
+- Slice 4 was merged through [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17)
+  in consolidation `56cb0ad` on September 6, preserving implementation `317abda`
+  and reviewed head `25057bd`. Original CI `33337682290` and combined integration
+  CI `34026349075` both passed all three jobs. The consolidation also includes
+  the notification bell and current static themes. HANDOFF.md records publication
+  evidence; Git refs are authoritative for current dev/main tips.
   Publication does not restart further private-operations development.
   The unmounted candidate verifier and credential-redaction
   coverage passed `66/66` focused tests on Node `24.19.0`, with focused
@@ -981,7 +980,7 @@ Complete this before broad feature expansion:
 - Renewal/cancellation.
 - Veso tip.
 - PPV purchase.
-- Booking and reminder.
+- Chat-arranged service-order status; scheduled booking reminders remain deferred.
 - Creator approval.
 - Moderation action.
 - Report outcome.

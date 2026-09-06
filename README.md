@@ -247,12 +247,12 @@ or deployment exists. G1–G12 remain `NOT EVALUATED`.
 
 Phase 4 Slice 4 is the dormant
 [YubiKey claim-schema evaluation](docs/architecture/phase4-slice4-yubikey-claim-schema-evaluation.md)
-from [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17), implementation
-`317abda` and reviewed head `25057bd`. All three final-head CI jobs passed in
-run `33337682290`. On September 6 the founder authorized consolidating this
-work, the local notification bell, and the current static-theme result into
-`dev` and `main` after integration verification. See HANDOFF.md for the actual
-publication checkpoint. PR #19 is the static-theme change, not Slice 4.
+from merged [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17), implementation
+`317abda` and reviewed head `25057bd`. September 6 consolidation `56cb0ad`
+merged that source and the local notification bell into dev alongside the
+current static themes. All three combined CI jobs passed in run `34026349075`.
+See HANDOFF.md for the publication checkpoint and Git refs for current dev/main
+tips. PR #19 is the static-theme change, not Slice 4.
 The candidate remains unmounted and synthetic; Cloudflare is not selected.
 Two hardware-key account logins were founder-tested on the Mac, but exact
 Access-application assertion and hardware-method evidence remain absent.

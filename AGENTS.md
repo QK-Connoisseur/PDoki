@@ -15,14 +15,14 @@ Prisma/PostgreSQL `packages/database`. Authentication, Settings and pending
 creator applications are real; payments, content/media, messaging, operations
 and production infrastructure remain incomplete.
 
-Phase 3 is published through `d55f5f3`; Phase 4 Slices 1–3 are published, with
-Slice 3 merged in PR #15 (`24e1653`). Slice 4 is PR #17 (`317abda` / reviewed
-head `25057bd`), whose original exact-head CI passed. The September 6 founder
-instruction authorizes reviewed consolidation into dev/main, including that
-dormant candidate, local notifications, and static themes from PR #19. See
-HANDOFF.md for actual integration verification/publication. Cloudflare remains
-an unselected candidate, the public API does not mount operations, and G1–G12
-remain NOT EVALUATED. Merging code is not deployment or activation.
+Phase 3 is published through `d55f5f3`; Phase 4 Slices 1–4 have published
+source. Slice 3 merged in PR #15 (`24e1653`). Slice 4's reviewed head `25057bd`
+(PR #17) was merged through consolidation `56cb0ad` on September 6, together
+with local notifications and the static themes already in dev. All three
+combined CI jobs passed in run `34026349075`. See HANDOFF.md for publication
+and verification evidence; read Git refs for current dev/main tips. Cloudflare
+remains an unselected candidate, the public API does not mount operations, and
+G1–G12 remain NOT EVALUATED. Merging code is not deployment or activation.
 
 The founder needs one active task at a time. Read PLAN.md's current sequential
 workflow and do not assign parallel founder workstreams. The next task is the

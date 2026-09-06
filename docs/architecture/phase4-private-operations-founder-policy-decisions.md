@@ -1,13 +1,13 @@
 # Phase 4 founder decision record — private operations policy
 
-> Current checkpoint — September 6, 2026: the founder authorized integrating
-> reviewed Slice 4 head `25057bd` (PR #17), current static themes and notification
-> work into dev/main after verification. Original final-head CI `33337682290`
-> passed all three jobs. HANDOFF.md records integration/publication status.
-> August publication restrictions below are historical, not a request to seek
-> merge permission again. Provider selection, live configuration and activation
-> remain separate; operations work is parked. The sole next founder task is the
-> one-page business definition in PLAN.md.
+> Current checkpoint — September 6, 2026: PR #17's reviewed head `25057bd`
+> was merged through consolidation `56cb0ad`, including the notification bell
+> and existing static themes. Combined CI `34026349075` passed all three jobs.
+> HANDOFF.md records publication evidence; Git refs identify current dev/main.
+> August publication restrictions below are historical. No Slice 4 merge
+> permission remains outstanding. Provider selection, live configuration and
+> activation remain separate; operations work is parked. The sole next founder
+> task is the one-page business definition in PLAN.md.
 
 Date: 2026-08-24 · Status: founder-approved direction; operational evidence and
 activation remain incomplete
@@ -123,11 +123,11 @@ process required by these decisions.
 The bounded local
 [Phase 4 Slice 4 — YubiKey claim-schema evaluation](phase4-slice4-yubikey-claim-schema-evaluation.md)
 is implemented and locally verified with synthetic inputs only. The founder
-approved publication on 2026-08-30, and implementation `317abda` is pushed in
-[draft PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17) against `dev`.
-Original final-head CI run `33337682290` passed on `25057bd`. The September 6
-founder instruction authorizes reviewed consolidation; HANDOFF.md records the
-current verification/publication checkpoint. Cloudflare Access is an
+approved publication on 2026-08-30, and implementation `317abda` was published in
+[PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17) against `dev`.
+Original final-head CI run `33337682290` passed on `25057bd`. PR #17 merged
+through `56cb0ad` on September 6 and combined CI `34026349075` passed.
+HANDOFF.md records the publication checkpoint. Cloudflare Access is an
 evaluation candidate, not a selected provider. On 2026-08-25, the founder
 independently authenticated the existing primary USB-C and backup USB-A
 Cloudflare account security-key enrollments on the new Mac. That sanitized,
@@ -140,7 +140,7 @@ separation, or any G1–G12 gate.
 - Publication closes out completed Slice 4 work only. Further private-
   operations development remains parked under the newer local plan; bounded
   content-domain design is the next proposed engineering priority after the current one-page business
-  definition and relevant decisions; live Access testing stays parked. The September 6 consolidation authorizes readiness/merge; activation does not follow from that authorization.
+  definition and relevant decisions; live Access testing stays parked. The September 6 consolidation completed the source merge; activation does not follow from that merge.
 - Phase 4 remains partial.
 - The creator-review router remains unmounted from the normal API.
 - `APPROVED`, role promotion, identity collection, and creator publishing
