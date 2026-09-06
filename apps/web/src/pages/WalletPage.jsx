@@ -116,13 +116,14 @@ function Pill({ children, tone = "pink" }) {
   );
 }
 
-function Toggle({ checked, onChange, label }) {
+function Toggle({ checked, onChange, label, disabled = false }) {
   return (
     <button
       onClick={() => onChange && onChange(!checked)}
       className={`inline-flex h-6 w-11 items-center rounded-full transition ${checked ? "bg-[#df5f97]" : "bg-pink-100"}`}
       aria-label={label}
       aria-pressed={checked}
+      disabled={disabled}
     >
       <span
         className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${checked ? "translate-x-5" : "translate-x-0.5"}`}
@@ -1087,8 +1088,8 @@ function WithdrawSection() {
                 />
               </div>
               <p className="text-xs text-[#8c6d7f]">
-                Instant cashout delivers within 30 minutes for an additional
-                1.5% fee.
+                Instant cashout is not available. Payout timing and fees have
+                not been established.
               </p>
             </div>
           </div>
@@ -1723,6 +1724,10 @@ function WalletSettingsSection() {
           <h3 className="mb-4 text-base font-bold text-[#241a22]">
             Privacy & security
           </h3>
+          <p className="mb-3 text-xs text-[#8c6d7f]">
+            Demo options only. Transaction PIN and two-factor protection are not
+            implemented.
+          </p>
           <div className="space-y-3">
             {[
               { l: "Require PIN for withdrawals", on: true },
@@ -1733,7 +1738,12 @@ function WalletSettingsSection() {
             ].map((x) => (
               <div key={x.l} className="flex items-center justify-between">
                 <span className="text-sm text-[#5b4153]">{x.l}</span>
-                <Toggle checked={x.on} onChange={() => {}} label={x.l} />
+                <Toggle
+                  checked={false}
+                  disabled
+                  onChange={() => {}}
+                  label={x.l}
+                />
               </div>
             ))}
           </div>
@@ -1744,7 +1754,8 @@ function WalletSettingsSection() {
             Tax documents
           </h3>
           <p className="text-sm text-[#5b4153] mb-3">
-            Download year-end tax forms and statements for your records.
+            These are sample document labels. No tax forms or account statements
+            have been issued.
           </p>
           <div className="space-y-2">
             {[
@@ -2125,6 +2136,14 @@ export default function WalletPage({
         {/* ─── Main Content ──────────────────────────────────────── */}
         <main className="flex-1 min-w-0">
           <div className="mx-auto max-w-[1100px] px-4 py-6 md:px-8 md:py-8">
+            <aside
+              aria-label="Wallet prototype status"
+              className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
+            >
+              Demo wallet: balances, payment methods, and transactions are
+              sample data. No money moves here; payments, payouts, and
+              transaction security controls are not active.
+            </aside>
             {renderSection()}
           </div>
         </main>

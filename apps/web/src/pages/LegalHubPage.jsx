@@ -1,4 +1,8 @@
 import { useState } from "react";
+import {
+  CURRENT_TERMS_VERSION,
+  CURRENT_PRIVACY_VERSION,
+} from "../auth/policyVersions";
 
 const SECTIONS = [
   {
@@ -76,7 +80,7 @@ const SECTIONS = [
     items: [
       {
         id: "2257",
-        label: "18 USC §2257 Statement",
+        label: "18 USC §2257 — Pending",
         icon: "M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z",
       },
     ],
@@ -86,20 +90,19 @@ const SECTIONS = [
 const CONTENT = {
   hub: {
     title: "Legal Overview",
-    updated: "January 1, 2026",
     body: (
       <div className="space-y-5">
         <p>
-          Welcome to the Pumdoki Legal Hub. This directory provides access to
-          all of our policies, guidelines, and compliance statements. We are
-          committed to transparency, user safety, and legal compliance across
-          all jurisdictions in which we operate.
+          Pumdoki is a development prototype for adults aged 18 and older. These
+          pages identify policy topics that need qualified legal review before
+          launch. They are not final terms or statements of compliance.
         </p>
-        <p>
-          Pumdoki is an adult content platform subject to applicable laws and
-          regulations, including but not limited to 18 USC §2257, DMCA, GDPR,
-          CCPA, and other applicable privacy and content regulations.
-        </p>
+        <Section heading="Current status">
+          The business entity, legal policies, operational contacts, and
+          moderation and compliance workflows have not been established. Creator
+          applications remain pending; identity documents, tax forms, and
+          banking information are not collected through that application.
+        </Section>
         <div className="grid gap-3 sm:grid-cols-2">
           {SECTIONS.flatMap((s) => s.items)
             .filter((i) => i.id !== "hub")
@@ -111,6 +114,9 @@ const CONTENT = {
                 <p className="text-sm font-semibold text-[#241a22]">
                   {item.label}
                 </p>
+                <p className="mt-1 text-xs text-[#8c6d7f]">
+                  Counsel review pending
+                </p>
               </div>
             ))}
         </div>
@@ -119,511 +125,263 @@ const CONTENT = {
   },
   terms: {
     title: "Terms of Service",
-    updated: "January 1, 2026",
+    version: CURRENT_TERMS_VERSION,
     body: (
       <div className="space-y-5">
-        <p className="text-sm font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-          These are placeholder Terms of Service. Final legal text will be
-          drafted by qualified legal counsel prior to launch.
-        </p>
-        <Section heading="1. Acceptance of Terms">
-          By accessing or using Pumdoki, you agree to be bound by these Terms of
-          Service and all applicable laws and regulations. If you do not agree
-          with any of these terms, you are prohibited from using or accessing
-          this site. You must be at least 18 years of age to use this platform.
+        <Section heading="Prototype terms status">
+          Final Terms of Service have not been drafted or approved by counsel.
+          Registration records acceptance of a versioned prototype notice; that
+          record does not establish production legal readiness.
         </Section>
-        <Section heading="2. Use of the Platform">
-          You may use Pumdoki only for lawful purposes and in accordance with
-          these Terms. You agree not to use the platform in any way that
-          violates any applicable federal, state, local, or international law or
-          regulation.
+        <Section heading="Before launch">
+          The operating entity, eligible countries, account and content rules,
+          Veso terms, purchase and subscription conditions, refunds, disputes,
+          and governing law need review and approved documents.
         </Section>
-        <Section heading="3. User Accounts">
-          You are responsible for safeguarding the password that you use to
-          access the platform and for any activities or actions under your
-          password. You agree to notify us immediately of any unauthorized use
-          of your account.
-        </Section>
-        <Section heading="4. Content Policy">
-          Users may only post content that complies with our Community
-          Guidelines and Acceptable Use Policy. Content involving minors is
-          strictly prohibited and will be reported to appropriate authorities.
-          All content must comply with 18 USC §2257 record-keeping requirements.
-        </Section>
-        <Section heading="5. Intellectual Property">
-          The platform and its original content, features, and functionality are
-          owned by Pumdoki and are protected by international copyright,
-          trademark, patent, trade secret, and other intellectual property laws.
-        </Section>
-        <Section heading="6. Termination">
-          We may terminate or suspend your account and access to the platform
-          immediately, without prior notice or liability, for any reason
-          whatsoever, including without limitation if you breach the Terms.
-        </Section>
-        <Section heading="7. Limitation of Liability">
-          In no event shall Pumdoki, its directors, employees, partners, agents,
-          suppliers, or affiliates, be liable for any indirect, incidental,
-          special, consequential, or punitive damages.
-        </Section>
-        <Section heading="8. Governing Law">
-          These Terms shall be governed and construed in accordance with the
-          laws applicable to our jurisdiction, without regard to its conflict of
-          law provisions.
-        </Section>
-        <Section heading="9. Changes to Terms">
-          We reserve the right to modify or replace these Terms at any time. It
-          is your responsibility to check these Terms periodically for changes.
+        <Section heading="Current product limits">
+          Content purchases, subscriptions, Veso spending, creator payouts, and
+          messaging shown in the prototype are not live commercial services.
         </Section>
       </div>
     ),
   },
   privacy: {
     title: "Privacy Policy",
-    updated: "January 1, 2026",
+    version: CURRENT_PRIVACY_VERSION,
     body: (
       <div className="space-y-5">
-        <p className="text-sm font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-          This is a placeholder Privacy Policy. Final text will be drafted by
-          qualified legal counsel prior to launch.
-        </p>
-        <Section heading="1. Information We Collect">
-          We collect information you provide directly to us, including when you
-          create an account, make a purchase, or contact us for support. This
-          includes name, email address, payment information, and any content you
-          upload.
+        <Section heading="Prototype privacy status">
+          A final Privacy Policy and the production data-handling arrangements
+          have not been approved. Account registration, authentication,
+          Settings, and creator applications can save data in the connected
+          development backend. Use sample data when testing.
         </Section>
-        <Section heading="2. How We Use Your Information">
-          We use the information we collect to provide, maintain, and improve
-          our services, process transactions, send you technical notices and
-          support messages, and respond to your comments and questions.
+        <Section heading="Sensitive information">
+          Do not provide identity documents, tax forms, payment credentials, or
+          banking information through this prototype. No production identity
+          collection or payment processing is available.
         </Section>
-        <Section heading="3. Information Sharing">
-          We do not sell, trade, or rent your personal identification
-          information to others. We may share generic aggregated demographic
-          information not linked to any personal identification information with
-          our business partners.
-        </Section>
-        <Section heading="4. Data Retention">
-          We retain personal data for as long as necessary to provide our
-          services and for legitimate legal, business, or contractual purposes.
-          Identity verification documents are retained for a minimum period as
-          required by 18 USC §2257.
-        </Section>
-        <Section heading="5. Your Rights">
-          Depending on your location, you may have the right to access, correct,
-          or delete your personal data, object to or restrict certain
-          processing, and data portability. To exercise these rights, contact us
-          at privacy@pumdoki.com.
-        </Section>
-        <Section heading="6. Cookies">
-          We use cookies and similar tracking technologies. See our Cookie
-          Policy for detailed information about how we use cookies.
-        </Section>
-        <Section heading="7. Security">
-          We implement appropriate technical and organisational measures to
-          protect your personal information against unauthorised access,
-          alteration, disclosure, or destruction.
-        </Section>
-        <Section heading="8. Contact Us">
-          If you have questions about this Privacy Policy, please contact our
-          Data Protection team at privacy@pumdoki.com.
+        <Section heading="Before launch">
+          The data inventory, service providers, processing purposes, retention
+          and deletion rules, international transfers, privacy rights process,
+          and security disclosures need review. A privacy request mailbox and
+          production export/deletion workflow are not available here.
         </Section>
       </div>
     ),
   },
   cookies: {
     title: "Cookie Policy",
-    updated: "January 1, 2026",
     body: (
       <div className="space-y-5">
-        <p className="text-sm font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-          This is a placeholder Cookie Policy. Final text will be drafted by
-          qualified legal counsel prior to launch.
-        </p>
-        <Section heading="What Are Cookies">
-          Cookies are small pieces of text sent to your browser by a website you
-          visit. They help the website remember information about your visit,
-          which can make it easier to visit the site again and make the site
-          more useful.
+        <Section heading="Current prototype storage">
+          The connected account flow uses a session cookie. Theme selection is
+          stored locally in your browser. Demo media can load from external
+          websites.
         </Section>
-        <Section heading="Types of Cookies We Use">
-          <ul className="mt-2 list-disc space-y-1.5 pl-5">
-            <li>
-              <strong>Essential Cookies:</strong> Required for the platform to
-              function. These cannot be disabled.
-            </li>
-            <li>
-              <strong>Functional Cookies:</strong> Enable personalised settings
-              and features.
-            </li>
-            <li>
-              <strong>Analytics Cookies:</strong> Help us understand how users
-              interact with the platform.
-            </li>
-            <li>
-              <strong>Marketing Cookies:</strong> Used to deliver relevant
-              advertising.
-            </li>
-          </ul>
-        </Section>
-        <Section heading="Managing Cookies">
-          You can control cookies through your browser settings. Note that
-          disabling certain cookies may impact your experience on the platform.
-          You can update your preferences at any time via the Cookie Consent
-          banner.
-        </Section>
-        <Section heading="Third-Party Cookies">
-          Some cookies on our platform are placed by third-party services. We
-          have no control over these cookies and recommend you check the
-          relevant third-party websites for more information.
+        <Section heading="Before launch">
+          A complete cookie and browser-storage inventory, third-party review,
+          and any required consent controls need to be approved. This page does
+          not claim that analytics, advertising, or a cookie consent manager
+          have been implemented.
         </Section>
       </div>
     ),
   },
   dmca: {
     title: "DMCA Policy",
-    updated: "January 1, 2026",
     body: (
       <div className="space-y-5">
-        <p className="text-sm font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-          This is a placeholder DMCA Policy. Final text will be drafted by
-          qualified legal counsel prior to launch.
-        </p>
-        <Section heading="Copyright Infringement Notice">
-          Pumdoki respects the intellectual property rights of others and
-          expects users to do the same. In accordance with the Digital
-          Millennium Copyright Act of 1998 (DMCA), we will respond expeditiously
-          to claims of copyright infringement.
+        <Section heading="Copyright process pending">
+          A designated copyright agent and an operational notice and
+          counter-notice process have not been established. This prototype does
+          not accept legal notices or promise content restoration dates.
         </Section>
-        <Section heading="Filing a DMCA Notice">
-          To file a DMCA takedown notice, please provide the following
-          information to our designated copyright agent: (1) your signature or
-          an authorized agent's signature; (2) identification of the copyrighted
-          work; (3) identification of the infringing material; (4) your contact
-          information; (5) a statement of good faith belief; (6) a statement of
-          accuracy under penalty of perjury.
-        </Section>
-        <Section heading="Counter-Notice Procedure">
-          If you believe your content was removed in error, you may submit a
-          counter-notice. After receiving a valid counter-notice, we will
-          restore the removed content unless the reporting party files a court
-          action within 10-14 business days.
-        </Section>
-        <Section heading="Repeat Infringer Policy">
-          Pumdoki maintains a policy of terminating accounts of users who
-          repeatedly infringe copyrights.
-        </Section>
-        <Section heading="DMCA Agent Contact">
-          Email: dmca@pumdoki.com | Mailing address will be provided upon formal
-          registration of our DMCA agent.
+        <Section heading="Before launch">
+          Counsel must determine the applicable copyright requirements and
+          approve the agent details, notice process, repeat-infringer rules, and
+          related operating procedures.
         </Section>
       </div>
     ),
   },
   2257: {
-    title: "18 USC §2257 Compliance Statement",
-    updated: "January 1, 2026",
+    title: "18 USC §2257 — Review Pending",
     body: (
       <div className="space-y-5">
-        <div className="rounded-2xl border border-pink-200 bg-pink-50/50 px-5 py-4">
-          <p className="text-sm font-bold text-[#241a22]">
-            Custodian of Records
-          </p>
-          <p className="mt-1 text-sm text-[#5b4153]">
-            This statement is provided in compliance with 18 U.S.C. §2257 and 28
-            C.F.R. Part 75.
-          </p>
-        </div>
-        <Section heading="Compliance Statement">
-          Pumdoki requires all content producers and uploaders to certify that
-          all performers depicted in any sexually explicit content are 18 years
-          of age or older. Records verifying the age of all performers are
-          maintained by each content producer and, where Pumdoki is the primary
-          producer, by Pumdoki's designated Custodian of Records.
+        <Section heading="No compliance statement is issued">
+          Pumdoki has not appointed a Custodian of Records or established
+          performer identity recordkeeping. This prototype does not collect
+          performer identity documents or hold records available for inspection.
         </Section>
-        <Section heading="Record-Keeping Requirements">
-          In accordance with 18 U.S.C. §2257 and the regulations promulgated
-          thereunder, Pumdoki maintains records of the actual names, legal
-          names, and other names used by all performers depicted in explicit
-          content, as well as their date of birth and copies of the relevant
-          identification documents.
-        </Section>
-        <Section heading="Custodian of Records">
-          Records required to be maintained pursuant to 18 U.S.C. §2257 are kept
-          at:
-          <br />
-          <br />
-          Pumdoki, Inc.
-          <br />
-          Custodian of Records
-          <br />
-          [Address — to be completed by legal counsel]
-          <br />
-          compliance@pumdoki.com
-        </Section>
-        <Section heading="User-Generated Content">
-          For content uploaded by users (secondary producers), the uploader
-          assumes responsibility for maintaining the required §2257 records. By
-          uploading content, users certify compliance with these record-keeping
-          requirements and represent that all performers are 18 years of age or
-          older.
-        </Section>
-        <Section heading="Inspection">
-          Records are available for inspection during normal business hours by
-          appropriate regulatory authorities.
+        <Section heading="Before launch">
+          Qualified counsel must determine the applicable obligations,
+          responsible entity, recordkeeping and retention arrangements, and
+          required published statement before relevant content operations begin.
         </Section>
       </div>
     ),
   },
   "acceptable-use": {
     title: "Community Guidelines & Acceptable Use Policy",
-    updated: "January 1, 2026",
     body: (
       <div className="space-y-5">
-        <p className="text-sm font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-          This is a placeholder Community Guidelines document. Final text will
-          be drafted prior to launch.
-        </p>
-        <Section heading="Our Community Standards">
-          Pumdoki is committed to maintaining a safe, respectful, and legal
-          environment for all users. These guidelines outline what is and is not
-          permitted on our platform.
+        <Section heading="Product safety requirements">
+          Pumdoki is intended for adults only. Sexual content involving minors,
+          non-consensual intimate content, trafficking, exploitation,
+          harassment, and other illegal activity are prohibited.
         </Section>
-        <Section heading="Zero-Tolerance Violations">
-          The following are strictly prohibited and will result in immediate
-          account termination and reporting to law enforcement where applicable:
-          <ul className="mt-2 list-disc space-y-1.5 pl-5">
-            <li>Any content involving minors in a sexual context (CSAM)</li>
-            <li>
-              Non-consensual content or content distributed without the
-              subject's consent (NCII)
-            </li>
-            <li>Content facilitating or promoting human trafficking</li>
-            <li>
-              Content facilitating violence, terrorism, or illegal activities
-            </li>
-          </ul>
+        <Section heading="Operational status">
+          The production moderation team, content-review process, reporting
+          workflow, and enforcement procedures are not established. Prototype
+          report controls do not send reports to an operating safety team.
         </Section>
-        <Section heading="Content Standards">
-          All explicit content must feature only verified adult performers who
-          have provided explicit consent. All performers must be 18+ and comply
-          with §2257 record-keeping requirements.
+        <Section heading="Before launch">
+          Detailed content and conduct rules, consent requirements, reports,
+          removals, and appeals need counsel review and implemented operations.
         </Section>
-        <Section heading="Conduct Standards">
-          Users must treat others with respect. Harassment, doxxing,
-          impersonation, and hate speech are prohibited.
-        </Section>
-        <Section heading="Reporting Violations">
-          Use the in-platform reporting tools or contact safety@pumdoki.com to
-          report violations of these guidelines.
-        </Section>
+        <SafetyResources />
       </div>
     ),
   },
   contact: {
     title: "Contact & Complaints",
-    updated: "January 1, 2026",
     body: (
       <div className="space-y-5">
-        <Section heading="General Inquiries">
-          For general questions about Pumdoki: support@pumdoki.com
+        <Section heading="No operational Pumdoki inboxes">
+          The addresses below are reserved examples, not working mailboxes. They
+          do not receive support requests, complaints, legal notices, emergency
+          reports, or sensitive documents. No response time is promised.
         </Section>
-        <Section heading="Privacy & Data Requests">
-          For privacy-related requests including data access, correction, or
-          deletion: privacy@pumdoki.com
+        <ul className="list-disc space-y-1.5 pl-5">
+          <li>Support example: support@pumdoki.example</li>
+          <li>Privacy example: privacy@pumdoki.example</li>
+          <li>Copyright example: dmca@pumdoki.example</li>
+          <li>Safety example: safety@pumdoki.example</li>
+          <li>Appeals example: appeals@pumdoki.example</li>
+          <li>Legal requests example: lawenforcement@pumdoki.example</li>
+          <li>Compliance example: compliance@pumdoki.example</li>
+          <li>Billing example: billing@pumdoki.example</li>
+        </ul>
+        <Section heading="Before launch">
+          Approved, monitored contact channels and responsible operators must
+          replace these examples before real users rely on the service.
         </Section>
-        <Section heading="DMCA / Copyright">
-          For copyright infringement notices and counter-notices:
-          dmca@pumdoki.com
-        </Section>
-        <Section heading="Child Safety (CSAM Reporting)">
-          To report content involving minors: safety@pumdoki.com — or contact
-          the NCMEC CyberTipline at www.cybertipline.org
-        </Section>
-        <Section heading="Trust & Safety">
-          To report content policy violations, NCII, or trafficking concerns:
-          safety@pumdoki.com
-        </Section>
-        <Section heading="Law Enforcement">
-          For law enforcement requests, subpoenas, or preservation requests:
-          lawenforcement@pumdoki.com
-        </Section>
-        <Section heading="18 USC §2257 Compliance">
-          For §2257 compliance inquiries: compliance@pumdoki.com
-        </Section>
-        <Section heading="Billing & Payments">
-          For subscription, payout, or billing issues: billing@pumdoki.com
-        </Section>
+        <SafetyResources />
       </div>
     ),
   },
   appeals: {
     title: "Appeals Policy",
-    updated: "January 1, 2026",
     body: (
       <div className="space-y-5">
-        <p className="text-sm font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-          This is a placeholder Appeals Policy. Final text will be drafted prior
-          to launch.
-        </p>
-        <Section heading="Right to Appeal">
-          Users whose accounts have been suspended, terminated, or whose content
-          has been removed have the right to appeal the decision within 30 days
-          of the action being taken.
+        <Section heading="Appeals process pending">
+          There is no operational appeal intake or dedicated review team in this
+          prototype. No appeal deadline, response time, or outcome is promised
+          by this page.
         </Section>
-        <Section heading="How to Submit an Appeal">
-          To submit an appeal: (1) Contact appeals@pumdoki.com with the subject
-          line "Account Appeal"; (2) Include your account username, a
-          description of the action taken, and why you believe the decision was
-          made in error; (3) Provide any supporting documentation.
-        </Section>
-        <Section heading="Review Process">
-          Appeals are reviewed by a dedicated Trust & Safety team. We aim to
-          respond within 5-10 business days. Appeals regarding CSAM or
-          trafficking violations are non-appealable.
-        </Section>
-        <Section heading="Outcomes">
-          We may reinstate your account, restore removed content, uphold the
-          original decision, or issue a modified consequence based on our
-          review.
+        <Section heading="Before launch">
+          Counsel-reviewed appeal rules, a working submission channel, review
+          responsibilities, and decision records need to be established.
         </Section>
       </div>
     ),
   },
   "law-enforcement": {
-    title: "Law Enforcement Request Policy",
-    updated: "January 1, 2026",
+    title: "Law Enforcement Requests",
     body: (
       <div className="space-y-5">
-        <p className="text-sm font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-          This is a placeholder Law Enforcement Policy. Final text will be
-          drafted by qualified legal counsel prior to launch.
+        <Section heading="Request process pending">
+          A registered agent, legal request channel, preservation process, and
+          emergency disclosure workflow have not been established. This
+          prototype does not accept service or emergency requests.
+        </Section>
+        <Section heading="Before launch">
+          Counsel must approve the responsible entity, request validation,
+          disclosure and retention procedures, and published contact details.
+        </Section>
+        <p>
+          If someone is in immediate danger, contact local emergency services.
         </p>
-        <Section heading="Our Commitment">
-          Pumdoki is committed to cooperating with legitimate law enforcement
-          requests in accordance with applicable laws, including the Electronic
-          Communications Privacy Act (ECPA), the Stored Communications Act
-          (SCA), and other applicable legislation.
-        </Section>
-        <Section heading="Types of Requests Accepted">
-          We accept legally valid court orders, subpoenas, search warrants, and
-          emergency requests from authorized law enforcement agencies. All
-          requests must be submitted through proper legal channels.
-        </Section>
-        <Section heading="Emergency Disclosure">
-          In cases involving imminent threat to life or safety of a person,
-          Pumdoki may voluntarily disclose information to law enforcement
-          without a court order. To submit an emergency request, contact:
-          emergency@pumdoki.com
-        </Section>
-        <Section heading="Submission Process">
-          Standard law enforcement requests should be served on our registered
-          agent or submitted to: lawenforcement@pumdoki.com. International
-          requests must comply with applicable Mutual Legal Assistance Treaty
-          (MLAT) processes.
-        </Section>
-        <Section heading="Transparency">
-          Pumdoki will publish a transparency report on a regular basis
-          detailing the number and types of law enforcement requests received.
-        </Section>
       </div>
     ),
   },
   "anti-trafficking": {
     title: "Anti-Human Trafficking Policy",
-    updated: "January 1, 2026",
     body: (
       <div className="space-y-5">
-        <div className="rounded-2xl border border-red-200 bg-red-50/50 px-5 py-4">
-          <p className="text-sm font-bold text-red-800">
-            Zero Tolerance Policy
-          </p>
-          <p className="mt-1 text-sm text-red-700">
-            Human trafficking is a serious crime and a violation of human
-            rights. Pumdoki has a zero-tolerance policy for any content or
-            activity facilitating trafficking.
-          </p>
-        </div>
-        <Section heading="Our Commitment">
-          Pumdoki is deeply committed to preventing and combating human
-          trafficking and sexual exploitation on our platform. We comply with
-          the Fight Online Sex Trafficking Act (FOSTA) and the Stop Enabling Sex
-          Traffickers Act (SESTA).
+        <Section heading="Product safety requirement">
+          Trafficking, coercion, and exploitation are prohibited. This is a
+          product requirement; no claim of legal compliance or an operating
+          detection program is made here.
         </Section>
-        <Section heading="Prohibited Activities">
-          The following are strictly prohibited and will result in immediate
-          account termination and reporting to law enforcement:
-          <ul className="mt-2 list-disc space-y-1.5 pl-5">
-            <li>Advertising or facilitating sex trafficking</li>
-            <li>Content that coerces or exploits individuals</li>
-            <li>Recruitment content targeting vulnerable individuals</li>
-            <li>Any content that promotes or glorifies trafficking</li>
-          </ul>
+        <Section heading="Operational status">
+          Production moderation tools, human reviewers, escalation procedures,
+          and authority-reporting arrangements have not been established.
+          Prototype report controls do not contact a safety team.
         </Section>
-        <Section heading="Detection & Reporting">
-          We employ content moderation tools and human reviewers to detect
-          trafficking-related content. Detected violations are immediately
-          removed and reported to the National Center for Missing & Exploited
-          Children (NCMEC) and relevant law enforcement agencies.
+        <Section heading="Before launch">
+          Prevention, detection, review, reporting, and removal procedures need
+          counsel review and operational implementation.
         </Section>
-        <Section heading="How to Report">
-          If you encounter content you believe facilitates trafficking, please
-          report it immediately via the in-app reporting tools or contact
-          safety@pumdoki.com. You may also contact the National Human
-          Trafficking Hotline at 1-888-373-7888.
-        </Section>
-        <Section heading="Support Resources">
-          National Human Trafficking Hotline: 1-888-373-7888 | Text: 233733 |
-          NCMEC CyberTipline: www.cybertipline.org
-        </Section>
+        <SafetyResources />
       </div>
     ),
   },
   ncii: {
     title: "Non-Consensual Intimate Image (NCII) Policy",
-    updated: "January 1, 2026",
     body: (
       <div className="space-y-5">
-        <div className="rounded-2xl border border-red-200 bg-red-50/50 px-5 py-4">
-          <p className="text-sm font-bold text-red-800">
-            Zero Tolerance Policy
-          </p>
-          <p className="mt-1 text-sm text-red-700">
-            The non-consensual sharing of intimate images (NCII) — sometimes
-            called "revenge porn" — is prohibited absolutely on this platform.
-          </p>
-        </div>
-        <Section heading="Our Policy">
-          Pumdoki has zero tolerance for non-consensual intimate images (NCII).
-          The non-consensual sharing, distribution, or uploading of intimate
-          images of any person is strictly prohibited and will result in
-          immediate account termination.
+        <Section heading="Product safety requirement">
+          Sharing intimate images without the depicted person's consent is
+          prohibited, including non-consensual intimate impersonations.
         </Section>
-        <Section heading="Scope">
-          This policy covers any intimate or sexual images shared without the
-          explicit consent of the person depicted, including: images taken in
-          private contexts and distributed without consent; images or videos
-          recorded without the subject's knowledge; deepfakes or AI-generated
-          images of real persons in intimate contexts.
+        <Section heading="Operational status">
+          Pumdoki has no operational NCII report intake, removal workflow, or
+          re-upload prevention integration. It does not participate in
+          StopNCII.org's partner program. No review or removal time is promised.
         </Section>
-        <Section heading="Reporting NCII">
-          If you believe your images are being shared without your consent,
-          report immediately via: (1) In-app reporting tools; (2)
-          safety@pumdoki.com with subject line "NCII Report". We aim to review
-          and action NCII reports within 24 hours.
+        <Section heading="Before launch">
+          Counsel-reviewed reporting and removal rules, staffed handling, and
+          any approved prevention tools need to be implemented and verified.
         </Section>
-        <Section heading="Cooperation with NCII Frameworks">
-          Pumdoki participates in industry frameworks to prevent the re-upload
-          of NCII, including cooperation with StopNCII.org hashing technology.
-        </Section>
-        <Section heading="Support Resources">
-          If you are a victim of NCII, support is available at: Cyber Civil
-          Rights Initiative: cybercivilrights.org | StopNCII: stopncii.org
-        </Section>
+        <SafetyResources />
       </div>
     ),
   },
 };
+
+function SafetyResources() {
+  return (
+    <Section heading="Independent safety resources">
+      <p>
+        These services are independent of Pumdoki. Links do not imply a
+        partnership. If someone is in immediate danger, contact local emergency
+        services.
+      </p>
+      <ul className="mt-2 list-disc space-y-1.5 pl-5">
+        {[
+          [
+            "NCMEC CyberTipline",
+            "https://www.missingkids.org/gethelpnow/cybertipline",
+          ],
+          [
+            "National Human Trafficking Hotline",
+            "https://humantraffickinghotline.org/en",
+          ],
+          ["Cyber Civil Rights Initiative", "https://cybercivilrights.org/"],
+          ["StopNCII.org", "https://stopncii.org/"],
+        ].map(([label, href]) => (
+          <li key={href}>
+            <a href={href} className="font-medium text-[#df5f97] underline">
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Section>
+  );
+}
 
 function Section({ heading, children }) {
   return (
@@ -804,9 +562,21 @@ export default function LegalHubPage({ onBack, initialPage = "hub" }) {
                 {current.title}
               </h1>
               <p className="mt-1 text-sm text-[#b89aa8]">
-                Last updated: {current.updated}
+                Prototype notice updated: September 6, 2026
+                {current.version && ` · ${current.version}`}
               </p>
             </div>
+            <aside
+              aria-label="Prototype legal status"
+              className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
+            >
+              <p className="font-semibold">Prototype — not counsel-approved</p>
+              <p className="mt-1">
+                All policies in this hub are unfinished. This is not a live
+                legal, safety, or support intake. Do not submit sensitive
+                documents or rely on the example contacts for help.
+              </p>
+            </aside>
             <div className="prose-sm max-w-none text-[#5b4153]">
               {current.body}
             </div>
@@ -859,7 +629,7 @@ export default function LegalHubPage({ onBack, initialPage = "hub" }) {
                 Legal Overview
               </button>
               <p className="text-xs text-[#c9aab8]">
-                18 USC §2257 record-keeping statement available{" "}
+                18 USC §2257 review status{" "}
                 <button
                   onClick={() => navigate("2257")}
                   className="font-medium text-[#df5f97] hover:underline"

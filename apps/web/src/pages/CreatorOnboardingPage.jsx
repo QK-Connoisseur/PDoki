@@ -21,7 +21,7 @@ const OUTCOME_COPY = {
   NEEDS_INFORMATION: {
     title: "More information is needed",
     message:
-      "Pumdoki operations will contact the email on your account with the next approved step. Do not send identity documents through email or support messages.",
+      "An approved follow-up workflow is not available in this prototype. Do not send identity documents through email or support messages.",
   },
   APPROVED: {
     title: "Application approved",
@@ -31,7 +31,7 @@ const OUTCOME_COPY = {
   REJECTED: {
     title: "Application not approved",
     message:
-      "This application is closed. Any future appeal or reapplication process will be communicated through an approved support channel.",
+      "This application is closed. An appeal or reapplication workflow is not available in this prototype.",
   },
 };
 

@@ -1,6 +1,6 @@
 # Pumdoki
 
-Pumdoki is an adult creator platform focused on subscriptions, paid content, creator services, social interaction, and a collectible companion system called Oasis.
+Pumdoki is an adult creator platform focused on subscriptions, paid content, creator services, social interaction, and creator discovery through Connect.
 
 The repository contains a broad React frontend prototype plus a local
 TypeScript/Express/PostgreSQL backend foundation. Core authentication, secure
@@ -27,7 +27,7 @@ The following are intended to work at launch:
 - The Home feed with Following and For You views.
 - Public, subscriber-only, tier-restricted, and individually paid content.
 - Store browsing, purchases, favorites, history, and responsive YouTube-like thumbnails.
-- Connect creator services and bookings.
+- Connect creator discovery with online status, price, language, and service filters. Members communicate and arrange orders through real-time chat; automated calendars/bookings are not assumed launch scope.
 - Real-time direct messages using WebSockets.
 - Creator tipping through Send Love.
 - Veso prepaid credits, where 1 Veso equals 1 USD.
@@ -35,7 +35,7 @@ The following are intended to work at launch:
 - Creator dashboard plus separately deployed private admin operations.
 - Explicit-content preference controls.
 - Creator verification, consent, moderation, reporting, and required compliance workflows.
-- Oasis/Drimy daily-retention gameplay, collectibles, backgrounds, and skins.
+- A clear, responsive interface with both existing static themes. Additional motion, sound, Plus benefits, and retention experiments are later work.
 
 Live streaming remains post-MVP.
 
@@ -69,14 +69,36 @@ Veso is a prepaid platform credit:
 - Mobile should use a prominent single-column presentation.
 - Purchased, Favorites, Liked, and History must be backed by real account data.
 
-### Oasis
+### Oasis and later retention — founder decision, September 6, 2026
 
-- Oasis is launch scope, not a post-launch experiment.
-- Its primary purpose is daily retention.
-- Members collect and evolve Drimys.
-- Rewards include collectible backgrounds, skins, frames, badges, and related cosmetics.
-- Progress, inventory, tasks, cooldowns, purchases, and rewards must be server-authoritative.
-- Paid randomized rewards should not launch without legal and payment-provider review.
+The original Oasis/Drimy collectible game is cancelled. Its legacy prototype
+may remain in the repository for reference but must not be treated as a launch
+requirement or extended. The Oasis name may be reused after launch for daily
+and friend streaks plus playful adult language learning, including profanity
+and opt-in roasting. This is an unbuilt concept; mechanics, costs, privacy,
+moderation, and any AI provider remain undecided. No replacement game economy,
+Orbs, creature evolution, leagues, or randomized purchases are approved.
+
+### Founding creators and Pumdoki Plus
+
+The founder wants a founding-creator programme with a profile badge and only
+necessary payment-processing charges rather than the standard platform fee.
+Approximately 500 creators is a proposed programme size, not an initial pilot
+capacity commitment. Eligible costs, duration, payout/reserve treatment, and
+funding must be decided from processor quotes before publishing an offer.
+Zero platform commission does not pay hosting, support, verification, or
+chargeback losses. Pumdoki Plus, cosmetics/avatar decorations, and free Plus
+for a proposed top 100/leaderboard are ideas for later evaluation; prices,
+benefits, selection rules, and free-membership promises are not approved.
+
+### Founder workflow
+
+Work one founder step at a time. The current task is the
+[one-page initial business definition](docs/product/initial-business-definition.md).
+The sequential order, review checkpoints, legal-copy release procedure, and
+email-provider timing are in PLAN.md. Use the
+[budget notes](docs/product/launch-budget.md) and master tracker for estimates;
+an estimate is not spending authorization or a promised launch date.
 
 ### International direction
 
@@ -118,7 +140,7 @@ These requirements were extracted from temporary implementation-prompt files bef
   or selfie collection until an approved provider, retention policy, and
   private operations workflow exist.
 - Content publishing includes a mandatory rights and policy confirmation.
-- Legal copy currently in the frontend is placeholder material and is not approved for production.
+- Legal copy currently in the frontend is explicitly a prototype, not counsel-approved policy or an operational intake channel. PLAN.md records when and how approved copy replaces it before public launch.
 - Prototype contact details must use reserved sample addresses such as `support@pumdoki.example` until real mailboxes exist.
 - No interface may claim that encryption, moderation vendors, response times, legal programs, or compliance processes exist until they are actually operational.
 
@@ -174,7 +196,7 @@ The web prototype includes:
 - Promotions.
 - Wallet.
 - Creator dashboard.
-- Oasis.
+- Legacy Oasis prototype (cancelled direction; retained for reference).
 - Chat UI.
 - Legal hub and creator-onboarding UI.
 
@@ -190,7 +212,7 @@ Current limitations:
   the theme choice is saved only in the current browser. Both themes use static
   desktop/mobile artwork. Background motion controls, overlays, and videos have
   been removed; motion is deferred until a professionally reviewed implementation.
-  Notifications, account-synced appearance, billing, export,
+  The notification bell supports sample All/Unread activity with temporary read state. Persisted notifications, account-synced appearance, billing, export,
   and deletion remain sequenced to their later dependency phases.
 - Verified members can now submit one real creator application. The application
   and versioned prototype-policy evidence persist in PostgreSQL, while the
@@ -212,16 +234,32 @@ creator-application foundation, is published and CI-verified as commit
 Phase 4 Slice 2 and the frontend routing hardening are published on `dev`
 through merge commit `1189404`. Slice 2 remains a fail-closed backend
 state/evidence foundation rather than a deployable private-operations workflow.
-Phase 4 Slice 3 is locally committed and verified on
-`codex/phase4-private-ops-access-foundation` as implementation commit
-`9904334`. It adds provider-neutral signed-assertion verification, database-
-owned exact operator/permission authorization, and test-only request-integrity
-seams for the dormant review router. The public API still does not mount that
-router, and no operational identity provider, session, private origin, runtime
-database role, live configuration, or deployment exists. G1–G12 remain
-`NOT EVALUATED`.
-Production
-infrastructure, identity verification, operational authentication/review,
+Phase 4 Slice 3 is published through PR #15 merge commit `24e1653`; post-merge
+GitHub Actions run `32784338614` passed all three jobs. It adds provider-neutral
+signed-assertion verification, database-owned exact operator/permission
+authorization, and test-only request-integrity seams for the dormant review
+router. The founder has approved the seven private-operations policy decisions,
+including the two-lock identity-plus-Pumdoki-authorization model, in
+[the durable decision record](docs/architecture/phase4-private-operations-founder-policy-decisions.md).
+The public API still does not mount that router, and no operational identity
+provider, session, private origin, runtime database role, live configuration,
+or deployment exists. G1–G12 remain `NOT EVALUATED`.
+
+Phase 4 Slice 4 is the dormant
+[YubiKey claim-schema evaluation](docs/architecture/phase4-slice4-yubikey-claim-schema-evaluation.md)
+from [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17), implementation
+`317abda` and reviewed head `25057bd`. All three final-head CI jobs passed in
+run `33337682290`. On September 6 the founder authorized consolidating this
+work, the local notification bell, and the current static-theme result into
+`dev` and `main` after integration verification. See HANDOFF.md for the actual
+publication checkpoint. PR #19 is the static-theme change, not Slice 4.
+The candidate remains unmounted and synthetic; Cloudflare is not selected.
+Two hardware-key account logins were founder-tested on the Mac, but exact
+Access-application assertion and hardware-method evidence remain absent.
+Further operations hardening is parked. The next engineering work will follow
+the one-page business definition and concrete commercial requirements.
+
+Production infrastructure, identity verification, operational authentication/review,
 server-side content filtering, dependency-bound Settings, and other product
 domains are not complete. The [operations readiness packet](docs/operations/README.md)
 contains non-secret planning templates for those future controls; it neither
@@ -249,7 +287,7 @@ npm install
 npm run dev
 ```
 
-For full-stack review on the current Windows workstation, use
+For full-stack review on macOS or Windows, use
 `npm run dev:e2e:web` so Vite binds explicitly to `127.0.0.1`. Keep the API in
 a second terminal with `npm run dev:api`; the complete environment and startup
 sequence is recorded in `HANDOFF.md`.
@@ -338,6 +376,10 @@ points the frontend API client at the backend. Never commit a real `.env`.
   Phase Roadmap for phase-level truth, Daily Log for plain-language debriefs,
   and Decision Register for open approvals. Its original tracker, backlog,
   notes, and expense sheets remain preserved.
+- The founder approved the PLAN-aligned workbook at home. The 2026-08-25 Slice
+  4 reconciliation preserves its legacy tracker, backlog, notes, assumptions,
+  and expense values while adding only current decision and sanitized progress
+  evidence.
 - Architecture decisions and durable slice designs live under `docs/architecture`.
 - Counsel-approved policies may later live under `docs/legal`.
 - Temporary implementation prompts should not be committed.

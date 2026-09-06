@@ -4,7 +4,32 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## What this is
 
-Pumdoki is an adult creator platform (subscriptions, paid content, creator services/bookings, real-time messaging, prepaid "Veso" credits, and a collectible "Oasis/Drimy" retention game). The repo is an npm-workspaces monorepo: a **React frontend prototype** in `apps/web`, an independently buildable private operations shell in `apps/admin`, a TypeScript Express API in `apps/api`, shared Zod schemas in `packages/contracts`, and Prisma + PostgreSQL in `packages/database`. Phase 3 is published and CI-verified through commit `d55f5f3`. Phase 4 Slice 1 is published and CI-verified as commit `ce6c9e4`: verified members can submit one persisted creator application, versioned prototype acceptances are recorded atomically, and the result remains pending without role promotion or Dashboard access. Phase 4 Slice 2 is published as a fail-closed non-approval review/evidence foundation. Slice 3 is locally committed and verified as `9904334`: it adds provider-neutral assertion verification, database-owned exact operator/permission authorization, and request-integrity seams, while the public API still does not mount the router. Draft publication is authorized; merge, deployment, live configuration, provider selection, and activation remain separately gated, and G1–G12 remain `NOT EVALUATED`. Identity collection, counsel-approved policies, production-ready operational authentication/review, payments, media, and other product APIs remain incomplete. `packages/ui` is still empty scaffolding.
+Pumdoki is an adult creator platform with subscriptions/paid content, creator
+discovery through Connect, real-time chat, tipping and prepaid Veso credits.
+Veso, Connect discovery, real-time chat and tipping remain launch requirements.
+The original Oasis/Drimy game was cancelled September 6, 2026; a possible later
+streak/adult-language-learning concept is not a launch requirement. The repo is
+an npm-workspaces monorepo: React prototype `apps/web`, disabled private shell
+`apps/admin`, TypeScript Express API `apps/api`, Zod `packages/contracts`, and
+Prisma/PostgreSQL `packages/database`. Authentication, Settings and pending
+creator applications are real; payments, content/media, messaging, operations
+and production infrastructure remain incomplete.
+
+Phase 3 is published through `d55f5f3`; Phase 4 Slices 1–3 are published, with
+Slice 3 merged in PR #15 (`24e1653`). Slice 4 is PR #17 (`317abda` / reviewed
+head `25057bd`), whose original exact-head CI passed. The September 6 founder
+instruction authorizes reviewed consolidation into dev/main, including that
+dormant candidate, local notifications, and static themes from PR #19. See
+HANDOFF.md for actual integration verification/publication. Cloudflare remains
+an unselected candidate, the public API does not mount operations, and G1–G12
+remain NOT EVALUATED. Merging code is not deployment or activation.
+
+The founder needs one active task at a time. Read PLAN.md's current sequential
+workflow and do not assign parallel founder workstreams. The next task is the
+one-page initial business definition; follow with scoped counsel, processor fit
+and economics, then the relevant provider/review/engineering steps. Preserve
+provisional ideas without presenting unapproved benefits, prices or capacity
+as promises. No extra motion, game, Plus or design expansion is authorized.
 
 Authoritative product/scope docs, read these before non-trivial work:
 
@@ -48,7 +73,7 @@ the root environment: `MAIL_TRANSPORT` (`console` or `smtp`), `SMTP_HOST`,
 `SMTP_PORT`, and `MAIL_FROM`. The local setup uses reserved `.example`
 addresses; no production email provider has been selected.
 
-For this Windows workstation's full-stack manual review, use `127.0.0.1`
+For local full-stack manual review on macOS or Windows, use `127.0.0.1`
 consistently: set `VITE_API_BASE_URL=http://127.0.0.1:3000/api/v1` in both the
 ignored root `.env` and `apps/web/.env.local`, set
 `WEB_ORIGIN=http://127.0.0.1:5173` in the root `.env`, run `npm run dev:api` in
@@ -63,7 +88,7 @@ Backend foundation (all TypeScript, ESM, strict; base tsconfig in `packages/conf
 
 - `apps/api/src` — Express 5 API. `createApp()` in `app.ts` is a dependency-injected factory (env, logger, database, mailer, `checkDatabase`, version); `server.ts` wires real Prisma and the configured mail transport. Middleware: request IDs, pino-http logging, helmet, strict-origin credentialed CORS, JSON limits, and global rate limiting. Every non-2xx response uses `{ error: { code, message, requestId, details? } }`. `validate()` parses Zod contracts into `req.validated`. Endpoints: health/readiness; register, login, logout/logout-all, `/me`; email-verification/password-reset request and confirm; authenticated preference reads/updates; profile, email, and password changes; active-session listing/revocation; and member creator-application read/submit.
 - `apps/api/src/auth` + `middleware/auth.ts` — Argon2id password hashing, dev-scrypt compatibility/upgrade, opaque 32-byte session and verification tokens with SHA-256 hashes at rest, secure HttpOnly SameSite cookies, 30-day sliding session expiry renewed at most daily, runtime suspension/ban checks, role and verified-email gates, and bounded instance-local login/email-request throttling. Redis-backed multi-instance throttling remains deferred.
-- `apps/api/src/operations` — dormant, provider-neutral private-operations trust primitives: strict signed-assertion validation, database-owned exact operator/permission resolution, and test-only request-integrity composition. The normal API/server do not import or mount the creator-review router; no provider adapter, first-party operations session, private origin, runtime database role, or deployment exists.
+- `apps/api/src/operations` — dormant assertion, exact DB authorization and request-integrity primitives. Slice 4 adds a synthetic Cloudflare claim-schema candidate and credential-header redaction, with no production import/mount. Real signed hardware-method evidence and provider selection remain absent. Further operations work is parked; see HANDOFF.md.
 - `apps/api/src/mail` — provider-neutral mailer interface, pure verification/reset templates, console and Nodemailer SMTP transports, and an in-memory test transport. Sends happen after database work and failures are logged without converting successful registration/reset requests into transport errors.
 - `apps/api/src/durableJobs` + `apps/api/src/worker` — published Phase 2 durable-worker foundation. A fixed non-secret canary is enqueued atomically through Prisma, then processed by a separate PostgreSQL worker with opaque lease fencing, bounded retries, terminal states, redacted telemetry, and bounded shutdown. No current product flow uses it. PR #13 merged into `dev` as `6311522`; deployment and product-flow migration remain separately gated.
 - `packages/contracts` — Zod schemas shared by the API and browser integration (error envelope, health/ready, user, auth, Settings, and creator applications). Build before the API (`npm run build:api` handles ordering).
@@ -98,7 +123,7 @@ These are product invariants, not suggestions — violating them is a correctnes
 
 - **Veso** is prepaid credit (1 Veso = 1 USD). Member Veso balances and creator payable earnings are **separate ledgers**; never model a balance as a directly-editable number — it must be an append-only transaction ledger. Store, Connect, and Send Love (tipping) spend Veso.
 - **Explicit content is hidden by default**; adult members opt in. This is distinct from age verification.
-- **Oasis** progress, inventory, cooldowns, rewards, and purchases must be **server-authoritative** when the backend exists; the client never sets XP/Orbs/stage/inventory directly.
+- The old Oasis/Drimy game is cancelled. Do not extend its client-side prototype. Any later streak/reward system must have server-authoritative progress and separately approved scope.
 - **Server-side entitlement checks** gate protected media; protected/original media URLs must never appear in public feed payloads.
 
 ## Compliance constraints on the prototype
@@ -111,4 +136,13 @@ These are product invariants, not suggestions — violating them is a correctnes
 
 ## Repository state note
 
-The monorepo migration is committed: work against `apps/web` and `apps/api`, never old top-level paths. Phase 2 is **partially complete (published fixed-canary foundation)** — PR #13 merged the application-owned PostgreSQL worker and non-secret canary into `dev` as `6311522`, with exact-head and post-merge CI green. Staging deploy, RDS, backups, Sentry, Redis/shared throttling, general idempotency, and product-flow migration remain deferred. Phase 3 is published and CI-verified through `d55f5f3`. Phase 4 Slices 1–2 are published; Slice 3 is locally committed and verified as `9904334` on `codex/phase4-private-ops-access-foundation`, with draft-PR publication authorized. It remains dormant and unmounted; G1–G12, merge, provider/live configuration, runtime roles, deployment, and activation remain separately gated. Notifications, theme, billing, export/deletion, identity-provider integration, production-ready operational creator review, and server-side content-query enforcement remain deliberately sequenced to their dependency phases. See `HANDOFF.md` for exact commands, counts, and publication status.
+Work against apps/web and apps/api, never the obsolete top-level src paths.
+HANDOFF.md is the current publication and verification checkpoint; Git/CI
+evidence outranks stale historical next-task prose. Phase 2 is partial and its
+published worker serves only a non-secret canary. Phase 4 remains a dormant
+foundation, not an operating approval/identity/moderation workflow. Retain all
+actual legal, payment, sensitive-data and activation controls. Do not turn
+routine local implementation decisions into repeated founder approvals.
+Static themes are the final approved background result. Notification read
+state remains a frontend prototype. Historical intermediate motion branches
+must not reintroduce background video. Later human-reviewed motion is deferred.

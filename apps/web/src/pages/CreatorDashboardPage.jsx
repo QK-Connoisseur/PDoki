@@ -188,13 +188,14 @@ function Pill({ children, tone = "pink" }) {
   );
 }
 
-function Toggle({ checked, onChange, label }) {
+function Toggle({ checked, onChange, label, disabled = false }) {
   return (
     <button
       onClick={() => onChange(!checked)}
       className={`inline-flex h-6 w-11 items-center rounded-full transition ${checked ? "bg-[#df5f97]" : "bg-pink-100"}`}
       aria-label={label}
       aria-pressed={checked}
+      disabled={disabled}
     >
       <span
         className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${checked ? "translate-x-5" : "translate-x-0.5"}`}
@@ -2609,13 +2610,13 @@ function SettingsSection() {
     <>
       <SectionHeader
         title="Creator Settings"
-        subtitle="Payouts, verification, tax, notifications, content rules."
+        subtitle="Demo settings. Verification, payouts, and protection controls are not active."
       />
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
               <svg
                 viewBox="0 0 24 24"
                 className="w-4 h-4"
@@ -2633,25 +2634,23 @@ function SettingsSection() {
               <h3 className="text-base font-bold text-[#241a22]">
                 Verification & KYC
               </h3>
-              <p className="text-xs text-[#8c6d7f]">Approved · Dec 14, 2025</p>
+              <p className="text-xs text-[#8c6d7f]">
+                Not available in this prototype
+              </p>
             </div>
-            <Pill tone="green">Verified</Pill>
+            <Pill tone="gold">Not started</Pill>
           </div>
           <ul className="space-y-2 text-sm">
             {[
-              { l: "Government ID", done: true },
-              { l: "Liveness selfie", done: true },
-              { l: "Address verification", done: true },
-              { l: "Tax form (W-9 / W-8BEN)", done: true },
-              { l: "Bank account on file", done: true },
+              "Government ID",
+              "Liveness selfie",
+              "Address verification",
+              "Tax form (W-9 / W-8BEN)",
+              "Bank account",
             ].map((x) => (
-              <li key={x.l} className="flex items-center justify-between">
-                <span className="text-[#5b4153]">{x.l}</span>
-                {x.done ? (
-                  <Pill tone="green">✓ Complete</Pill>
-                ) : (
-                  <Pill tone="gold">Pending</Pill>
-                )}
+              <li key={x} className="flex items-center justify-between">
+                <span className="text-[#5b4153]">{x}</span>
+                <Pill tone="gray">Not collected</Pill>
               </li>
             ))}
           </ul>
@@ -2678,37 +2677,20 @@ function SettingsSection() {
                 Payout method
               </h3>
               <p className="text-xs text-[#8c6d7f]">
-                Primary: ACH · Chase ****4210
+                No payout method connected
               </p>
             </div>
           </div>
           <div className="space-y-2">
-            {[
-              {
-                l: "ACH — Chase Bank",
-                sub: "****4210 · Default",
-                tone: "green",
-              },
-              { l: "Wire transfer", sub: "Int'l · ****8831", tone: "gray" },
-              { l: "Crypto wallet (USDC)", sub: "0x7f...A20a", tone: "gray" },
-            ].map((p) => (
-              <div
-                key={p.l}
-                className="flex items-center justify-between rounded-xl border border-pink-100 p-3"
-              >
-                <div>
-                  <div className="text-sm font-semibold text-[#241a22]">
-                    {p.l}
-                  </div>
-                  <div className="text-xs text-[#8c6d7f]">{p.sub}</div>
-                </div>
-                <Pill tone={p.tone}>
-                  {p.tone === "green" ? "Active" : "Backup"}
-                </Pill>
-              </div>
-            ))}
-            <button className="w-full rounded-xl border border-dashed border-pink-200 py-2 text-sm font-semibold text-[#df5f97] hover:bg-pink-50">
-              + Add payout method
+            <p className="text-sm text-[#5b4153]">
+              Payout methods, eligibility, fees, and timing are undecided.
+              Banking information is not collected here.
+            </p>
+            <button
+              disabled
+              className="w-full cursor-not-allowed rounded-xl border border-dashed border-pink-200 py-2 text-sm font-semibold text-[#8c6d7f]"
+            >
+              Payout setup unavailable
             </button>
           </div>
         </div>
@@ -2775,17 +2757,25 @@ function SettingsSection() {
           <h3 className="mb-4 text-base font-bold text-[#241a22]">
             Content & privacy
           </h3>
+          <p className="mb-3 text-xs text-[#8c6d7f]">
+            Demo options only. These protections are not implemented or
+            enforced.
+          </p>
           <div className="space-y-3">
             {[
               { l: "Hide from non-subscribers in Promotions", on: false },
-              { l: "Block screenshots in DMs (best effort)", on: true },
               { l: "Watermark all images", on: true },
               { l: "Auto-apply content warning to PPV", on: true },
               { l: "Restrict chat to subscribers", on: false },
             ].map((x) => (
               <label key={x.l} className="flex items-center justify-between">
                 <span className="text-sm text-[#5b4153]">{x.l}</span>
-                <Toggle checked={x.on} onChange={() => {}} label={x.l} />
+                <Toggle
+                  checked={false}
+                  disabled
+                  onChange={() => {}}
+                  label={x.l}
+                />
               </label>
             ))}
           </div>
@@ -3156,10 +3146,14 @@ export default function CreatorDashboardPage({
                 Need help?
               </div>
               <p className="mt-1 text-xs text-[#5b4153]">
-                Creator support responds in &lt; 2h for verified creators.
+                Support is not connected in this prototype. No response time is
+                promised.
               </p>
-              <button className="mt-2 w-full rounded-xl border border-pink-200 bg-white py-1.5 text-xs font-semibold text-[#df5f97] hover:bg-pink-50">
-                Message support
+              <button
+                disabled
+                className="mt-2 w-full cursor-not-allowed rounded-xl border border-pink-200 bg-white py-1.5 text-xs font-semibold text-[#8c6d7f]"
+              >
+                Support unavailable
               </button>
             </div>
           </div>
@@ -3168,6 +3162,13 @@ export default function CreatorDashboardPage({
         {/* ─── Main Content ──────────────────────────────────────── */}
         <main className="flex-1 min-w-0">
           <div className="mx-auto max-w-[1280px] px-4 py-6 md:px-8 md:py-8">
+            <aside
+              aria-label="Creator dashboard prototype status"
+              className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
+            >
+              Demo dashboard: activity, earnings, and settings are sample data.
+              Identity verification, payouts, and support are not active here.
+            </aside>
             {renderSection()}
           </div>
         </main>

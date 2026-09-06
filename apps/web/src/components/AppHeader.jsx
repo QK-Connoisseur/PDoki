@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PumdokiLogo from "./PumdokiLogo";
+import NotificationBell from "./NotificationBell";
 import { StatusMenuRow } from "./UserStatusSwitcher";
 import { notifications as defaultNotifications } from "../fixtures/notifications";
 
@@ -17,7 +18,7 @@ import { notifications as defaultNotifications } from "../fixtures/notifications
  *   onLogout?: () => void,
  *   showCreatorDashboard?: boolean,
  *   showCreatorApplication?: boolean,
- *   notifications?: Array<{id:number,text:string,time:string,avatar:string}>,
+ *   notifications?: Array<{id:number,text:string,time:string,avatar?:string,actor?:string,action?:string,type?:string,unread?:boolean,group?:string,preview?:string}>,
  * }} props
  */
 export default function AppHeader({
@@ -155,71 +156,16 @@ export default function AppHeader({
           </div>
 
           {/* Notifications */}
-          <div className="relative" data-dropdown>
-            <button
-              onClick={() => {
-                setShowNotifications(!showNotifications);
-                setShowSearch(false);
-                setShowProfileMenu(false);
-              }}
-              className="member-header-action relative flex h-10 w-10 items-center justify-center rounded-xl text-[#8c6d7f] transition hover:bg-pink-50 hover:text-[#df5f97] cursor-pointer"
-              aria-label="Notifications"
-              aria-expanded={showNotifications}
-              aria-controls="member-notifications-popover"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 01-3.46 0" />
-              </svg>
-              {notifications.length > 0 && (
-                <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#e8384f] text-[10px] font-bold text-white">
-                  {notifications.length}
-                </span>
-              )}
-            </button>
-            {showNotifications && (
-              <div
-                id="member-notifications-popover"
-                className="member-header-popover member-header-popover-wide absolute right-0 top-full mt-2 w-80 rounded-2xl border border-pink-100 bg-white shadow-xl overflow-hidden"
-              >
-                <div className="border-b border-pink-50 px-4 py-3">
-                  <h3 className="text-sm font-semibold text-[#241a22]">
-                    Notifications
-                  </h3>
-                </div>
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.map((n) => (
-                    <button
-                      key={n.id}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-pink-50/60 cursor-pointer"
-                    >
-                      <img
-                        src={n.avatar}
-                        alt=""
-                        className="h-10 w-10 shrink-0 rounded-full object-cover"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm text-[#4a3340] leading-snug">
-                          {n.text}
-                        </p>
-                        <p className="mt-0.5 text-xs text-[#b89aa8]">
-                          {n.time}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <NotificationBell
+            notifications={notifications}
+            open={showNotifications}
+            onOpenChange={setShowNotifications}
+            onToggle={() => {
+              setShowNotifications(!showNotifications);
+              setShowSearch(false);
+              setShowProfileMenu(false);
+            }}
+          />
 
           {/* Oasis */}
           <button

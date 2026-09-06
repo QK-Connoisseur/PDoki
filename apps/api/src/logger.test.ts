@@ -14,6 +14,7 @@ describe("logger credential redaction", () => {
     const logger = createLogger("info", destination);
     const credentials = {
       authorization: "Bearer signed-operations-assertion",
+      "cf-access-jwt-assertion": "signed-cloudflare-access-assertion",
       cookie: "pumdoki_session=opaque-public-session",
       "x-csrf-token": "generic-csrf-proof",
       "x-operations-csrf": "operations-csrf-proof",
@@ -25,6 +26,6 @@ describe("logger credential redaction", () => {
     for (const credential of Object.values(credentials)) {
       expect(output).not.toContain(credential);
     }
-    expect(output.match(/\[Redacted\]/g)).toHaveLength(4);
+    expect(output.match(/\[Redacted\]/g)).toHaveLength(5);
   });
 });

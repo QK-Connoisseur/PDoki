@@ -223,7 +223,7 @@ export default function Footer({
             onClick={() => handle("2257")}
             className="text-xs font-medium text-[#9e8090] underline decoration-dotted underline-offset-2 transition hover:text-[#df5f97]"
           >
-            18 USC §2257 Compliance
+            18 USC §2257 — Review pending
           </button>
         </div>
       </div>

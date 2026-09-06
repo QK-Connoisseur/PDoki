@@ -2,7 +2,7 @@
 
 @CLAUDE.md
 
-Last updated: August 23, 2026
+Last updated: September 6, 2026
 
 ## 1. Purpose
 
@@ -48,17 +48,17 @@ be reported as fully complete against the original phase definition.
 
 ### Launch scope
 
-- Store and Connect are launch-critical.
+- Store and Connect are launch-critical. Connect is creator discovery: filters for online status, price, language, and service, leading to profiles and real-time chat.
 - Tipping, PPV content, and Send Love are launch scope.
-- Oasis is launch scope and must be functional.
-- Real-time messaging uses WebSockets.
+- The original Oasis/Drimy game is cancelled by founder decision on September 6, 2026. Its possible streak/learning replacement is later work, not launch scope.
+- Real-time direct messaging uses WebSockets and is mandatory at launch. Tipping/Send Love and Veso also remain mandatory.
 - Veso is prepaid value at 1 Veso = 1 USD.
-- Store and Connect transactions use Veso.
+- Store purchases, agreed creator-service orders, and tipping use Veso. Connect itself is discovery; a calendar/booking engine is not implied.
 - Membership tiers are standardized across creators.
 - Explicit content can be hidden or shown based on an adult member's preference.
 - International creators, especially Latin American creators, are a core audience.
 - Live streaming is post-MVP.
-- The platform will begin with a small group of known creators but should accept public member registration.
+- Begin with a controlled pilot before public member registration. The proposed founding-creator programme may eventually reach about 500; that is not an initial operating-capacity commitment.
 
 ### Current external dependencies
 
@@ -289,7 +289,7 @@ Decision locked — founder-confirmed August 18, 2026:
 4. Mark processor selection separately from processor integration.
 5. Mark existing Wallet, legal, onboarding, and Oasis screens as UI prototypes.
 6. Confirm the exact MVP list in writing.
-7. Add Store, Connect, tipping, PPV, Send Love, WebSockets, Veso recharge, explicit-content controls, and launch Oasis to MVP.
+7. Preserve Store, discovery-focused Connect, tipping, PPV, Send Love, WebSockets, Veso recharge, and explicit-content controls as launch scope. The old Oasis game is cancelled; see the September 6 founder decisions.
 8. Keep live streaming in post-MVP backlog.
 9. Create an open-decision register for:
    - Commission.
@@ -469,11 +469,11 @@ Architecture status — August 21, 2026:
 - Subscriptions and entitlements.
 - Veso accounts and ledger entries.
 - Store purchases.
-- Connect services and bookings.
+- Creator services and chat-arranged orders; automated scheduling/bookings require a later scope decision.
 - Conversations and messages.
 - Reports, moderation actions, and appeals.
 - Admin audit events.
-- Oasis creatures, inventory, tasks, and rewards.
+- Later streak/learning retention data only after a separate product definition; old Drimy/Orb/inventory requirements are cancelled.
 
 ### Exit criteria
 
@@ -630,7 +630,7 @@ Settings list is implemented.
 12. Support more than one performer per media item without creating a complicated public UI.
 13. Link every explicit media item to required performer records.
 
-### Current Phase 4 implementation status — reviewed August 23, 2026; activation state unchanged
+### Current Phase 4 implementation status — reviewed August 30, 2026; activation state unchanged
 
 - Slice 1, the creator-application foundation, is implemented, published on
   `dev` as commit `ce6c9e4`, and CI-verified by GitHub Actions run
@@ -672,21 +672,46 @@ Settings list is implemented.
   10/10, the full API suite passes 90/90, the web suite passes 133/133, and the
   real-stack Chromium suite passes 40/40. GitHub Actions run `31947756634`
   passed all three jobs at reviewed head `e83b027` before PR #1 merged.
-- Slice 3 is locally implemented and verified as commit `9904334` on
-  `codex/phase4-private-ops-access-foundation`. It adds strict provider-neutral
-  signed-assertion verification, database-owned exact operator/permission
+- Slice 3 is published on `dev` through PR #15 merge commit `24e1653`; its
+  implementation began at `9904334`. It adds strict provider-neutral signed-
+  assertion verification, database-owned exact operator/permission
   authorization, same-transaction reauthorization, and test-only request-
-  integrity seams for the dormant review router.
+  integrity seams for the dormant review router. Post-merge GitHub Actions run
+  `32784338614` passed the API, web/private-admin, and real-stack Playwright
+  jobs.
 - Slice 3 local verification passed 287/287 API tests, 166/166 web tests,
   24/24 contract tests, and 15/15 focused migration/review cases. All eight
   repository migrations applied to a clean disposable PostgreSQL 17 database,
-  and a second deploy was a no-op. Draft-PR publication is authorized; exact-
-  head CI and review remain required.
+  and a second deploy was a no-op.
 - Slice 3 does not mount the router or add a production provider, issuer/key
   service, operations session/server, private origin, runtime database role,
   operator, live configuration, deployment, `APPROVED`, role promotion, or
-  identity workflow. G1–G12 remain `NOT EVALUATED`; merge and activation are
-  separately gated.
+  identity workflow. G1–G12 remain `NOT EVALUATED`; publication did not
+  authorize deployment or activation.
+- On August 24 the founder approved all seven private-operations policy
+  decisions, including founder-only initial operation, two separately stored
+  hardware keys, an isolated origin/session, controlled provisioning and
+  offboarding, separated recovery and break glass, independent audit and
+  disablement, and the exact two-lock identity-plus-Pumdoki-authorization
+  policy. The durable record is
+  `docs/architecture/phase4-private-operations-founder-policy-decisions.md`.
+- Slice 4 is submitted for review in draft [PR #17](https://github.com/QK-Connoisseur/PDoki/pull/17),
+  with implementation commit `317abda` on
+  `codex/phase4-yubikey-claim-schema-evaluation`, based on published
+  `dev@24e1653`. The founder authorized this completed-slice publication on
+  August 30. Reviewed head `25057bd` passed all three CI jobs in run
+  `33337682290`. The September 6 founder instruction authorizes integration
+  and publication to dev/main after current integration checks; see HANDOFF.md.
+  Publication does not restart further private-operations development.
+  The unmounted candidate verifier and credential-redaction
+  coverage passed `66/66` focused tests on Node `24.19.0`, with focused
+  TypeScript, API build, scoped ESLint, Prettier, and import/mount checks green.
+  On August 25 the founder independently authenticated the existing primary
+  USB-C and backup USB-A Cloudflare account hardware-key enrollments on the new
+  Mac. This limited browser-compatibility evidence does not inspect the exact
+  candidate Access application, a signed assertion or hardware-method claim,
+  AAGUID, policy precedence, or controlled recovery separation. Cloudflare is
+  not selected and G1–G12 remain `NOT EVALUATED`.
 - The non-secret [operations readiness packet](docs/operations/README.md)
   provides activation, recovery, configuration, provider-decision, and future
   staging-verification templates. It records no live control, selects no
@@ -798,7 +823,7 @@ Settings list is implemented.
 
 ### Processor work
 
-1. Begin CCBill merchant application in parallel with product work.
+1. Request CCBill business-fit requirements and pricing at Step 3 of the sequential founder workflow; formal application follows the entity and required documents. Do not wait for the entire website to be built.
 2. Begin Epoch discussion after core policies and entity details are ready.
 3. Confirm cascade support in writing.
 4. Implement CCBill checkout.
@@ -914,26 +939,23 @@ Complete this before broad feature expansion:
 17. Recharge fallback.
 18. Responsive mobile layout.
 
-### Connect
+### Connect — founder clarification, September 6, 2026
 
-1. Standard service types.
-2. Creator service configuration.
-3. Pricing in Veso.
-4. Availability calendar.
-5. Time-zone handling.
-6. Booking.
-7. Payment hold.
-8. Confirmation.
-9. Reminder.
-10. Completion.
-11. Cancellation and refund rules.
-12. Dispute workflow.
-13. Reviews.
+1. Persist creator profiles and service descriptions/prices in Veso.
+2. Filter discovery by online status, price, language, service, and eligibility.
+3. Keep card/profile price and service information consistent.
+4. Open the correct creator profile or authorized direct conversation.
+5. Define a minimal chat-arranged order flow with a durable offer, price,
+   payment, fulfillment, cancellation/refund, and dispute record before service
+   spending ships. Discovery itself must not be expanded into a booking engine.
+6. Defer automated calendars, time-slot reservations, scheduled reminders,
+   payment holds, and a full booking lifecycle unless separately justified.
 
 ### Exit criteria
 
 - Store tabs contain real account data.
-- Connect booking lifecycle works.
+- Connect filters real eligible creators and opens the correct profile/chat.
+- Any enabled paid service order has the agreed payment/refund/fulfillment controls.
 - Feed actions persist.
 
 ## 13. Phase 9 — Real-time messaging and notifications
@@ -980,7 +1002,7 @@ Connect the existing UI to:
 - Content management.
 - Message queue.
 - Standardized tiers.
-- Connect services and bookings.
+- Creator services and chat-arranged orders; automated scheduling/bookings require a later scope decision.
 - Store items.
 - Fan CRM.
 - Promotions.
@@ -1040,64 +1062,28 @@ Build in this order:
 - Reports, payments, and creator verification are manageable.
 - Sensitive access is auditable.
 
-## 16. Phase 12 — Oasis/Drimy launch implementation
+## 16. Phase 12 — Cancelled game; later retention concept
 
-### Product loop
+Founder decision — September 6, 2026: cancel the original Oasis/Drimy game,
+including species/evolution, Orbs/XP economies, inventory, Lucky Catch, leagues,
+and randomized purchases. These tasks must not gate launch or be resumed from
+an old tracker row. Existing prototype code is historical reference; removal
+from the release navigation is required before public launch, without
+automatically implementing a replacement.
 
-1. Member receives or chooses a starter Drimy.
-2. Daily login creates a task set.
-3. Member earns Orbs through approved platform activity.
-4. Member bonds with the Drimy.
-5. Drimy gains XP and evolves.
-6. Member unlocks cosmetics and collectibles.
-7. Collections and streaks encourage return visits.
+The name Oasis may be retained for a later experience inspired by daily and
+friend streaks and playful adult language learning: profanity, humour, and
+opt-in roasting. It is not the former collectible game. No curriculum, AI
+provider, moderation model, budget, or implementation has been approved.
+If later implemented, earned streaks and rewards must be server-authoritative.
 
-### Backend domains
-
-- Drimy species.
-- User-owned Drimys.
-- Evolution stages.
-- XP ledger.
-- Orb ledger.
-- Daily task definitions.
-- User task progress.
-- Inventory.
-- Cosmetics.
-- Equipped background/skin/frame.
-- Achievements.
-- League seasons.
-- Leaderboard snapshots.
-- Store purchases.
-- Reward claims.
-
-### Rules
-
-- Server time controls cooldowns and daily resets.
-- Reward claims are idempotent.
-- Client cannot directly update XP, Orbs, stage, or inventory.
-- Tasks react to real platform events.
-- Lucky Catch results update inventory.
-- Duplicate rewards have a defined conversion rule.
-- Store purchases deduct Orbs or Vesos through the appropriate ledger.
-- Fixed-price cosmetics are safer for launch.
-- Paid randomized rewards require separate legal and processor approval.
-
-### Launch content target
-
-- At least three Drimy species.
-- Three evolution stages for each launch Drimy.
-- A meaningful starter cosmetic collection.
-- Daily task variety.
-- Achievement set.
-- Backgrounds, skins, frames, and badges.
-- Clear empty, locked, earned, and equipped states.
-
-### Exit criteria
-
-- Progress survives devices and refreshes.
-- Daily reset is reliable.
-- Purchases and rewards cannot be duplicated.
-- Inventory and equipped cosmetics render correctly.
+Further later ideas: Pumdoki Plus, avatar decorations, cosmetics, a proposed
+top-100 free-Plus reward/leaderboard, optional animations/sounds, and richer
+interaction feedback. Do not invent benefits, prices, availability, or paid
+promises. Backgrounds stay static until a separately reviewed implementation.
+Reward/retention design must not reward spending or pressure users to disclose
+sensitive activity merely to maintain a streak; decide those rules when this
+future feature is actually scoped.
 
 ## 17. Phase 13 — Internationalization and accessibility
 
@@ -1125,7 +1111,7 @@ Build in this order:
 
 ### Automated testing
 
-- Unit tests for pricing, entitlement, ledger, Oasis, and permissions.
+- Unit tests for pricing, entitlement, ledger, and permissions. Retention tests belong to its later approved implementation.
 - Integration tests for auth, media, payments, and moderation.
 - E2E tests for member and creator vertical slices.
 - Webhook duplicate and out-of-order tests.
@@ -1178,64 +1164,115 @@ Build in this order:
 - Advanced creator analytics.
 - Larger group-chat features.
 - External affiliate program.
-- Paid randomized Oasis mechanics only if approved.
+- Streak/learning retention concept, optional motion/sounds, and Pumdoki Plus/cosmetic benefits after separate scope and economic review. The former Oasis game is cancelled.
 
-## 20. Current dependency and decision register
+## 20. Founder decisions and sequential work order — September 6, 2026
 
-These are working management targets, not legal or processor deadlines. The
-founder may revise them, but each item must retain an owner and a concrete
-follow-up date.
+The founder has limited time and must receive one actionable step at a time.
+Do not assign parallel founder workstreams or treat missing replies to later
+ideas as approval. At each handoff say what completed, the one current task,
+and what evidence finishes it. Keep parked ideas here and in the tracker.
+Routine implementation inside an authorized scope does not need repeated
+permission; financial commitments, live exposure, and activation retain their
+actual approval boundaries.
 
-| Dependency or decision                           | Owner                 | Target     | Current state / next action                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------ | --------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AWS staging shape and account access             | Founder + Engineering | 2026-07-23 | Overdue: use the non-secret staging decision matrix and future verification runbook in `docs/operations/`; deployment shape, credentials boundary, and approval remain undecided, so Phase 2 remains partial.                                                                                                                                                                                                                                        |
-| Sentry or equivalent                             | Founder + Engineering | 2026-07-23 | Overdue: the provider scorecard is drafted in `docs/operations/`; select a provider and approve environment separation, PII minimization, retention, alerting, and cost before integration.                                                                                                                                                                                                                                                          |
-| Redis, queue, and idempotency architecture       | Engineering           | 2026-08-18 | Decision complete: PostgreSQL-backed durable jobs/outbox and idempotency; Redis only for shared throttling/ephemeral coordination; no unlimited outage path.                                                                                                                                                                                                                                                                                         |
-| Async-foundation implementation/provider review  | Engineering + Founder | 2026-08-25 | PR #9 published the transaction/privilege sub-proof, PR #10 published Node 24, and PR #11 published the provisional candidate evidence. PR #13 published the separately approved fixed-canary application-owned foundation as `6311522`; exact-head run `32518256241` and post-merge run `32535922437` passed all three jobs. Phase 2 remains partial, and every next implementation slice remains separately gated.                                 |
-| Transactional email provider and local Mailpit   | Founder + Engineering | 2026-07-23 | Local Mailpit and provider-neutral mail are complete; the provider scorecard is drafted, while production adult-business fit, data terms, authentication, bounce/complaint handling, and deliverability remain overdue.                                                                                                                                                                                                                              |
-| LLC attorney/CPA shortlist and entity state      | Founder               | 2026-07-30 | Obtain qualified advice; no entity filing is implied by this plan.                                                                                                                                                                                                                                                                                                                                                                                   |
-| CCBill requirements and fee quote                | Founder               | 2026-07-30 | Request merchant package, technical docs, and complete pricing.                                                                                                                                                                                                                                                                                                                                                                                      |
-| Identity-verification shortlist                  | Founder + Engineering | 2026-07-30 | Compare two or three providers for countries, AUP, security, and cost.                                                                                                                                                                                                                                                                                                                                                                               |
-| Epoch terms and written cascade behavior         | Founder               | 2026-08-06 | Confirm commercial and technical fallback behavior in writing.                                                                                                                                                                                                                                                                                                                                                                                       |
-| Initial country allowlist                        | Founder + Counsel     | 2026-08-06 | Start with the US and only supported Latin American countries.                                                                                                                                                                                                                                                                                                                                                                                       |
-| Commission, payout, refund, and Veso economics   | Founder + CPA/Counsel | 2026-08-13 | Model processor fees, chargebacks, taxes, reserves, and Founding discounts.                                                                                                                                                                                                                                                                                                                                                                          |
-| Acceptance/evidence retention schedule           | Founder + Counsel     | 2026-08-13 | Define retention, pseudonymization, lawful deletion, and litigation-hold rules before account deletion or creator onboarding ships.                                                                                                                                                                                                                                                                                                                  |
-| Private-admin restricted access and hardware MFA | Founder + Engineering | 2026-08-06 | A local provider-neutral assertion verifier, exact operator/grant mapping, transaction-time reauthorization, and request-integrity seams are implemented at `9904334`. Provider claim semantics, live issuer/JWKS/origin, hardware-key enrollment/recovery, an independent operations session/CSRF mechanism, proxy/rate-limit policy, runtime DB grants, audit/incident evidence, deployment, and approval remain open; G1–G12 are `NOT EVALUATED`. |
-| Google Workspace recovery-contact privacy        | Founder + Engineering | 2026-08-20 | A repository-safe checklist is drafted in `docs/operations/`. Review live directory/recovery surfaces privately and test independent backup access before replacing any temporary contact; record no personal details here.                                                                                                                                                                                                                          |
+### Locked product corrections
 
-## 21. Immediate next actions
+- Keep Veso (1 Veso = USD 1), Store, subscriptions/paid content, real-time chat,
+  tipping/Send Love, creator profiles, and discovery-focused Connect at launch.
+- Cancel the old Oasis/Drimy game. The streak/learning idea in Phase 12 is later.
+- Keep Sakura Kiss and Midnight City static; preserve the palette and avatar
+  decoration foundation. Optional motion, sound, and richer feedback are later.
+- The founding-creator proposal is processing-fees-only plus a founder badge,
+  potentially about 500 creators. Duration, qualifying costs, eligibility,
+  standard fees, reserves/refunds, and funding remain undecided. Do not publish
+  a lifetime zero-commission promise. Proposed free Plus for a top 100 and its
+  ranking rules are not approved entitlements. Define economics before promotion.
+- Founder recruitment may use the existing E-Pal contact and Discord communities.
+  This is a channel plan, not evidence of enrolled/committed creators yet.
 
-1. Keep the creator-review router unmounted from the public API. The merged
-   Slice 2 foundation and local Slice 3 primitives are not a deployable private-
-   operations workflow.
-2. Publish the authorized Slice 3 draft PR, require exact-head CI, and review
-   its strict assertion, database authorization, transaction recheck, and
-   request-integrity evidence without mounting or activating the router. Merge
-   remains separately gated, and G1–G12 remain `NOT EVALUATED`.
-3. After separate approval, use the non-secret
-   [operations readiness packet](docs/operations/README.md) to decide and
-   verify provider claim semantics, live issuer/JWKS/origin, hardware-key
-   enrollment/recovery, an independent operations session and CSRF mechanism,
-   trusted-proxy/rate-limit policy, restricted runtime database grants, audit/
-   incident evidence, and deployment shape. Templates and local tests are not
-   activation evidence; keep live identifiers and restricted evidence out of
-   Git.
-4. Keep `APPROVED`, role promotion, identity files, tax/banking intake, and
-   creator publishing disabled until identity, country, legal, and operations
-   gates are concrete.
-5. In parallel, advance the legal-entity/counsel, acceptance-retention,
-   identity-provider, country-allowlist, tax, processor, payout-economics, and
-   operational-mailbox decisions.
-6. Preserve the dependency sequencing for notifications, theme, billing,
-   export/deletion, and explicit-content query enforcement.
-7. PR #8 published the provider-neutral Phase 2 async-work ADR, PR #9
-   published the local transaction/privilege proof, PR #10 published Node 24,
-   PR #11 published the local candidate evaluation, and PR #13 published the
-   fixed-canary application-owned worker foundation as `6311522`. Exact-head
-   run `32518256241` and post-merge run `32535922437` passed all three jobs.
-   Keep Phase 2 partial; Redis/shared throttling, general idempotency,
-   product-flow migration, providers, AWS, monitoring, and transactional-email
-   choices remain open. Select and separately authorize any next implementation
-   slice.
-8. Build the commission and payout model using real processor quotes when
-   available.
+### One active step
+
+| Step        | Work                                                                                                                                                              | Finish evidence                                                                                               |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 1 — current | Fill the [one-page business definition](docs/product/initial-business-definition.md). No purchase or provider choice.                                             | Founder answers; unresolved items may say “not sure.”                                                         |
+| 2 — waiting | One scoped consultation with adult-platform counsel, including entity/operating-state and payout/retention questions. Seek a quote first.                         | Qualified reviewer, written scope/price, practical requirements; no filing selected by AI.                    |
+| 3 — waiting | Ask intended primary processor CCBill about the exact Veso/creator-services/content model, countries, payouts, pricing and reserves.                              | Written fit/requirements and quote, or explicit unresolved questions. Epoch integration/cascade waits.        |
+| 4 — waiting | Set an affordable pilot size, entity/banking/application actions, creator offer, fee basis, and working-cash plan from those answers.                             | Founder approves concrete scope and spending cap; formal merchant onboarding proceeds as requirements permit. |
+| 5 — waiting | Resolve identity/age/consent, content review, reports/support, retention and country eligibility for that pilot; obtain the scoped human technical design review. | Implementable provider/workflow boundary, responsible person/backup, and review findings.                     |
+| 6 — waiting | Select transactional email and minimal staging/monitoring once entity/domain ownership, adult-business fit, recipients, data handling and budget are settled.     | Provider acceptance, costs and sender/operations plan; then implement and verify production mail.             |
+| 7 — waiting | Build and test the agreed purchase-to-access-to-earnings flow, including chat/service orders/tipping and necessary operations.                                    | Real persistence, processor sandbox, refunds/reconciliation, entitlements and operator actions verified.      |
+| 8 — waiting | Independent pre-launch security/payment review, fixes/retest, operational drills and controlled real-money pilot.                                                 | Applicable legal/provider/technical/operational launch gates pass for the exact release.                      |
+
+This is the founder's attention order, not a demand to finish every eventual
+provider approval before any synthetic local engineering. A later step may
+produce an external waiting period; propose at most one useful next task then.
+Do not restart dormant operations hardening or general infrastructure research
+as a substitute for completing the current founder step.
+
+### Human review timing and scope
+
+Human legal review begins at Step 2, before filing decisions and final policies.
+Human technical review begins at Step 5, before committing to payment-ledger,
+protected-media and sensitive-identity implementation. A narrowly scoped
+auth/deployment review may be commissioned sooner if it resolves the founder's
+confidence within an approved cap; it is not a full-platform certification.
+Use Fiverr if a reviewer can demonstrate relevant expertise and provide a
+written scope, reproducible findings, severity, remediation advice and retest.
+Check attorney licensing for legal work; generic policy drafting and star
+ratings are insufficient evidence of adult-platform expertise. Use synthetic
+data and scoped repository access, not production secrets or identity files.
+Before real uploads/money, commission the integrated review at Step 8; do not
+assume an inexpensive generic “website audit” covers authorization, payouts,
+webhook duplicates, media access and operational recovery.
+
+### Email/API timing
+
+Do not choose or buy email now. Step 6 is triggered after the earlier business,
+entity/domain, processor, pilot and data-handling decisions are concrete, and
+before any externally accessible pilot needs verification/reset delivery.
+The current production-mail startup error is an intentional safety guard,
+not a fix-by-disabling check. Implement authenticated TLS delivery, verified
+sender setup, bounded failures, bounce/complaint ownership and safe retries;
+test real production-mode startup and synthetic delivery. Review server-owned
+allowed policy versions before approved registration terms go live. Keep old
+acceptance records immutable. No real environment/provider configuration is
+authorized merely by this plan.
+
+### Legal UI correction and release procedure
+
+The September 6 cleanup replaces invented operational claims with explicit
+prototype notices: no claimed identity recordkeeping, human moderation,
+StopNCII participation, live support/report mailboxes, response promises,
+approved KYC/tax/bank status or counsel-approved legal policies. Prototype
+Terms/Privacy versions advance for new acceptances; earlier records are retained.
+
+These source changes appear in local development after reload and in a build
+after `npm run build`. A Git push/merge does not itself publish this repository's
+website: the inspected workflow runs CI only. Do not deploy the current full
+prototype as an operating adult platform. At Step 8, replace notices only with
+dated/versioned counsel-approved policy text and tested, staffed intake paths;
+verify every link, sender/recipient, report path and acceptance version in
+staging, then include them in the separately approved website release. No
+manual production copy-paste or direct database editing is required.
+
+### Budget and parked dependencies
+
+Use [launch-budget.md](docs/product/launch-budget.md) and the master tracker's
+current budget view. Available cash is USD 1,000–5,000 now; another USD 5,000 is
+possible later and must not be treated as committed. Estimates are planning
+allowances, not provider quotes or permission to spend. Keep reserve/hold cash
+distinct from fees, ongoing burn and founder living expenses. Avoid committing
+to 500 fee-free creators before the subsidy's funding and limits are known.
+
+AWS topology, monitoring, shared throttling, runtime grants, production mail,
+identity/country/tax/retention decisions, and operations activation remain open
+at their relevant steps. PostgreSQL durability and ephemeral-only Redis are
+already decided; do not reopen them. The local worker remains canary-only.
+
+## 21. Immediate next action
+
+The founder fills the [one-page business definition](docs/product/initial-business-definition.md).
+Review that answer before assigning Step 2. Keep software expansion parked
+during this founder task. The authorized legal/status/budget cleanup and branch
+consolidation are maintenance close-out, not a new feature phase.
