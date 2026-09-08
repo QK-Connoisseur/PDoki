@@ -64,9 +64,12 @@ be reported as fully complete against the original phase definition.
 
 - CCBill is the intended primary adult payment processor.
 - Epoch is the intended fallback/cascade processor.
-- Neither merchant application has started.
+- The founder reports the CCBill sales inquiry sent; a reply is pending.
+  Neither formal merchant application or approval has been reported.
 - Cascade behavior has not been confirmed with either provider.
-- The LLC has not been formed.
+- The founder reports Kiban Digital Holdings LLC filed in Maryland through
+  Northwest, awaiting state approval, as of September 8, 2026. An EIN,
+  business bank account and formation cost have not been verified.
 - Legal policies have not been approved by counsel.
 - Real support/compliance email mailboxes do not yet exist.
 
@@ -591,13 +594,22 @@ Settings list is implemented.
 
 ### Legal workstream
 
-1. Form the legal entity before merchant onboarding.
-2. Evaluate Wyoming and other states with a privacy-focused attorney and CPA.
-3. Understand foreign qualification in the founder's operating state.
-4. Secure a registered agent.
-5. Decide whether Pumdoki is a DBA/trade name.
-6. Hire counsel experienced with adult creator platforms or high-risk marketplaces.
-7. Draft and approve:
+1. Complete the founder-selected Maryland formation of Kiban Digital Holdings
+   LLC through Northwest; the founder reports it filed and awaiting state approval.
+2. When approval arrives, verify the approved name, formation documents and
+   agent/address details; retain private documents outside the repository.
+3. Obtain the EIN after state formation, avoiding a duplicate request if
+   Northwest is handling it, then arrange a bank account accepting the actual
+   adult-platform business. The [IRS](https://www.irs.gov/businesses/employer-identification-number)
+   provides EINs free and says to form the entity before applying.
+4. Check Pumdoki trade-name registration and routine filing obligations through
+   official instructions. Use paid advice only if a concrete issue needs it.
+5. Obtain the actual processor requirements before paying for tailored legal work.
+6. Prepare drafts using founder work and suitable Fiverr specialists. Obtain
+   substantive review from qualified counsel for the applicable adult-platform,
+   prepaid-value, consent/records, privacy and contract questions before relying
+   on those drafts or implementing dependent sensitive workflows.
+7. Draft and obtain the applicable review/approval for:
    - Terms of Service.
    - Privacy Policy.
    - Cookie Policy.
@@ -759,6 +771,10 @@ Settings list is implemented.
 
 ### Content visibility
 
+Content offers support individual photos/videos or bundles. Creators can offer
+pay-to-view content as feed posts and send locked content through chat. Both
+delivery surfaces use server-enforced purchase entitlements.
+
 - Public.
 - Followers.
 - Any subscriber.
@@ -822,7 +838,7 @@ Settings list is implemented.
 
 ### Processor work
 
-1. Request CCBill business-fit requirements and pricing at Step 3 of the sequential founder workflow; formal application follows the entity and required documents. Do not wait for the entire website to be built.
+1. CCBill business-fit/pricing inquiry sent, per the founder's September 8 report. Await and review the response at Step 3; formal application follows the entity and required documents. Do not wait for the entire website to be built.
 2. Begin Epoch discussion after core policies and entity details are ready.
 3. Confirm cascade support in writing.
 4. Implement CCBill checkout.
@@ -848,6 +864,21 @@ Settings list is implemented.
 
 ### Veso recharge UI
 
+The intended member experience is select a recharge package, choose an available
+payment method/provider, then complete checkout. Balance becomes spendable after
+verified successful payment confirmation; show a pending state when confirmation
+is delayed. A browser success redirect alone must never credit Veso. Bank/card
+authentication may add a step, and payment confirmation is distinct from final
+settlement to Pumdoki. Start with one approved adult processor; additional
+processors share the same ledger and add reconciliation/integration work.
+
+CCBill documents [tokens/credits for adult live-cam platforms](https://ccbill.com/industries/live-cams),
+[hosted FlexForms](https://ccbill.com/doc/flexforms-overview) and
+[payment lifecycle webhooks](https://ccbill.com/doc/webhooks-user-guide).
+These establish technical feasibility, not approval of Pumdoki's exact prepaid
+credit, content/service, country and creator-payout model. Confirm that scope
+at the existing processor step; this research does not start implementation.
+
 1. Current balance.
 2. Recharge presets.
 3. Custom amount if processor permits.
@@ -863,6 +894,7 @@ Settings list is implemented.
 
 - Send Love creates a Veso transfer from member balance to creator pending earnings.
 - PPV purchase creates a permanent or policy-defined entitlement.
+- PPV offers may contain one photo/video or a bundle, surfaced in feed posts or chat; the API verifies access to each included asset.
 - Insufficient Veso opens the recharge flow.
 - Repeated clicks use idempotency keys.
 - Refunds update both entitlement and ledger state.
@@ -1165,7 +1197,7 @@ future feature is actually scoped.
 - External affiliate program.
 - Streak/learning retention concept, optional motion/sounds, and Pumdoki Plus/cosmetic benefits after separate scope and economic review. The former Oasis game is cancelled.
 
-## 20. Founder decisions and sequential work order — September 6, 2026
+## 20. Founder decisions and sequential work order — updated September 8, 2026
 
 The founder has limited time and must receive one actionable step at a time.
 Do not assign parallel founder workstreams or treat missing replies to later
@@ -1175,6 +1207,25 @@ Routine implementation inside an authorized scope does not need repeated
 permission; financial commitments, live exposure, and activation retain their
 actual approval boundaries.
 
+### Formation and spending approach — September 8 update
+
+The founder first supplied a Northwest order-received screen, then confirmed
+that **Kiban Digital Holdings LLC** is filed in Maryland and awaiting state
+approval. The founder also confirmed the CCBill inquiry was sent to Sales.
+These are founder-reported progress updates as of September 8, 2026; exact
+filing/send timestamps and the sent email itself have not been inspected.
+State approval, a CCBill reply/approval, EIN, business bank account and amount
+charged remain unverified. Do not downgrade filed status to mere order receipt
+or ask the founder to send the inquiry again.
+
+Use DIY, existing drafts and suitable Fiverr specialists for work the founder
+can handle economically. Paid legal advice is for necessary, specific issues
+and substantive review of the actual documents/workflows. A broad discovery
+consultation or attorney-led entity choice is not a prerequisite to the next
+processor inquiry. The earlier six-area counsel brief is a parked reference;
+choose the relevant issue and quote when needed. Record the actual model,
+reviewed draft version, corrections and remaining limitations of each review.
+
 ### Locked product corrections
 
 - Keep Veso (1 Veso = USD 1), Store, subscriptions/paid content, real-time chat,
@@ -1182,26 +1233,36 @@ actual approval boundaries.
 - Cancel the old Oasis/Drimy game. The streak/learning idea in Phase 12 is later.
 - Keep Sakura Kiss and Midnight City static; preserve the palette and avatar
   decoration foundation. Optional motion, sound, and richer feedback are later.
-- The founding-creator proposal is processing-fees-only plus a founder badge,
-  potentially about 500 creators. Duration, qualifying costs, eligibility,
-  standard fees, reserves/refunds, and funding remain undecided. Do not publish
-  a lifetime zero-commission promise. Proposed free Plus for a top 100 and its
-  ranking rules are not approved entitlements. Define economics before promotion.
-- Founder recruitment may use the existing E-Pal contact and Discord communities.
-  This is a channel plan, not evidence of enrolled/committed creators yet.
+- The completed definition clarifies the founding-creator offer: Pumdoki should
+  make no profit on those sales while recovering the costs they create. This
+  supersedes processing-fees-only wording. Define attributable/shared costs,
+  fee calculation, duration, eligibility, reserves/refunds and funding before
+  promotion. No-loss economics are an objective, not a verified result.
+  Proposed 500 creators, founder badges and free Plus/top-100 ranking rules
+  remain provisional; do not publish a lifetime zero-commission promise.
+- Two contacted creators may help recruit 50–100 candidates. A paid Discord
+  recruiter/helper is proposed, with USD 300–400 monthly cited for assistance.
+  This is not evidence of committed creators or qualified operational coverage.
+- The content model includes pay-to-view single photos/videos and bundles in
+  feed posts and chat, alongside subscriptions and tipping. Possible services
+  include SFW gaming/social interactions and adult calls; the catalogue remains
+  unfinalized. Following a member or liking a post does not mean account access.
+  Gameplay-linked nudity was an illustrative niche idea, not a committed feature.
+  Counsel and the processor should receive this accurate content/services/Veso
+  description. “Ask roughly anything” is not an approved product promise.
 
 ### One active step
 
-| Step        | Work                                                                                                                                                              | Finish evidence                                                                                               |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| 1 — current | Fill the [one-page business definition](docs/product/initial-business-definition.md). No purchase or provider choice.                                             | Founder answers; unresolved items may say “not sure.”                                                         |
-| 2 — waiting | One scoped consultation with adult-platform counsel, including entity/operating-state and payout/retention questions. Seek a quote first.                         | Qualified reviewer, written scope/price, practical requirements; no filing selected by AI.                    |
-| 3 — waiting | Ask intended primary processor CCBill about the exact Veso/creator-services/content model, countries, payouts, pricing and reserves.                              | Written fit/requirements and quote, or explicit unresolved questions. Epoch integration/cascade waits.        |
-| 4 — waiting | Set an affordable pilot size, entity/banking/application actions, creator offer, fee basis, and working-cash plan from those answers.                             | Founder approves concrete scope and spending cap; formal merchant onboarding proceeds as requirements permit. |
-| 5 — waiting | Resolve identity/age/consent, content review, reports/support, retention and country eligibility for that pilot; obtain the scoped human technical design review. | Implementable provider/workflow boundary, responsible person/backup, and review findings.                     |
-| 6 — waiting | Select transactional email and minimal staging/monitoring once entity/domain ownership, adult-business fit, recipients, data handling and budget are settled.     | Provider acceptance, costs and sender/operations plan; then implement and verify production mail.             |
-| 7 — waiting | Build and test the agreed purchase-to-access-to-earnings flow, including chat/service orders/tipping and necessary operations.                                    | Real persistence, processor sandbox, refunds/reconciliation, entitlements and operator actions verified.      |
-| 8 — waiting | Independent pre-launch security/payment review, fixes/retest, operational drills and controlled real-money pilot.                                                 | Applicable legal/provider/technical/operational launch gates pass for the exact release.                      |
+| Step                     | Work                                                                                                                                                                                                                                | Finish evidence                                                                                               |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 1 — done                 | Founder [business-definition answers](docs/product/initial-business-definition.md) received and reviewed. Open details are carried forward.                                                                                         | Founder answers; unresolved items may say “not sure.”                                                         |
+| 2 — filed; awaiting MD   | Kiban Digital Holdings LLC filed through Northwest, per founder report. Await Maryland approval.                                                                                                                                    | Approved state formation documents still pending. EIN/banking/cost are not verified.                          |
+| 3 — sent; awaiting reply | CCBill inquiry sent to Sales, per founder report. Await the response, then review model fit, onboarding evidence, pricing/reserves, payouts and countries using the [inquiry reference](docs/product/initial-ccbill-inquiry.md).    | Written reply with fit/requirements and indicative quote, or specific unresolved questions. Epoch waits.      |
+| 4 — waiting              | Review the reply; set an affordable pilot, creator offer, fee basis and cash plan. Complete EIN/banking/application actions as formation and provider requirements permit; scope only necessary legal/tax questions.                | Founder approves concrete scope and spending cap; formal merchant onboarding proceeds as requirements permit. |
+| 5 — waiting              | Prepare policy/workflow drafts economically; obtain necessary qualified legal review for identity/age/consent, content review, reports, retention, funds flow and pilot countries. Obtain the scoped human technical design review. | Reviewed implementable requirements, responsible person/backup and concrete review findings.                  |
+| 6 — waiting              | Select transactional email and minimal staging/monitoring once entity/domain ownership, adult-business fit, recipients, data handling and budget are settled.                                                                       | Provider acceptance, costs and sender/operations plan; then implement and verify production mail.             |
+| 7 — waiting              | Build and test the agreed purchase-to-access-to-earnings flow, including chat/service orders/tipping and necessary operations.                                                                                                      | Real persistence, processor sandbox, refunds/reconciliation, entitlements and operator actions verified.      |
+| 8 — waiting              | Independent pre-launch security/payment review, fixes/retest, operational drills and controlled real-money pilot.                                                                                                                   | Applicable legal/provider/technical/operational launch gates pass for the exact release.                      |
 
 This is the founder's attention order, not a demand to finish every eventual
 provider approval before any synthetic local engineering. A later step may
@@ -1211,7 +1272,12 @@ as a substitute for completing the current founder step.
 
 ### Human review timing and scope
 
-Human legal review begins at Step 2, before filing decisions and final policies.
+Paid legal review is commissioned for a defined unresolved legal issue or
+applicable document/workflow review, normally after the initial processor
+response and before reliance or dependent sensitive implementation. It may be
+brought forward for a specific need; routine filing and the preliminary sales
+inquiry do not require a broad consultation. Prefer preparing drafts first,
+then a fixed-scope review and corrections with the reviewed version recorded.
 Human technical review begins at Step 5, before committing to payment-ledger,
 protected-media and sensitive-identity implementation. A narrowly scoped
 auth/deployment review may be commissioned sooner if it resolves the founder's
@@ -1258,8 +1324,11 @@ manual production copy-paste or direct database editing is required.
 ### Budget and parked dependencies
 
 Use [launch-budget.md](docs/product/launch-budget.md) and the master tracker's
-current budget view. Available cash is USD 1,000–5,000 now; another USD 5,000 is
-possible later and must not be treated as committed. Estimates are planning
+current budget view. The new founder answer states a USD 1,800 monthly ceiling. Current cash,
+sustainable duration and its relationship to the earlier USD 1,000–5,000 now
+and possible USD 5,000 later remain unconfirmed. Do not count monthly capacity
+as existing cash. The proposed USD 300–400 helper may overlap the budget backup
+allowance; confirm inclusion before changing totals. Estimates are planning
 allowances, not provider quotes or permission to spend. Keep reserve/hold cash
 distinct from fees, ongoing burn and founder living expenses. Avoid committing
 to 500 fee-free creators before the subsidy's funding and limits are known.
@@ -1271,7 +1340,29 @@ already decided; do not reopen them. The local worker remains canary-only.
 
 ## 21. Immediate next action
 
-The founder fills the [one-page business definition](docs/product/initial-business-definition.md).
-Review that answer before assigning Step 2. Keep software expansion parked
-during this founder task. The authorized legal/status/budget cleanup and branch
-consolidation are maintenance close-out, not a new feature phase.
+The business definition is complete. The founder confirms Kiban Digital
+Holdings LLC is filed and awaiting Maryland approval, and the CCBill inquiry
+has been sent to Sales. The current stage is waiting for those external
+responses. Bring the CCBill reply back when received for one focused review
+of fit, costs/reserves, payout responsibilities, countries and the onboarding
+checklist. The [prepared inquiry](docs/product/initial-ccbill-inquiry.md) remains
+a reference, not a task to send again. State approval is a separate pending
+formation milestone; sending the inquiry is not processor approval.
+
+The earlier [counsel inquiry](docs/product/initial-counsel-inquiry.md) is parked.
+Use its relevant questions later for a necessary, scoped review of concrete
+drafts or an unresolved issue; do not automatically commission all six areas
+or reopen the founder's entity decision. CCBill has been contacted; no reply,
+contract, approval or payment to it is reported. No lawyer engagement is
+reported. The Northwest filing is a separate founder action; its cost is not
+supplied.
+
+Review the processor response before a contract, fee or activation. The
+assistant must not send a duplicate inquiry, follow-up or other message without
+explicit authorization. No automatic monitoring or reminder is scheduled.
+
+Initial creator/member countries, service delivery channels, refund/cancellation
+handling, founder hours, helper coverage and exact cash/runway remain open.
+Carry these into the appropriate consultation or budget step, one question at
+a time; do not return the entire definition as an incomplete assignment.
+Software expansion and email selection remain at their later steps.

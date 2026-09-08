@@ -7,7 +7,7 @@
 > August publication restrictions below are historical. No Slice 4 merge
 > permission remains outstanding. Provider selection, live configuration and
 > activation remain separate; operations work is parked. The sole next founder
-> task is the one-page business definition in PLAN.md.
+> task is maintained in PLAN.md §20; do not infer it from historical slice notes.
 
 Date: 2026-08-23 · Status: published and CI-verified; deployment disabled
 

@@ -25,11 +25,17 @@ remains an unselected candidate, the public API does not mount operations, and
 G1–G12 remain NOT EVALUATED. Merging code is not deployment or activation.
 
 The founder needs one active task at a time. Read PLAN.md's current sequential
-workflow and do not assign parallel founder workstreams. The next task is the
-one-page initial business definition; follow with scoped counsel, processor fit
-and economics, then the relevant provider/review/engineering steps. Preserve
+workflow and do not assign parallel founder workstreams. PLAN.md §20 owns the
+active founder step; historical slice records must not restart completed tasks.
+The business definition has been answered and reviewed. Preserve
 provisional ideas without presenting unapproved benefits, prices or capacity
 as promises. No extra motion, game, Plus or design expansion is authorized.
+
+September 8: the founder confirms Kiban Digital Holdings LLC is filed through
+Northwest and awaiting Maryland approval. The CCBill sales inquiry is sent;
+await and review its response. Prefer DIY, drafts and suitable Fiverr specialists;
+use paid legal advice only for necessary, specific issues and substantive
+review. Do not restart a broad counsel-first or entity-selection task.
 
 Authoritative product/scope docs, read these before non-trivial work:
 

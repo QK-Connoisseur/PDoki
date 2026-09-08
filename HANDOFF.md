@@ -1,24 +1,43 @@
 # Session Handoff
 
-Updated: September 6, 2026. Reviewed source consolidation: `56cb0ad`.
+Updated: September 8, 2026. LLC filed, awaiting Maryland approval; CCBill inquiry sent, awaiting reply.
+Published engineering checkpoint: `8c33fd1`; source consolidation: `56cb0ad`.
 Legal/status/budget cleanup is complete; the current founder task is below. This file is the current
 checkpoint; historical command logs remain in Git, including the previous
 [Slice 4 handoff at 25057bd](https://github.com/QK-Connoisseur/PDoki/blob/25057bd/HANDOFF.md).
 
 ## One next founder task
 
-Fill [the one-page business definition](docs/product/initial-business-definition.md).
-Short answers and “not sure” are sufficient. Do not assign another founder task
-until those answers have been reviewed. The founder works solo, has limited
-time, and explicitly needs sequential guidance. The full waiting sequence is
-in PLAN.md §20; it is not a to-do list for today.
+The [business definition](docs/product/initial-business-definition.md) has been
+answered and reviewed. Step 1 is complete even though some details remain open.
+The founder confirms **Kiban Digital Holdings LLC** is filed through Northwest
+and awaiting Maryland approval. This September 8 update advances the earlier
+order-received screenshot. State approval, EIN, banking, exact filing date and
+amount charged are not verified. Keep the distinction between filed and approved;
+prototype legal notices must not imply approved formation or live operations.
 
-The next human involvement is a scoped adult-platform counsel consultation
-after that definition, with a quote and spending cap first. Technical design
-review comes before payment/media/identity implementation, and an independent
-integrated review/retest comes before real uploads and payments. Fiverr is an
-acceptable sourcing channel if relevant qualifications and deliverables are
-verified. No reviewer, provider, purchase or live deployment is selected here.
+The founder confirms the CCBill inquiry was sent to its Sales team. Await the
+response, then bring it back for review; do not assign sending it again.
+The [prepared inquiry](docs/product/initial-ccbill-inquiry.md) is retained as a
+reference, not an independently verified copy of the sent email. It covers PPV photos/videos/bundles in feed/chat,
+subscriptions, tipping, Veso, and chat-arranged services including possible
+adult calls. It asks about eligibility, complete costs/reserves, payouts,
+countries and onboarding evidence. The entity/prototype status is explicit.
+CCBill has been contacted; no reply, merchant approval, contract or payment is
+reported. Maryland approval remains the separate pending formation milestone.
+
+The founder chose DIY, drafts and suitable Fiverr specialists wherever practical,
+with paid legal advice only for necessary issues and substantive review. The
+[earlier counsel brief](docs/product/initial-counsel-inquiry.md) is parked as a
+scope reference. Do not restart a broad counsel-first task or ask a lawyer to
+reselect the entity without a concrete reason. Qualified review of applicable
+adult-platform, records/consent, funds-flow and policy requirements still belongs
+before reliance or dependent sensitive implementation. No lawyer is hired.
+The founder needs one active task; PLAN.md §20 owns the waiting sequence.
+
+Technical design review remains before payment/media/identity implementation;
+independent integrated review/retest remains before real uploads and payments.
+Email selection remains at Step 6. No software expansion is assigned now.
 
 ## Founder decisions preserved
 
@@ -33,20 +52,26 @@ verified. No reviewer, provider, purchase or live deployment is selected here.
   evolution, inventory, leagues or randomized purchases. The name may be reused
   later for day/friend streaks and playful adult language learning, profanity
   and opt-in roasting. This later concept is unbuilt and does not gate launch.
-- Founder badge and processing-fees-only creator pricing are the intended
-  acquisition direction, potentially for about 500 creators. Cohort size,
-  duration, costs passed through, ordinary fees, reserves and funding remain
-  provisional. Free Plus for a proposed top 100/leaderboard and Plus/cosmetic
-  benefits are unpriced ideas, not published promises or delivered features.
-- Recruitment may use the founder's E-Pal contact and Discord communities;
-  actual creator commitments have not yet been evidenced.
+- The founding-creator offer is now clarified as no profit on those sales
+  while recovering their costs. This supersedes processing-fees-only wording.
+  Fee basis, shared-cost allocation, duration, cohort size and a sustainable
+  no-loss outcome remain unproven. Founder badge, proposed 500-creator programme
+  and top-100/Plus ideas remain provisional.
+- Two contacted creators may help recruit 50–100 candidates. These are prospects,
+  not committed creators. A paid Discord recruiter/helper is proposed at
+  USD 300–400 monthly; scope, hours and moderation capability remain unverified.
 - Static Sakura Kiss/Midnight City, palette placement and avatar decorations
   are preserved. Motion/sound/richer gratification are later work; no background
   videos should be restored from superseded branches.
-- Cash available now is USD 1,000–5,000, with a possible further USD 5,000 over
-  later months. Future funds are not committed. See the current tracker budget
-  and [budget notes](docs/product/launch-budget.md); estimates are not quotes or
-  spending permission. Founder living expenses are outside the project budget.
+- The completed definition states a USD 1,800 monthly spending ceiling. Its
+  relationship to the earlier USD 1,000–5,000 current cash and possible further
+  USD 5,000 is not yet clear; do not convert it into cash already available or
+  assumed runway. Whether helper costs are included, and whether they overlap
+  the existing backup allowance, is unresolved. Budget totals remain unchanged
+  until clarified. See [budget notes](docs/product/launch-budget.md).
+- Creator/member launch countries, service delivery channels, order/refund
+  rules, founder hours and urgent coverage remain open. “Ask roughly anything”
+  and claims of being the only platform are not approved marketing promises.
 
 ## Recovered task and branch history
 
@@ -104,8 +129,11 @@ Local Node 24.19.0 checks for the combined code:
 The initial socket-limited API attempt failed with sandbox `listen EPERM`;
 the authorized rerun passed. No existing database was reset. Prior dev CI run
 33809241413 passed all three jobs; it does not verify new changes by itself.
-Final dev/main branch publication is reported in this task's final response.
-The CI workflow runs on both branches; inspect those runs for the latest checkpoint. No source push in the inspected repository workflow deploys the site:
+The preceding release published matching dev/main at `8c33fd1`, with
+[main CI 34026601963](https://github.com/QK-Connoisseur/PDoki/actions/runs/34026601963) and
+[dev CI 34026602009](https://github.com/QK-Connoisseur/PDoki/actions/runs/34026602009) passing.
+The later business-answer updates are local documentation/tracker edits; they
+do not change the verified application code. No source push in the inspected repository workflow deploys the site:
 the only workflow is CI. No hosting/provider configuration changed.
 
 ## Legal UI and email timing

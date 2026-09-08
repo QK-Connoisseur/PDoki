@@ -26,6 +26,7 @@ The following are intended to work at launch:
 - Creator profiles and standardized membership tiers.
 - The Home feed with Following and For You views.
 - Public, subscriber-only, tier-restricted, and individually paid content.
+- Pay-to-view individual photos/videos and bundles, offered in feed posts or sent as locked content through chat.
 - Store browsing, purchases, favorites, history, and responsive YouTube-like thumbnails.
 - Connect creator discovery with online status, price, language, and service filters. Members communicate and arrange orders through real-time chat; automated calendars/bookings are not assumed launch scope.
 - Real-time direct messages using WebSockets.
@@ -81,20 +82,29 @@ Orbs, creature evolution, leagues, or randomized purchases are approved.
 
 ### Founding creators and Pumdoki Plus
 
-The founder wants a founding-creator programme with a profile badge and only
-necessary payment-processing charges rather than the standard platform fee.
+The founder wants a founding-creator programme with a profile badge, no profit
+for Pumdoki on those creators' sales, and recovery of the costs they create.
+This clarifies the earlier processing-fees-only description: the exact cost
+basis and fee are undecided, and a no-loss outcome has not been demonstrated.
 Approximately 500 creators is a proposed programme size, not an initial pilot
-capacity commitment. Eligible costs, duration, payout/reserve treatment, and
-funding must be decided from processor quotes before publishing an offer.
-Zero platform commission does not pay hosting, support, verification, or
-chargeback losses. Pumdoki Plus, cosmetics/avatar decorations, and free Plus
+capacity commitment. Eligible costs, duration, payout/reserve treatment, shared
+cost allocation and funding must be decided before publishing an offer.
+Pumdoki Plus, cosmetics/avatar decorations, and free Plus
 for a proposed top 100/leaderboard are ideas for later evaluation; prices,
 benefits, selection rules, and free-membership promises are not approved.
 
 ### Founder workflow
 
-Work one founder step at a time. The current task is the
-[one-page initial business definition](docs/product/initial-business-definition.md).
+Work one founder step at a time. The
+[initial business definition](docs/product/initial-business-definition.md) has
+been answered and reviewed. As of September 8, 2026, the founder confirms
+**Kiban Digital Holdings LLC** is filed through Northwest and awaiting Maryland
+approval. The CCBill inquiry has been sent to Sales and is awaiting a reply.
+PLAN.md §20 owns the current stage: await and review the response. The
+[prepared inquiry](docs/product/initial-ccbill-inquiry.md) remains a reference.
+Use founder-led work, drafts and suitable Fiverr specialists where practical;
+pay for targeted qualified legal review only when needed for the actual issue.
+Do not require a broad legal consultation for routine entity formation.
 The sequential order, review checkpoints, legal-copy release procedure, and
 email-provider timing are in PLAN.md. Use the
 [budget notes](docs/product/launch-budget.md) and master tracker for estimates;
