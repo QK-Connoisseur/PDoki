@@ -232,7 +232,7 @@ export default function PromotionsPage({
   const [composeItalic, setComposeItalic] = useState(false);
   const [composeLocked, setComposeLocked] = useState(false);
   const [composeText, setComposeText] = useState("");
-  const [composeVesoPrice, setComposeVesoPrice] = useState("");
+  const [composePriceUsd, setComposePriceUsd] = useState("");
 
   const activePromotions = useMemo(
     () => promotions.filter((promo) => isPromotionActive(promo, now)),
@@ -444,8 +444,8 @@ export default function PromotionsPage({
         setFontColor={setComposeFontColor}
         locked={composeLocked}
         setLocked={setComposeLocked}
-        vesoPrice={composeVesoPrice}
-        setVesoPrice={setComposeVesoPrice}
+        priceUsd={composePriceUsd}
+        setPriceUsd={setComposePriceUsd}
       />
     </MemberLayout>
   );

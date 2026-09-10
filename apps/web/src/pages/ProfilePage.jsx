@@ -195,7 +195,6 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
   const [activeTab, setActiveTab] = useState("services");
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [kokoroStates, setKokoroStates] = useState({});
-  const [unlockedPosts, setUnlockedPosts] = useState({});
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [serviceSearch, setServiceSearch] = useState("");
   const [showFreeOnly, setShowFreeOnly] = useState(false);
@@ -220,7 +219,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
   const [composeItalic, setComposeItalic] = useState(false);
   const [composeLocked, setComposeLocked] = useState(false);
   const [composeText, setComposeText] = useState("");
-  const [composeVesoPrice, setComposeVesoPrice] = useState("");
+  const [composePriceUsd, setComposePriceUsd] = useState("");
 
   const profile = profileData;
 
@@ -420,7 +419,8 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
 
                       {/* Subscribe */}
                       <button className="rounded-xl border-2 border-[#e8384f] bg-[#e8384f]/10 px-5 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-[#e8384f] hover:shadow-md hover:shadow-red-500/30">
-                        Subscribe &middot; ${profile.subscriptionPrice}/mo
+                        Subscribe &middot; $
+                        {profile.subscriptionPrice.toFixed(2)} USD/mo
                       </button>
 
                       {/* Message */}
@@ -688,7 +688,8 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                             </p>
                             <p className="mt-1">
                               <span className="bg-pink-100 text-pink-700 px-2.5 py-0.5 rounded-full text-xs font-medium">
-                                ${service.price} / {service.duration}
+                                ${service.price.toFixed(2)} USD /{" "}
+                                {service.duration}
                               </span>
                             </p>
                           </div>
@@ -1191,7 +1192,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                                   Price
                                 </span>
                                 <p className="text-lg font-bold text-[#241a22]">
-                                  ${selectedService.price}
+                                  ${selectedService.price.toFixed(2)} USD
                                 </p>
                               </div>
                               <div className="w-px h-8 bg-pink-200" />
@@ -1241,7 +1242,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                                     <div className="flex items-center gap-3">
                                       <span className="flex items-center gap-1.5 text-sm text-[#4a3340] font-semibold">
                                         <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400" />
-                                        ${service.price}
+                                        ${service.price.toFixed(2)} USD
                                       </span>
                                       <span className="text-xs text-[#b89aa8]">
                                         /{service.duration}
@@ -1380,8 +1381,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                   const kokoroCount = isKokoro
                     ? post.kokoros + 1
                     : post.kokoros;
-                  const isUnlocked = unlockedPosts[post.id] || false;
-                  const showLocked = post.locked && !isUnlocked;
+                  const showLocked = post.locked;
 
                   return (
                     <article
@@ -1514,7 +1514,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                               )}
                             </div>
                             <span className="flex items-center gap-1.5 text-xs font-semibold text-[#5b4153]">
-                              ${post.price}
+                              ${post.price.toFixed(2)} USD
                               <svg
                                 viewBox="0 0 24 24"
                                 className="w-3.5 h-3.5 text-[#8c6d7f]"
@@ -1537,16 +1537,15 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                           </div>
                           <div className="px-4 pb-3">
                             <button
-                              onClick={() =>
-                                setUnlockedPosts((prev) => ({
-                                  ...prev,
-                                  [post.id]: true,
-                                }))
-                              }
-                              className="w-full rounded-full bg-[linear-gradient(110deg,#E7C978_0%,#F4E1A6_16%,#FFF7DE_40%,#FFEFBF_52%,#F2D47E_66%,#E7C978_100%)] py-3 text-sm font-bold text-[#2B1A10] tracking-wide uppercase ring-1 ring-amber-200/70 shadow-md shadow-amber-200/60 transition hover:shadow-lg hover:shadow-amber-300/60 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F2D47E]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                              disabled
+                              title="Purchases are not available yet"
+                              className="w-full cursor-not-allowed rounded-full bg-[linear-gradient(110deg,#E7C978_0%,#F4E1A6_16%,#FFF7DE_40%,#FFEFBF_52%,#F2D47E_66%,#E7C978_100%)] py-3 text-sm font-bold text-[#2B1A10] tracking-wide uppercase ring-1 ring-amber-200/70 shadow-md shadow-amber-200/60 transition hover:shadow-lg hover:shadow-amber-300/60 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F2D47E]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                             >
-                              Unlock Post for ${post.price}
+                              Unlock Post for ${post.price.toFixed(2)} USD
                             </button>
+                            <p className="mt-2 text-center text-xs text-[#8c6d7f]">
+                              Purchases are not available yet.
+                            </p>
                           </div>
                         </div>
                       )}
@@ -1850,7 +1849,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                           </h3>
                           <div className="mt-2 flex items-center justify-between">
                             <span className="text-base font-bold text-[#241a22]">
-                              ${item.price}
+                              ${item.price.toFixed(2)} USD
                             </span>
                             <div className="flex items-center gap-2">
                               {/* Bookmark */}
@@ -1933,7 +1932,7 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
                           </div>
                           <div className="flex items-center justify-between mt-2">
                             <span className="text-base font-bold text-[#241a22]">
-                              ${item.price}
+                              ${item.price.toFixed(2)} USD
                             </span>
                             <div className="flex items-center gap-2">
                               <button
@@ -2004,8 +2003,8 @@ export default function ProfilePage({ userStatus = "online", onStatusChange }) {
         setFontColor={setComposeFontColor}
         locked={composeLocked}
         setLocked={setComposeLocked}
-        vesoPrice={composeVesoPrice}
-        setVesoPrice={setComposeVesoPrice}
+        priceUsd={composePriceUsd}
+        setPriceUsd={setComposePriceUsd}
       />
 
       {/* ─── Moment Composer ───────────────────────────────────────── */}

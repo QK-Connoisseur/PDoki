@@ -16,6 +16,8 @@ import { creatorApplicationsRouter } from "./routes/creatorApplications.js";
 import { healthRouter } from "./routes/health.js";
 import { preferencesRouter } from "./routes/preferences.js";
 import { readyRouter } from "./routes/ready.js";
+import { contentRouter } from "./routes/content.js";
+import { createConfiguredMediaStorage } from "./content/configuredStorage.js";
 
 export interface AppDeps {
   env: Env;
@@ -72,6 +74,21 @@ export function createApp({
   api.use(accountRouter({ db, env, mailer, logger }));
   api.use(creatorApplicationsRouter({ db, env, mailer, logger }));
   api.use(preferencesRouter({ db, env }));
+  if (env.CONTENT_MODE === "development") {
+    if (env.NODE_ENV === "production" || !env.CONTENT_STORAGE_DIRECTORY) {
+      throw new Error(
+        "Development content requires non-production private storage"
+      );
+    }
+    api.use(
+      "/content",
+      contentRouter({
+        db,
+        env,
+        storage: createConfiguredMediaStorage(env),
+      })
+    );
+  }
   app.use("/api/v1", api);
 
   app.use((req, _res, next) => {

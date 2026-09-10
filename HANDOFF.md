@@ -1,10 +1,41 @@
 # Session Handoff
 
-Updated: September 8, 2026. LLC filed, awaiting Maryland approval; CCBill inquiry sent, awaiting reply.
-Published engineering checkpoint: `8c33fd1`; source consolidation: `56cb0ad`.
+Updated: September 10, 2026. USD pricing and Billing replace prepaid-credit UI; safe photo/video flow remains verified against private R2. Founder review of the working local flow is next.
+Prior engineering checkpoint: `8c33fd1`; source consolidation: `56cb0ad`.
+Read current `dev` / `main` Git refs and their CI runs for publication state.
 Legal/status/budget cleanup is complete; the current founder task is below. This file is the current
 checkpoint; historical command logs remain in Git, including the previous
 [Slice 4 handoff at 25057bd](https://github.com/QK-Connoisseur/PDoki/blob/25057bd/HANDOFF.md).
+
+## September 10 — USD pricing and billing UI
+
+The launch tracker no longer includes the deferred prepaid-credit work. Website
+prices and composer inputs use plain `$` / USD. Billing replaces the member
+wallet: no stored balance, recharge, auto top-up or gift-credit redemption;
+creator earnings remain in the creator dashboard. `/wallet` redirects to
+`/billing` for existing bookmarks. Credit-funded offers were removed from the
+cancelled game prototype. Checkout, subscriptions and tips remain previews;
+this change does not implement or activate payment processing.
+
+Validation: all 238 web tests, the web build and repository ESLint passed.
+After the final Billing cleanup, its 8 focused tests and the build passed again.
+Browser checks passed across 18 desktop/mobile views with synthetic accounts,
+including all Billing sections, the legacy redirect and USD composer inputs.
+All 13 tracker tabs have no remaining prepaid-brand references; expense totals,
+recalculation and existing workbook formulas/features were checked.
+
+September 10 publication checks used Node 24.19.0 and a fresh isolated
+`pumdoki_publish_20260910` database: all 10 migrations applied; 425 API tests
+passed with one existing opt-in test skipped; 24 contract tests, 238 web tests,
+53 standard browser tests and both content browser tests passed. API, web and
+admin builds, the content TypeScript check and repository lint passed. The
+content browser checks used local storage; earlier private R2 verification is
+recorded below. Existing development data was preserved.
+
+The tracker now displays all 17 Deferred status/legend cells with light-red
+backgrounds and dark-red text, including automatic formatting for future
+Deferred selections. This formatting change preserves cell values, formulas,
+cached results and the $1,296 recorded expense total.
 
 ## One next founder task
 
@@ -12,19 +43,36 @@ The [business definition](docs/product/initial-business-definition.md) has been
 answered and reviewed. Step 1 is complete even though some details remain open.
 The founder confirms **Kiban Digital Holdings LLC** is filed through Northwest
 and awaiting Maryland approval. This September 8 update advances the earlier
-order-received screenshot. State approval, EIN, banking, exact filing date and
-amount charged are not verified. Keep the distinction between filed and approved;
-prototype legal notices must not imply approved formation or live operations.
+order-received screenshot. The supplied sent email reports filing on September 8.
+The formation purchase is recorded in the tracker. State approval, EIN, banking
+and original filing documentation remain unverified. Keep the distinction
+between filed and approved; prototype legal notices must not imply approved
+formation or live operations.
 
-The founder confirms the CCBill inquiry was sent to its Sales team. Await the
-response, then bring it back for review; do not assign sending it again.
-The [prepared inquiry](docs/product/initial-ccbill-inquiry.md) is retained as a
-reference, not an independently verified copy of the sent email. It covers PPV photos/videos/bundles in feed/chat,
-subscriptions, tipping, Veso, and chat-arranged services including possible
-adult calls. It asks about eligibility, complete costs/reserves, payouts,
-countries and onboarding evidence. The entity/prototype status is explicit.
-CCBill has been contacted; no reply, merchant approval, contract or payment is
-reported. Maryland approval remains the separate pending formation milestone.
+The founder supplied the sent email and first CCBill Sales reply on September 9.
+The [first-exchange record](docs/product/initial-ccbill-inquiry.md) now uses that
+supplied inquiry text. Sales requests a URL, development/timeline, business and
+price/service details. It requires a functioning site, permits password
+protection, and lists US business/owner, bank and principal-ID requirements.
+It does not answer Veso/services eligibility, fees/reserves, payouts/countries
+or underwriting timing, or define the detailed review-site standard.
+
+The founder cancelled the [review-site clarification](docs/product/ccbill-review-site-clarification.md).
+Do not send it or require its URL field to continue. Build toward a functioning
+website, using one functional slice that pairs code with its necessary founder
+and provider work. The first milestone is a test creator uploading safe sample
+media and publishing a persisted post that a test member can read in the
+existing feed. Drafts stay private; server access checks and refresh/restart
+persistence must work. Pair media-storage selection/setup and an approved spend
+budget with this implementation. The local flow is implemented and tested;
+R2 is now active, with $0 due at activation shown in the founder's screenshot.
+The founder confirms creating `pumdoki-review-media` in the default jurisdiction.
+Bucket-scoped credentials are saved in ignored `.env.r2.local` (mode 0600).
+Actual cloud photo/video upload, private access, publication, restart persistence
+and removal checks passed. Cloudflare's bucket overview independently shows
+Public Access Disabled. The next founder action is reviewing this working local
+upload/publish flow; no further storage signup is needed for this milestone.
+No processor approval, contract or payment is reported; Maryland approval remains pending.
 
 The founder chose DIY, drafts and suitable Fiverr specialists wherever practical,
 with paid legal advice only for necessary issues and substantive review. The
@@ -32,18 +80,146 @@ with paid legal advice only for necessary issues and substantive review. The
 scope reference. Do not restart a broad counsel-first task or ask a lawyer to
 reselect the entity without a concrete reason. Qualified review of applicable
 adult-platform, records/consent, funds-flow and policy requirements still belongs
-before reliance or dependent sensitive implementation. No lawyer is hired.
-The founder needs one active task; PLAN.md §20 owns the waiting sequence.
+within the relevant feature work and before reliance or live sensitive use.
+The founder now reports commissioning policy drafts; the tracker owns the
+engagement and expense status. Draft delivery and approval remain pending.
+The founder wants code and related business/provider decisions handled together;
+PLAN.md §20 owns the latest work order.
 
-Technical design review remains before payment/media/identity implementation;
-independent integrated review/retest remains before real uploads and payments.
-Email selection remains at Step 6. No software expansion is assigned now.
+Targeted review accompanies the relevant design/code slice before live
+sensitive use; controlled implementation is not held for a blanket pre-code
+review. Email is selected/integrated with hosted account flows when needed.
+The P05 design below informed the implemented local milestone.
+
+## P05 first local content flow — September 9 implementation
+
+See [implementation and run instructions](docs/architecture/phase5-local-content-flow.md).
+The API now persists private safe media and sealed drafts; a test creator can
+publish into the real Home feed and a test member can view photos and play
+videos. Removal blocks subsequent media delivery. Requests enforce current
+authentication, creator ownership/status and post visibility; private object
+keys never enter browser payloads. Upload/save retries are idempotent. Both
+flags default off, production/remote activation is refused, and only verified
+`.example` test accounts are accepted. This is partial Phase 5, not hosted
+review-site, payment, moderation, identity or production completion.
+
+Confirmed checks:
+
+- All nine migrations applied to a fresh isolated database.
+- API: 388 tests passed; one existing opt-in worker privilege test skipped.
+- Web: 238 tests passed, including the shared contract adapter and real content UI.
+- Content browser: photo and video paths both passed, including persisted
+  drafts, member playback/access, and removal. Screenshots visually checked.
+- API and web builds, scoped frontend TypeScript check and new-code review passed.
+- Legacy browser suite: 52/52 passed. Traces identified HTTP 429 from shared
+  parallel test traffic; only the Playwright request allowance changed from
+  300 to 3000. Product limits and UI assertions remain unchanged.
+- Contracts: 24 tests passed; admin build, repository lint/format and
+  `git diff --check` passed.
+- An actual API process stop/start preserved the published post, session and
+  identical video bytes; the safe verification post was subsequently removed.
+- Tracker records local completion and verified R2 safe-sample integration.
+  Financial actuals were preserved.
+
+These are local verification results from before publication. Publication of
+source does not activate the content flags or deploy the application.
+
+Existing local development data was preserved. It has pre-existing worker
+schema drift, so tests use `pumdoki_content_final_20260909`. The new content
+migration contains no unrelated drift repair. A dependency audit found 23
+affected packages at unchanged baseline versions; none are in the new Sharp
+dependency chain. Remediation is still pending and must be considered before
+hosted exposure. No audit-fix upgrade or production deployment occurred.
+
+R2 setup is complete for this safe-sample milestone. The founder created the
+`pumdoki-local-review` Account API token with Object Read & Write scoped only to
+`pumdoki-review-media`, then saved its S3 keys locally. Presence/validity, mode
+0600 and Git exclusion were checked without displaying secrets. The recommended
+30-day token lifetime and a billing alert have not been independently verified.
+
+The S3 adapter sends only
+sanitized bytes, uses conditional immutable writes and bounds private reads.
+An additive tenth migration records LOCAL/R2 per asset and prevents rewriting
+that location, preserving old local uploads. It was applied only to the isolated
+review database. The current targeted content/configuration suites pass 86 tests;
+API build and scoped lint pass. Actual R2 verification then passed:
+
+- Sanitized PNG/MP4 uploads persisted R2 as their backend; cloud and app reads
+  matched stored SHA-256 values. Browser payloads omitted private storage keys.
+- Anonymous app reads returned 401; members could not read drafts (404).
+  Unsigned S3 requests returned 400 without media; Cloudflare separately showed
+  Public Access Disabled. No public endpoint or permission was enabled.
+- Published member feed, full/range delivery and a real API process restart
+  preserved both media types and the session. Removed posts returned 404 for
+  owner/member reads, including ranges.
+- Both browser tests passed against R2, including photo rendering and actual
+  advancing video playback. Five generated objects across the verification
+  runs were deleted and confirmed absent; existing objects were untouched.
+
+The temporary harness first expected S3 403 (Cloudflare returned 400) and needed
+an ESM test-runner import correction; neither required an application change.
+Final browser evidence is in
+`/private/tmp/pumdoki-r2-proof-666cfa89-1732-4c0c-8784-ee39a81683b4`.
+Product post removal is a logical tombstone; the verification's explicit cloud
+cleanup does not implement production retention/garbage collection. No public
+hosting or live adult-media activation occurred. Next: founder review of Create
+Post → save draft → publish in the local preview using safe samples.
+
+## P05 Slice 1 — historical local design checkpoint
+
+The [content model and access-rule design](docs/architecture/phase5-slice1-content-model-and-access-design.md)
+starts from `3dfad3a` on `codex/phase5-content-access-design`. It defines stable
+content/revision/asset/offer identities, immutable purchase manifests, separate
+audience and lifecycle rules, recipient-scoped chat offers, explicit-content
+suppression, private response boundaries, and upload/removal constraints.
+It includes 28 synthetic acceptance cases for later implementation.
+
+At the September 8 design checkpoint, scoped human technical review remained
+pending and the design itself added no contracts, Prisma migrations, routes,
+worker handlers, frontend behavior, uploads, payments or operations activation.
+The September 9 implementation above supersedes its historical next-task prose.
+P04 remains partial; P06 remains unimplemented. The next engineering work is
+the functional content path above, with targeted review and provider decisions
+alongside implementation. The historical design remains a design-only artifact;
+it does not itself implement or activate anything.
+
+Historical verification for that design/documentation-only change:
+
+- Agent design review completed; its historical-revision and subscription/PPV
+  findings were corrected and rechecked. This is not the pending human review.
+- `./node_modules/.bin/prettier --check AGENTS.md CLAUDE.md HANDOFF.md PLAN.md README.md docs/product/initial-business-definition.md docs/architecture/phase5-slice1-content-model-and-access-design.md`
+  passed; `git diff --check` passed.
+- Read-only Python checks passed for local Markdown link targets, the JSON
+  example, and the 28 unique ordered acceptance-case IDs. These validate the
+  design artifact, not runtime authorization behavior.
+- The tracker has 39 scoped value edits and 9 expected recalculated dependent
+  values. Its two P05 definition tasks are `In Review`; phase maturity remains
+  `Not Started / UI Prototype`. Formulas, tables, validations, conditional
+  formatting, relationship targets and unrelated data were preserved. Affected
+  views passed before/after visual review; the saved output's phase and delivery
+  rows were independently read back.
+- Application lint/unit/API/E2E/build suites were not run: no application,
+  contract, schema, migration, dependency, or runtime configuration changed.
+  No P05 integration or production-readiness result is claimed.
 
 ## Founder decisions preserved
 
-- Veso stays (1 Veso = USD 1), with separate append-only member-credit and
-  creator-earnings ledgers. Store, subscriptions/paid content, tipping and
-  real-time chat remain launch requirements.
+- September 9: the founder deferred Veso payments beyond beta because of
+  implementation complexity and the perceived high risk of being flagged
+  during CCBill or Epoch review. This is the founder's risk assessment, not a
+  reported processor rejection or prohibition. It supersedes the earlier
+  Veso-at-launch requirement, including older references elsewhere in the repo.
+- Veso recharge, prepaid balances/spending, promotional credits, transfers and
+  Veso-funded purchases/tips are deferred, not beta gates or completed work.
+  Retain the later concept at 1 Veso = USD 1 with separate append-only
+  member-credit and creator-earnings ledgers if reconsidered. No future release
+  date, processor acceptance or activation is promised.
+- Store, subscriptions/paid content, tipping and real-time chat remain launch
+  requirements. The beta payment model remains unresolved; removing Veso does
+  not approve a replacement checkout or remove payment/earnings, refund,
+  reconciliation and entitlement controls for any enabled paid flow.
+  Continue the existing local content/R2 slice; this scope update adds no
+  processor outreach, runtime changes, spending or deployment.
 - Connect is creator discovery with online, price, language and service
   filters. Communication/order arrangement belongs in chat. Automated calendar,
   reservation and reminder workflows are not implied; actual paid orders still
@@ -182,8 +358,13 @@ Docker Compose's PostgreSQL/Mailpit host bindings remain loopback-only.
 
 Phase 2 remains partial: no deployed staging/restore/monitoring/shared throttle
 or product-flow jobs. Phase 4 remains partial: no approved policies, operational
-identity/approval/moderation/performer workflow. No content/media/payment/Veso/
-messaging backend exists. The review router and Cloudflare candidate remain
+identity/approval/moderation/performer workflow. The first local safe-sample
+content flow is implemented as recorded above; payment/Veso/messaging backends
+remain absent. Veso is deferred beyond beta. The review router and Cloudflare
+candidate remain
 unmounted; no role promotion or identity-file collection is enabled; G1–G12
-remain NOT EVALUATED. Legal entity, merchant onboarding and other external
-decisions have not started, as confirmed by the founder on September 6.
+remain NOT EVALUATED. The September 9 correspondence update supersedes the
+earlier external-status note: the LLC is filed and awaiting Maryland approval,
+and the founder directed work toward the functioning review website before
+returning to CCBill. Commercial terms remain unresolved. Formal
+merchant onboarding, processor approval, EIN and banking remain unverified.

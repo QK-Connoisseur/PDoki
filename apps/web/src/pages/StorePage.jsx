@@ -380,7 +380,7 @@ function StoreCard({ item, followedUsernames, onBookmark, toggleFollow }) {
         {/* Price + Actions */}
         <div className="flex items-center justify-between mt-0.5">
           <span className="text-sm font-semibold text-[#241a22]">
-            ${item.price.toFixed(2)}
+            ${item.price.toFixed(2)} USD
           </span>
           <div className="flex items-center gap-1">
             <FollowButton
@@ -441,7 +441,7 @@ export default function StorePage({ userStatus = "online", onStatusChange }) {
   const [composeItalic, setComposeItalic] = useState(false);
   const [composeLocked, setComposeLocked] = useState(false);
   const [composeText, setComposeText] = useState("");
-  const [composeVesoPrice, setComposeVesoPrice] = useState("");
+  const [composePriceUsd, setComposePriceUsd] = useState("");
 
   /* ─── Store-specific state ─── */
   const [activeTab, setActiveTab] = useState("all");
@@ -1225,8 +1225,8 @@ export default function StorePage({ userStatus = "online", onStatusChange }) {
         setFontColor={setComposeFontColor}
         locked={composeLocked}
         setLocked={setComposeLocked}
-        vesoPrice={composeVesoPrice}
-        setVesoPrice={setComposeVesoPrice}
+        priceUsd={composePriceUsd}
+        setPriceUsd={setComposePriceUsd}
       />
     </MemberLayout>
   );

@@ -13,38 +13,38 @@ const creator = {
   audioIntro: "https://demo.example/audio.mp3",
   description: "Friendly conversations.",
   offers: [
-    { service: "chat", vesos: 12, unit: "30 min" },
-    { service: "chat", vesos: 10, unit: "30 min" },
-    { service: "video", vesos: 30, unit: "30 min" },
-    { service: "game", vesos: 8, unit: "game" },
+    { service: "chat", priceUsd: 12, unit: "30 min" },
+    { service: "chat", priceUsd: 10, unit: "30 min" },
+    { service: "video", priceUsd: 30, unit: "30 min" },
+    { service: "game", priceUsd: 8, unit: "game" },
   ],
 };
 
 describe("ConnectCreatorCard", () => {
   it("shows the lowest offer for the active service category", () => {
     render(<ConnectCreatorCard creator={creator} serviceType="chat" />);
-    expect(screen.getAllByText("10/30 min").length).toBeGreaterThan(0);
-    expect(screen.queryByText("12/30 min")).not.toBeInTheDocument();
+    expect(screen.getAllByText("$10.00/30 min").length).toBeGreaterThan(0);
+    expect(screen.queryByText("$12.00/30 min")).not.toBeInTheDocument();
   });
 
-  it("shows the same formatted Veso price on the front badge and the back face", () => {
+  it("shows the same formatted USD price on the front badge and the back face", () => {
     render(<ConnectCreatorCard creator={creator} serviceType="chat" />);
-    expect(screen.getAllByText("10/30 min")).toHaveLength(2);
+    expect(screen.getAllByText("$10.00/30 min")).toHaveLength(2);
   });
 
-  it("uses the Veso symbol, not a dollar sign", () => {
+  it("identifies its dollar price as USD in the accessible card label", () => {
     const { container } = render(
       <ConnectCreatorCard creator={creator} serviceType="chat" />
     );
-    expect(screen.getAllByRole("img", { name: "Veso" }).length).toBeGreaterThan(
-      0
+    expect(container.firstChild).toHaveAccessibleName(
+      "Luna Bloom — $10.00/30 min USD"
     );
-    expect(container.textContent).not.toContain("$");
+    expect(container.textContent).toContain("$10.00/30 min");
   });
 
   it('shows the lowest overall offer prefixed with "From" when no category is selected', () => {
     render(<ConnectCreatorCard creator={creator} serviceType={null} />);
-    expect(screen.getAllByText("From 8/game")).toHaveLength(2);
+    expect(screen.getAllByText("From $8.00/game")).toHaveLength(2);
   });
 
   it("flips via keyboard focus, not only hover", () => {

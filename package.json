@@ -27,6 +27,7 @@
     "test:phase2-worker-spike": "npm run build:api && npm run test:phase2-worker-spike --workspace @pumdoki/api",
     "test:phase2-worker-candidates": "npm run build:api && npm run test:phase2-worker-candidates --workspace @pumdoki/api",
     "test:e2e": "playwright test",
+    "test:e2e:content": "playwright test --config playwright.content.config.js",
     "start:e2e:api": "npm run start:e2e --workspace @pumdoki/api",
     "dev:api": "npm run dev --workspace @pumdoki/api",
     "dev:worker": "npm run dev:worker --workspace @pumdoki/api",

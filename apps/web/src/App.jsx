@@ -29,7 +29,7 @@ const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const ConnectPage = lazy(() => import("./pages/ConnectPage"));
 const StorePage = lazy(() => import("./pages/StorePage"));
 const PromotionsPage = lazy(() => import("./pages/PromotionsPage"));
-const WalletPage = lazy(() => import("./pages/WalletPage"));
+const BillingPage = lazy(() => import("./pages/BillingPage"));
 const OasisPage = lazy(() => import("./pages/OasisPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const CreatorDashboardPage = lazy(() => import("./pages/CreatorDashboardPage"));
@@ -44,7 +44,7 @@ const LegalHubPage = lazy(() => import("./pages/LegalHubPage"));
 /**
  * Navigation adapter.
  *
- * Some screens (Wallet, Creator Dashboard, Oasis, Login, onboarding, legal)
+ * Some screens (Billing, Creator Dashboard, Oasis, Login, onboarding, legal)
  * still render their own headers and were written against an object of
  * `onOpen*`/`onBack` callbacks. This hook reproduces that callback shape on top
  * of React Router so those pages render unchanged.
@@ -73,7 +73,7 @@ function useNav(userStatus, onStatusChange) {
     onOpenStore: () => navigate("/store"),
     onOpenPromotions: () => navigate("/promotions"),
     onOpenDashboard: () => navigate("/dashboard"),
-    onOpenWallet: () => navigate("/wallet"),
+    onOpenBilling: () => navigate("/billing"),
     onOpenSettings: () => navigate("/settings"),
     onOpenCreatorOnboarding: () => navigate("/creator/onboarding"),
     showCreatorDashboard: user?.role === AUTH_ROLES.CREATOR,
@@ -212,11 +212,12 @@ function AppShell() {
             </ProtectedRoute>
           }
         />
+        <Route path="/wallet" element={<Navigate to="/billing" replace />} />
         <Route
-          path="/wallet"
+          path="/billing"
           element={
             <ProtectedRoute>
-              <WalletPage {...nav} />
+              <BillingPage {...nav} />
             </ProtectedRoute>
           }
         />

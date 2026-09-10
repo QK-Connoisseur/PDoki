@@ -1,97 +1,92 @@
-# Initial CCBill inquiry
+# CCBill first exchange
 
-**Status — September 8, 2026:** The founder confirms the inquiry was sent to
-CCBill's Sales team. A reply is pending. PLAN.md §20 now calls for awaiting and
-reviewing that response, not sending another inquiry.
+**Recorded September 9, 2026:** The founder supplied the text of the email sent
+to CCBill and the Sales reply. These replace the earlier AI-prepared draft as
+the correspondence reference. Original email headers, send/receive timestamps
+and attachments were not supplied. A substantive model decision and quote
+remain outstanding.
 
-The text below is the prepared draft retained for reference. The sent email and
-exact send timestamp have not been inspected, so this is not a verified copy
-of the transmitted message. The listed recipient was **sales@ccbill.com**, from
-[CCBill's official contact page](https://ccbill.com/contact).
+The founder cancelled the [review-site clarification](ccbill-review-site-clarification.md)
+and directed work toward a functioning website, with founder/provider decisions
+alongside implementation. The follow-up is unsent and must not be sent.
 
-**Subject: Pre-launch eligibility and pricing — Pumdoki adult creator platform**
+## Sent inquiry — text supplied by the founder
 
-Hello CCBill Sales,
+**Subject: New adult platform — merchant inquiry, fee quote and pre-approval requirements**
 
-I am a solo founder based in Maryland, USA, developing Pumdoki, an online adult
-creator platform. Formation of **Kiban Digital Holdings LLC** in Maryland has
-been ordered through Northwest and is awaiting processing/state approval.
-The website is a development prototype with no live payments or sales history.
-CCBill is our intended first processor, subject to approval and workable terms.
+Hello,
 
-The planned model includes:
+I'm the founder of a pre-launch adult content and creator platform, operated by Kiban Digital Holdings LLC, a Maryland LLC filed on 8 September with approval expected late this month. Nothing is live yet — no user content, no transactions, no processor relationship.
 
-- Creator subscriptions and pay-to-view individual photos/videos or bundles,
-  including sexually explicit content, offered in feed posts and internal chat.
-- Creator tipping and discovery, plus real-time messaging.
-- Services arranged through chat, potentially including SFW gaming/social
-  interactions and adult video calls. The service catalogue and call delivery
-  method are not finalized; please identify any restrictions on these services.
-- Prepaid **Veso** credits at 1 Veso = USD 1, purchased through hosted checkout
-  and spent with creators on the platform. For example, a USD 50 credit purchase
-  adds 50 Veso; a 10 Veso content purchase leaves 40 Veso and records the creator's
-  gross sale separately. Creator cash payouts are a separate process to be agreed.
+**The model.** Creators publish photo and video to paying members: subscriptions, pay-per-view unlocks on individual posts and bundles, paid unlocks inside direct messages, and tips. Members and creators can also arrange paid services through chat, including SFW gaming companionship and adult video calls.
 
-Member cash-out, transfers, expiration, refund rules, limits and payout timing
-are undecided. Initial creator/member countries are also undecided; Latin
-America is an intended creator audience alongside the US. We have no reliable
-volume forecast yet and intend to start with a small pilot.
+**Funds flow.** Members buy prepaid platform credit (1 credit = 1 USD) through your hosted checkout and spend it across content, services and tips. Creator earnings accrue in a separate ledger and are paid out separately.
 
-Before commissioning the final policies and implementing payments, could you
-please answer the following or route this to the appropriate team?
+I want to understand fit and cost before I build the payments layer. Specifically:
 
-1. **Business fit:** Can CCBill consider this multi-creator adult-content,
-   prepaid-credit and services model? Which parts need separate approval,
-   restrictions or changes?
-2. **Veso rules:** What restrictions would apply to credit purchases, spending
-   across creators, refunds, balance/recharge limits, transfers or cash-out?
-   What merchant/seller and settlement arrangement would you require?
-3. **Complete costs and cash requirements:** Please provide indicative processing
-   rates, per-transaction and recurring fees, card-network registration/renewal
-   costs, minimums, deposits, refund/chargeback fees, rolling reserves and release
-   periods, and settlement timing. Identify anything requiring underwriting
-   before it can be quoted, and when any charges would become payable.
-4. **Creator payouts and countries:** Does your proposed arrangement handle
-   payouts to individual creators, or must we contract a separate payout
-   provider? Which merchant, member and creator countries are eligible, and
-   what payout fees, verification and tax-document responsibilities would apply?
-5. **Onboarding evidence and timing:** Please send the current checklist for
-   entity/bank documents, policies, performer ID/consent records, age checks,
-   moderation/removal procedures and website review. Can preliminary model
-   review and technical/sandbox guidance begin while formation is pending and
-   the website is still a prototype? What must be ready for formal approval?
+1. Complete fee schedule — discount rate, per-transaction and fixed fees, chargeback fee, any reserve or holdback, and the Visa and Mastercard high-risk registration fees.
+2. Underwriting timeline from complete application to approval.
+3. **What must be live on the site before you approve** — 2257 statement, age verification, published policies, takedown intake. This determines my build order.
+4. Whether the prepaid credit model above is supported, or whether you require direct per-item purchases.
+5. Whether the paid-services layer is supported, or must be excluded from the platform.
+6. Creator payouts — what CCBill handles versus what I'm responsible for, and which creator countries are supported.
 
-I am requesting preliminary fit, requirements and pricing information at this
-stage. I would appreciate a written response distinguishing initial guidance
-from requirements that still need formal underwriting.
+Happy to complete an application. What do you need from me?
 
-Thank you.
+## First Sales reply — recorded requirements
 
----
+Source: the reply pasted by the founder on September 9. The following is a
+summary, not a replacement quotation or an approval decision.
 
-## Completion and next use
+- Sales requests the website URL, development status, completion timeline,
+  business type, business location/registration, average price, whether it is
+  a monthly subscription, and a description of the offered services.
+- Sales says it needs a fully functioning site before moving forward. The
+  site may be online and password protected; the founder should email when
+  ready. The reply does not define which features or integrations must work,
+  or whether sandbox/test-credit purchase flows are sufficient.
+- For a US merchant account, Sales says the LLC and owner must be in the US.
+  It lists US business registration or sole-trader status, a US business bank
+  account, and personal identification from the US principal/owner.
+- The reply includes individual/sole-trader billing-descriptor and personal
+  contact-disclosure wording. Do not automatically treat that passage as the
+  final descriptor/privacy terms for the planned LLC; account-specific details
+  remain to be confirmed.
 
-The inquiry is sent per the founder's report. Bring the response back when
-received for review. This step finishes with written fit and
-requirements, indicative costs/reserves, or specific unresolved questions.
-Sending this inquiry does not select a paid plan or authorize an application
-fee, processor contract, merchant activation or disclosure of identity files.
+## Still unanswered
 
-The draft's original entity wording reflects the Northwest order-received
-stage. The founder has since confirmed the LLC is filed and awaiting Maryland
-approval. State approval, EIN, banking and the formation cost remain unverified.
-Keep this progress note separate from the retained draft text.
+No fee schedule, reserve terms, underwriting duration, approval of Veso or
+paid services, creator-payout arrangement/country list, or detailed site-review
+checklist was supplied. This is initial intake guidance. It is neither approval
+nor rejection of the proposed model, and it does not establish an accepted
+merchant account or permission to process payments.
 
-## Research basis — September 8, 2026
+The founder's email states a September 8 filing date. Its expected approval
+later in September is a forecast, not a state approval or guaranteed date.
+Formation approval, EIN, bank-account readiness and actual formation cost remain
+unverified. No ID or bank documents are stored with this correspondence.
 
-- [CCBill contact](https://ccbill.com/contact) and [general FAQs](https://ccbill.com/doc/general-faqs)
-  identify Sales as the route for prospective merchants.
-- [Merchant eligibility](https://ccbill.com/merchants) lists business, banking
-  and functional-site requirements for onboarding. The inquiry asks what can
-  be discussed before those are complete; it does not claim formal approval
-  is available for the prototype.
-- [Adult token/credit support](https://ccbill.com/industries/live-cams) supports
-  asking about Veso; Pumdoki's precise model remains subject to underwriting.
-- [Creator-platform payments](https://ccbill.com/industries/content-creator-platforms)
-  describes integration with a payout system of the merchant's choice. Do not
-  assume member payment collection automatically supplies creator payouts.
+## Next action and scope
+
+The latest founder direction is to build the functioning site and return to
+CCBill when it is ready for review. The first milestone is a working controlled
+content publishing/read flow from the existing P05 design. Pair storage/provider
+and product decisions with its code. Do not restart the cancelled clarification,
+URL questionnaire or broad legal engagement.
+
+The P05 Slice 1 content/access design supplies the next implementation's input.
+This reply does not authorize deploying the prototype, collecting identity
+documents, accepting uploads/money, or treating fake operational policies as
+a working review site. Hosting and implementation remain at their actual
+dependency and approval steps in PLAN.md.
+
+## Existing public references
+
+- [CCBill contact](https://ccbill.com/contact) identifies the Sales contact used
+  in the prepared inquiry.
+- [Merchant eligibility](https://ccbill.com/merchants) lists the general
+  business, banking and functional-site requirements. The account team's reply
+  above is the latest supplied evidence for this inquiry.
+- [Adult token/credit support](https://ccbill.com/industries/live-cams) and
+  [creator-platform payment/payout integration](https://ccbill.com/industries/content-creator-platforms)
+  establish product capabilities to ask about, not approval of Pumdoki.

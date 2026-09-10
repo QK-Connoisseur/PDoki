@@ -3,7 +3,9 @@
 **September 8 update:** This broad inquiry is no longer the current task and
 has not been sent. The founder confirms Kiban Digital Holdings LLC is filed
 through Northwest and awaiting Maryland approval. The CCBill inquiry has been
-sent to Sales; the current stage is awaiting and reviewing its response.
+sent to Sales. Its initial reply was supplied September 9. The founder cancelled
+the proposed clarification follow-up and directed work toward a functioning
+website, pairing founder/provider work with code; see PLAN.md §20.
 The [CCBill inquiry reference](initial-ccbill-inquiry.md) records that status.
 
 Keep the topics below as a reference. For later necessary legal work, select
@@ -36,7 +38,9 @@ remain to be defined.
 
 **Proposed payments and Veso model:** CCBill is the intended first processor;
 Epoch is a possible later fallback. A preliminary inquiry has been sent to
-CCBill Sales; its reply and approval are pending. Epoch has not been contacted.
+CCBill Sales. Its first reply requests a functioning review site and more
+business details; model eligibility and approval remain unresolved. Epoch has
+not been contacted.
 Members would select a recharge package and pay through a processor's
 hosted checkout. Pumdoki would credit Veso after verified payment confirmation,
 then let members spend it on content, agreed services and tips.

@@ -81,8 +81,15 @@ order-received screenshot. Approval, EIN, banking, exact filing timestamp and
 cost are not verified. Routine work should use DIY, drafts and suitable Fiverr
 specialists, with targeted qualified legal review only where needed.
 
-The founder confirms the CCBill inquiry was sent to Sales. Next: await and review
-the reply on model eligibility, onboarding, costs/reserves and payouts. The
-[prepared inquiry](initial-ccbill-inquiry.md) is retained as a reference.
+**September 9:** The founder supplied the sent email and first CCBill Sales
+reply, recorded in the [first exchange](initial-ccbill-inquiry.md). Sales requires
+a functioning, optionally password-protected site; model eligibility, fees,
+payouts and the detailed review checklist remain open. The founder subsequently
+cancelled the clarification follow-up and directed work toward a functioning
+website, pairing founder/provider decisions with each implementation slice.
+The first milestone is the working test-creator publishing/member-read path
+in PLAN.md §20, using safe sample media and the existing P05 design.
 The earlier broad counsel inquiry is parked as a reference for later scoped work.
-No email provider or engineering sprint is assigned until its turn in PLAN.md.
+The founder subsequently authorized P05 Slice 1 content model and access-rule
+design during this waiting period; see PLAN.md §9. Dependent implementation
+and email selection remain at their steps in §20.

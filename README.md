@@ -5,7 +5,10 @@ Pumdoki is an adult creator platform focused on subscriptions, paid content, cre
 The repository contains a broad React frontend prototype plus a local
 TypeScript/Express/PostgreSQL backend foundation. Core authentication, secure
 sessions, email verification, password reset, account-security Settings, and
-their database models are implemented locally. Media, payments, compliance
+their database models are implemented locally. A flagged
+[safe local content flow](docs/architecture/phase5-local-content-flow.md) now
+uploads photos/videos, persists private drafts and publishes to test members.
+Production media, payments, compliance
 operations, moderation, and production infrastructure remain incomplete.
 
 The detailed delivery roadmap is maintained in [PLAN.md](./PLAN.md).
@@ -31,8 +34,7 @@ The following are intended to work at launch:
 - Connect creator discovery with online status, price, language, and service filters. Members communicate and arrange orders through real-time chat; automated calendars/bookings are not assumed launch scope.
 - Real-time direct messages using WebSockets.
 - Creator tipping through Send Love.
-- Veso prepaid credits, where 1 Veso equals 1 USD.
-- Veso wallet recharge and spending.
+- Prices displayed in USD using the dollar sign; payment processing remains unimplemented.
 - Creator dashboard plus separately deployed private admin operations.
 - Explicit-content preference controls.
 - Creator verification, consent, moderation, reporting, and required compliance workflows.
@@ -42,17 +44,14 @@ Live streaming remains post-MVP.
 
 ## Important product decisions
 
-### Veso
+### Pricing and billing
 
-Veso is a prepaid platform credit:
-
-- 1 Veso represents 1 USD of purchasing value.
-- Members recharge Vesos before spending them.
-- Store content, Connect services, and Send Love may be paid with Vesos.
-- Member Veso balances and creator payable earnings must be separate accounting systems.
-- Veso must use an auditable transaction ledger rather than a directly editable balance.
-- The recharge experience should be visually comparable to E-Pal's Buff recharge flow.
-- E-Pal may be used as a product reference, but Pumdoki's financial, refund, expiration, transfer, and redemption policies require independent processor and legal review.
+Prices use USD and the plain dollar sign. Member billing covers purchase,
+subscription and tip history; creator earnings remain separate. Prepaid Veso
+credits, recharge and member stored balances are deferred beyond beta and are
+removed from the launch tracker and UI. Existing `/wallet` links redirect to
+`/billing`. Changing the display currency does not activate payments; checkout,
+refunds, reconciliation and payouts still need implementation and provider review.
 
 ### Explicit content
 
@@ -95,13 +94,18 @@ benefits, selection rules, and free-membership promises are not approved.
 
 ### Founder workflow
 
-Work one founder step at a time. The
+Work one functional slice at a time, with its founder/provider work alongside code. The
 [initial business definition](docs/product/initial-business-definition.md) has
 been answered and reviewed. As of September 8, 2026, the founder confirms
 **Kiban Digital Holdings LLC** is filed through Northwest and awaiting Maryland
-approval. The CCBill inquiry has been sent to Sales and is awaiting a reply.
-PLAN.md §20 owns the current stage: await and review the response. The
-[prepared inquiry](docs/product/initial-ccbill-inquiry.md) remains a reference.
+approval. On September 9, the founder supplied CCBill's initial Sales reply:
+a functioning review site is required, and password protection is permitted.
+Model eligibility, fees, payouts and the detailed review checklist remain open.
+The founder cancelled the clarification follow-up. PLAN.md §20 now prioritizes
+the first working test-creator content and member-read flow, with storage and
+other necessary founder/provider decisions alongside code. Use test accounts
+and safe sample media; recruitment and polish are not prerequisites.
+The [first exchange](docs/product/initial-ccbill-inquiry.md) records the supplied evidence.
 Use founder-led work, drafts and suitable Fiverr specialists where practical;
 pay for targeted qualified legal review only when needed for the actual issue.
 Do not require a broad legal consultation for routine entity formation.
@@ -204,7 +208,7 @@ The web prototype includes:
 - Connect.
 - Store.
 - Promotions.
-- Wallet.
+- Billing.
 - Creator dashboard.
 - Legacy Oasis prototype (cancelled direction; retained for reference).
 - Chat UI.
@@ -266,8 +270,12 @@ tips. PR #19 is the static-theme change, not Slice 4.
 The candidate remains unmounted and synthetic; Cloudflare is not selected.
 Two hardware-key account logins were founder-tested on the Mac, but exact
 Access-application assertion and hardware-method evidence remain absent.
-Further operations hardening is parked. The next engineering work will follow
-the one-page business definition and concrete commercial requirements.
+Further operations hardening is parked. On September 8 the founder authorized
+[P05 Slice 1 content model and access-rule design](docs/architecture/phase5-slice1-content-model-and-access-design.md)
+while awaiting Maryland approval and CCBill's reply. A local design draft now
+covers content/media/offer identities, access rules and synthetic cases; human
+technical review remains pending. No P05 backend or media/payment integration
+is implemented by this design. PLAN.md §9 and §20 own the next boundary.
 
 Production infrastructure, identity verification, operational authentication/review,
 server-side content filtering, dependency-bound Settings, and other product

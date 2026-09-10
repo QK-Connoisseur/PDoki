@@ -600,7 +600,7 @@ export default function ChatSidebar({ contacts = [] }) {
 
                   {/* Composer */}
                   <div className="px-4 pt-2.5 pb-3 border-t border-pink-100 bg-white shrink-0">
-                    {/* Action toolbar: media attach, gift, and Tip Veso */}
+                    {/* Action toolbar: media attach, gift, and Tip */}
                     <div className="flex items-center gap-1.5 mb-2">
                       <button
                         className="flex h-7 w-7 items-center justify-center rounded-full text-[#b89aa8] hover:bg-pink-50 hover:text-[#df5f97] transition cursor-pointer"
@@ -658,21 +658,16 @@ export default function ChatSidebar({ contacts = [] }) {
                           background: "linear-gradient(90deg,#f5b63b,#f9c76a)",
                           color: "#2B1A10",
                         }}
-                        aria-label={`Tip Veso to ${activeContact.name}`}
+                        aria-label={`Tip to ${activeContact.name}`}
                         onClick={() => {}}
                       >
-                        <svg
-                          viewBox="0 0 16 16"
-                          className="w-3.5 h-3.5"
-                          fill="none"
+                        <span
+                          aria-hidden="true"
+                          className="text-sm leading-none"
                         >
-                          <path
-                            d="M8 13c-1.2-.85-3.2-2.1-4.4-3.6C2.2 8 2.2 6.8 3.8 6c.85-.45 1.8-.22 2.4.5.2.23.3.52.3.8 0-.28.1-.57.3-.8.6-.72 1.55-.95 2.4-.5 1.6.8 1.6 2 .4 3.4C8.4 10.9 8 13 8 13z"
-                            fill="#2B1A10"
-                            opacity="0.75"
-                          />
-                        </svg>
-                        Tip Veso
+                          $
+                        </span>
+                        Tip
                       </button>
                     </div>
 

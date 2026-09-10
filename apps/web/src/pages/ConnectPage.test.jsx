@@ -42,13 +42,13 @@ describe("ConnectPage", () => {
         "chat"
       )
     );
-    expect(lunaLowestChat).toBe("10/30 min");
+    expect(lunaLowestChat).toBe("$10.00/30 min");
     // Front badge + back face of Luna's card both use the shared helper.
     expect(screen.getAllByText(lunaLowestChat).length).toBeGreaterThanOrEqual(
       2
     );
     // Her more expensive chat offer is never shown.
-    expect(screen.queryByText("18/hour")).not.toBeInTheDocument();
+    expect(screen.queryByText("$18.00/hour")).not.toBeInTheDocument();
   });
 
   it('prefixes "From" on cards in the New to Pumdoki section (no category context)', () => {
@@ -60,7 +60,7 @@ describe("ConnectPage", () => {
       ),
       { from: true }
     );
-    expect(kiraLowest).toBe("From 4/30 min");
+    expect(kiraLowest).toBe("From $4.00/30 min");
     expect(screen.getAllByText(kiraLowest).length).toBeGreaterThan(0);
   });
 });

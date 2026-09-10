@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { MenuHeartIcon, STATUS_OPTIONS } from "./UserStatusSwitcher";
-import VesoIcon from "./VesoIcon";
 import { getLowestOffer, formatServicePrice } from "../utils/serviceOffers";
 
 /**
  * Connect creator card with a 3D flip. The front photo face and the flipped
- * detail face both show the creator's lowest Veso offer for the service
+ * detail face both show the creator's lowest USD offer for the service
  * category the card is rendered in (`serviceType`); with no category the
  * lowest offer overall is shown prefixed with "From". The flip is reachable
  * by hover, keyboard focus, and click/tap.
@@ -154,7 +153,7 @@ export default function ConnectCreatorCard({ creator, serviceType = null }) {
       className="group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f472b6]/60 rounded-2xl"
       style={{ perspective: "1000px" }}
       tabIndex={0}
-      aria-label={`${creator.name} — ${priceLabel || "creator card"}`}
+      aria-label={`${creator.name} — ${priceLabel ? `${priceLabel} USD` : "creator card"}`}
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
       onFocus={() => setIsFlipped(true)}
@@ -223,7 +222,7 @@ export default function ConnectCreatorCard({ creator, serviceType = null }) {
             <PlayIcon size={10} />
           </button>
 
-          {/* Lowest Veso price for the active category — bottom-right */}
+          {/* Lowest USD price for the active category — bottom-right */}
           {priceLabel && (
             <div
               className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full px-2 py-1"
@@ -234,8 +233,10 @@ export default function ConnectCreatorCard({ creator, serviceType = null }) {
                 border: "1px solid rgba(249,168,200,0.25)",
               }}
             >
-              <VesoIcon size={11} />
-              <span className="text-white/90 text-[11px] font-semibold whitespace-nowrap">
+              <span
+                title="Price in USD"
+                className="text-white/90 text-[11px] font-semibold whitespace-nowrap"
+              >
                 {priceLabel}
               </span>
             </div>
@@ -307,8 +308,7 @@ export default function ConnectCreatorCard({ creator, serviceType = null }) {
           {/* Same helper, same formatted price as the front badge */}
           {priceLabel && (
             <p className="flex items-center gap-1 text-[#241a22] font-bold text-sm mt-3">
-              <VesoIcon size={13} />
-              <span>{priceLabel}</span>
+              <span title="Price in USD">{priceLabel}</span>
             </p>
           )}
 

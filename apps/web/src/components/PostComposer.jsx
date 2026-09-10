@@ -9,7 +9,7 @@ export default function PostComposer({ onClose }) {
   const [bold, setBold] = useState(false);
   const [italic, setItalic] = useState(false);
   const [locked, setLocked] = useState(false);
-  const [vesoPrice, setVesoPrice] = useState("");
+  const [priceUsd, setPriceUsd] = useState("");
 
   return (
     <CreatePostModal
@@ -27,8 +27,8 @@ export default function PostComposer({ onClose }) {
       setFontColor={setFontColor}
       locked={locked}
       setLocked={setLocked}
-      vesoPrice={vesoPrice}
-      setVesoPrice={setVesoPrice}
+      priceUsd={priceUsd}
+      setPriceUsd={setPriceUsd}
     />
   );
 }

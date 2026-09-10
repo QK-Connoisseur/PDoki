@@ -4,8 +4,8 @@
  * Dev/test only — not production data. Extracted from the page body so it can
  * be swapped for a real `/api/v1` response during backend integration.
  *
- * Each creator lists service `offers` priced in Veso (1 Veso = 1 USD):
- * `{ service, vesos, unit }`. A category may carry several offers (e.g. a
+ * Each creator lists sample service `offers` priced in USD:
+ * `{ service, priceUsd, unit }`. A category may carry several offers (e.g. a
  * 30-minute block and an hour block); display code derives the lowest via
  * `getLowestOffer` instead of storing a pre-formatted price string. The
  * creator's service categories are derived from these offers.
@@ -24,11 +24,11 @@ export const creators = [
     status: "online",
     audioIntro: "https://example.com/audio/lunabloom.mp3",
     offers: [
-      { service: "chat", vesos: 10, unit: "30 min" },
-      { service: "chat", vesos: 18, unit: "hour" },
-      { service: "voice", vesos: 15, unit: "30 min" },
-      { service: "video", vesos: 25, unit: "30 min" },
-      { service: "shoutout", vesos: 20, unit: "shoutout" },
+      { service: "chat", priceUsd: 10, unit: "30 min" },
+      { service: "chat", priceUsd: 18, unit: "hour" },
+      { service: "voice", priceUsd: 15, unit: "30 min" },
+      { service: "video", priceUsd: 25, unit: "30 min" },
+      { service: "shoutout", priceUsd: 20, unit: "shoutout" },
     ],
     description:
       "Friendly conversations about life, love, and everything in between.",
@@ -46,10 +46,10 @@ export const creators = [
     status: "busy",
     audioIntro: "https://example.com/audio/mikarose.mp3",
     offers: [
-      { service: "chat", vesos: 12, unit: "30 min" },
-      { service: "video", vesos: 30, unit: "30 min" },
-      { service: "game", vesos: 10, unit: "game" },
-      { service: "game", vesos: 8, unit: "game" },
+      { service: "chat", priceUsd: 12, unit: "30 min" },
+      { service: "video", priceUsd: 30, unit: "30 min" },
+      { service: "game", priceUsd: 10, unit: "game" },
+      { service: "game", priceUsd: 8, unit: "game" },
     ],
     description: "Let's play games together or just vibe on a video call!",
     section: "recent",
@@ -66,8 +66,8 @@ export const creators = [
     status: "resting",
     audioIntro: "https://example.com/audio/airivale.mp3",
     offers: [
-      { service: "chat", vesos: 6, unit: "30 min" },
-      { service: "voice", vesos: 12, unit: "30 min" },
+      { service: "chat", priceUsd: 6, unit: "30 min" },
+      { service: "voice", priceUsd: 12, unit: "30 min" },
     ],
     description: "Deep talks and late-night chats. Always here to listen.",
     section: "recent",
@@ -84,12 +84,12 @@ export const creators = [
     status: "online",
     audioIntro: "https://example.com/audio/soranyx.mp3",
     offers: [
-      { service: "chat", vesos: 20, unit: "30 min" },
-      { service: "voice", vesos: 35, unit: "30 min" },
-      { service: "video", vesos: 50, unit: "30 min" },
-      { service: "video", vesos: 90, unit: "hour" },
-      { service: "game", vesos: 40, unit: "game" },
-      { service: "shoutout", vesos: 45, unit: "shoutout" },
+      { service: "chat", priceUsd: 20, unit: "30 min" },
+      { service: "voice", priceUsd: 35, unit: "30 min" },
+      { service: "video", priceUsd: 50, unit: "30 min" },
+      { service: "video", priceUsd: 90, unit: "hour" },
+      { service: "game", priceUsd: 40, unit: "game" },
+      { service: "shoutout", priceUsd: 45, unit: "shoutout" },
     ],
     description: "Premium 1-on-1 experiences. Gaming, chatting, and more.",
     section: "recent",
@@ -106,8 +106,8 @@ export const creators = [
     status: "offline",
     audioIntro: "https://example.com/audio/naomihart.mp3",
     offers: [
-      { service: "chat", vesos: 9, unit: "30 min" },
-      { service: "video", vesos: 22, unit: "30 min" },
+      { service: "chat", priceUsd: 9, unit: "30 min" },
+      { service: "video", priceUsd: 22, unit: "30 min" },
     ],
     description: "Video calls with good vibes and great energy every time.",
     section: "recent",
@@ -124,8 +124,8 @@ export const creators = [
     status: "busy",
     audioIntro: "https://example.com/audio/reinanoir.mp3",
     offers: [
-      { service: "voice", vesos: 18, unit: "30 min" },
-      { service: "video", vesos: 28, unit: "30 min" },
+      { service: "voice", priceUsd: 18, unit: "30 min" },
+      { service: "video", priceUsd: 28, unit: "30 min" },
     ],
     description: "Voice and video sessions with a creative twist. Come say hi!",
     section: "recent",
@@ -142,8 +142,8 @@ export const creators = [
     status: "online",
     audioIntro: "https://example.com/audio/kiradawn.mp3",
     offers: [
-      { service: "chat", vesos: 4, unit: "30 min" },
-      { service: "game", vesos: 5, unit: "game" },
+      { service: "chat", priceUsd: 4, unit: "30 min" },
+      { service: "game", priceUsd: 5, unit: "game" },
     ],
     description: "Casual gaming sessions and fun chat. Let's hang out!",
     section: "recent",
@@ -160,10 +160,10 @@ export const creators = [
     status: "resting",
     audioIntro: "https://example.com/audio/yukistar.mp3",
     offers: [
-      { service: "chat", vesos: 11, unit: "30 min" },
-      { service: "voice", vesos: 16, unit: "30 min" },
-      { service: "video", vesos: 26, unit: "30 min" },
-      { service: "shoutout", vesos: 18, unit: "shoutout" },
+      { service: "chat", priceUsd: 11, unit: "30 min" },
+      { service: "voice", priceUsd: 16, unit: "30 min" },
+      { service: "video", priceUsd: 26, unit: "30 min" },
+      { service: "shoutout", priceUsd: 18, unit: "shoutout" },
     ],
     description: "Warm conversations and cozy voice calls. Your comfort zone.",
     section: "popular",
@@ -180,10 +180,10 @@ export const creators = [
     status: "online",
     audioIntro: "https://example.com/audio/hanamizu.mp3",
     offers: [
-      { service: "chat", vesos: 10, unit: "30 min" },
-      { service: "voice", vesos: 14, unit: "30 min" },
-      { service: "game", vesos: 12, unit: "game" },
-      { service: "game", vesos: 9, unit: "game" },
+      { service: "chat", priceUsd: 10, unit: "30 min" },
+      { service: "voice", priceUsd: 14, unit: "30 min" },
+      { service: "game", priceUsd: 12, unit: "game" },
+      { service: "game", priceUsd: 9, unit: "game" },
     ],
     description: "Challenge me to a game or just chat about anything.",
     section: "popular",
@@ -200,11 +200,11 @@ export const creators = [
     status: "online",
     audioIntro: "https://example.com/audio/emiskye.mp3",
     offers: [
-      { service: "chat", vesos: 22, unit: "30 min" },
-      { service: "voice", vesos: 38, unit: "30 min" },
-      { service: "video", vesos: 60, unit: "hour" },
-      { service: "game", vesos: 45, unit: "game" },
-      { service: "shoutout", vesos: 50, unit: "shoutout" },
+      { service: "chat", priceUsd: 22, unit: "30 min" },
+      { service: "voice", priceUsd: 38, unit: "30 min" },
+      { service: "video", priceUsd: 60, unit: "hour" },
+      { service: "game", priceUsd: 45, unit: "game" },
+      { service: "shoutout", priceUsd: 50, unit: "shoutout" },
     ],
     description:
       "Full interactive experience. Games, calls, and exclusive chats.",
@@ -222,8 +222,8 @@ export const creators = [
     status: "offline",
     audioIntro: "https://example.com/audio/rinvelvet.mp3",
     offers: [
-      { service: "chat", vesos: 7, unit: "30 min" },
-      { service: "video", vesos: 20, unit: "30 min" },
+      { service: "chat", priceUsd: 7, unit: "30 min" },
+      { service: "video", priceUsd: 20, unit: "30 min" },
     ],
     description: "Chill video sessions. Let's talk about your day.",
     section: "popular",
@@ -240,9 +240,9 @@ export const creators = [
     status: "busy",
     audioIntro: "https://example.com/audio/meisoleil.mp3",
     offers: [
-      { service: "voice", vesos: 20, unit: "30 min" },
-      { service: "video", vesos: 32, unit: "30 min" },
-      { service: "game", vesos: 15, unit: "game" },
+      { service: "voice", priceUsd: 20, unit: "30 min" },
+      { service: "video", priceUsd: 32, unit: "30 min" },
+      { service: "game", priceUsd: 15, unit: "game" },
     ],
     description: "High-energy gaming and interactive voice experiences.",
     section: "popular",
@@ -258,7 +258,7 @@ export const creators = [
     level: "bronze",
     status: "resting",
     audioIntro: "https://example.com/audio/zaralux.mp3",
-    offers: [{ service: "chat", vesos: 3, unit: "30 min" }],
+    offers: [{ service: "chat", priceUsd: 3, unit: "30 min" }],
     description: "Quick messages and personal replies. Always responsive.",
     section: "popular",
   },
@@ -274,10 +274,10 @@ export const creators = [
     status: "online",
     audioIntro: "https://example.com/audio/noaember.mp3",
     offers: [
-      { service: "chat", vesos: 10, unit: "30 min" },
-      { service: "voice", vesos: 15, unit: "30 min" },
-      { service: "video", vesos: 24, unit: "30 min" },
-      { service: "shoutout", vesos: 16, unit: "shoutout" },
+      { service: "chat", priceUsd: 10, unit: "30 min" },
+      { service: "voice", priceUsd: 15, unit: "30 min" },
+      { service: "video", priceUsd: 24, unit: "30 min" },
+      { service: "shoutout", priceUsd: 16, unit: "shoutout" },
     ],
     description: "Voice calls with personality. Let me brighten your day.",
     section: "popular",

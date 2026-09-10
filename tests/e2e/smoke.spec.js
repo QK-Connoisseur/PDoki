@@ -34,6 +34,7 @@ const protectedRoutes = [
   { path: "/store", group: "member", expect: "Trending" },
   { path: "/connect", group: "member", expect: "Voice Call" },
   { path: "/promotions", group: "member" },
+  { path: "/billing", group: "member" },
   { path: "/wallet", group: "member" },
   { path: "/settings", group: "member", expect: "Content preferences" },
   { path: "/oasis", group: "member" },

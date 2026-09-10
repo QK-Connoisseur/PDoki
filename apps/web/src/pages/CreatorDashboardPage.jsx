@@ -854,7 +854,7 @@ function EarningsSection() {
     <>
       <SectionHeader
         title="Earnings & Payouts"
-        subtitle="Track every cherry blossom that drops into your wallet."
+        subtitle="Track your creator earnings and payouts in USD."
         action={
           <div className="flex gap-2">
             <button className="rounded-xl border border-pink-200 bg-white px-3.5 py-2 text-sm font-semibold text-[#df5f97] transition hover:bg-pink-50">

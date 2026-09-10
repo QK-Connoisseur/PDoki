@@ -19,6 +19,8 @@ function readString(key, fallback) {
 export const env = {
   /** Base URL of the Pumdoki API, e.g. http://localhost:3000/api/v1 */
   apiBaseUrl: readString("VITE_API_BASE_URL", "http://localhost:3000/api/v1"),
+  /** Explicitly opt into the controlled content API; never fall back to fixtures. */
+  contentMode: readString("VITE_CONTENT_MODE", "disabled"),
   /** Vite's standard mode flag. */
   isDev: import.meta.env?.DEV ?? false,
 };

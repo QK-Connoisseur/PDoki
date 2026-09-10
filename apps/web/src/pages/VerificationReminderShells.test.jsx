@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthContext } from "../auth/authContext";
 import CreatorDashboardPage from "./CreatorDashboardPage";
 import OasisPage from "./OasisPage";
-import WalletPage from "./WalletPage";
+import BillingPage from "./BillingPage";
 
 vi.mock("../lib/useSimulatedFetch", () => ({
   useSimulatedFetch: () => ({ status: "ready", retry: vi.fn() }),
@@ -20,8 +20,8 @@ const unverifiedUser = {
 
 const shells = [
   {
-    name: "wallet",
-    page: () => <WalletPage onBack={vi.fn()} />,
+    name: "billing",
+    page: () => <BillingPage onBack={vi.fn()} />,
   },
   {
     name: "Oasis",

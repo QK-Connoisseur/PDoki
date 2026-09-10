@@ -97,5 +97,20 @@ export default [
     },
   },
 
+  // New typed frontend integration stays scoped; existing JSX keeps its rules.
+  ...tseslint.configs.recommended.map((config) => ({
+    ...config,
+    files: ["apps/web/**/*.{ts,tsx}"],
+  })),
+  {
+    files: ["apps/web/**/*.{ts,tsx}"],
+    languageOptions: { globals: { ...globals.browser } },
+    plugins: { "react-hooks": reactHooks },
+    rules: {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+    },
+  },
+
   prettier,
 ];

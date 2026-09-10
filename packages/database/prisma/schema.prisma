@@ -18,6 +18,59 @@ enum UserRole {
   ADMIN
 }
 
+enum ContentPostState {
+  DRAFT
+  PUBLISHED
+  REMOVED
+}
+
+enum MediaStorageBackend {
+  LOCAL
+  R2
+}
+
+// First immutable content revision. Only safe development samples can be
+// created/delivered until the production eligibility/entitlement path exists.
+model ContentPost {
+  id             String           @id @default(uuid()) @db.Uuid
+  creatorId      String           @db.Uuid
+  creator        User             @relation(fields: [creatorId], references: [id], onDelete: Restrict)
+  body           String           @db.VarChar(2000)
+  state          ContentPostState @default(DRAFT)
+  testOnly       Boolean          @default(true)
+  idempotencyKey String           @db.Uuid
+  requestDigest  String           @db.Char(64)
+  createdAt      DateTime         @default(now()) @db.Timestamptz(3)
+  publishedAt    DateTime?        @db.Timestamptz(3)
+  removedAt      DateTime?        @db.Timestamptz(3)
+  media          MediaAsset[]
+
+  @@unique([id, creatorId])
+  @@unique([creatorId, idempotencyKey])
+  @@index([state, publishedAt, id])
+}
+
+model MediaAsset {
+  id             String       @id @default(uuid()) @db.Uuid
+  ownerId        String       @db.Uuid
+  owner          User         @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  postId         String?      @db.Uuid
+  post           ContentPost? @relation(fields: [postId, ownerId], references: [id, creatorId], onDelete: Restrict, onUpdate: Restrict)
+  position       Int?
+  storageKey     String       @unique @db.Char(64)
+  storageBackend MediaStorageBackend @default(LOCAL)
+  mimeType       String       @db.VarChar(40)
+  byteSize       Int
+  sha256         String       @db.Char(64)
+  testOnly       Boolean      @default(true)
+  idempotencyKey String       @db.Uuid
+  requestDigest  String       @db.Char(64)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+
+  @@unique([ownerId, idempotencyKey])
+  @@unique([postId, position])
+}
+
 enum UserStatus {
   ACTIVE
   SUSPENDED
@@ -95,6 +148,8 @@ model User {
   creatorApplication             CreatorApplication?
   creatorApplicationReviewEvents CreatorApplicationReviewEvent[]
   operationsOperators            OperationsOperator[]
+  contentPosts                   ContentPost[]
+  mediaAssets                    MediaAsset[]
 }
 
 model OperationsOperator {

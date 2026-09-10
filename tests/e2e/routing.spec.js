@@ -132,11 +132,11 @@ test.describe("core page async states", () => {
 
 const featurePageStates = [
   {
-    name: "wallet",
-    path: "/wallet",
-    empty: "Your wallet is empty",
-    error: "We couldn’t load your wallet.",
-    ready: "Wallet",
+    name: "billing",
+    path: "/billing",
+    empty: "No purchases yet",
+    error: "We couldn’t load billing.",
+    ready: "Billing",
   },
   {
     name: "Oasis",

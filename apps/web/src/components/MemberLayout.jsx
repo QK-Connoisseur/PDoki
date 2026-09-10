@@ -33,8 +33,8 @@ import {
  *
  * @param {{
  *   activePage: string,
- *   onComposePost?: () => void,
- *   onComposeMoment?: () => void,
+ *   onComposePost?: (() => void) | null,
+ *   onComposeMoment?: (() => void) | null,
  *   userStatus?: string,
  *   onStatusChange?: (s: string) => void,
  *   onLogoClick?: () => void,
@@ -68,9 +68,15 @@ export default function MemberLayout({
   const [showComposeMenu, setShowComposeMenu] = useState(false);
   const [activeComposer, setActiveComposer] = useState(null);
   const [logoutError, setLogoutError] = useState("");
-  const handleComposePost = onComposePost ?? (() => setActiveComposer("post"));
+  // Explicit null disables a creation action in API-backed flows.
+  const handleComposePost =
+    onComposePost === undefined
+      ? () => setActiveComposer("post")
+      : onComposePost;
   const handleComposeMoment =
-    onComposeMoment ?? (() => setActiveComposer("moment"));
+    onComposeMoment === undefined
+      ? () => setActiveComposer("moment")
+      : onComposeMoment;
 
   const handleNavigate = (id) => {
     if (id === "home") navigate("/home");

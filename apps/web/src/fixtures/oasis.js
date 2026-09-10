@@ -280,27 +280,11 @@ export const STORE_ITEMS = [
     rarity: "Epic",
   },
   {
-    id: 4,
-    name: "Celestial Halo",
-    type: "medal",
-    price: 200,
-    currency: "vesos",
-    rarity: "Legendary",
-  },
-  {
     id: 5,
     name: "Starfall Frame",
     type: "collectible",
     price: 800,
     currency: "orbs",
     rarity: "Rare",
-  },
-  {
-    id: 6,
-    name: "Blossom Aura",
-    type: "collectible",
-    price: 150,
-    currency: "vesos",
-    rarity: "Epic",
   },
 ];

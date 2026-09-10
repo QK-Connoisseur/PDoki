@@ -5,8 +5,9 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 ## What this is
 
 Pumdoki is an adult creator platform with subscriptions/paid content, creator
-discovery through Connect, real-time chat, tipping and prepaid Veso credits.
-Veso, Connect discovery, real-time chat and tipping remain launch requirements.
+discovery through Connect, real-time chat and tipping. Prices use plain USD ($).
+Prepaid Veso credits are deferred beyond beta and removed from the launch
+tracker and UI. Member billing has no recharge or stored balance.
 The original Oasis/Drimy game was cancelled September 6, 2026; a possible later
 streak/adult-language-learning concept is not a launch requirement. The repo is
 an npm-workspaces monorepo: React prototype `apps/web`, disabled private shell
@@ -32,14 +33,38 @@ provisional ideas without presenting unapproved benefits, prices or capacity
 as promises. No extra motion, game, Plus or design expansion is authorized.
 
 September 8: the founder confirms Kiban Digital Holdings LLC is filed through
-Northwest and awaiting Maryland approval. The CCBill sales inquiry is sent;
-await and review its response. Prefer DIY, drafts and suitable Fiverr specialists;
+Northwest and awaiting Maryland approval. September 9: CCBill's initial Sales
+reply requires a functioning review site, optionally password protected; model
+eligibility, fees and payouts remain open. The founder cancelled the proposed
+clarification follow-up and directed work toward a functioning review website.
+Prefer DIY, drafts and suitable Fiverr specialists;
 use paid legal advice only for necessary, specific issues and substantive
 review. Do not restart a broad counsel-first or entity-selection task.
 
+Latest September 9 direction supersedes the earlier paperwork-first sequence:
+work one functional product slice at a time, pairing code with its necessary
+founder/provider decisions and targeted review. Start from the existing P05
+content/access design toward a working test-creator publishing and member-read
+flow. Use test accounts and safe sample media; recruitment and polish are not
+prerequisites. Review concrete sensitive flows before live use. No provider
+purchase, deployment, real identity collection or payment activation is implied.
+PLAN.md §9 and §20 own the updated scope and actual implementation status.
+
+The first [local content flow](docs/architecture/phase5-local-content-flow.md)
+is now implemented: private safe PNG/JPEG/MP4 uploads, sealed drafts,
+publication/removal, and test-member feed/media reads. Both content flags are
+off by default; production/remote use is rejected. R2 safe photo/video integration
+is verified using bucket-scoped credentials in ignored `.env.r2.local` (0600).
+The bucket overview shows Public Access Disabled. Cloud upload/read, private
+access, restart persistence, removal and both browser paths passed; generated
+objects were cleaned up. Next is founder review of this working local flow.
+Credentials belong only in the local file, never chat or commits. Do not restart design-only work
+or claim Phase 5, hosted review or production readiness. See HANDOFF for tests
+and the isolated review database; preserve the existing development database.
+
 Authoritative product/scope docs, read these before non-trivial work:
 
-- `README.md` — product direction, confirmed launch scope, and stable UI requirements (Profile, Store, Veso, Oasis, legal/compliance UI).
+- `README.md` — product direction, confirmed launch scope, and stable UI requirements (Profile, Store, billing, Oasis, legal/compliance UI).
 - `PLAN.md` — dependency-ordered, 14-phase delivery roadmap with exit criteria and open business/legal decisions.
 - `docs/architecture/` — durable slice designs, implementation records, and architecture decisions, including the Phase 3 Settings records and the Phase 4 creator-application foundation.
 - `docs/product/Pumdoki_MasterTracker_V4.xlsx` — operational checklist ("master tracker").
@@ -104,10 +129,10 @@ The frontend code lives in `apps/web/src`:
 
 - `App.jsx` — root. **Uses React Router (`BrowserRouter`).** `AuthProvider` restores the HttpOnly-cookie session through `/me`. Routes are organized into public/auth, member, creator, and legal groups. The older `useNav` adapter remains for specialized pages that still expose callback navigation. Shared-shell pages navigate directly with React Router. Routes are wrapped in an `ErrorBoundary`; member/creator routes use the real `ProtectedRoute` state and uppercase API roles. Creator Dashboard navigation is visible only to `CREATOR` accounts. The public app intentionally has no `/admin` route. `userStatus` is lifted so it persists across routes.
 - `auth/` — auth API adapter, canonical roles and policy versions, `AuthProvider` state machine, and hooks. The API remains the identity source of truth; no auth token is stored in browser storage.
-- `pages/` — one component per screen (Home, Profile, Store, Connect, Wallet, Promotions, CreatorDashboard, Oasis, Settings, Login, SignUp, ForgotPassword, ResetPassword, VerifyEmail, LegalHub, CreatorOnboarding). Settings is protected and uses real APIs for display name, email/reverification, password, active sessions, and the explicit-content preference. Creator onboarding now uses the real application API, requests no identity files, persists a pending outcome, and never promotes or redirects a member to Dashboard. Several prototype pages remain large, but backend-bound sample content is imported from `fixtures/` rather than being declared inside page components.
-- `components/` — shared widgets and foundation primitives. `MemberLayout` is the shared shell for Home, Profile, Store, Connect, and Promotions; it composes `AppHeader`, Sidebar/mobile navigation, and ChatSidebar. Specialized feature areas such as Wallet, Oasis, and Creator Dashboard intentionally retain their own layouts. `ErrorBoundary`, `ProtectedRoute`, and `StateViews` provide failure, authorization, loading, empty, and retry seams.
+- `pages/` — one component per screen (Home, Profile, Store, Connect, Billing, Promotions, CreatorDashboard, Oasis, Settings, Login, SignUp, ForgotPassword, ResetPassword, VerifyEmail, LegalHub, CreatorOnboarding). Settings is protected and uses real APIs for display name, email/reverification, password, active sessions, and the explicit-content preference. Creator onboarding now uses the real application API, requests no identity files, persists a pending outcome, and never promotes or redirects a member to Dashboard. Several prototype pages remain large, but backend-bound sample content is imported from `fixtures/` rather than being declared inside page components.
+- `components/` — shared widgets and foundation primitives. `MemberLayout` is the shared shell for Home, Profile, Store, Connect, and Promotions; it composes `AppHeader`, Sidebar/mobile navigation, and ChatSidebar. Specialized feature areas such as Billing, Oasis, and Creator Dashboard intentionally retain their own layouts. `ErrorBoundary`, `ProtectedRoute`, and `StateViews` provide failure, authorization, loading, empty, and retry seams.
 - `lib/` — `env.js` (validated `import.meta.env` access), `apiClient.js` (fetch wrapper: base URL, credentials, nested error envelopes, request IDs, typed errors, and global later-`401` notification), and `useSimulatedFetch.js` (temporary async-state seam for prototype pages until real API calls replace it).
-- `fixtures/` — development-only sample content for public, social, Wallet, Oasis, and Creator Dashboard pages. These files are the replacement boundary for future `/api/v1` responses.
+- `fixtures/` — development-only sample content for public, social, Billing, Oasis, and Creator Dashboard pages. These files are the replacement boundary for future `/api/v1` responses.
 - `utils/` — small pure helpers (e.g. `sortMomentRail.js`).
 - `test/setup.js` — Vitest setup (jest-dom). Tests are colocated as `*.test.{js,jsx}`.
 
@@ -127,7 +152,7 @@ Conventions:
 
 These are product invariants, not suggestions — violating them is a correctness bug:
 
-- **Veso** is prepaid credit (1 Veso = 1 USD). Member Veso balances and creator payable earnings are **separate ledgers**; never model a balance as a directly-editable number — it must be an append-only transaction ledger. Store, Connect, and Send Love (tipping) spend Veso.
+- **Prices use USD ($), without emoji currency symbols.** Prepaid credits and recharge are deferred beyond beta. Member purchase records and creator payable earnings remain separate; financial records require an append-only ledger. The billing preview does not process payments.
 - **Explicit content is hidden by default**; adult members opt in. This is distinct from age verification.
 - The old Oasis/Drimy game is cancelled. Do not extend its client-side prototype. Any later streak/reward system must have server-authoritative progress and separately approved scope.
 - **Server-side entitlement checks** gate protected media; protected/original media URLs must never appear in public feed payloads.

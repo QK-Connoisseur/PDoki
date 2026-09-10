@@ -8,11 +8,11 @@ import {
 const creator = {
   name: "Test Creator",
   offers: [
-    { service: "chat", vesos: 12, unit: "30 min" },
-    { service: "chat", vesos: 10, unit: "30 min" },
-    { service: "video", vesos: 30, unit: "30 min" },
-    { service: "game", vesos: 8, unit: "game" },
-    { service: "shoutout", vesos: 15, unit: "shoutout" },
+    { service: "chat", priceUsd: 12, unit: "30 min" },
+    { service: "chat", priceUsd: 10, unit: "30 min" },
+    { service: "video", priceUsd: 30, unit: "30 min" },
+    { service: "game", priceUsd: 8, unit: "game" },
+    { service: "shoutout", priceUsd: 15, unit: "shoutout" },
   ],
 };
 
@@ -20,7 +20,7 @@ describe("getLowestOffer", () => {
   it("selects the lowest-priced offer within the requested category", () => {
     expect(getLowestOffer(creator, "chat")).toEqual({
       service: "chat",
-      vesos: 10,
+      priceUsd: 10,
       unit: "30 min",
     });
   });
@@ -32,7 +32,7 @@ describe("getLowestOffer", () => {
   it("selects the lowest offer overall when no category is given", () => {
     expect(getLowestOffer(creator, null)).toEqual({
       service: "game",
-      vesos: 8,
+      priceUsd: 8,
       unit: "game",
     });
   });
@@ -40,7 +40,7 @@ describe("getLowestOffer", () => {
   it('treats "all" like no category', () => {
     expect(getLowestOffer(creator, "all")).toEqual({
       service: "game",
-      vesos: 8,
+      priceUsd: 8,
       unit: "game",
     });
   });
@@ -51,28 +51,32 @@ describe("getLowestOffer", () => {
 });
 
 describe("formatServicePrice", () => {
-  it("formats an E-Chat offer as vesos/duration", () => {
+  it("formats an E-Chat offer as a USD price per duration", () => {
     expect(
-      formatServicePrice({ service: "chat", vesos: 10, unit: "30 min" })
-    ).toBe("10/30 min");
+      formatServicePrice({ service: "chat", priceUsd: 10, unit: "30 min" })
+    ).toBe("$10.00/30 min");
   });
 
   it("formats per-game and per-shoutout offers", () => {
     expect(
-      formatServicePrice({ service: "game", vesos: 8, unit: "game" })
-    ).toBe("8/game");
+      formatServicePrice({ service: "game", priceUsd: 8, unit: "game" })
+    ).toBe("$8.00/game");
     expect(
-      formatServicePrice({ service: "shoutout", vesos: 15, unit: "shoutout" })
-    ).toBe("15/shoutout");
+      formatServicePrice({
+        service: "shoutout",
+        priceUsd: 15,
+        unit: "shoutout",
+      })
+    ).toBe("$15.00/shoutout");
   });
 
   it('prefixes "From" when asked', () => {
     expect(
       formatServicePrice(
-        { service: "game", vesos: 8, unit: "game" },
+        { service: "game", priceUsd: 8, unit: "game" },
         { from: true }
       )
-    ).toBe("From 8/game");
+    ).toBe("From $8.00/game");
   });
 
   it("returns an empty string for a missing offer", () => {

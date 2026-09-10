@@ -285,13 +285,13 @@ export default function ConnectPage({ userStatus = "online", onStatusChange }) {
   const [composeItalic, setComposeItalic] = useState(false);
   const [composeLocked, setComposeLocked] = useState(false);
   const [composeText, setComposeText] = useState("");
-  const [composeVesoPrice, setComposeVesoPrice] = useState("");
+  const [composePriceUsd, setComposePriceUsd] = useState("");
 
   const isAll = activeFilter === "all";
 
   // When a specific category is selected, show only those creators in one unified grid.
   // When "all" is selected, derive per-category sets for the sectioned layout.
-  // Service membership is derived from each creator's Veso offers.
+  // Service membership is derived from each creator's USD offers.
   const offersService = (c, service) => getCreatorServices(c).includes(service);
 
   const filteredCreators = isAll
@@ -638,8 +638,8 @@ export default function ConnectPage({ userStatus = "online", onStatusChange }) {
         setFontColor={setComposeFontColor}
         locked={composeLocked}
         setLocked={setComposeLocked}
-        vesoPrice={composeVesoPrice}
-        setVesoPrice={setComposeVesoPrice}
+        priceUsd={composePriceUsd}
+        setPriceUsd={setComposePriceUsd}
       />
     </MemberLayout>
   );

@@ -5,12 +5,13 @@ import { useSimulatedFetch } from "../lib/useSimulatedFetch";
 import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import FollowButton from "../components/FollowButton";
 import FeedMedia from "../components/FeedMedia";
-import VesoIcon from "../components/VesoIcon";
 import Avatar from "../components/Avatar";
 import MomentAvatar from "../components/MomentAvatar";
 import MomentComposer from "../components/MomentComposer";
 import { sortMomentRail } from "../utils/sortMomentRail";
 import { moments, feedPosts, fypPosts } from "../fixtures/homeFeed";
+import { env } from "../lib/env";
+import ContentHome from "../content/ContentHome";
 
 /* ─── Mock Data ──────────────────────────────────────────────────────── */
 
@@ -68,7 +69,15 @@ function VerifiedBadge() {
 
 /* ─── Main Component ─────────────────────────────────────────────────── */
 
-export default function HomePage({ userStatus = "online", onStatusChange }) {
+export default function HomePage(props) {
+  return env.contentMode === "development" ? (
+    <ContentHome {...props} />
+  ) : (
+    <PrototypeHomePage {...props} />
+  );
+}
+
+function PrototypeHomePage({ userStatus = "online", onStatusChange }) {
   const page = useSimulatedFetch();
   const navigate = useNavigate();
   const onViewProfile = () => navigate("/profile");
@@ -81,8 +90,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
   const [composeBold, setComposeBold] = useState(false);
   const [composeItalic, setComposeItalic] = useState(false);
   const [composeLocked, setComposeLocked] = useState(false);
-  const [composeVesoPrice, setComposeVesoPrice] = useState("");
-  const [showVesoTooltip, setShowVesoTooltip] = useState(false);
+  const [composePriceUsd, setComposePriceUsd] = useState("");
   const [composeText, setComposeText] = useState("");
   const [composeRightsConfirmed, setComposeRightsConfirmed] = useState(false);
   const [bookmarkStates, setBookmarkStates] = useState({});
@@ -675,7 +683,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
             if (e.target === e.currentTarget) {
               setShowCompose(false);
               setComposeLocked(false);
-              setComposeVesoPrice("");
+              setComposePriceUsd("");
               setComposeText("");
               setComposeRightsConfirmed(false);
             }
@@ -774,7 +782,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   onClick={() => {
                     setShowCompose(false);
                     setComposeLocked(false);
-                    setComposeVesoPrice("");
+                    setComposePriceUsd("");
                     setComposeText("");
                     setComposeRightsConfirmed(false);
                   }}
@@ -978,64 +986,15 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                   </div>
                 </div>
 
-                {/* ─── Veso price row — shown only when locked ─── */}
+                {/* ─── USD price row — shown only when locked ─── */}
                 {composeLocked && (
-                  <div className="mt-3 flex items-center gap-2">
-                    <div className="relative flex-shrink-0">
-                      {/* Veso icon with tooltip */}
-                      <button
-                        className="flex h-9 w-9 items-center justify-center rounded-full transition-all"
-                        style={{
-                          background: "linear-gradient(135deg,#f5b63b,#f9a8c8)",
-                          boxShadow: "0 2px 8px rgba(245,182,59,0.3)",
-                        }}
-                        onMouseEnter={() => setShowVesoTooltip(true)}
-                        onMouseLeave={() => setShowVesoTooltip(false)}
-                        aria-label="Veso — 1 Veso = 1 Dollar"
-                        type="button"
-                      >
-                        {/* Stylized kiss/lip Veso symbol */}
-                        <svg
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5"
-                          fill="none"
-                        >
-                          <path
-                            d="M12 18c-1.5-1-4-2.5-5.5-4.5C5 11.5 5 10 6.5 9c1-.7 2.2-.4 3 .5.3.3.5.7.5 1.1.0-.4.2-.8.5-1.1.8-.9 2-.12 3-.5 1.5 1 1.5 2.5.0 4.5-1.5 2-4 3.5-5.5 4.5z"
-                            fill="white"
-                            opacity="0.9"
-                          />
-                          <path
-                            d="M9.5 9.5c.3-.3.7-.5 1.1-.5h2.8c.4 0 .8.2 1.1.5"
-                            stroke="white"
-                            strokeWidth="1.2"
-                            strokeLinecap="round"
-                            fill="none"
-                            opacity="0.7"
-                          />
-                        </svg>
-                      </button>
-                      {showVesoTooltip && (
-                        <div
-                          className="absolute bottom-11 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-xl px-3 py-1.5 text-[11px] font-semibold shadow-lg z-10 pointer-events-none"
-                          style={{
-                            background: "#241a22",
-                            color: "#f9a8c8",
-                            border: "1px solid rgba(249,168,200,0.2)",
-                          }}
-                        >
-                          1 Veso = 1 Dollar
-                          <div
-                            className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
-                            style={{
-                              borderLeft: "5px solid transparent",
-                              borderRight: "5px solid transparent",
-                              borderTop: "5px solid #241a22",
-                            }}
-                          />
-                        </div>
-                      )}
-                    </div>
+                  <label className="mt-3 flex items-center gap-2">
+                    <span
+                      className="text-xs font-semibold"
+                      style={{ color: "#b8860b" }}
+                    >
+                      Price (USD)
+                    </span>
                     <div
                       className="flex-1 flex items-center rounded-2xl overflow-hidden"
                       style={{
@@ -1046,21 +1005,23 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                       <span
                         className="pl-3 pr-1 text-sm font-bold"
                         style={{ color: "#b8860b" }}
+                        aria-hidden="true"
                       >
-                        <VesoIcon size={14} className="inline-block mr-0.5" />
+                        $
                       </span>
                       <input
                         type="number"
                         min="0"
-                        step="1"
-                        value={composeVesoPrice}
-                        onChange={(e) => setComposeVesoPrice(e.target.value)}
-                        placeholder="Set price in Vesos"
-                        className="flex-1 bg-transparent py-2 pr-3 text-sm outline-none"
+                        step="0.01"
+                        inputMode="decimal"
+                        value={composePriceUsd}
+                        onChange={(e) => setComposePriceUsd(e.target.value)}
+                        placeholder="0.00"
+                        className="min-w-0 flex-1 bg-transparent py-2 pr-3 text-sm outline-none"
                         style={{ color: "#241a22" }}
                       />
                     </div>
-                  </div>
+                  </label>
                 )}
 
                 {/* ─── Media + lock + post row ─── */}
@@ -1210,7 +1171,7 @@ export default function HomePage({ userStatus = "online", onStatusChange }) {
                     onClick={() => {
                       setShowCompose(false);
                       setComposeLocked(false);
-                      setComposeVesoPrice("");
+                      setComposePriceUsd("");
                       setComposeText("");
                       setComposeRightsConfirmed(false);
                     }}

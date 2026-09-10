@@ -2645,22 +2645,17 @@ export default function OasisPage({ onBack }) {
                   <div
                     className="flex items-center gap-1 rounded-full px-2 py-1"
                     style={{
-                      backgroundColor:
-                        item.currency === "vesos" ? "#eff6ff" : "#fdf2f8",
+                      backgroundColor: "#fdf2f8",
                     }}
                   >
-                    {item.currency === "orbs" ? (
-                      <svg viewBox="0 0 12 12" className="w-3 h-3">
-                        <circle cx="6" cy="6" r="5" fill="#c084fc" />
-                      </svg>
-                    ) : (
-                      <span className="text-[10px]">V</span>
-                    )}
+                    <svg viewBox="0 0 12 12" className="w-3 h-3">
+                      <circle cx="6" cy="6" r="5" fill="#c084fc" />
+                    </svg>
+
                     <span
                       className="text-[10px] font-semibold"
                       style={{
-                        color:
-                          item.currency === "vesos" ? "#2563eb" : "#7c3aed",
+                        color: "#7c3aed",
                       }}
                     >
                       {item.price}
@@ -2767,21 +2762,6 @@ export default function OasisPage({ onBack }) {
             </div>
             <p className="text-[9px]" style={{ color: "#a16207" }}>
               Subscribers get 2 extra Lucky Catch attempts daily!
-            </p>
-          </div>
-
-          <div
-            className="mt-2 rounded-xl p-3"
-            style={{ backgroundColor: "#eff6ff", border: "1px solid #bfdbfe" }}
-          >
-            <div
-              className="text-[10px] font-semibold"
-              style={{ color: "#1e40af" }}
-            >
-              Vesos Option
-            </div>
-            <p className="text-[9px]" style={{ color: "#1d4ed8" }}>
-              Spend 50 Vesos for an extra attempt anytime.
             </p>
           </div>
         </div>

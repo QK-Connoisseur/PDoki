@@ -1,9 +1,9 @@
 /**
- * Helpers for creator service offers priced in Veso.
+ * Helpers for creator service offers priced in USD.
  *
- * An offer is `{ service, vesos, unit }` where `service` is a Connect category
- * id ("chat", "voice", "video", "game", "shoutout"), `vesos` is a numeric Veso
- * price (1 Veso = 1 USD), and `unit` is the human-readable billing unit
+ * An offer is `{ service, priceUsd, unit }` where `service` is a Connect category
+ * id ("chat", "voice", "video", "game", "shoutout"), `priceUsd` is a numeric USD
+ * price, and `unit` is the human-readable billing unit
  * ("30 min", "hour", "game", "shoutout", ...). A creator may list several
  * offers in one category; display code derives the lowest instead of storing it.
  */
@@ -19,16 +19,18 @@ export function getLowestOffer(creator, serviceType) {
       ? offers.filter((o) => o.service === serviceType)
       : offers;
   if (inScope.length === 0) return null;
-  return inScope.reduce((lowest, o) => (o.vesos < lowest.vesos ? o : lowest));
+  return inScope.reduce((lowest, o) =>
+    o.priceUsd < lowest.priceUsd ? o : lowest
+  );
 }
 
 /**
- * Formats an offer as "<vesos>/<unit>", e.g. "10/30 min" or "8/game".
+ * Formats an offer in USD, e.g. "$10.00/30 min" or "$8.00/game".
  * Pass `{ from: true }` to prefix "From " (used where no category is selected).
  */
 export function formatServicePrice(offer, { from = false } = {}) {
   if (!offer) return "";
-  const price = `${offer.vesos}/${offer.unit}`;
+  const price = `$${offer.priceUsd.toFixed(2)}/${offer.unit}`;
   return from ? `From ${price}` : price;
 }
 

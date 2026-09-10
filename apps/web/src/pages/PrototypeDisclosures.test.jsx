@@ -8,7 +8,7 @@ import {
 } from "../auth/policyVersions";
 import CreatorDashboardPage from "./CreatorDashboardPage";
 import LegalHubPage from "./LegalHubPage";
-import WalletPage from "./WalletPage";
+import BillingPage from "./BillingPage";
 
 vi.mock("../lib/useSimulatedFetch", () => ({
   useSimulatedFetch: () => ({ status: "ready", retry: vi.fn() }),
@@ -115,18 +115,18 @@ describe("Prototype operational disclosures", () => {
     ).toBeVisible();
   });
 
-  it("keeps unavailable wallet security controls off and marks money as simulated", async () => {
+  it("keeps unavailable billing security controls off and marks money as simulated", async () => {
     const user = userEvent.setup();
-    renderAccountPage(<WalletPage />);
+    renderAccountPage(<BillingPage />);
     await user.click(
-      screen.getByRole("button", { name: "Wallet Settings", exact: true })
+      screen.getByRole("button", { name: "Billing Settings", exact: true })
     );
 
     expect(
-      screen.getByRole("complementary", { name: "Wallet prototype status" })
+      screen.getByRole("complementary", { name: "Billing prototype status" })
     ).toHaveTextContent("No money moves here");
     for (const name of [
-      "Require PIN for withdrawals",
+      "Require PIN for purchases",
       "Two-factor for large transactions (>$500)",
     ]) {
       const protection = screen.getByRole("button", { name, exact: true });
@@ -134,12 +134,11 @@ describe("Prototype operational disclosures", () => {
       expect(protection).toBeDisabled();
       expect(protection).toHaveAttribute("aria-pressed", "false");
     }
-    await user.click(
-      within(screen.getByRole("navigation")).getByRole("button", {
-        name: "Withdraw",
-        exact: true,
-      })
-    );
-    expect(screen.getByText(/Instant cashout is not available/)).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: "Add Funds", exact: true })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Withdraw", exact: true })
+    ).not.toBeInTheDocument();
   });
 });

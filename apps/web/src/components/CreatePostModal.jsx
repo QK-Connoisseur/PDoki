@@ -15,17 +15,16 @@ export default function CreatePostModal({
   setFontColor,
   locked,
   setLocked,
-  vesoPrice,
-  setVesoPrice,
+  priceUsd,
+  setPriceUsd,
 }) {
-  const [showVesoTooltip, setShowVesoTooltip] = useState(false);
   const [rightsConfirmed, setRightsConfirmed] = useState(false);
 
   if (!open) return null;
 
   const handleClose = () => {
     setLocked(false);
-    setVesoPrice("");
+    setPriceUsd("");
     setText("");
     setRightsConfirmed(false);
     onClose();
@@ -318,58 +317,15 @@ export default function CreatePostModal({
               </div>
             </div>
 
-            {/* ─── Veso price row — shown only when locked ─── */}
+            {/* ─── USD price row — shown only when locked ─── */}
             {locked && (
-              <div className="mt-3 flex items-center gap-2">
-                <div className="relative flex-shrink-0">
-                  <button
-                    className="flex h-9 w-9 items-center justify-center rounded-full transition-all"
-                    style={{
-                      background: "linear-gradient(135deg,#f5b63b,#f9a8c8)",
-                      boxShadow: "0 2px 8px rgba(245,182,59,0.3)",
-                    }}
-                    onMouseEnter={() => setShowVesoTooltip(true)}
-                    onMouseLeave={() => setShowVesoTooltip(false)}
-                    aria-label="Veso - 1 Veso = 1 Dollar"
-                    type="button"
-                  >
-                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
-                      <path
-                        d="M12 18c-1.5-1-4-2.5-5.5-4.5C5 11.5 5 10 6.5 9c1-.7 2.2-.4 3 .5.3.3.5.7.5 1.1.0-.4.2-.8.5-1.1.8-.9 2-.12 3-.5 1.5 1 1.5 2.5.0 4.5-1.5 2-4 3.5-5.5 4.5z"
-                        fill="white"
-                        opacity="0.9"
-                      />
-                      <path
-                        d="M9.5 9.5c.3-.3.7-.5 1.1-.5h2.8c.4 0 .8.2 1.1.5"
-                        stroke="white"
-                        strokeWidth="1.2"
-                        strokeLinecap="round"
-                        fill="none"
-                        opacity="0.7"
-                      />
-                    </svg>
-                  </button>
-                  {showVesoTooltip && (
-                    <div
-                      className="absolute bottom-11 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-xl px-3 py-1.5 text-[11px] font-semibold shadow-lg z-10 pointer-events-none"
-                      style={{
-                        background: "#241a22",
-                        color: "#f9a8c8",
-                        border: "1px solid rgba(249,168,200,0.2)",
-                      }}
-                    >
-                      1 Veso = 1 Dollar
-                      <div
-                        className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
-                        style={{
-                          borderLeft: "5px solid transparent",
-                          borderRight: "5px solid transparent",
-                          borderTop: "5px solid #241a22",
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
+              <label className="mt-3 flex items-center gap-2">
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: "#b8860b" }}
+                >
+                  Price (USD)
+                </span>
                 <div
                   className="flex-1 flex items-center rounded-2xl overflow-hidden"
                   style={{
@@ -380,30 +336,23 @@ export default function CreatePostModal({
                   <span
                     className="pl-3 pr-1 text-sm font-bold"
                     style={{ color: "#b8860b" }}
+                    aria-hidden="true"
                   >
-                    <svg
-                      viewBox="0 0 16 16"
-                      className="w-3.5 h-3.5 inline-block mr-0.5"
-                      fill="none"
-                    >
-                      <path
-                        d="M8 12c-1-.7-2.7-1.7-3.7-3C3 7.5 3 6.5 4.4 5.7c.7-.4 1.5-.2 2 .4.2.2.3.5.3.8 0-.3.1-.6.3-.8.5-.6 1.3-.8 2-.4C10.4 6.5 10.4 7.5 9 9c-1 1.3-2.7 2.3-3.7 3z"
-                        fill="#f5b63b"
-                      />
-                    </svg>
+                    $
                   </span>
                   <input
                     type="number"
                     min="0"
-                    step="1"
-                    value={vesoPrice}
-                    onChange={(e) => setVesoPrice(e.target.value)}
-                    placeholder="Set price in Vesos"
-                    className="flex-1 bg-transparent py-2 pr-3 text-sm outline-none"
+                    step="0.01"
+                    inputMode="decimal"
+                    value={priceUsd}
+                    onChange={(e) => setPriceUsd(e.target.value)}
+                    placeholder="0.00"
+                    className="min-w-0 flex-1 bg-transparent py-2 pr-3 text-sm outline-none"
                     style={{ color: "#241a22" }}
                   />
                 </div>
-              </div>
+              </label>
             )}
 
             {/* ─── Media + lock + post row ─── */}

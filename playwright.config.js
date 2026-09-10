@@ -6,6 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./tests/e2e",
+  testIgnore: "**/content.spec.js",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -31,7 +32,10 @@ export default defineConfig({
           "postgresql://pumdoki:pumdoki@127.0.0.1:5432/pumdoki_dev",
         LOG_LEVEL: "warn",
         RATE_LIMIT_WINDOW_MS: "60000",
-        RATE_LIMIT_MAX: "300",
+        // All parallel browser contexts share localhost's IP. The suite's
+        // aggregate navigation traffic must not consume the normal per-IP
+        // product allowance; API tests exercise the real rate-limit behavior.
+        RATE_LIMIT_MAX: "3000",
         MAIL_TRANSPORT: "smtp",
         SMTP_HOST: "localhost",
         SMTP_PORT: "1025",

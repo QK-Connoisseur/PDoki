@@ -62,7 +62,17 @@ export function createApiClient({
 } = {}) {
   const doFetch = fetchImpl ?? globalThis.fetch?.bind(globalThis);
 
-  async function request(path, { method = "GET", body, headers = {} } = {}) {
+  /**
+   * @param {string} path
+   * @param {{ method?: string, body?: unknown, rawBody?: BodyInit, headers?: Record<string, string> }} options
+   */
+  async function request(
+    path,
+    { method = "GET", body, rawBody, headers = {} } = {}
+  ) {
+    if (body !== undefined && rawBody !== undefined) {
+      throw new TypeError("A request cannot contain both JSON and raw data");
+    }
     const requestId = generateRequestId();
     const url = `${baseUrl}${path}`;
 
@@ -77,7 +87,8 @@ export function createApiClient({
           ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
           ...headers,
         },
-        body: body !== undefined ? JSON.stringify(body) : undefined,
+        body:
+          rawBody ?? (body !== undefined ? JSON.stringify(body) : undefined),
       });
     } catch {
       throw new ApiError("Network request failed", {

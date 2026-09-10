@@ -135,12 +135,12 @@ const CONTENT = {
         </Section>
         <Section heading="Before launch">
           The operating entity, eligible countries, account and content rules,
-          Veso terms, purchase and subscription conditions, refunds, disputes,
-          and governing law need review and approved documents.
+          purchase and subscription conditions, refunds, disputes, and governing
+          law need review and approved documents.
         </Section>
         <Section heading="Current product limits">
-          Content purchases, subscriptions, Veso spending, creator payouts, and
-          messaging shown in the prototype are not live commercial services.
+          Content purchases, subscriptions, tips, creator payouts, and messaging
+          shown in the prototype are not live commercial services.
         </Section>
       </div>
     ),

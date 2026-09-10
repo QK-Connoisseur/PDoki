@@ -2,7 +2,7 @@
 
 @CLAUDE.md
 
-Last updated: September 6, 2026
+Last updated: September 9, 2026
 
 ## 1. Purpose
 
@@ -51,25 +51,53 @@ be reported as fully complete against the original phase definition.
 - Store and Connect are launch-critical. Connect is creator discovery: filters for online status, price, language, and service, leading to profiles and real-time chat.
 - Tipping, PPV content, and Send Love are launch scope.
 - The original Oasis/Drimy game is cancelled by founder decision on September 6, 2026. Its possible streak/learning replacement is later work, not launch scope.
-- Real-time direct messaging uses WebSockets and is mandatory at launch. Tipping/Send Love and Veso also remain mandatory.
-- Veso is prepaid value at 1 Veso = 1 USD.
-- Store purchases, agreed creator-service orders, and tipping use Veso. Connect itself is discovery; a calendar/booking engine is not implied.
+- Real-time direct messaging uses WebSockets and is mandatory at launch. Tipping/Send Love remains mandatory; Veso payments are deferred beyond beta by the September 9 decision below.
+- Veso remains a deferred prepaid-value concept at 1 Veso = 1 USD. Recharge, wallet spending and Veso-funded purchases/tips are not beta launch requirements.
+- The payment method for beta Store purchases, creator-service orders and tipping remains unresolved. This deferral does not approve a replacement checkout or remove those product features. Connect itself is discovery; a calendar/booking engine is not implied.
 - Membership tiers are standardized across creators.
 - Explicit content can be hidden or shown based on an adult member's preference.
 - International creators, especially Latin American creators, are a core audience.
 - Live streaming is post-MVP.
 - Begin with a controlled pilot before public member registration. The proposed founding-creator programme may eventually reach about 500; that is not an initial operating-capacity commitment.
 
+### Beta payment scope decision — September 9, 2026
+
+The founder deferred Veso payments beyond beta because of implementation
+complexity and the perceived high risk of the prepaid-credit model being
+flagged during CCBill or Epoch review. This records the founder's risk
+assessment, not a processor rejection or confirmed prohibition.
+
+Veso recharge, prepaid balances and spending, promotional credits, transfers,
+and their dedicated ledger/UI/operations work are deferred and do not gate
+beta. Preserve the design for later reconsideration; it has no promised
+release date or automatic post-beta activation. Revisit it only with explicit
+scope, processor acceptance and targeted review of the actual funds flow.
+
+Subscriptions, PPV, tipping and paid service-order intent remain in the launch
+roadmap. A replacement beta payment model has not been selected or approved.
+Resolve that model with the relevant product slice before monetized beta use;
+entitlements, payment authenticity, refunds, reconciliation and creator-earnings
+controls still apply to any enabled paid flow. This decision supersedes older
+Veso-at-launch statements, including historical references in other repo docs.
+
+September 10 UI direction: remove prepaid-credit items from all tracker tabs
+and the website UI. Display prices in USD ($), with no emoji currency symbols.
+The billing preview covers purchases, subscriptions and tips; it does not hold
+member funds or process payments. Creator earnings remain separate.
+
 ### Current external dependencies
 
 - CCBill is the intended primary adult payment processor.
 - Epoch is the intended fallback/cascade processor.
-- The founder reports the CCBill sales inquiry sent; a reply is pending.
-  Neither formal merchant application or approval has been reported.
+- CCBill's first Sales reply was supplied September 9: it requires a fully
+  functioning review site (password protection permitted), US business/owner,
+  US business banking and principal ID. Detailed site scope, model eligibility,
+  pricing and creator payouts remain unanswered; no merchant approval is reported.
 - Cascade behavior has not been confirmed with either provider.
 - The founder reports Kiban Digital Holdings LLC filed in Maryland through
   Northwest, awaiting state approval, as of September 8, 2026. An EIN,
-  business bank account and formation cost have not been verified.
+  business bank account have not been verified; the formation purchase is
+  recorded in the expense tracker.
 - Legal policies have not been approved by counsel.
 - Real support/compliance email mailboxes do not yet exist.
 
@@ -160,7 +188,7 @@ Required transactional messages:
 - Login/security alerts.
 - Subscription receipt and renewal.
 - Cancellation and failed payment.
-- Veso recharge receipt.
+- Veso recharge receipt — deferred beyond beta with Veso.
 - Creator application received/approved/rejected.
 - Content moderation and appeal notices.
 - Chat-arranged service-order confirmation, cancellation and refund updates as required. Scheduled booking reminders remain deferred.
@@ -258,7 +286,7 @@ Provisional recommendation:
 
 - Avoid promising an 80/20 gross split until processor economics are known.
 - Prefer a clearly disclosed creator share of net eligible receipts if high-risk processor fees make gross accounting unsustainable.
-- Keep member Veso, creator earnings, and platform revenue in separate ledgers.
+- Keep creator earnings and platform revenue separately auditable. If Veso is later approved, its member-credit ledger must remain separate from creator earnings; the Veso-specific implementation is deferred beyond beta.
 
 ### 3.9 Durable async work, shared throttling, and idempotency
 
@@ -292,7 +320,7 @@ Decision locked — founder-confirmed August 18, 2026:
 4. Mark processor selection separately from processor integration.
 5. Mark existing Wallet, legal, onboarding, and Oasis screens as UI prototypes.
 6. Confirm the exact MVP list in writing.
-7. Preserve Store, discovery-focused Connect, tipping, PPV, Send Love, WebSockets, Veso recharge, and explicit-content controls as launch scope. The old Oasis game is cancelled; see the September 6 founder decisions.
+7. Preserve Store, discovery-focused Connect, tipping, PPV, Send Love, WebSockets, and explicit-content controls as product launch scope. Veso payments/recharge are deferred beyond beta by the September 9 decision; the beta payment model remains unresolved. The old Oasis game is cancelled.
 8. Keep live streaming in post-MVP backlog.
 9. Create an open-decision register for:
    - Commission.
@@ -302,7 +330,7 @@ Decision locked — founder-confirmed August 18, 2026:
    - Identity provider.
    - Email provider.
    - Launch country allowlist.
-   - Refund and Veso policies.
+   - Refund policies for the agreed beta payment model; Veso policies deferred beyond beta.
 10. Replace fake production claims with clearly marked prototype copy before any public deployment.
 
 ### Exit criteria
@@ -470,7 +498,7 @@ Architecture status — August 21, 2026:
 - Follows.
 - Reactions, comments, and bookmarks.
 - Subscriptions and entitlements.
-- Veso accounts and ledger entries.
+- Veso accounts and ledger entries — deferred beyond beta; other payment/earnings records depend on the agreed payment model.
 - Store purchases.
 - Creator services and chat-arranged orders; automated scheduling/bookings require a later scope decision.
 - Conversations and messages.
@@ -607,8 +635,10 @@ Settings list is implemented.
 5. Obtain the actual processor requirements before paying for tailored legal work.
 6. Prepare drafts using founder work and suitable Fiverr specialists. Obtain
    substantive review from qualified counsel for the applicable adult-platform,
-   prepaid-value, consent/records, privacy and contract questions before relying
+   consent/records, privacy and contract questions before relying
    on those drafts or implementing dependent sensitive workflows.
+   Prepaid-value review accompanies any later reconsideration of Veso; it is
+   not a beta prerequisite solely because Veso remains in the deferred roadmap.
 7. Draft and obtain the applicable review/approval for:
    - Terms of Service.
    - Privacy Policy.
@@ -623,7 +653,7 @@ Settings list is implemented.
    - Appeals policy.
    - Complaint policy.
    - Law-enforcement request policy.
-   - Refund and Veso terms.
+   - Refund terms for enabled paid flows. Veso terms are deferred beyond beta.
 8. Configure real operational mailboxes only after ownership and workflows exist.
 
 ### Creator onboarding implementation
@@ -754,12 +784,38 @@ Settings list is implemented.
 
 ## 9. Phase 5 — Media pipeline and content model
 
-### Upload lifecycle
+### First local content flow — September 9, 2026
+
+The founder authorized starting the bounded
+[content model and access-rule design](docs/architecture/phase5-slice1-content-model-and-access-design.md)
+while awaiting Maryland approval and the CCBill response. The local draft covers
+content/revision/asset/offer identities, upload and publication states,
+server-side access rules, feed/Store/chat boundaries, and synthetic acceptance
+cases. The two definition tasks remain in review; human technical review remains
+pending under §20. The [first local content implementation](docs/architecture/phase5-local-content-flow.md)
+now has contracts, a content/media migration, private PNG/JPEG/MP4 processing,
+draft/publish/remove APIs and a real `/home` feed for verified test accounts.
+Phase 5 is partially implemented; its production exit is not complete.
+
+The design itself remains a design artifact. The implementation accepts only
+safe samples, refuses production/remote activation, and retains the default
+disabled prototype mode. Private drafts, publication, media access and removal
+have real server enforcement; prices, paid entitlements and live operations are
+not simulated into this path. The founder activated R2 ($0 due at activation),
+created `pumdoki-review-media`, and saved scoped credentials locally. Actual
+cloud photo/video upload, private access, restart persistence, removal and both
+browser paths passed; the bucket overview shows Public Access Disabled.
+Founder review of the working local flow is next. P04 eligibility/operations
+and P06 grants remain live-use dependencies; synthetic evidence cannot replace
+them for real users. Apply targeted technical review to the concrete flow before
+live sensitive use. See §20 for the superseding work order.
+
+### Planned production upload lifecycle (not the local adapter)
 
 1. Creator requests a signed upload.
 2. API checks role, creator status, and quota.
 3. API creates a pending media record.
-4. Browser uploads directly to an R2 quarantine bucket/prefix.
+4. Browser uploads directly to a private quarantine bucket/prefix at R2, the selected storage direction; safe-sample integration is verified, while this production upload lifecycle remains unimplemented.
 5. Browser confirms completion.
 6. Background worker validates the actual file.
 7. Worker creates thumbnails and optimized variants.
@@ -767,7 +823,7 @@ Settings list is implemented.
 9. Approved content moves to a publishable protected location.
 10. Member requests access.
 11. API checks entitlement or purchase.
-12. API returns a short-lived signed media URL.
+12. API authorizes each protected delivery request; do not expose a reusable storage URL that bypasses later removal checks. See the content/access design.
 
 ### Content visibility
 
@@ -779,7 +835,7 @@ delivery surfaces use server-enforced purchase entitlements.
 - Followers.
 - Any subscriber.
 - Specific standardized tier.
-- PPV/Veso purchase.
+- PPV purchase entitlement; Veso funding is deferred beyond beta and the beta payment method remains unresolved.
 - Scheduled.
 - Draft.
 - Removed.
@@ -806,7 +862,17 @@ delivery surfaces use server-enforced purchase entitlements.
 
 ## 10. Phase 6 — Veso, payments, subscriptions, tipping, and PPV
 
-### Veso product rules to finalize
+### Beta boundary — September 9, 2026
+
+Veso-specific work below is retained as deferred beyond beta. Do not mark the
+whole mixed payment phase deferred or complete: any selected beta payment,
+subscription, PPV or tipping flow still needs its implementation, processor
+acceptance and financial/access controls. The beta funding/checkout approach
+is unresolved; direct currency checkout or any other replacement is not
+approved by removing Veso. Beta acceptance excludes the explicitly deferred
+Veso cases, while full Phase 6 completion remains subject to its actual scope.
+
+### Veso product rules to finalize — deferred beyond beta
 
 1. Minimum recharge.
 2. Maximum account balance.
@@ -821,13 +887,13 @@ delivery surfaces use server-enforced purchase entitlements.
 11. Creator conversion from earned Vesos to payable balance.
 12. Whether taxes are included or added.
 
-### Recommended ledger model
+### Ledger requirements and deferred Veso accounts
 
-- Store all values in integer cents or integer Veso units.
+- Store monetary values in integer minor units. Veso denomination rules remain part of its deferred design.
 - Never update a balance without a ledger transaction.
 - Use separate accounts for:
-  - Member purchased Veso.
-  - Member promotional Veso.
+  - Member purchased Veso — deferred beyond beta.
+  - Member promotional Veso — deferred beyond beta.
   - Creator pending earnings.
   - Creator available earnings.
   - Platform revenue.
@@ -838,10 +904,10 @@ delivery surfaces use server-enforced purchase entitlements.
 
 ### Processor work
 
-1. CCBill business-fit/pricing inquiry sent, per the founder's September 8 report. Await and review the response at Step 3; formal application follows the entity and required documents. Do not wait for the entire website to be built.
+1. CCBill's initial reply is received. The founder cancelled the clarification follow-up and directed work toward a functioning review site. Return to CCBill with that site; model, fee/reserve and payout decisions remain unresolved until confirmed. Formal approval is separate from development.
 2. Begin Epoch discussion after core policies and entity details are ready.
 3. Confirm cascade support in writing.
-4. Implement CCBill checkout.
+4. Define the beta payment model and implement CCBill checkout only for the agreed, processor-supported flow. Veso funding is excluded from beta.
 5. Store raw webhook events.
 6. Verify webhook authenticity.
 7. Handle sale, rebill, failure, cancel, expiration, refund, and chargeback.
@@ -862,9 +928,9 @@ delivery surfaces use server-enforced purchase entitlements.
 9. Expiration revokes access.
 10. Refund/chargeback applies business rules and audit events.
 
-### Veso recharge UI
+### Veso recharge UI — deferred beyond beta
 
-The intended member experience is select a recharge package, choose an available
+The retained later concept is to select a recharge package, choose an available
 payment method/provider, then complete checkout. Balance becomes spendable after
 verified successful payment confirmation; show a pending state when confirmation
 is delayed. A browser success redirect alone must never credit Veso. Bank/card
@@ -876,8 +942,9 @@ CCBill documents [tokens/credits for adult live-cam platforms](https://ccbill.co
 [hosted FlexForms](https://ccbill.com/doc/flexforms-overview) and
 [payment lifecycle webhooks](https://ccbill.com/doc/webhooks-user-guide).
 These establish technical feasibility, not approval of Pumdoki's exact prepaid
-credit, content/service, country and creator-payout model. Confirm that scope
-at the existing processor step; this research does not start implementation.
+credit, content/service, country and creator-payout model. Retain this research
+for any later Veso reconsideration; it does not require Veso review or
+implementation for beta.
 
 1. Current balance.
 2. Recharge presets.
@@ -892,23 +959,26 @@ at the existing processor step; this research does not start implementation.
 
 ### Tipping and PPV
 
-- Send Love creates a Veso transfer from member balance to creator pending earnings.
+- Send Love remains product scope; its beta payment method is unresolved. The Veso transfer from member credits to creator pending earnings is deferred beyond beta.
 - PPV purchase creates a permanent or policy-defined entitlement.
 - PPV offers may contain one photo/video or a bundle, surfaced in feed posts or chat; the API verifies access to each included asset.
-- Insufficient Veso opens the recharge flow.
+- Insufficient Veso opening the recharge flow is deferred beyond beta.
 - Repeated clicks use idempotency keys.
 - Refunds update both entitlement and ledger state.
 
 ### Exit criteria
 
-- Test recharge updates the ledger.
-- Store, Connect, Send Love, and PPV consume Veso correctly.
+- The agreed beta payment model is explicitly scoped and accepted before any live paid flow; payment effects and creator earnings reconcile.
 - Subscription lifecycle is webhook-driven.
 - Refunds and chargebacks reconcile.
+- Deferred Veso exits, not beta gates: test recharge updates its ledger; Store/service orders, Send Love and PPV consume Veso correctly. These stay incomplete until the later Veso scope is implemented and verified.
 
 ## 11. Phase 7 — Core end-to-end vertical slice
 
-Complete this before broad feature expansion:
+Complete the applicable flow before broad feature expansion. The beta version
+uses the separately agreed payment model; it requires no Veso recharge or
+Veso-funded tip. No replacement model is selected by this record. Paid steps
+remain unimplemented until that model and its controls are resolved.
 
 1. Member registers.
 2. Member verifies email.
@@ -919,19 +989,19 @@ Complete this before broad feature expansion:
 7. Creator configures standardized tiers.
 8. Creator uploads protected media.
 9. Moderator approves media.
-10. Member recharges Veso.
+10. Member starts checkout through the agreed beta payment model; Veso recharge is deferred beyond beta.
 11. Member subscribes or buys PPV.
 12. Trusted processor event confirms payment.
 13. Member receives the correct entitlement.
 14. Member accesses protected media.
-15. Member sends a Veso tip.
+15. Member sends a tip through the agreed beta payment model; Veso funding is deferred beyond beta.
 16. Creator sees pending earnings.
 17. Cancellation or expiration changes access correctly.
 18. Admin can inspect the full audit trail.
 
 ### Exit criteria
 
-- The complete flow passes automated integration and E2E tests.
+- The agreed beta flow passes automated integration and E2E tests, with deferred Veso cases identified separately rather than reported as passed.
 - No manual database edits are required.
 
 ## 12. Phase 8 — Feed, social actions, Store, and Connect
@@ -966,13 +1036,13 @@ Complete this before broad feature expansion:
 13. Liked.
 14. History.
 15. Product-detail view.
-16. Buy with Veso.
-17. Recharge fallback.
+16. Purchase through the agreed beta payment flow; Buy with Veso is deferred beyond beta.
+17. Veso recharge fallback — deferred beyond beta.
 18. Responsive mobile layout.
 
 ### Connect — founder clarification, September 6, 2026
 
-1. Persist creator profiles and service descriptions/prices in Veso.
+1. Persist creator profiles and service descriptions; monetary display/checkout follows the agreed beta payment model. Veso-denominated pricing and spending are deferred beyond beta.
 2. Filter discovery by online status, price, language, service, and eligibility.
 3. Keep card/profile price and service information consistent.
 4. Open the correct creator profile or authorized direct conversation.
@@ -1010,7 +1080,7 @@ Complete this before broad feature expansion:
 - New message.
 - New subscriber.
 - Renewal/cancellation.
-- Veso tip.
+- Tip confirmation for the agreed payment flow; Veso-specific notifications are deferred beyond beta.
 - PPV purchase.
 - Chat-arranged service-order status; scheduled booking reminders remain deferred.
 - Creator approval.
@@ -1065,7 +1135,7 @@ Build in this order:
 8. DMCA workflow.
 9. Appeals.
 10. Subscriptions and payment events.
-11. Veso ledger inspection.
+11. Veso ledger inspection — deferred beyond beta; inspection of enabled beta payments and creator earnings remains required.
 12. Creator earnings and payouts.
 13. Chargeback monitoring.
 14. Performer/compliance records.
@@ -1164,6 +1234,13 @@ future feature is actually scoped.
 
 ### Beta sequence
 
+The September 9 Veso deferral applies to this sequence and its release checks.
+Veso recharge/spending/ledger work is not a beta gate. Test any agreed beta paid
+flow through its own processor sandbox and approval path; the replacement
+payment model remains unresolved. Historical Veso prototype controls must be
+hidden or clearly unavailable in the beta release. This documentation update
+does not change or activate those controls.
+
 1. Internal accounts.
 2. Existing trusted creators.
 3. Small invited member group.
@@ -1197,11 +1274,13 @@ future feature is actually scoped.
 - External affiliate program.
 - Streak/learning retention concept, optional motion/sounds, and Pumdoki Plus/cosmetic benefits after separate scope and economic review. The former Oasis game is cancelled.
 
-## 20. Founder decisions and sequential work order — updated September 8, 2026
+## 20. Founder decisions and sequential work order — updated September 9, 2026
 
-The founder has limited time and must receive one actionable step at a time.
-Do not assign parallel founder workstreams or treat missing replies to later
-ideas as approval. At each handoff say what completed, the one current task,
+The founder has limited time and must receive one functional product slice at
+a time. The latest September 9 direction pairs founder/provider work with code
+inside that slice, rather than completing all paperwork first or bolting live
+requirements on later. Do not treat missing replies to ideas as approval.
+At each handoff say what completed, the current functional task,
 and what evidence finishes it. Keep parked ideas here and in the tracker.
 Routine implementation inside an authorized scope does not need repeated
 permission; financial commitments, live exposure, and activation retain their
@@ -1212,11 +1291,24 @@ actual approval boundaries.
 The founder first supplied a Northwest order-received screen, then confirmed
 that **Kiban Digital Holdings LLC** is filed in Maryland and awaiting state
 approval. The founder also confirmed the CCBill inquiry was sent to Sales.
-These are founder-reported progress updates as of September 8, 2026; exact
-filing/send timestamps and the sent email itself have not been inspected.
-State approval, a CCBill reply/approval, EIN, business bank account and amount
-charged remain unverified. Do not downgrade filed status to mere order receipt
-or ask the founder to send the inquiry again.
+On September 9 the founder supplied the sent email and CCBill's initial Sales
+reply. The email reports a September 8 filing date; expected approval late in
+September is a forecast. Original email headers/timestamps and state approval
+documents have not been inspected. State approval, CCBill model/merchant
+approval, EIN, business bank account and amount charged remain unverified.
+Do not downgrade filed status to mere order receipt or resend the first inquiry.
+
+CCBill requires a fully functioning site and permits online password-protected
+access. It requests URL, development/timeline, business type/location, average
+price/subscription model and services, and lists US registration/business bank/
+owner ID requirements. The reply does not define the minimum working review
+scope, accept test-mode flows, quote fees/reserves or resolve Veso, services and
+creator payouts. The founder explicitly cancelled the
+[review-site clarification](docs/product/ccbill-review-site-clarification.md)
+and directed work toward the functioning website. No additional Sales reply,
+recruited creators, production content or polish is a prerequisite to starting
+the next controlled implementation slice. Revisit CCBill with a functioning
+review site; approval, live money and public sensitive-data use remain separate.
 
 Use DIY, existing drafts and suitable Fiverr specialists for work the founder
 can handle economically. Paid legal advice is for necessary, specific issues
@@ -1228,8 +1320,14 @@ reviewed draft version, corrections and remaining limitations of each review.
 
 ### Locked product corrections
 
-- Keep Veso (1 Veso = USD 1), Store, subscriptions/paid content, real-time chat,
-  tipping/Send Love, creator profiles, and discovery-focused Connect at launch.
+- September 9 supersedes the earlier Veso-at-launch requirement: defer Veso
+  payments beyond beta because of complexity and founder-assessed CCBill/Epoch
+  review risk. This is not a reported processor rejection. Retain the concept
+  at 1 Veso = USD 1 and separate append-only member-credit/creator-earnings
+  ledgers if later approved; do not build or activate it as a beta dependency.
+- Keep Store, subscriptions/paid content, real-time chat, tipping/Send Love,
+  creator profiles, and discovery-focused Connect in launch scope. The beta
+  payment method remains unresolved; no replacement processor flow is approved.
 - Cancel the old Oasis/Drimy game. The streak/learning idea in Phase 12 is later.
 - Keep Sakura Kiss and Midnight City static; preserve the palette and avatar
   decoration foundation. Optional motion, sound, and richer feedback are later.
@@ -1248,38 +1346,48 @@ reviewed draft version, corrections and remaining limitations of each review.
   include SFW gaming/social interactions and adult calls; the catalogue remains
   unfinalized. Following a member or liking a post does not mean account access.
   Gameplay-linked nudity was an illustrative niche idea, not a committed feature.
-  Counsel and the processor should receive this accurate content/services/Veso
-  description. “Ask roughly anything” is not an approved product promise.
+  Counsel and the processor should receive the current content/services and
+  beta payment description, explicitly distinguishing deferred Veso from beta.
+  “Ask roughly anything” is not an approved product promise.
 
 ### One active step
 
-| Step                     | Work                                                                                                                                                                                                                                | Finish evidence                                                                                               |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| 1 — done                 | Founder [business-definition answers](docs/product/initial-business-definition.md) received and reviewed. Open details are carried forward.                                                                                         | Founder answers; unresolved items may say “not sure.”                                                         |
-| 2 — filed; awaiting MD   | Kiban Digital Holdings LLC filed through Northwest, per founder report. Await Maryland approval.                                                                                                                                    | Approved state formation documents still pending. EIN/banking/cost are not verified.                          |
-| 3 — sent; awaiting reply | CCBill inquiry sent to Sales, per founder report. Await the response, then review model fit, onboarding evidence, pricing/reserves, payouts and countries using the [inquiry reference](docs/product/initial-ccbill-inquiry.md).    | Written reply with fit/requirements and indicative quote, or specific unresolved questions. Epoch waits.      |
-| 4 — waiting              | Review the reply; set an affordable pilot, creator offer, fee basis and cash plan. Complete EIN/banking/application actions as formation and provider requirements permit; scope only necessary legal/tax questions.                | Founder approves concrete scope and spending cap; formal merchant onboarding proceeds as requirements permit. |
-| 5 — waiting              | Prepare policy/workflow drafts economically; obtain necessary qualified legal review for identity/age/consent, content review, reports, retention, funds flow and pilot countries. Obtain the scoped human technical design review. | Reviewed implementable requirements, responsible person/backup and concrete review findings.                  |
-| 6 — waiting              | Select transactional email and minimal staging/monitoring once entity/domain ownership, adult-business fit, recipients, data handling and budget are settled.                                                                       | Provider acceptance, costs and sender/operations plan; then implement and verify production mail.             |
-| 7 — waiting              | Build and test the agreed purchase-to-access-to-earnings flow, including chat/service orders/tipping and necessary operations.                                                                                                      | Real persistence, processor sandbox, refunds/reconciliation, entitlements and operator actions verified.      |
-| 8 — waiting              | Independent pre-launch security/payment review, fixes/retest, operational drills and controlled real-money pilot.                                                                                                                   | Applicable legal/provider/technical/operational launch gates pass for the exact release.                      |
+| Step                                     | Work                                                                                                                                                                                                                                | Finish evidence                                                                                                                                               |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 — done                                 | Founder [business-definition answers](docs/product/initial-business-definition.md) received and reviewed. Open details are carried forward.                                                                                         | Founder answers; unresolved items may say “not sure.”                                                                                                         |
+| 2 — filed; awaiting MD                   | Kiban Digital Holdings LLC filed through Northwest, per founder report. Await Maryland approval.                                                                                                                                    | Approved state formation documents still pending. EIN/banking are not verified; the formation cost is recorded in the tracker.                                |
+| 3 — current: review working content flow | R2 setup and safe-sample integration are verified. Review Create Post → save draft → publish in the local preview with a safe photo/video.                                                                                          | Cloud upload/read, private drafts, member playback, restart persistence and removal passed. Bucket public access is disabled; founder review remains pending. |
+| 4 — waiting                              | Review the reply; set an affordable pilot, creator offer, fee basis and cash plan. Complete EIN/banking/application actions as formation and provider requirements permit; scope only necessary legal/tax questions.                | Founder approves concrete scope and spending cap; formal merchant onboarding proceeds as requirements permit.                                                 |
+| 5 — waiting                              | Prepare policy/workflow drafts economically; obtain necessary qualified legal review for identity/age/consent, content review, reports, retention, funds flow and pilot countries. Obtain the scoped human technical design review. | Reviewed implementable requirements, responsible person/backup and concrete review findings.                                                                  |
+| 6 — waiting                              | Select transactional email and minimal staging/monitoring once entity/domain ownership, adult-business fit, recipients, data handling and budget are settled.                                                                       | Provider acceptance, costs and sender/operations plan; then implement and verify production mail.                                                             |
+| 7 — waiting                              | Build and test the agreed purchase-to-access-to-earnings flow, including chat/service orders/tipping and necessary operations.                                                                                                      | Real persistence, processor sandbox, refunds/reconciliation, entitlements and operator actions verified.                                                      |
+| 8 — waiting                              | Independent pre-launch security/payment review, fixes/retest, operational drills and controlled real-money pilot.                                                                                                                   | Applicable legal/provider/technical/operational launch gates pass for the exact release.                                                                      |
 
-This is the founder's attention order, not a demand to finish every eventual
-provider approval before any synthetic local engineering. A later step may
-produce an external waiting period; propose at most one useful next task then.
-Do not restart dormant operations hardening or general infrastructure research
-as a substitute for completing the current founder step.
+Rows 4–8 are dependency reminders, not separate paperwork phases that must all
+finish before code. Bring each founder/provider decision into the slice that
+needs it, alongside implementation, verification and targeted review. A slice
+finishes with working behavior and its necessary real-world setup. The first
+milestone is a working content path in the existing UI using test accounts and
+safe sample media. The P05 design is its input, not another document to expand.
+No live provider purchase, deployment or activation is implied by this plan.
+
+Veso deferral changes beta scope, not this active task: continue the existing
+local content flow through founder review of its verified private R2 integration. At the relevant paid-product
+slice, settle the beta payment model and its requirements together; do not
+restart Veso work or a separate processor follow-up because of this update.
 
 ### Human review timing and scope
 
 Paid legal review is commissioned for a defined unresolved legal issue or
 applicable document/workflow review, normally after the initial processor
-response and before reliance or dependent sensitive implementation. It may be
+response, within the relevant code slice and before reliance or live sensitive use. It may be
 brought forward for a specific need; routine filing and the preliminary sales
 inquiry do not require a broad consultation. Prefer preparing drafts first,
 then a fixed-scope review and corrections with the reviewed version recorded.
-Human technical review begins at Step 5, before committing to payment-ledger,
-protected-media and sensitive-identity implementation. A narrowly scoped
+Human technical review accompanies the relevant design/code slice and must
+resolve material issues before live protected-media, money or identity use.
+Controlled local implementation is not held for a blanket pre-code review.
+A narrowly scoped
 auth/deployment review may be commissioned sooner if it resolves the founder's
 confidence within an approved cap; it is not a full-platform certification.
 Use Fiverr if a reviewer can demonstrate relevant expertise and provide a
@@ -1293,9 +1401,10 @@ webhook duplicates, media access and operational recovery.
 
 ### Email/API timing
 
-Do not choose or buy email now. Step 6 is triggered after the earlier business,
-entity/domain, processor, pilot and data-handling decisions are concrete, and
-before any externally accessible pilot needs verification/reset delivery.
+Select and integrate transactional email as part of the hosted account-flow
+slice, before external verification/reset delivery is needed. Pair provider
+fit, ownership, data-handling and cost decisions with implementation; it does
+not require finishing every unrelated payment or content decision first.
 The current production-mail startup error is an intentional safety guard,
 not a fix-by-disabling check. Implement authenticated TLS delivery, verified
 sender setup, bounded failures, bounce/complaint ownership and safe retries;
@@ -1340,22 +1449,31 @@ already decided; do not reopen them. The local worker remains canary-only.
 
 ## 21. Immediate next action
 
-The business definition is complete. The founder confirms Kiban Digital
-Holdings LLC is filed and awaiting Maryland approval, and the CCBill inquiry
-has been sent to Sales. The current stage is waiting for those external
-responses. Bring the CCBill reply back when received for one focused review
-of fit, costs/reserves, payout responsibilities, countries and the onboarding
-checklist. The [prepared inquiry](docs/product/initial-ccbill-inquiry.md) remains
-a reference, not a task to send again. State approval is a separate pending
-formation milestone; sending the inquiry is not processor approval.
+The business definition is complete and Kiban Digital Holdings LLC remains
+filed, awaiting Maryland approval. CCBill's initial Sales reply has been
+received and reviewed; its proposed clarification is cancelled. The first
+[local content flow](docs/architecture/phase5-local-content-flow.md) now works:
+safe photo/video upload, private persisted draft, publication in the Home feed
+and server-enforced access/removal. R2 setup is now complete for this milestone:
+scoped credentials are saved in ignored `.env.r2.local`, the bucket overview
+shows Public Access Disabled, and actual cloud/API/browser checks passed for
+photos and videos. Generated verification objects were cleaned up.
+The one founder step is reviewing Create Post → save draft → publish in the
+local preview using safe samples. No further storage signup is needed. A
+billing alert and the recommended token lifetime remain unverified, and future
+hosted use needs its own provider/budget decisions. No new broad
+design document or creator recruitment step is required. The
+[first exchange](docs/product/initial-ccbill-inquiry.md) records the evidence.
+No test-mode acceptance, merchant approval, live hosting or payment activation
+is established by this reply.
 
 The earlier [counsel inquiry](docs/product/initial-counsel-inquiry.md) is parked.
 Use its relevant questions later for a necessary, scoped review of concrete
 drafts or an unresolved issue; do not automatically commission all six areas
-or reopen the founder's entity decision. CCBill has been contacted; no reply,
-contract, approval or payment to it is reported. No lawyer engagement is
-reported. The Northwest filing is a separate founder action; its cost is not
-supplied.
+or reopen the founder's entity decision. CCBill has replied with intake
+requirements; no contract, approval or payment to it is reported. Policy
+drafting has been commissioned; delivery and approval remain pending.
+The tracker records the legal and Northwest formation purchases.
 
 Review the processor response before a contract, fee or activation. The
 assistant must not send a duplicate inquiry, follow-up or other message without
@@ -1365,4 +1483,8 @@ Initial creator/member countries, service delivery channels, refund/cancellation
 handling, founder hours, helper coverage and exact cash/runway remain open.
 Carry these into the appropriate consultation or budget step, one question at
 a time; do not return the entire definition as an incomplete assignment.
-Software expansion and email selection remain at their later steps.
+The first local content implementation and private R2 safe-sample integration
+are verified; founder review of the working flow is next. Veso payments are deferred beyond beta. Subsequent slices combine
+code, necessary founder/provider decisions and targeted review, including
+settling the beta payment model before monetized use. Preserve actual controls
+before live sensitive use.

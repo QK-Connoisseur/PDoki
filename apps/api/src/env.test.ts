@@ -68,4 +68,30 @@ describe("loadEnv", () => {
       } as NodeJS.ProcessEnv)
     ).toThrow(/MAIL_TRANSPORT/);
   });
+
+  it("requires complete R2 credentials only when cloud uploads are selected", () => {
+    const base = {
+      ...validEnv,
+      CONTENT_MODE: "development",
+      CONTENT_STORAGE_DIRECTORY: "/private/tmp/content-env-test",
+      CONTENT_STORAGE_BACKEND: "R2",
+    };
+    expect(() => loadEnv(base)).toThrow(/R2_ACCOUNT_ID/);
+    expect(
+      loadEnv({
+        ...base,
+        R2_ACCOUNT_ID: "a".repeat(32),
+        R2_BUCKET: "pumdoki-review-media",
+        R2_ACCESS_KEY_ID: "test-access-key",
+        R2_SECRET_ACCESS_KEY: "test-secret-key",
+      }).CONTENT_STORAGE_BACKEND
+    ).toBe("R2");
+    expect(
+      loadEnv({ ...validEnv, R2_ACCESS_KEY_ID: "", R2_SECRET_ACCESS_KEY: "" })
+        .CONTENT_STORAGE_BACKEND
+    ).toBe("LOCAL");
+    expect(() =>
+      loadEnv({ ...validEnv, R2_ACCOUNT_ID: "https://untrusted.example" })
+    ).toThrow(/R2_ACCOUNT_ID/);
+  });
 });

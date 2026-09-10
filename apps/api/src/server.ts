@@ -21,9 +21,13 @@ const app = createApp({
   mailer: createMailer(env, logger),
 });
 
-const server = app.listen(env.PORT, () => {
-  logger.info({ port: env.PORT }, "pumdoki api listening");
-});
+const server = app.listen(
+  env.PORT,
+  env.CONTENT_MODE === "development" ? "127.0.0.1" : "0.0.0.0",
+  () => {
+    logger.info({ port: env.PORT }, "pumdoki api listening");
+  }
+);
 
 const shutdown = createGracefulShutdown({
   server,

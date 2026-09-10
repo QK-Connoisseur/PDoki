@@ -1,23 +1,4 @@
-export const WALLET = {
-  available: 2140.86,
-  pending: 318.42,
-  held: 62,
-  lifetime_earned: 58214.09,
-  lifetime_spent: 4820.44,
-  currency: "USD",
-};
-
 export const transactions = [
-  {
-    id: 1,
-    when: "Apr 18 · 2:14 PM",
-    kind: "Love received",
-    who: "HoneyBee_22",
-    amount: 25,
-    direction: "in",
-    status: "Settled",
-    icon: "love",
-  },
   {
     id: 2,
     when: "Apr 18 · 11:02 AM",
@@ -49,16 +30,6 @@ export const transactions = [
     icon: "love",
   },
   {
-    id: 5,
-    when: "Apr 17 · 8:15 PM",
-    kind: "Deposit",
-    who: "Visa ****8421",
-    amount: 100,
-    direction: "in",
-    status: "Settled",
-    icon: "deposit",
-  },
-  {
     id: 6,
     when: "Apr 17 · 4:02 PM",
     kind: "Shop Purchase",
@@ -79,46 +50,6 @@ export const transactions = [
     icon: "session",
   },
   {
-    id: 8,
-    when: "Apr 16 · 9:47 PM",
-    kind: "Withdrawal",
-    who: "ACH · ****4210",
-    amount: -500,
-    direction: "out",
-    status: "Completed",
-    icon: "withdraw",
-  },
-  {
-    id: 9,
-    when: "Apr 16 · 4:12 PM",
-    kind: "Love received",
-    who: "mochi_kun",
-    amount: 50,
-    direction: "in",
-    status: "Settled",
-    icon: "love",
-  },
-  {
-    id: 10,
-    when: "Apr 16 · 1:30 PM",
-    kind: "Referral bonus",
-    who: "peachfuzz joined via your link",
-    amount: 8.99,
-    direction: "in",
-    status: "Settled",
-    icon: "referral",
-  },
-  {
-    id: 11,
-    when: "Apr 15 · 10:00 PM",
-    kind: "Gift card redeemed",
-    who: "Code: SAKURA50",
-    amount: 50,
-    direction: "in",
-    status: "Settled",
-    icon: "gift",
-  },
-  {
     id: 12,
     when: "Apr 15 · 6:18 PM",
     kind: "Subscription",
@@ -137,16 +68,6 @@ export const transactions = [
     direction: "out",
     status: "Settled",
     icon: "love",
-  },
-  {
-    id: 14,
-    when: "Apr 14 · 11:00 AM",
-    kind: "Deposit",
-    who: "PayPal · you@example.com",
-    amount: 200,
-    direction: "in",
-    status: "Settled",
-    icon: "deposit",
   },
 ];
 
@@ -220,41 +141,6 @@ export const paymentMethods = [
   },
 ];
 
-export const withdrawMethods = [
-  {
-    id: 1,
-    type: "ACH Bank Transfer",
-    detail: "Chase · ****4210",
-    isDefault: true,
-    fee: "Free",
-    speed: "1–3 days",
-  },
-  {
-    id: 2,
-    type: "Wire Transfer",
-    detail: "Int'l · ****8831",
-    isDefault: false,
-    fee: "$25",
-    speed: "1–5 days",
-  },
-  {
-    id: 3,
-    type: "PayPal",
-    detail: "you@example.com",
-    isDefault: false,
-    fee: "1%",
-    speed: "Instant",
-  },
-  {
-    id: 4,
-    type: "Crypto (USDC)",
-    detail: "0x7f...A20a",
-    isDefault: false,
-    fee: "Gas fee",
-    speed: "~5 min",
-  },
-];
-
 export const loveHistory = [
   {
     id: 1,
@@ -310,40 +196,4 @@ export const loveHistory = [
     when: "Apr 12",
     direction: "sent",
   },
-];
-
-export const referralEarnings = [
-  {
-    id: 1,
-    fan: "peachfuzz",
-    action: "Subscribed via your link",
-    earned: 8.99,
-    when: "Apr 16",
-  },
-  {
-    id: 2,
-    fan: "night_owl_88",
-    action: "Purchased PPV via your link",
-    earned: 3,
-    when: "Apr 12",
-  },
-  {
-    id: 3,
-    fan: "doki_dreamer",
-    action: "Subscribed via your link",
-    earned: 4.99,
-    when: "Apr 08",
-  },
-  {
-    id: 4,
-    fan: "sunKissed",
-    action: "Subscribed via your link",
-    earned: 9.99,
-    when: "Apr 02",
-  },
-];
-
-export const spendingChart = [
-  18, 32, 24, 45, 38, 52, 28, 64, 42, 35, 58, 72, 48, 62, 55, 84, 38, 92, 68,
-  46, 78, 56, 88, 94, 72, 62, 48, 82, 96, 108,
 ];

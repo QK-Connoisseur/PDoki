@@ -78,9 +78,9 @@ export default function AppHeader({
         ]
       : []),
     {
-      label: "Wallet",
+      label: "Billing",
       icon: "M21 4H3a1 1 0 00-1 1v14a1 1 0 001 1h18a1 1 0 001-1V5a1 1 0 00-1-1zM1 10h22M16 15h2",
-      action: () => navigate("/wallet"),
+      action: () => navigate("/billing"),
     },
     {
       label: "Settings",

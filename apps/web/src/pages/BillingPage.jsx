@@ -4,15 +4,11 @@ import { StatusMenuRow } from "../components/UserStatusSwitcher";
 import { LoadingState, EmptyState, ErrorState } from "../components/StateViews";
 import { useSimulatedFetch } from "../lib/useSimulatedFetch";
 import {
-  WALLET,
   transactions,
   activeSubscriptions,
   paymentMethods,
-  withdrawMethods,
   loveHistory,
-  referralEarnings,
-  spendingChart,
-} from "../fixtures/wallet";
+} from "../fixtures/billing";
 
 /* ─── Colors ─────────────────────────────────────────────────────────── */
 
@@ -35,7 +31,7 @@ function PumdokiLogo() {
     <svg viewBox="0 0 520 120" className="h-9 w-auto" aria-label="Pumdoki">
       <defs>
         <linearGradient
-          id="walletHeartBase"
+          id="billingHeartBase"
           x1="0%"
           y1="0%"
           x2="100%"
@@ -45,7 +41,7 @@ function PumdokiLogo() {
           <stop offset="48%" stopColor="#ffd8e5" />
           <stop offset="100%" stopColor="#f3a0bc" />
         </linearGradient>
-        <linearGradient id="walletWordFill" x1="0%" y1="0%" x2="100%" y2="0%">
+        <linearGradient id="billingWordFill" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#ffd1e0" />
           <stop offset="55%" stopColor="#f8b3ca" />
           <stop offset="100%" stopColor="#ef8fb1" />
@@ -54,7 +50,7 @@ function PumdokiLogo() {
       <g transform="translate(4,6)">
         <path
           d="M52 66c-4-3-7-6-9-8C27 43 18 33 18 20 18 9 26 0 37 0c7 0 13 3 17 10 5-7 11-10 18-10 11 0 19 9 19 20 0 13-10 23-27 38l-9 8-5 5-5-5Z"
-          fill="url(#walletHeartBase)"
+          fill="url(#billingHeartBase)"
           stroke="#111"
           strokeWidth="1.8"
           strokeLinejoin="round"
@@ -86,7 +82,7 @@ function PumdokiLogo() {
         y="75"
         fontSize="60"
         fontWeight="700"
-        fill="url(#walletWordFill)"
+        fill="url(#billingWordFill)"
         letterSpacing="0.5"
       >
         Pumdoki
@@ -145,54 +141,16 @@ function StatCard({ label, value, sub, icon, accent = SAKURA_DEEP }) {
           </div>
           {sub && <div className="mt-1 text-xs text-[#8c6d7f]">{sub}</div>}
         </div>
-        <div
-          className="flex h-10 w-10 items-center justify-center rounded-xl"
-          style={{ backgroundColor: `${accent}20`, color: accent }}
-        >
-          {icon}
-        </div>
+        {icon && (
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-xl"
+            style={{ backgroundColor: `${accent}20`, color: accent }}
+          >
+            {icon}
+          </div>
+        )}
       </div>
     </div>
-  );
-}
-
-/* ─── Spend Mini Chart ───────────────────────────────────────────────── */
-
-function SpendChart({ data }) {
-  const W = 600,
-    H = 140,
-    P = 8;
-  const max = Math.max(...data);
-  const bw = (W - P * 2) / data.length - 2;
-  return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      className="w-full h-[140px]"
-      preserveAspectRatio="none"
-    >
-      <defs>
-        <linearGradient id="walletBarGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f472b6" />
-          <stop offset="100%" stopColor="#f9a8c8" />
-        </linearGradient>
-      </defs>
-      {data.map((v, i) => {
-        const h = (v / max) * (H - P * 2);
-        const x = P + i * ((W - P * 2) / data.length) + 1;
-        const y = H - P - h;
-        return (
-          <rect
-            key={i}
-            x={x}
-            y={y}
-            width={bw}
-            height={h}
-            rx={bw / 2}
-            fill="url(#walletBarGrad)"
-          />
-        );
-      })}
-    </svg>
   );
 }
 
@@ -300,26 +258,6 @@ const NAV_SECTIONS = [
     ),
   },
   {
-    id: "add_funds",
-    label: "Add Funds",
-    icon: (
-      <>
-        <path d="M12 3v12M5 10l7 7 7-7" />
-        <path d="M5 21h14" />
-      </>
-    ),
-  },
-  {
-    id: "withdraw",
-    label: "Withdraw",
-    icon: (
-      <>
-        <path d="M12 21V9M5 14l7-7 7 7" />
-        <path d="M5 3h14" />
-      </>
-    ),
-  },
-  {
     id: "subscriptions",
     label: "Subscriptions",
     icon: (
@@ -352,18 +290,8 @@ const NAV_SECTIONS = [
     ),
   },
   {
-    id: "referrals",
-    label: "Referral Earnings",
-    icon: (
-      <>
-        <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
-        <path d="M7 7h.01" />
-      </>
-    ),
-  },
-  {
     id: "settings",
-    label: "Wallet Settings",
+    label: "Billing Settings",
     icon: (
       <>
         <circle cx="12" cy="12" r="3" />
@@ -376,269 +304,69 @@ const NAV_SECTIONS = [
 /* ─── Overview ───────────────────────────────────────────────────────── */
 
 function OverviewSection({ go }) {
+  const totalSpent = transactions.reduce(
+    (total, transaction) => total + Math.abs(transaction.amount),
+    0
+  );
   return (
     <>
       <div className="mb-5">
-        <h2 className="text-[22px] font-bold text-[#241a22]">Wallet</h2>
+        <h2 className="text-[22px] font-bold text-[#241a22]">Billing</h2>
         <p className="mt-1 text-sm text-[#8c6d7f]">
-          Your Pumdoki balance, spending, and funds at a glance.
+          Your purchases, subscriptions, and tips. All prices are in USD.
         </p>
       </div>
-
-      {/* Balance hero */}
-      <div className="rounded-2xl border border-pink-200 bg-gradient-to-br from-pink-50 via-white to-pink-50/40 p-6 shadow-sm">
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div>
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-[#df5f97]">
-              Available balance
-            </div>
-            <div className="mt-1 text-4xl font-extrabold text-[#241a22]">
-              {money(WALLET.available)}
-            </div>
-            <div className="mt-2 flex gap-2">
-              <button
-                onClick={() => go("add_funds")}
-                className="rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110"
-              >
-                Add funds
-              </button>
-              <button
-                onClick={() => go("withdraw")}
-                className="rounded-xl border border-pink-200 bg-white px-4 py-2 text-sm font-semibold text-[#df5f97] transition hover:bg-pink-50"
-              >
-                Withdraw
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-col justify-center">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-[#b89aa8]">
-              Pending
-            </div>
-            <div className="mt-1 text-xl font-bold text-[#241a22]">
-              {money(WALLET.pending)}
-            </div>
-            <div className="text-xs text-[#8c6d7f]">Clearing in 1–3 days</div>
-          </div>
-          <div className="flex flex-col justify-center">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-[#b89aa8]">
-              Held
-            </div>
-            <div className="mt-1 text-xl font-bold text-[#241a22]">
-              {money(WALLET.held)}
-            </div>
-            <div className="text-xs text-[#8c6d7f]">
-              Dispute / chargeback hold
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats row */}
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         <StatCard
-          label="Lifetime earned"
-          value={money(WALLET.lifetime_earned)}
-          icon={
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 2v20M5 9h10a3 3 0 010 6H7" />
-            </svg>
-          }
-        />
-        <StatCard
-          label="Lifetime spent"
-          value={money(WALLET.lifetime_spent)}
-          icon={
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 2L3 7v13a1 1 0 001 1h16a1 1 0 001-1V7l-3-5H6z" />
-            </svg>
-          }
+          label="Sample spending"
+          value={money(totalSpent)}
+          sub="Transactions shown in this preview"
           accent={LAVENDER}
         />
         <StatCard
-          label="Active subs"
+          label="Sample subscriptions"
           value={String(activeSubscriptions.length)}
           sub={
-            money(activeSubscriptions.reduce((s, x) => s + x.price, 0)) + "/mo"
-          }
-          icon={
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-            </svg>
+            money(
+              activeSubscriptions.reduce(
+                (total, subscription) => total + subscription.price,
+                0
+              )
+            ) + "/mo"
           }
           accent={MINT}
         />
-        <StatCard
-          label="Referral earned"
-          value={money(referralEarnings.reduce((s, x) => s + x.earned, 0))}
-          sub={`${referralEarnings.length} referrals`}
-          icon={
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
-              <path d="M7 7h.01" />
-            </svg>
-          }
-          accent={GOLD}
-        />
       </div>
-
-      {/* Spending chart + recent */}
-      <div className="mt-5 grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2 rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
-          <div className="mb-3 flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-bold text-[#241a22]">
-                Spending — last 30 days
-              </h3>
-              <p className="text-xs text-[#8c6d7f]">
-                Subscriptions, PPV, love sent, sessions, shop
-              </p>
-            </div>
-            <div className="flex gap-1.5 rounded-xl bg-pink-50 p-1">
-              {["7D", "30D", "90D"].map((p, i) => (
-                <button
-                  key={p}
-                  className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition ${i === 1 ? "bg-white text-[#df5f97] shadow-sm" : "text-[#8c6d7f] hover:text-[#df5f97]"}`}
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
-          </div>
-          <SpendChart data={spendingChart} />
-        </div>
-
-        <div className="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
-          <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-base font-bold text-[#241a22]">
-              Recent activity
-            </h3>
-            <button
-              onClick={() => go("transactions")}
-              className="text-xs font-semibold text-[#df5f97] hover:underline"
-            >
-              View all
-            </button>
-          </div>
-          <ul className="space-y-2.5">
-            {transactions.slice(0, 6).map((t) => (
-              <li key={t.id} className="flex items-center gap-3">
-                <TxIcon type={t.icon} />
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-semibold text-[#241a22]">
-                    {t.kind}
-                  </div>
-                  <div className="truncate text-[11px] text-[#8c6d7f]">
-                    {t.who}
-                  </div>
-                </div>
-                <div
-                  className={`text-sm font-bold tabular-nums ${t.direction === "in" ? "text-emerald-600" : "text-[#241a22]"}`}
-                >
-                  {t.direction === "in" ? "+" : "−"}
-                  {money(t.amount)}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Quick actions */}
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          {
-            l: "Send Love",
-            sub: "Support a creator",
-            s: "send_love",
-            i: "M12 2v20M5 9h10a3 3 0 010 6H7",
-          },
-          {
-            l: "Redeem gift card",
-            sub: "Enter promo code",
-            s: "add_funds",
-            i: "M20 12v10H4V12M2 7h20v5H2z",
-          },
-          {
-            l: "Manage subs",
-            sub: "Auto-renew & tiers",
-            s: "subscriptions",
-            i: "M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2",
-          },
-          {
-            l: "Download statement",
-            sub: "Tax & records",
-            s: "settings",
-            i: "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z",
-          },
-        ].map((a) => (
+      <div className="mt-5 rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
+        <div className="mb-3 flex items-center justify-between">
+          <h3 className="text-base font-bold text-[#241a22]">
+            Recent purchases
+          </h3>
           <button
-            key={a.l}
-            onClick={() => go(a.s)}
-            className="flex items-center gap-3 rounded-xl bg-white p-3 text-left ring-1 ring-pink-100 transition hover:ring-pink-300 hover:bg-pink-50/40"
+            onClick={() => go("transactions")}
+            className="text-xs font-semibold text-[#df5f97] hover:underline"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-pink-100 text-[#df5f97]">
-              <svg
-                viewBox="0 0 24 24"
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d={a.i} />
-              </svg>
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-sm font-semibold text-[#241a22]">{a.l}</div>
-              <div className="text-xs text-[#8c6d7f]">{a.sub}</div>
-            </div>
-            <svg
-              viewBox="0 0 24 24"
-              className="h-4 w-4 text-[#b89aa8]"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M9 6l6 6-6 6" />
-            </svg>
+            View all
           </button>
-        ))}
+        </div>
+        <ul className="space-y-3">
+          {transactions.slice(0, 6).map((transaction) => (
+            <li key={transaction.id} className="flex items-center gap-3">
+              <TxIcon type={transaction.icon} />
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-semibold text-[#241a22]">
+                  {transaction.kind}
+                </div>
+                <div className="truncate text-xs text-[#8c6d7f]">
+                  {transaction.who}
+                </div>
+              </div>
+              <span className="text-sm font-bold tabular-nums">
+                {money(transaction.amount)}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   );
@@ -671,8 +399,7 @@ function TransactionsSection() {
             Transaction History
           </h2>
           <p className="mt-1 text-sm text-[#8c6d7f]">
-            Every deposit, withdrawal, subscription, purchase, and love
-            transaction.
+            Your subscriptions, purchases, and tips in USD.
           </p>
         </div>
         <button className="rounded-xl border border-pink-200 bg-white px-3.5 py-2 text-sm font-semibold text-[#df5f97] transition hover:bg-pink-50">
@@ -762,385 +489,6 @@ function TransactionsSection() {
               ))}
             </tbody>
           </table>
-        </div>
-      </div>
-    </>
-  );
-}
-
-/* ─── Add Funds ──────────────────────────────────────────────────────── */
-
-function AddFundsSection() {
-  const [amount, setAmount] = useState("50.00");
-  const [method, setMethod] = useState(1);
-
-  return (
-    <>
-      <div className="mb-5">
-        <h2 className="text-[22px] font-bold text-[#241a22]">Add Funds</h2>
-        <p className="mt-1 text-sm text-[#8c6d7f]">
-          Top up your Pumdoki wallet to unlock content, subscribe, and send
-          love.
-        </p>
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-2">
-        <div className="rounded-2xl border border-pink-100 bg-white p-6 shadow-sm">
-          <h3 className="mb-4 text-base font-bold text-[#241a22]">
-            Choose amount
-          </h3>
-          <div className="grid grid-cols-4 gap-2 mb-4">
-            {["10.00", "25.00", "50.00", "100.00", "200.00", "500.00"].map(
-              (v) => (
-                <button
-                  key={v}
-                  onClick={() => setAmount(v)}
-                  className={`rounded-xl py-2.5 text-sm font-bold transition ${amount === v ? "bg-[#df5f97] text-white shadow-sm" : "bg-pink-50 text-[#5b4153] hover:bg-pink-100"}`}
-                >
-                  ${v.replace(".00", "")}
-                </button>
-              )
-            )}
-            <label className="col-span-2 relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8c6d7f] font-semibold">
-                $
-              </span>
-              <input
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="w-full rounded-xl border border-pink-200 bg-[#fffafc] py-2.5 pl-7 pr-3 text-sm font-bold outline-none tabular-nums focus:border-pink-300"
-                placeholder="Custom"
-              />
-            </label>
-          </div>
-
-          <h3 className="mb-3 text-base font-bold text-[#241a22]">
-            Payment method
-          </h3>
-          <div className="space-y-2">
-            {paymentMethods.map((pm) => (
-              <label
-                key={pm.id}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${method === pm.id ? "border-[#df5f97] bg-pink-50/60 ring-1 ring-[#df5f97]" : "border-pink-100 bg-white hover:border-pink-200"}`}
-              >
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={method === pm.id}
-                  onChange={() => setMethod(pm.id)}
-                  className="sr-only"
-                />
-                <div
-                  className={`flex h-8 w-12 items-center justify-center rounded-lg text-xs font-bold ${pm.brand === "visa" ? "bg-blue-50 text-blue-600" : pm.brand === "mc" ? "bg-orange-50 text-orange-600" : "bg-sky-50 text-sky-600"}`}
-                >
-                  {pm.type === "PayPal" ? "PP" : pm.type.slice(0, 4)}
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm font-semibold text-[#241a22]">
-                    {pm.type}
-                  </div>
-                  <div className="text-xs text-[#8c6d7f]">
-                    {pm.type === "PayPal"
-                      ? pm.last4
-                      : `···· ${pm.last4} · Exp ${pm.expires}`}
-                  </div>
-                </div>
-                <div
-                  className={`h-4 w-4 rounded-full border-2 ${method === pm.id ? "border-[#df5f97] bg-[#df5f97]" : "border-pink-200"}`}
-                >
-                  {method === pm.id && (
-                    <div className="mx-auto mt-0.5 h-1.5 w-1.5 rounded-full bg-white" />
-                  )}
-                </div>
-              </label>
-            ))}
-            <button className="w-full rounded-xl border border-dashed border-pink-200 py-2.5 text-sm font-semibold text-[#df5f97] hover:bg-pink-50">
-              + Add new card or PayPal
-            </button>
-          </div>
-
-          <button className="mt-5 w-full rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] py-3 text-base font-bold text-white shadow-sm transition hover:brightness-110">
-            Add {money(parseFloat(amount) || 0)} to wallet
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          <div className="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
-            <h3 className="mb-3 text-base font-bold text-[#241a22]">
-              Redeem gift card or promo code
-            </h3>
-            <div className="flex gap-2">
-              <input
-                placeholder="Enter code e.g. SAKURA50"
-                className="flex-1 rounded-xl border border-pink-100 bg-[#fffafc] px-3 py-2.5 text-sm outline-none placeholder:text-[#c59aae] focus:border-pink-300"
-              />
-              <button className="rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:brightness-110">
-                Redeem
-              </button>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-pink-100 bg-gradient-to-br from-pink-50 via-white to-white p-5 shadow-sm">
-            <h3 className="mb-3 text-base font-bold text-[#241a22]">
-              Auto-reload
-            </h3>
-            <p className="text-sm text-[#5b4153]">
-              Automatically top up your wallet when your balance drops below a
-              set threshold.
-            </p>
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <div>
-                <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-[#b89aa8]">
-                  When balance falls below
-                </label>
-                <div className="flex items-center rounded-xl border border-pink-100 bg-[#fffafc]">
-                  <span className="pl-3 text-[#8c6d7f]">$</span>
-                  <input
-                    defaultValue="10"
-                    className="w-full bg-transparent py-2 pr-3 text-sm font-semibold outline-none"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-[#b89aa8]">
-                  Reload amount
-                </label>
-                <div className="flex items-center rounded-xl border border-pink-100 bg-[#fffafc]">
-                  <span className="pl-3 text-[#8c6d7f]">$</span>
-                  <input
-                    defaultValue="50"
-                    className="w-full bg-transparent py-2 pr-3 text-sm font-semibold outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="mt-3 flex items-center justify-between">
-              <span className="text-sm font-semibold text-[#5b4153]">
-                Enable auto-reload
-              </span>
-              <Toggle checked={false} onChange={() => {}} label="Auto-reload" />
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
-            <h3 className="mb-2 text-base font-bold text-[#241a22]">
-              Crypto deposit
-            </h3>
-            <p className="text-sm text-[#5b4153] mb-3">
-              Deposit USDC on Ethereum or Solana directly to your wallet.
-            </p>
-            <div className="rounded-xl bg-pink-50 p-3 text-center">
-              <div className="mx-auto mb-2 h-24 w-24 rounded-xl bg-white p-2 ring-1 ring-pink-100">
-                <div className="flex h-full w-full items-center justify-center rounded-lg bg-pink-50 text-xs font-bold text-[#df5f97]">
-                  QR Code
-                </div>
-              </div>
-              <code className="text-xs text-[#5b4153] font-semibold break-all">
-                0x7f3a...A20a
-              </code>
-              <button className="mt-2 block mx-auto rounded-lg bg-white px-3 py-1 text-xs font-semibold text-[#df5f97] ring-1 ring-pink-200 hover:bg-pink-50">
-                Copy address
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-/* ─── Withdraw ───────────────────────────────────────────────────────── */
-
-function WithdrawSection() {
-  const [amount, setAmount] = useState(String(WALLET.available));
-  const [method, setMethod] = useState(1);
-
-  return (
-    <>
-      <div className="mb-5">
-        <h2 className="text-[22px] font-bold text-[#241a22]">Withdraw Funds</h2>
-        <p className="mt-1 text-sm text-[#8c6d7f]">
-          Cash out your available balance to your preferred payout method.
-        </p>
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-2">
-        <div className="rounded-2xl border border-pink-100 bg-white p-6 shadow-sm">
-          <div className="mb-5 rounded-xl bg-gradient-to-r from-pink-50 to-white p-4 ring-1 ring-pink-100">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-[#df5f97]">
-              Available to withdraw
-            </div>
-            <div className="mt-1 text-3xl font-extrabold text-[#241a22]">
-              {money(WALLET.available)}
-            </div>
-            <div className="text-xs text-[#8c6d7f]">
-              Minimum withdrawal: $20 · Platform fee: 0%
-            </div>
-          </div>
-
-          <h3 className="mb-3 text-base font-bold text-[#241a22]">Amount</h3>
-          <div className="flex gap-2 mb-4">
-            <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8c6d7f] font-semibold">
-                $
-              </span>
-              <input
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="w-full rounded-xl border border-pink-200 bg-[#fffafc] py-2.5 pl-7 pr-3 text-sm font-bold outline-none tabular-nums focus:border-pink-300"
-              />
-            </div>
-            <button
-              onClick={() => setAmount(String(WALLET.available))}
-              className="rounded-xl border border-pink-200 bg-white px-4 py-2.5 text-sm font-semibold text-[#df5f97] hover:bg-pink-50"
-            >
-              Withdraw all
-            </button>
-          </div>
-
-          <h3 className="mb-3 text-base font-bold text-[#241a22]">
-            Payout method
-          </h3>
-          <div className="space-y-2">
-            {withdrawMethods.map((wm) => (
-              <label
-                key={wm.id}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${method === wm.id ? "border-[#df5f97] bg-pink-50/60 ring-1 ring-[#df5f97]" : "border-pink-100 bg-white hover:border-pink-200"}`}
-              >
-                <input
-                  type="radio"
-                  name="withdraw"
-                  checked={method === wm.id}
-                  onChange={() => setMethod(wm.id)}
-                  className="sr-only"
-                />
-                <div className="flex-1">
-                  <div className="text-sm font-semibold text-[#241a22]">
-                    {wm.type}
-                  </div>
-                  <div className="text-xs text-[#8c6d7f]">{wm.detail}</div>
-                </div>
-                <div className="flex items-center gap-3 text-xs text-[#8c6d7f]">
-                  <span>Fee: {wm.fee}</span>
-                  <span>·</span>
-                  <span>{wm.speed}</span>
-                </div>
-                <div
-                  className={`h-4 w-4 rounded-full border-2 ${method === wm.id ? "border-[#df5f97] bg-[#df5f97]" : "border-pink-200"}`}
-                >
-                  {method === wm.id && (
-                    <div className="mx-auto mt-0.5 h-1.5 w-1.5 rounded-full bg-white" />
-                  )}
-                </div>
-              </label>
-            ))}
-            <button className="w-full rounded-xl border border-dashed border-pink-200 py-2.5 text-sm font-semibold text-[#df5f97] hover:bg-pink-50">
-              + Add payout method
-            </button>
-          </div>
-
-          <button className="mt-5 w-full rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] py-3 text-base font-bold text-white shadow-sm transition hover:brightness-110">
-            Withdraw {money(parseFloat(amount) || 0)}
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          <div className="rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden">
-            <div className="border-b border-pink-50 px-5 py-3.5">
-              <h3 className="text-base font-bold text-[#241a22]">
-                Payout schedule
-              </h3>
-            </div>
-            <div className="p-5 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-[#5b4153]">Schedule</span>
-                <select className="rounded-xl border border-pink-100 bg-[#fffafc] px-3 py-1.5 text-sm outline-none focus:border-pink-300">
-                  <option>Monthly (1st of month)</option>
-                  <option>Bi-weekly</option>
-                  <option>Weekly</option>
-                  <option>Manual only</option>
-                </select>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-[#5b4153]">
-                  Minimum auto-payout
-                </span>
-                <div className="flex items-center rounded-xl border border-pink-100 bg-[#fffafc] w-24">
-                  <span className="pl-2 text-[#8c6d7f]">$</span>
-                  <input
-                    defaultValue="100"
-                    className="w-full bg-transparent py-1.5 pr-2 text-sm font-semibold outline-none"
-                  />
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-[#5b4153]">Next auto-payout</span>
-                <span className="text-sm font-semibold text-[#241a22]">
-                  May 01, 2026
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-[#5b4153]">Instant cashout</span>
-                <Toggle
-                  checked={false}
-                  onChange={() => {}}
-                  label="Instant cashout"
-                />
-              </div>
-              <p className="text-xs text-[#8c6d7f]">
-                Instant cashout is not available. Payout timing and fees have
-                not been established.
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden">
-            <div className="border-b border-pink-50 px-5 py-3.5">
-              <h3 className="text-base font-bold text-[#241a22]">
-                Recent withdrawals
-              </h3>
-            </div>
-            <ul className="divide-y divide-pink-50">
-              {[
-                {
-                  when: "Apr 01",
-                  amount: 8420.14,
-                  to: "ACH ****4210",
-                  status: "Paid",
-                },
-                {
-                  when: "Mar 01",
-                  amount: 7104.8,
-                  to: "ACH ****4210",
-                  status: "Paid",
-                },
-                {
-                  when: "Feb 01",
-                  amount: 5894.22,
-                  to: "ACH ****4210",
-                  status: "Paid",
-                },
-              ].map((p, i) => (
-                <li
-                  key={i}
-                  className="flex items-center justify-between px-5 py-3.5"
-                >
-                  <div>
-                    <div className="text-sm font-semibold text-[#241a22]">
-                      {p.when}
-                    </div>
-                    <div className="text-xs text-[#8c6d7f]">{p.to}</div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold tabular-nums text-[#241a22]">
-                      {money(p.amount)}
-                    </span>
-                    <Pill tone="green">{p.status}</Pill>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </div>
     </>
@@ -1314,8 +662,8 @@ function SendLoveSection() {
       <div className="mb-5">
         <h2 className="text-[22px] font-bold text-[#241a22]">Send Love</h2>
         <p className="mt-1 text-sm text-[#8c6d7f]">
-          Support your favourite creators with monetary love — directly from
-          your wallet.
+          Support your favourite creators with a tip in USD. Payments are not
+          available yet.
         </p>
       </div>
 
@@ -1363,10 +711,13 @@ function SendLoveSection() {
               <textarea
                 rows={3}
                 className="w-full resize-none rounded-xl border border-pink-100 bg-[#fffafc] p-3 text-sm outline-none placeholder:text-[#c59aae] focus:border-pink-300"
-                placeholder="You're amazing, keep creating! 🌸"
+                placeholder="Add a message for the creator"
               />
             </div>
-            <button className="w-full rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] py-3 text-base font-bold text-white shadow-sm transition hover:brightness-110">
+            <button
+              disabled
+              className="w-full rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] py-3 text-base font-bold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
+            >
               <span className="inline-flex items-center gap-2">
                 <svg
                   viewBox="0 0 24 24"
@@ -1380,7 +731,7 @@ function SendLoveSection() {
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 6v12M8 10h8" />
                 </svg>
-                Send $25.00 Love
+                Tipping unavailable
               </span>
             </button>
           </div>
@@ -1458,7 +809,7 @@ function PaymentMethodsSection() {
             Payment Methods
           </h2>
           <p className="mt-1 text-sm text-[#8c6d7f]">
-            Manage your cards, PayPal, and crypto for deposits and purchases.
+            Sample payment methods for purchases and subscriptions.
           </p>
         </div>
         <button className="rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110">
@@ -1506,186 +857,18 @@ function PaymentMethodsSection() {
           </div>
         ))}
       </div>
-
-      <div className="mt-5 rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
-        <h3 className="mb-3 text-base font-bold text-[#241a22]">
-          Payout methods (for withdrawals)
-        </h3>
-        <div className="space-y-2">
-          {withdrawMethods.map((wm) => (
-            <div
-              key={wm.id}
-              className={`flex items-center justify-between rounded-xl border p-3 ${wm.isDefault ? "border-[#df5f97] bg-pink-50/40" : "border-pink-100"}`}
-            >
-              <div>
-                <div className="text-sm font-semibold text-[#241a22]">
-                  {wm.type}
-                </div>
-                <div className="text-xs text-[#8c6d7f]">
-                  {wm.detail} · Fee: {wm.fee} · {wm.speed}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                {wm.isDefault && <Pill tone="green">Default</Pill>}
-                <button className="rounded-lg p-1.5 text-[#b89aa8] hover:bg-pink-50 hover:text-[#df5f97]">
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </>
   );
 }
 
-/* ─── Referral Earnings ──────────────────────────────────────────────── */
+/* ─── Billing Settings ────────────────────────────────────────────────── */
 
-function ReferralsSection() {
-  const totalRef = referralEarnings.reduce((s, x) => s + x.earned, 0);
+function BillingSettingsSection() {
   return (
     <>
       <div className="mb-5">
         <h2 className="text-[22px] font-bold text-[#241a22]">
-          Referral Earnings
-        </h2>
-        <p className="mt-1 text-sm text-[#8c6d7f]">
-          Earn when fans you refer subscribe or make their first purchase.
-        </p>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-3 mb-5">
-        <StatCard
-          label="Total earned"
-          value={money(totalRef)}
-          icon={
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 2v20M5 9h10a3 3 0 010 6H7" />
-            </svg>
-          }
-        />
-        <StatCard
-          label="Referrals"
-          value={String(referralEarnings.length)}
-          icon={
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M22 21v-2a4 4 0 00-3-3.87" />
-              <path d="M16 3.13a4 4 0 010 7.75" />
-            </svg>
-          }
-          accent={MINT}
-        />
-        <StatCard
-          label="Commission rate"
-          value="10%"
-          icon={
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M7 17l10-10M7 7h10v10" />
-            </svg>
-          }
-          accent={GOLD}
-        />
-      </div>
-
-      <div className="rounded-2xl border border-pink-100 bg-gradient-to-br from-pink-50 via-white to-white p-5 shadow-sm mb-5">
-        <h3 className="text-base font-bold text-[#241a22]">
-          Your referral link
-        </h3>
-        <p className="mt-1 text-sm text-[#5b4153]">
-          Share this link — earn 10% of every referred fan's first subscription.
-        </p>
-        <div className="mt-3 flex gap-2">
-          <code className="flex-1 rounded-xl border border-pink-200 bg-white px-4 py-2.5 text-sm font-semibold text-[#df5f97]">
-            pumdoki.app/r/yourpumdoki
-          </code>
-          <button className="rounded-xl border border-pink-200 bg-white px-4 py-2.5 text-sm font-semibold text-[#df5f97] hover:bg-pink-50">
-            Copy
-          </button>
-          <button className="rounded-xl bg-gradient-to-r from-[#f472b6] to-[#df5f97] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:brightness-110">
-            Share
-          </button>
-        </div>
-      </div>
-
-      <div className="rounded-2xl border border-pink-100 bg-white shadow-sm overflow-hidden">
-        <div className="border-b border-pink-50 px-5 py-3.5">
-          <h3 className="text-base font-bold text-[#241a22]">
-            Referral history
-          </h3>
-        </div>
-        <table className="w-full text-sm">
-          <thead className="bg-pink-50/40 text-[11px] uppercase tracking-wider text-[#b89aa8]">
-            <tr>
-              <th className="px-5 py-2.5 text-left font-semibold">Fan</th>
-              <th className="px-5 py-2.5 text-left font-semibold">Action</th>
-              <th className="px-5 py-2.5 text-left font-semibold">Date</th>
-              <th className="px-5 py-2.5 text-right font-semibold">Earned</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-pink-50">
-            {referralEarnings.map((r) => (
-              <tr key={r.id} className="hover:bg-pink-50/30">
-                <td className="px-5 py-3 font-semibold text-[#241a22]">
-                  {r.fan}
-                </td>
-                <td className="px-5 py-3 text-[#5b4153]">{r.action}</td>
-                <td className="px-5 py-3 text-[#8c6d7f]">{r.when}</td>
-                <td className="px-5 py-3 text-right font-bold text-emerald-600">
-                  +{money(r.earned)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-}
-
-/* ─── Wallet Settings ────────────────────────────────────────────────── */
-
-function WalletSettingsSection() {
-  return (
-    <>
-      <div className="mb-5">
-        <h2 className="text-[22px] font-bold text-[#241a22]">
-          Wallet Settings
+          Billing Settings
         </h2>
         <p className="mt-1 text-sm text-[#8c6d7f]">
           Spending limits, privacy, notifications, and tax documents.
@@ -1730,11 +913,11 @@ function WalletSettingsSection() {
           </p>
           <div className="space-y-3">
             {[
-              { l: "Require PIN for withdrawals", on: true },
+              { l: "Require PIN for purchases", on: true },
               { l: "Two-factor for large transactions (>$500)", on: true },
-              { l: "Hide wallet balance in profile", on: false },
+              { l: "Hide purchase history in profile", on: false },
               { l: "Email receipt for every transaction", on: true },
-              { l: "Push notification for deposits", on: true },
+              { l: "Push notification for purchases", on: true },
             ].map((x) => (
               <div key={x.l} className="flex items-center justify-between">
                 <span className="text-sm text-[#5b4153]">{x.l}</span>
@@ -1795,54 +978,13 @@ function WalletSettingsSection() {
         </div>
 
         <div className="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
-          <h3 className="mb-3 text-base font-bold text-[#241a22]">
-            Currency preferences
-          </h3>
+          <h3 className="mb-3 text-base font-bold text-[#241a22]">Currency</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-[#5b4153]">Display currency</span>
-              <select className="rounded-xl border border-pink-100 bg-[#fffafc] px-3 py-1.5 text-sm outline-none focus:border-pink-300">
-                <option>USD ($)</option>
-                <option>EUR (€)</option>
-                <option>GBP (£)</option>
-                <option>JPY (¥)</option>
-                <option>CAD (C$)</option>
-                <option>AUD (A$)</option>
-              </select>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-[#5b4153]">
-                Accept crypto payments
-              </span>
-              <Toggle checked onChange={() => {}} label="Crypto payments" />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-[#5b4153]">Supported crypto</span>
-              <div className="flex gap-1">
-                {["USDC", "USDT", "ETH", "SOL"].map((c) => (
-                  <span
-                    key={c}
-                    className="rounded-lg bg-pink-50 px-2 py-0.5 text-[10px] font-bold text-[#df5f97]"
-                  >
-                    {c}
-                  </span>
-                ))}
-              </div>
+              <span className="font-semibold text-[#241a22]">USD ($)</span>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="mt-4 rounded-2xl border border-red-100 bg-red-50/40 p-5">
-        <h3 className="text-base font-bold text-red-500">Danger zone</h3>
-        <p className="mt-1 text-sm text-[#5b4153]">
-          Freezing your wallet prevents all transactions. Active subscriptions
-          will fail to renew.
-        </p>
-        <div className="mt-3">
-          <button className="rounded-xl border border-red-200 bg-white px-3.5 py-2 text-sm font-semibold text-red-500 transition hover:bg-red-50">
-            Freeze wallet
-          </button>
         </div>
       </div>
     </>
@@ -1851,7 +993,7 @@ function WalletSettingsSection() {
 
 /* ─── Main Component ─────────────────────────────────────────────────── */
 
-export default function WalletPage({
+export default function BillingPage({
   onBack,
   onLogout,
   onViewProfile,
@@ -1870,20 +1012,14 @@ export default function WalletPage({
     switch (section) {
       case "transactions":
         return <TransactionsSection />;
-      case "add_funds":
-        return <AddFundsSection />;
-      case "withdraw":
-        return <WithdrawSection />;
       case "subscriptions":
         return <SubscriptionsSection />;
       case "send_love":
         return <SendLoveSection />;
       case "payment_methods":
         return <PaymentMethodsSection />;
-      case "referrals":
-        return <ReferralsSection />;
       case "settings":
-        return <WalletSettingsSection />;
+        return <BillingSettingsSection />;
       default:
         return <OverviewSection go={setSection} />;
     }
@@ -1892,18 +1028,16 @@ export default function WalletPage({
   if (page.status !== "ready") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#fff8fb] px-6">
-        {page.status === "loading" && (
-          <LoadingState label="Loading your wallet…" />
-        )}
+        {page.status === "loading" && <LoadingState label="Loading billing…" />}
         {page.status === "empty" && (
           <EmptyState
-            title="Your wallet is empty"
-            message="Add Vesos or complete a transaction to begin."
+            title="No purchases yet"
+            message="Purchases and subscriptions will appear here once payments are available."
           />
         )}
         {page.status === "error" && (
           <ErrorState
-            message="We couldn’t load your wallet."
+            message="We couldn’t load billing."
             onRetry={page.retry}
           />
         )}
@@ -1956,7 +1090,7 @@ export default function WalletPage({
                 <path d="M2 10h20" />
               </svg>
               <span className="text-xs font-semibold text-[#df5f97]">
-                Wallet
+                Billing
               </span>
             </div>
           </div>
@@ -1978,23 +1112,6 @@ export default function WalletPage({
                 <path d="M3 6h18M3 12h18M3 18h18" />
               </svg>
             </button>
-            <div className="hidden sm:flex items-center gap-2 rounded-xl bg-gradient-to-r from-pink-50 to-white px-3 py-1.5 ring-1 ring-pink-100">
-              <svg
-                viewBox="0 0 24 24"
-                className="w-4 h-4 text-[#df5f97]"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 6v12M8 10h8" />
-              </svg>
-              <span className="text-sm font-bold text-[#241a22]">
-                {money(WALLET.available)}
-              </span>
-            </div>
             <div className="relative">
               <button
                 onClick={() => setShowProfileMenu((v) => !v)}
@@ -2071,34 +1188,6 @@ export default function WalletPage({
           className={`${mobileNavOpen ? "block absolute inset-y-16 left-0 z-30" : "hidden"} md:block md:relative md:inset-auto w-[240px] shrink-0 border-r border-pink-100 bg-white`}
         >
           <div className="sticky top-16 p-4">
-            <div className="rounded-2xl bg-gradient-to-br from-pink-50 via-white to-white p-4 ring-1 ring-pink-100 text-center mb-4">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-[#df5f97]">
-                Available balance
-              </div>
-              <div className="mt-1 text-2xl font-extrabold text-[#241a22]">
-                {money(WALLET.available)}
-              </div>
-              <div className="mt-2 flex gap-2 justify-center">
-                <button
-                  onClick={() => {
-                    setSection("add_funds");
-                    setMobileNavOpen(false);
-                  }}
-                  className="rounded-lg bg-gradient-to-r from-[#f472b6] to-[#df5f97] px-3 py-1.5 text-[11px] font-semibold text-white shadow-sm"
-                >
-                  Add funds
-                </button>
-                <button
-                  onClick={() => {
-                    setSection("withdraw");
-                    setMobileNavOpen(false);
-                  }}
-                  className="rounded-lg border border-pink-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-[#df5f97]"
-                >
-                  Withdraw
-                </button>
-              </div>
-            </div>
             <nav className="space-y-0.5">
               {NAV_SECTIONS.map((n) => {
                 const active = section === n.id;
@@ -2137,12 +1226,12 @@ export default function WalletPage({
         <main className="flex-1 min-w-0">
           <div className="mx-auto max-w-[1100px] px-4 py-6 md:px-8 md:py-8">
             <aside
-              aria-label="Wallet prototype status"
+              aria-label="Billing prototype status"
               className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
             >
-              Demo wallet: balances, payment methods, and transactions are
-              sample data. No money moves here; payments, payouts, and
-              transaction security controls are not active.
+              Billing preview: payment methods and transactions are sample data.
+              No money moves here; payments, payouts, and transaction security
+              controls are not active.
             </aside>
             {renderSection()}
           </div>

@@ -2,6 +2,8 @@ export { prisma } from "./client.js";
 export {
   AcceptanceKind,
   CreatorApplicationStatus,
+  ContentPostState,
+  MediaStorageBackend,
   DurableJobFailureCategory,
   DurableJobKind,
   DurableJobStatus,
@@ -16,6 +18,8 @@ export {
 export type {
   AcceptanceRecord,
   CreatorApplication,
+  ContentPost,
+  MediaAsset,
   CreatorApplicationReviewEvent,
   DurableJob,
   OperationsOperator,

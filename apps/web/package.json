@@ -4,15 +4,24 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "pretypecheck:content": "npm run build --workspace @pumdoki/contracts",
+    "typecheck:content": "tsc -p tsconfig.content.json",
+    "predev": "npm run build --workspace @pumdoki/contracts",
     "dev": "vite",
+    "predev:e2e": "npm run build --workspace @pumdoki/contracts",
     "dev:e2e": "vite --host 127.0.0.1",
+    "prebuild": "npm run build --workspace @pumdoki/contracts",
     "build": "vite build",
     "preview": "vite preview",
+    "pretest": "npm run build --workspace @pumdoki/contracts",
     "test": "vitest run",
+    "pretest:watch": "npm run build --workspace @pumdoki/contracts",
     "test:watch": "vitest",
+    "pretest:coverage": "npm run build --workspace @pumdoki/contracts",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@pumdoki/contracts": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.18.0"

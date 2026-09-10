@@ -21,8 +21,8 @@ Current fixtures:
 - `promotions.js` — promotional offers.
 - `profile.js` — creator profile header, services, reviews, posts, and media.
 - `login.js` — public login-page creator carousel and call-to-action cards.
-- `wallet.js` — wallet summary, transactions, subscriptions, payment methods,
-  withdrawals, love history, referrals, and spending chart.
+- `billing.js` — sample purchase transactions, subscriptions, payment methods,
+  and tip history.
 - `oasis.js` — Drimy profile, leagues, achievements, leaderboard, tasks,
   DrimyDex, and store items.
 - `creatorDashboard.js` — creator earnings, subscribers, content, transactions,

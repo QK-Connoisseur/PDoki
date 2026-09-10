@@ -1,21 +1,40 @@
-# Launch budget — September 8, 2026
+# Launch budget — September 9, 2026
 
-**Current state: waiting for Maryland approval and CCBill's sales response.**
-The founder reports that **Kiban Digital Holdings LLC has been filed** through
-Northwest and the preliminary inquiry **has been sent to CCBill sales**.
-September 8 is the report date; exact filing and send times were not supplied.
-State approval, a processor reply/quote or approval, the actual invoice/payment
-amount, recurring charges, EIN and business bank account are not evidenced.
-The next founder action is to share and review the response when received, then
-choose one next step. No duplicate inquiry or new broad legal task is needed.
+**Next planned work: the first functioning P05 test-creator-to-member content
+flow, with storage choice/setup and an approved spending cap alongside the code.**
+Use safe sample photos/videos: upload, persist a post, publish and read it in the
+feed. Drafts stay private, the server enforces access, and data survives refresh
+and restart. This implementation is planned, not completed. Recruited creators,
+production content and visual polish are not prerequisites for this test flow.
+The founder cancelled the proposed CCBill follow-up; do not request a URL/domain
+for that email or send it.
+
+The initial Sales reply, supplied by the founder on
+September 9, requests the URL, development timeline, business type/location,
+average prices, subscription model and services. It calls for a fully
+functioning online site (password protection allowed), US business registration
+or sole trader, a US business bank account and US principal ID. No fees/reserves
+quote, Veso/services approval, creator-payout details or underwriting timeline
+was supplied. Resolve account-specific commercial and compliance terms alongside
+the relevant payment integration, before live money. This response does not
+establish that a demo/sandbox would satisfy review.
+
+Kiban Digital Holdings LLC remains filed through Northwest and awaiting Maryland
+approval, as reported September 8. Filing date, state approval, recurring charges, EIN and business bank account remain unverified.
+The Expense Tracker records the confirmed formation and policy-drafting purchases.
+September 9 is when the sales reply was supplied here, not a verified sender
+timestamp. The P05 Slice 1 design remains In Review. Controlled implementation can
+proceed with targeted review alongside relevant work; blanket paid pre-code
+review is not a prerequisite. Applicable reviews remain before live sensitive
+use, and actual spending, deployment, payment and identity controls remain.
 
 Use DIY work, suitable Fiverr specialists and drafts to control cost. Buy legal
 advice only for material unresolved questions or necessary review of the actual
 documents and workflows. Record the reviewed draft version, corrections and
 remaining limitations. A broad discovery engagement
-or paid entity-choice consultation is no longer the required next step. No
-lawyer has been contacted or engaged. The CCBill sales inquiry is a preliminary
-contact, with no formal merchant application or approval evidenced.
+or paid entity-choice consultation is no longer the required next step. Policy drafting has been commissioned; delivery and review remain pending. The CCBill sales inquiry is a preliminary
+contact; the initial reply does not establish merchant approval or final model
+eligibility.
 
 The founder now reports a **$1,800 monthly spending ceiling**. This is not
 lump-sum cash, funded runway or purchase approval. Earlier assumptions of
@@ -64,23 +83,23 @@ Taxes, insurance and any additional professional or regulatory requirements
 could raise the target. Household expenses and existing AI subscriptions are
 excluded. No revenue is assumed.
 
-Spend and review in sequence:
+Fund and build one functional slice at a time:
 
 1. Business definition reviewed, Maryland confirmed and LLC filing reported
    complete through Northwest. Await state approval and approved documents.
-   The actual expense amount is unknown. Creator/member countries remain open.
-2. **Current:** await the CCBill sales response to the sent preliminary inquiry.
-   Review its answers on the adult-content/services, Veso and creator-payout
-   model, supported countries, complete fees, reserves and compliance package.
-   Choose one next action from the response. The unchanged $300–$800 legal and
-   $100–$300 tax allowances reserve funds for necessary specific advice when its
-   need is established. No duplicate send or broad discovery engagement is the
-   current task.
-3. Once the model and cash needs are understood, commission a scoped technical
-   review before the money, ledger, entitlement and media designs become fixed.
-   The unquoted allowance is $500–$1,500. Fiverr can be a source of candidates:
-   require relevant experience, a written scope, concrete findings and remediation
-   guidance. Marketplace ratings alone do not establish competence.
+   The formation purchase is recorded in the Expense Tracker. Creator/member countries remain open.
+2. **Next:** pair storage choice/setup and an approved spending cap with the
+   planned test-content upload, persisted post, publish/feed and server-access
+   implementation. Handle only the founder/provider decisions that this slice
+   needs alongside the code. The cancelled CCBill follow-up is not a task.
+   Financial allowances remain unchanged until actual quotes support an update.
+   The $300–$800 legal and $100–$300 tax allowances reserve funds for necessary
+   specific advice when its need is established.
+3. Use targeted technical review alongside relevant work and before live
+   sensitive use. Controlled test implementation can begin without a blanket
+   paid pre-code review. The unquoted allowance remains $500–$1,500. Fiverr can
+   source candidates with relevant experience, a written scope, concrete findings
+   and remediation guidance.
 4. Prepare suitable documents and operational drafts yourself or with competent
    Fiverr specialists. Before real users, identity documents, creator uploads or
    money, complete necessary qualified legal review and corrections, an
@@ -128,6 +147,8 @@ Primary price references checked September 6, 2026:
   allowance, not a selected or validated deployment configuration.
 
 The old Expense Tracker is retained as historical input. Its arithmetic now
-reads $1,980 + $170 + $18 × 12 = **$2,366**. The original incorrect $1,713 remains
+reads $1,630 + $170 + $18 × 12 = **$2,016** after removing the deferred
+credit-brand trademark item. Confirmed actual purchases total **$1,296** and
+are separate from these estimates. The original incorrect $1,713 remains
 recorded in B38. Old legal, card-fee and free-tier assumptions are superseded by
 the current planning tab.
