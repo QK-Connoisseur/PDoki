@@ -29,6 +29,11 @@ G1–G12 remain NOT EVALUATED. Merging code is not deployment or activation.
 The founder needs one active task at a time. Read PLAN.md's current sequential
 workflow and do not assign parallel founder workstreams. PLAN.md §20 owns the
 active founder step; historical slice records must not restart completed tasks.
+At the start of every work session, whenever the active workflow changes, and
+in the final response, state the phase (P00–P14), the exact master-tracker task
+ID, and a brief plain-language description of the workflow. Confirm the ID from
+the current tracker; do not invent one. If work has no assigned phase or ID,
+say so explicitly. Keep this orientation short and focus on the one active task.
 The business definition has been answered and reviewed. Preserve
 provisional ideas without presenting unapproved benefits, prices or capacity
 as promises. No extra motion, game, Plus or design expansion is authorized.
