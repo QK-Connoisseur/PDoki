@@ -67,6 +67,18 @@ Credentials belong only in the local file, never chat or commits. Do not restart
 or claim Phase 5, hosted review or production readiness. See HANDOFF for tests
 and the isolated review database; preserve the existing development database.
 
+September 10 explicit UI request: **P08 / LEG-MT-080 — Build 'Your Activity'
+page** moves from Post-MVP into Phase 8 alongside social actions and Store
+account history. `/activity` is a protected UI preview with labeled example
+likes, purchases, subscriptions and payments, local category/date filters and
+search. Shared sidebar/profile-menu links expose it on desktop/mobile.
+It remains In Progress / UI Prototype until authenticated history APIs and
+account-isolated content/payment integration are implemented after P03/P05/
+P06/P07 dependencies. Publish this bounded slice to `dev` only. The next
+founder task remains P05 / LEG-MT-088 review of the working local content flow;
+no payment activation or other design expansion is authorized. PLAN.md §12
+owns this scope.
+
 Authoritative product/scope docs, read these before non-trivial work:
 
 - `README.md` — product direction, confirmed launch scope, and stable UI requirements (Profile, Store, billing, Oasis, legal/compliance UI).

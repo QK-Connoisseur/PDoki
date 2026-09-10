@@ -2,7 +2,7 @@
 
 @CLAUDE.md
 
-Last updated: September 9, 2026
+Last updated: September 10, 2026
 
 ## 1. Purpose
 
@@ -1040,6 +1040,28 @@ remain unimplemented until that model and its controls are resolved.
 17. Veso recharge fallback — deferred beyond beta.
 18. Responsive mobile layout.
 
+### Your Activity — LEG-MT-080, moved into P08 September 10, 2026
+
+The founder moved the member Your Activity page from Post-MVP into the main
+delivery workflow and authorized its UI now. P08 owns it alongside reactions
+and Store Purchased/Liked/History. Its complete implementation depends on P03
+authenticated accounts, P05 content, the agreed P06 payment/subscription
+records and the P07 purchase-to-access flow. It is a member history view, not
+the private P11 operations audit log.
+
+The `/activity` UI is an **In Progress / UI Prototype** slice: the shared
+sidebar's Your Activity item and the desktop/mobile profile menu open a page
+for likes, purchases, subscriptions and payments. Search and category/date
+filters operate on explicitly labeled example records. It uses the existing
+Sakura Kiss and Midnight City themes and plain USD amounts. This UI does not
+read real account history or activate any payment or subscription operation.
+
+Remaining P08 work: implement authenticated, paginated member-history reads
+from the authoritative content and financial records; enforce account
+ownership, protected-content visibility and removal rules; connect the UI and
+test account isolation, filtering and empty/error states with real persistence.
+Do not mark LEG-MT-080 or P08 complete based on the preview alone.
+
 ### Connect — founder clarification, September 6, 2026
 
 1. Persist creator profiles and service descriptions; monetary display/checkout follows the agreed beta payment model. Veso-denominated pricing and spending are deferred beyond beta.
@@ -1055,6 +1077,8 @@ remain unimplemented until that model and its controls are resolved.
 ### Exit criteria
 
 - Store tabs contain real account data.
+- Your Activity (LEG-MT-080) shows only the signed-in member's persisted
+  likes, purchases, subscriptions and payment history, with server-enforced access.
 - Connect filters real eligible creators and opens the correct profile/chat.
 - Any enabled paid service order has the agreed payment/refund/fulfillment controls.
 - Feed actions persist.
@@ -1274,7 +1298,7 @@ does not change or activate those controls.
 - External affiliate program.
 - Streak/learning retention concept, optional motion/sounds, and Pumdoki Plus/cosmetic benefits after separate scope and economic review. The former Oasis game is cancelled.
 
-## 20. Founder decisions and sequential work order — updated September 9, 2026
+## 20. Founder decisions and sequential work order — updated September 10, 2026
 
 The founder has limited time and must receive one functional product slice at
 a time. The latest September 9 direction pairs founder/provider work with code
@@ -1351,6 +1375,12 @@ reviewed draft version, corrections and remaining limitations of each review.
   “Ask roughly anything” is not an approved product promise.
 
 ### One active step
+
+September 10 bounded engineering request: **P08 / LEG-MT-080 — Your Activity
+UI** is brought forward now and published to `dev` only. Its account-data
+integration remains in P08 after the dependencies above. This does not close
+P05 or create a parallel founder assignment; after this UI slice, the one
+pending founder step remains the P05 / LEG-MT-088 local content-flow review.
 
 | Step                                     | Work                                                                                                                                                                                                                                | Finish evidence                                                                                                                                               |
 | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |

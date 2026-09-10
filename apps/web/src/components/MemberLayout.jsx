@@ -141,6 +141,7 @@ export default function MemberLayout({
             onOpenDashboard={() => navigate("/dashboard")}
             onOpenCreatorApplication={() => navigate("/creator/onboarding")}
             onOpenSettings={() => navigate("/settings")}
+            onOpenActivity={() => navigate("/activity")}
             showCreatorDashboard={showCreatorDashboard}
             showCreatorApplication={showCreatorApplication}
             onLogout={handleLogout}

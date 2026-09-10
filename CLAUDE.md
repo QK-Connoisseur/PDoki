@@ -51,6 +51,18 @@ September 10 UI update: prices use plain USD ($); prepaid-credit controls and
 member stored balances are removed. Billing replaces the wallet preview, and
 `/wallet` redirects to `/billing`. Payments remain unimplemented.
 
+September 10 explicit UI request: **P08 / LEG-MT-080 — Build 'Your Activity'
+page** moves from Post-MVP into Phase 8 alongside social actions and Store
+account history. `/activity` is a protected UI preview with labeled example
+likes, purchases, subscriptions and payments; category/date filters and search
+work locally. Shared sidebar/profile-menu links expose it on desktop/mobile.
+Status is In Progress / UI Prototype; authenticated history APIs, pagination,
+account isolation and content/payment persistence integration remain pending.
+Dependencies are P03, P05, P06 and P07. This bounded slice is authorized now
+for `dev` only; after it, the pending founder task remains P05 / LEG-MT-088
+review of the working local content flow. It does not activate payments or
+authorize other design expansion. PLAN.md §12 owns its scope.
+
 September 9 beta-scope update: defer Veso payments because of implementation
 complexity and the founder's perceived high risk of CCBill/Epoch flagging the
 prepaid-credit model. This is not evidence of a processor rejection or ban.
@@ -62,7 +74,8 @@ inference.
 Any enabled paid beta still needs its agreed payment model, entitlements,
 refund/reconciliation and creator-earnings controls. This decision supersedes
 older mandatory-Veso launch statements in other repo instructions and docs.
-The local content/R2 implementation slice remains the active task.
+The local content/R2 milestone remains pending founder review; the bounded
+Your Activity UI request above does not close it.
 
 Latest September 9 direction supersedes the earlier paperwork-first sequence:
 work one functional product slice at a time, pairing code with its necessary

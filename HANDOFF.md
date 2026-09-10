@@ -1,11 +1,43 @@
 # Session Handoff
 
-Updated: September 10, 2026. USD pricing and Billing replace prepaid-credit UI; safe photo/video flow remains verified against private R2. Founder review of the working local flow is next.
+Updated: September 10, 2026. P08 / LEG-MT-080 Your Activity UI is brought into the main workflow. The next founder step remains P05 / LEG-MT-088 review of the working local content flow.
 Prior engineering checkpoint: `8c33fd1`; source consolidation: `56cb0ad`.
 Read current `dev` / `main` Git refs and their CI runs for publication state.
 Legal/status/budget cleanup is complete; the current founder task is below. This file is the current
 checkpoint; historical command logs remain in Git, including the previous
 [Slice 4 handoff at 25057bd](https://github.com/QK-Connoisseur/PDoki/blob/25057bd/HANDOFF.md).
+
+## September 10 — P08 / LEG-MT-080 Your Activity UI
+
+The founder moved **Build 'Your Activity' page** from Post-MVP into the main
+roadmap and authorized its UI on `dev`. P08 is the appropriate home because
+it already owns reactions and Store Purchased/Liked/History; complete member
+history depends on P03 authentication, P05 content, P06 payment/subscription
+records and the P07 end-to-end flow.
+
+The protected `/activity` page is reachable from the shared sidebar's More
+menu and the profile menu on desktop/mobile. It presents likes, purchases,
+subscriptions and payments with search and category/date filters, using
+explicit example-data labeling, USD amounts and the existing static themes.
+The tracker records **In Progress / UI Prototype**. Real account-history APIs,
+pagination, ownership/access enforcement and persistence integration remain
+P08 work; no financial action or payment activation is implemented here.
+
+Validation: all 241 web tests and 57 real-stack browser tests passed, including
+the new protected route, refresh, desktop/mobile navigation and combined
+filter/reset checks. Repository lint, formatting and the web build passed.
+Six visual checks passed across both themes at 1440, 390 and 320 px widths,
+including keyboard access to the horizontally scrolling category controls.
+Tests used an isolated copy of the committed baseline plus this Activity
+slice because separate Home/content work was in progress in the shared
+workspace; that work is not part of this publication. The tracker change
+preserves formulas, all 17 red Deferred styles and the $1,296 expense total.
+
+This request publishes the tracker, code and documentation to `dev` only.
+The preceding content/USD/tracker consolidation reached both `dev` and `main`
+at `c198b55`, with all three CI jobs passing on each branch. The current
+phase placement does not close P05 or create another founder workstream:
+after this bounded UI slice, review of the local content flow remains next.
 
 ## September 10 — USD pricing and billing UI
 

@@ -31,6 +31,8 @@ The following are intended to work at launch:
 - Public, subscriber-only, tier-restricted, and individually paid content.
 - Pay-to-view individual photos/videos and bundles, offered in feed posts or sent as locked content through chat.
 - Store browsing, purchases, favorites, history, and responsive YouTube-like thumbnails.
+- Your Activity with the member's liked content, purchases, subscriptions and
+  payment history (P08 / LEG-MT-080).
 - Connect creator discovery with online status, price, language, and service filters. Members communicate and arrange orders through real-time chat; automated calendars/bookings are not assumed launch scope.
 - Real-time direct messages using WebSockets.
 - Creator tipping through Send Love.
@@ -209,6 +211,9 @@ The web prototype includes:
 - Store.
 - Promotions.
 - Billing.
+- Your Activity: a protected preview of likes, purchases, subscriptions and
+  payment history; P08 / LEG-MT-080. Filters use labeled example data until
+  account-history APIs are integrated.
 - Creator dashboard.
 - Legacy Oasis prototype (cancelled direction; retained for reference).
 - Chat UI.

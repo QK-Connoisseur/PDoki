@@ -23,6 +23,8 @@ Current fixtures:
 - `login.js` — public login-page creator carousel and call-to-action cards.
 - `billing.js` — sample purchase transactions, subscriptions, payment methods,
   and tip history.
+- `activity.js` — explicitly labeled example likes, purchases, subscriptions,
+  and payment history for the Your Activity preview; never account records.
 - `oasis.js` — Drimy profile, leagues, achievements, leaderboard, tasks,
   DrimyDex, and store items.
 - `creatorDashboard.js` — creator earnings, subscribers, content, transactions,

@@ -30,6 +30,7 @@ const ConnectPage = lazy(() => import("./pages/ConnectPage"));
 const StorePage = lazy(() => import("./pages/StorePage"));
 const PromotionsPage = lazy(() => import("./pages/PromotionsPage"));
 const BillingPage = lazy(() => import("./pages/BillingPage"));
+const ActivityPage = lazy(() => import("./pages/ActivityPage"));
 const OasisPage = lazy(() => import("./pages/OasisPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const CreatorDashboardPage = lazy(() => import("./pages/CreatorDashboardPage"));
@@ -213,6 +214,14 @@ function AppShell() {
           }
         />
         <Route path="/wallet" element={<Navigate to="/billing" replace />} />
+        <Route
+          path="/activity"
+          element={
+            <ProtectedRoute>
+              <ActivityPage {...member} />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/billing"
           element={
