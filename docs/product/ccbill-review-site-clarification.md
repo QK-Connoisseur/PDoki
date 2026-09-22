@@ -5,6 +5,13 @@ directed work toward a functioning review website, with provider/business work
 integrated into each implementation slice. The text below is superseded;
 the URL question is no longer a prerequisite to continuing development.
 
+**Current formation status, September 16, 2026:** the founder confirmed
+Maryland approval of Kiban Digital Holdings LLC and EIN receipt.
+P04 / LEG-MT-158 is complete. Banking, Pumdoki DBA registration and processor
+approval remain open. Earlier pending-approval wording below is historical;
+the original correspondence/draft is preserved. Keep the EIN and company
+documents in private records outside this repository.
+
 Prepared September 9, 2026, after the founder supplied the first Sales reply.
 This follow-up is **unsent**. Reply in the existing email thread after replacing
 the bracketed website field with the confirmed domain/URL and access status.

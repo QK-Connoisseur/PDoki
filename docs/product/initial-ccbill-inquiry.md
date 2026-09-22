@@ -61,10 +61,13 @@ checklist was supplied. This is initial intake guidance. It is neither approval
 nor rejection of the proposed model, and it does not establish an accepted
 merchant account or permission to process payments.
 
-The founder's email states a September 8 filing date. Its expected approval
-later in September is a forecast, not a state approval or guaranteed date.
-Formation approval, EIN, bank-account readiness and actual formation cost remain
-unverified. No ID or bank documents are stored with this correspondence.
+The founder's original email states a September 8 filing date and forecasts
+approval later that month. The sent text above is preserved as correspondence.
+On September 16, the founder confirmed Maryland approval and EIN receipt
+(P04 / LEG-MT-158 complete). The $196 formation purchase was previously
+confirmed and recorded in the tracker. Banking and processor approval remain
+open. Original state/IRS documents have not been independently inspected.
+No EIN, identity or bank documents are stored with this correspondence.
 
 ## Next action and scope
 

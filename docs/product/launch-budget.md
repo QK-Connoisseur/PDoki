@@ -19,8 +19,11 @@ was supplied. Resolve account-specific commercial and compliance terms alongside
 the relevant payment integration, before live money. This response does not
 establish that a demo/sandbox would satisfy review.
 
-Kiban Digital Holdings LLC remains filed through Northwest and awaiting Maryland
-approval, as reported September 8. Filing date, state approval, recurring charges, EIN and business bank account remain unverified.
+September 16 update: the founder confirmed Maryland approval of Kiban Digital
+Holdings LLC and EIN receipt. P04 / LEG-MT-158 is complete on that report;
+original state/IRS documents have not been independently inspected. Business
+banking, Pumdoki DBA registration and recurring charges remain unverified.
+No paid EIN service was purchased in this workflow; budget allowances are unchanged.
 The Expense Tracker records the confirmed formation and policy-drafting purchases.
 September 9 is when the sales reply was supplied here, not a verified sender
 timestamp. The P05 Slice 1 design remains In Review. Controlled implementation can
@@ -85,9 +88,10 @@ excluded. No revenue is assumed.
 
 Fund and build one functional slice at a time:
 
-1. Business definition reviewed, Maryland confirmed and LLC filing reported
-   complete through Northwest. Await state approval and approved documents.
-   The formation purchase is recorded in the Expense Tracker. Creator/member countries remain open.
+1. Business definition reviewed. Maryland LLC approval and EIN receipt were
+   confirmed by the founder September 16 (P04 / LEG-MT-158 complete). Keep
+   originals and the EIN privately. The formation purchase is recorded in the
+   Expense Tracker. Banking, DBA and creator/member countries remain open.
 2. **Next:** pair storage choice/setup and an approved spending cap with the
    planned test-content upload, persisted post, publish/feed and server-access
    implementation. Handle only the founder/provider decisions that this slice
@@ -114,12 +118,14 @@ country/data boundaries and funded staging plan are known, and before external
 registration, verification or password-reset flows. Keep the API's production
 mail guard until approved delivery is configured and tested.
 
-The founder corrected the offer: **recover costs without profit on founding
-creator sales**, rather than charging processing fees only. The longer target
-remains approximately 500 creators and a founder badge. Eligibility, duration,
-attributable costs, allocation of shared expenses, refunds and losses still need
-definition. A no-loss fee has not been demonstrated. Plus income is unproven;
-top-100 memberships and leaderboard rewards remain provisional and excluded.
+September 22 Q132 replaces the earlier cost-recovery/no-profit founder offer.
+**Founders use the standard commission model**, with recognition, discovery and
+community/event benefits. Q131's 20% platform / 80% creator target still needs
+validation against confirmed provider and operating costs. Include programme
+operating costs in the ordinary budget; no special founder fee is assumed.
+Cash-prize events are optional and need a separately approved, funded budget
+before announcement. No prize amount, recurring event spend, fixed cohort size,
+member discount or Plus income is approved. Q133 owns duration/eligibility.
 
 Primary price references checked September 6, 2026:
 
