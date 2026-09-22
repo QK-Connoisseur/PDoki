@@ -38,7 +38,12 @@ provisional ideas without presenting unapproved benefits, prices or capacity
 as promises. No extra motion, game, Plus or design expansion is authorized.
 
 September 8: the founder confirms Kiban Digital Holdings LLC is filed through
-Northwest and awaiting Maryland approval. September 9: CCBill's initial Sales
+Northwest, then awaiting Maryland approval. September 16: the founder confirms
+Maryland approval and EIN receipt. P04 / LEG-MT-158 is complete based on that
+confirmation; do not restart formation or request a duplicate EIN. Keep the
+EIN and original company documents in private records outside the repository.
+Banking, Pumdoki trade-name registration and processor approval remain open.
+September 9: CCBill's initial Sales
 reply requires a functioning review site, optionally password protected; model
 eligibility, fees and payouts remain open. The founder cancelled the proposed
 clarification follow-up and directed work toward a functioning review website.

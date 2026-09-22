@@ -55,6 +55,12 @@ removed from the launch tracker and UI. Existing `/wallet` links redirect to
 `/billing`. Changing the display currency does not activate payments; checkout,
 refunds, reconciliation and payouts still need implementation and provider review.
 
+September 13 final direction: the founder chose to handle wallets in the
+future and continue the questionnaire. Assessment and implementation of an
+optional USD wallet are parked; direct payments remain the current direction.
+PLAN.md Phase 6 preserves the bounded candidate for a later explicit revisit.
+The original mandatory Veso economy is not being restored.
+
 ### Explicit content
 
 - New members must be able to choose whether explicit 18+ content is displayed.
@@ -81,26 +87,35 @@ and opt-in roasting. This is an unbuilt concept; mechanics, costs, privacy,
 moderation, and any AI provider remain undecided. No replacement game economy,
 Orbs, creature evolution, leagues, or randomized purchases are approved.
 
-### Founding creators and Pumdoki Plus
+### Founders and Pumdoki Plus
 
-The founder wants a founding-creator programme with a profile badge, no profit
-for Pumdoki on those creators' sales, and recovery of the costs they create.
-This clarifies the earlier processing-fees-only description: the exact cost
-basis and fee are undecided, and a no-loss outcome has not been demonstrated.
-Approximately 500 creators is a proposed programme size, not an initial pilot
-capacity commitment. Eligible costs, duration, payout/reserve treatment, shared
-cost allocation and funding must be decided before publishing an offer.
-Pumdoki Plus, cosmetics/avatar decorations, and free Plus
-for a proposed top 100/leaderboard are ideas for later evaluation; prices,
-benefits, selection rules, and free-membership promises are not approved.
+September 22 direction: the programme and public tag are **Founders**. The earlier
+commission-free/cost-recovery offer is replaced by standard commission plus a
+web-app tag, discovery placement through a Connect filter or an Explore section
+below the top sections, SFW Discord community events, and priority consideration
+for suitable future events. Cash-prize events are optional and separately
+budgeted; they do not create an ongoing cash entitlement. Exact eligibility,
+cohort size and benefit duration remain open in PLAN.md §20 (Q133).
+
+The programme direction is approved for planning. Its features remain unbuilt;
+no audience, sales, permanent ranking, event schedule or public launch is promised.
+Q131's 20% platform / 80% creator target still requires validation against actual
+provider and operating costs before a firm offer or live payments.
+
+Pumdoki Plus, cosmetics/avatar decorations, and free Plus for a proposed top 100
+or leaderboard remain later ideas. Prices, benefits, selection rules and free
+memberships are not approved; no member discount is added by the Founders decision.
 
 ### Founder workflow
 
 Work one functional slice at a time, with its founder/provider work alongside code. The
 [initial business definition](docs/product/initial-business-definition.md) has
-been answered and reviewed. As of September 8, 2026, the founder confirms
-**Kiban Digital Holdings LLC** is filed through Northwest and awaiting Maryland
-approval. On September 9, the founder supplied CCBill's initial Sales reply:
+been answered and reviewed. On September 16, 2026, the founder confirmed
+**Kiban Digital Holdings LLC** is approved in Maryland and its EIN has been
+obtained. P04 / LEG-MT-158 is complete on that confirmation. The EIN and original
+company documents belong in private records outside the repository; banking
+and Pumdoki trade-name registration remain open. On September 9, the founder
+supplied CCBill's initial Sales reply:
 a functioning review site is required, and password protection is permitted.
 Model eligibility, fees, payouts and the detailed review checklist remain open.
 The founder cancelled the clarification follow-up. PLAN.md §20 now prioritizes
@@ -157,6 +172,7 @@ These requirements were extracted from temporary implementation-prompt files bef
   private operations workflow exist.
 - Content publishing includes a mandatory rights and policy confirmation.
 - Legal copy currently in the frontend is explicitly a prototype, not counsel-approved policy or an operational intake channel. PLAN.md records when and how approved copy replaces it before public launch.
+- `/legal/refunds` is a public refund-help preview using the approved questionnaire direction, with purchase/subscription guidance and request-preparation details. It is marked as awaiting legal review and has no live refund intake. Billing, the footer and Legal Hub link to it (P04 / LEG-MT-011).
 - Prototype contact details must use reserved sample addresses such as `support@pumdoki.example` until real mailboxes exist.
 - No interface may claim that encryption, moderation vendors, response times, legal programs, or compliance processes exist until they are actually operational.
 

@@ -8,6 +8,19 @@ the proposed clarification follow-up and directed work toward a functioning
 website, pairing founder/provider work with code; see PLAN.md §20.
 The [CCBill inquiry reference](initial-ccbill-inquiry.md) records that status.
 
+**Founders update, September 22, 2026:** Q132 in PLAN.md §20 supersedes the
+historical commission-free/cost-recovery offer below. Founders use standard
+commission and receive planned recognition, discovery and community/event
+benefits. All Discord events are SFW. Duration, eligibility and optional cash-
+prize budgets remain open. The original answers/draft below are preserved.
+
+**Current formation status, September 16, 2026:** the founder confirmed
+Maryland approval of Kiban Digital Holdings LLC and EIN receipt.
+P04 / LEG-MT-158 is complete. Banking, Pumdoki DBA registration and processor
+approval remain open. Earlier pending-approval wording below is historical;
+the original correspondence/draft is preserved. Keep the EIN and company
+documents in private records outside this repository.
+
 Keep the topics below as a reference. For later necessary legal work, select
 the specific unresolved issue or prepared draft, provide the processor's actual
 requirements, and request a fixed-scope review/corrections quote. Use DIY and
