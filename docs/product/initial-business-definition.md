@@ -8,8 +8,9 @@ launch date. PLAN.md §20 owns the current task.
 **Founders update, September 22, 2026:** Q132 in PLAN.md §20 supersedes the
 historical commission-free/cost-recovery offer below. Founders use standard
 commission and receive planned recognition, discovery and community/event
-benefits. All Discord events are SFW. Duration, eligibility and optional cash-
-prize budgets remain open. The original answers/draft below are preserved.
+benefits. All Discord events are SFW. Q133 now approves an eligible-account-
+lifetime tag and conditional discovery/event benefits. Eligibility and optional
+cash-prize budgets remain open. The original answers/draft below are preserved.
 
 **Current formation status, September 16, 2026:** the founder confirmed
 Maryland approval of Kiban Digital Holdings LLC and EIN receipt.

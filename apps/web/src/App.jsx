@@ -40,6 +40,7 @@ const CreatorOnboardingPage = lazy(
   () => import("./pages/CreatorOnboardingPage")
 );
 const LegalHubPage = lazy(() => import("./pages/LegalHubPage"));
+const RefundHelpPage = lazy(() => import("./pages/RefundHelpPage"));
 
 /**
  * Navigation adapter.
@@ -136,7 +137,12 @@ function LegalRoute({ nav }) {
   const navigate = useNavigate();
   return (
     <>
-      <LegalHubPage onBack={() => navigate(-1)} initialPage={page || "hub"} />
+      <LegalHubPage
+        key={page || "hub"}
+        onBack={() => navigate(-1)}
+        initialPage={page || "hub"}
+        onNavigateLegal={nav.onNavigateLegal}
+      />
       <CookieConsentBanner onNavigateLegal={nav.onNavigateLegal} />
     </>
   );
@@ -271,6 +277,7 @@ function AppShell() {
 
         {/* ─── Legal ─────────────────────────────────────────────────── */}
         <Route path="/legal" element={<LegalRoute nav={nav} />} />
+        <Route path="/legal/refunds" element={<RefundHelpPage />} />
         <Route path="/legal/:page" element={<LegalRoute nav={nav} />} />
 
         <Route path="*" element={<NotFoundPage />} />

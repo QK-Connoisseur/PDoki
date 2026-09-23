@@ -87,15 +87,16 @@ Orbs, creature evolution, leagues, or randomized purchases are approved.
 
 ### Founders and Pumdoki Plus
 
-September 22 direction: the programme and public tag are **Founders**. The earlier
+September 22 direction: the program and public tag are **Founders**. The earlier
 commission-free/cost-recovery offer is replaced by standard commission plus a
 web-app tag, discovery placement through a Connect filter or an Explore section
 below the top sections, SFW Discord community events, and priority consideration
 for suitable future events. Cash-prize events are optional and separately
-budgeted; they do not create an ongoing cash entitlement. Exact eligibility,
-cohort size and benefit duration remain open in PLAN.md §20 (Q133).
+budgeted; they do not create an ongoing cash entitlement. Q133 approves the tag for the lifetime of an eligible account, with discovery
+and event priority subject to published terms and availability. Exact eligibility
+and the enrollment cutoff or cohort limit remain open in PLAN.md §20.
 
-The programme direction is approved for planning. Its features remain unbuilt;
+The program direction is approved for planning. Its features remain unbuilt;
 no audience, sales, permanent ranking, event schedule or public launch is promised.
 Q131's 20% platform / 80% creator target still requires validation against actual
 provider and operating costs before a firm offer or live payments.

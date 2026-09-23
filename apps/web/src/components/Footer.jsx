@@ -55,6 +55,7 @@ const socialLinks = [
 
 const LEGAL_LINKS = [
   { label: "Terms of Service", sub: "terms" },
+  { label: "Refunds", sub: "refunds" },
   { label: "Privacy Policy", sub: "privacy" },
   { label: "Cookie Policy", sub: "cookies" },
   { label: "DMCA Policy", sub: "dmca" },

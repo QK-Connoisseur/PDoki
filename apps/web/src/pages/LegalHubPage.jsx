@@ -24,6 +24,11 @@ const SECTIONS = [
         icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z",
       },
       {
+        id: "refunds",
+        label: "Requesting a Refund",
+        icon: "M6 3h12v18l-3-2-3 2-3-2-3 2V3Zm3 5h6m-6 4h6",
+      },
+      {
         id: "cookies",
         label: "Cookie Policy",
         icon: "M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5",
@@ -394,7 +399,11 @@ function Section({ heading, children }) {
   );
 }
 
-export default function LegalHubPage({ onBack, initialPage = "hub" }) {
+export default function LegalHubPage({
+  onBack,
+  initialPage = "hub",
+  onNavigateLegal,
+}) {
   const [activePage, setActivePage] = useState(initialPage);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -403,6 +412,11 @@ export default function LegalHubPage({ onBack, initialPage = "hub" }) {
   const currentItem = allItems.find((i) => i.id === activePage);
 
   const navigate = (id) => {
+    if (onNavigateLegal) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      onNavigateLegal(id);
+      return;
+    }
     setActivePage(id);
     setMobileNavOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
