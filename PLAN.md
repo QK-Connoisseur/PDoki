@@ -58,7 +58,7 @@ be reported as fully complete against the original phase definition.
 - Explicit content can be hidden or shown based on an adult member's preference.
 - International creators, especially Latin American creators, are a core audience.
 - Live streaming is post-MVP.
-- Begin with a controlled pilot before public member registration. The proposed founding-creator programme may eventually reach about 500; that is not an initial operating-capacity commitment.
+- Begin with a controlled pilot before public member registration. The proposed founding-creator program may eventually reach about 500; that is not an initial operating-capacity commitment.
 
 ### Beta payment scope decision — September 9, 2026
 
@@ -296,11 +296,35 @@ quotes or approved alternative fees. The earlier preference for a creator share
 of net processor receipts is superseded by Q131's approved target: do not silently
 subtract ordinary processing costs from the creator's 80% allocation.
 
-Refund/chargeback allocation and any separate payout fees remain pending Q139–141.
+Q139 approves reversing the affected creator share and corresponding platform
+commission for ordinary chargebacks, with applicable dispute fees and unrecovered
+ordinary processing costs borne by Pumdoki. Protect legitimately earned creator
+pay where Pumdoki's own billing/service error caused the loss and the creator
+fulfilled their obligations; correcting duplicate/unearned credits remains valid.
+No blanket stolen-card or dishonest-buyer protection is promised at launch.
+Model platform-error losses and failed recovery after creator withdrawals, not
+just lost commission. Q140 applies the same share-reversal and platform-error
+protection principles to refunds; Pumdoki absorbs unrecovered processing costs
+and applicable refund-processing fees. Q141 permits actual disclosed payout-provider
+transfer fees without platform markup, with commission charged once per sale.
+Actual methods, provider fees and economics remain unconfirmed. See §20 for
+approved safeguards and USD 100 examples.
+Q134 approves planned payout initiation on the 1st and 16th or next business day,
+subject to confirmed providers, eligible available earnings and required checks.
+Q135 approves USD 50 as the proposed standard available-earnings minimum, with
+confirmed method-specific limits disclosed in advance and balances carried forward.
+Q147 preserves legitimately earned unpaid balances after termination, with reviewed
+holds and a final-settlement process that does not automatically forfeit amounts
+below the ordinary minimum. Final provider methods and settlement details remain open.
+Q137 approves a provisional 14-calendar-day transaction pending period subject to
+settlement/reserve requirements; it does not cover later chargebacks or guarantee
+bank receipt. Final provider minimums, methods, hold/reserve arrangements and cutoff
+details remain pending in §20.
 Paid-session commission remains pending Q31. Question 132 replaces the earlier
-cost-recovery/no-profit founding offer with the Founders programme: standard
+cost-recovery/no-profit founding offer with the Founders program: standard
 commission, recognition, discovery placement and community/event benefits. The
-public tag is "Founders". Eligibility, duration and event budgets remain pending;
+public tag is "Founders". Q133 approves the tag for an eligible account's lifetime
+and conditional discovery/event benefits. Eligibility and event budgets remain pending;
 no founder fee reduction, permanent exemption or recurring prize budget is approved.
 
 Keep creator earnings and platform revenue separately auditable. If Veso is later
@@ -3238,8 +3262,11 @@ payout controls and their tests remain pending. The appeals questionnaire sectio
 is reviewed; LEG-MT-031 remains In Progress for commissioned drafting, substantive
 review, external arrangements and implementation/testing, not complete.
 
-The active founder review moves to **P04 / LEG-MT-021 — Draft Creator Agreement /
-Payout Terms**, now Q133 (Founders benefit duration and eligibility). Drafting is included
+The current legal drafting task is **P04 / LEG-MT-021 — Draft Creator Agreement /
+Payout Terms**. On September 23 the founder reports completing the final questionnaire
+corrections and is awaiting Suzanne's response. Q150 and the Additional materials
+wording are accepted; Q148–149 are retained and Q136 awaits provider confirmation.
+Drafting is included
 in the already purchased Suzanne Lawyer bundle (Expense Tracker row 11);
 delivery and substantive approval remain pending. No new purchase is authorized.
 
@@ -3443,9 +3470,10 @@ establishes that this target is sustainable.
 
 Section 3.8's cost-validation requirement remains in force. Its alternatives are
 modeling options, not adopted fees; do not silently subtract ordinary processing
-costs from the proposed creator share. Refund/chargeback allocation (Q139–140),
-possible separately disclosed payout fees (Q141), Founders benefit duration and
-eligibility (Q133), and paid-session commission (Q31) remain separate pending decisions.
+costs from the proposed creator share. Chargeback allocation is now approved in
+Q139 below, refund allocation in Q140 and permitted payout-fee categories in Q141.
+Actual provider fees, final Founders cohort eligibility and paid-session commission
+(Q31) remain separate pending decisions.
 No founding rate, permanent discount, provider purchase or live payment approval
 is implied. The approved questionnaire answer retains its proposed-rate and
 cost-validation qualifications; this is not permission to announce final pricing.
@@ -3458,7 +3486,7 @@ it is not a Pumdoki quote.
 https://help.fansly.com/en/articles/12315241-getting-started-on-fansly
 https://ccbill.com/pricing
 
-Question 132 approved September 22, 2026 (Founders programme direction): use the
+Question 132 approved September 22, 2026 (Founders program direction): use the
 public name and tag **Founders**, not "Founding Creator". Replace the earlier
 commission-free/cost-recovery/no-profit offer with the standard commission model
 from Q131 plus recognition, discovery and community/event benefits. The target
@@ -3481,24 +3509,595 @@ Promotional use of creator media retains Q55/Q128 permission requirements. These
 benefits do not guarantee impressions, audience, sales or permanent top ranking.
 No fixed cohort size, member discount, Plus benefit, recurring cash entitlement,
 event spending or new UI implementation is authorized by this documentation task.
-Update existing programme/commission/admin tracker entries rather than keeping
+Update existing program/commission/admin tracker entries rather than keeping
 mandatory special founder fees or unapproved permanent 500-person promises.
 Related P06 / LEG-MT-043 implementation remains Not Started; the sole active
 founder workflow stays P04 / LEG-MT-021.
 
-The active review is Q133. The original question about permanent or time-limited
-founder commission benefits is outdated after Q132: there is no special commission
-benefit to make permanent. Proposed replacement question: "How long do Founders
-recognition and programme benefits last, and who qualifies?"
+Question 133 approved September 22, 2026 (Founders benefit duration): the Founders
+tag remains for the lifetime of an eligible account, subject to platform rules.
+Discovery placements and priority consideration for future events follow the
+published program terms and availability. No guaranteed permanent top placement,
+recurring event schedule or cash prizes. Each prize event requires its own rules
+and approved budget. Eligibility and the enrollment cutoff or cohort limit remain
+to be finalized before recruitment; do not adopt the old 500-person cap.
 
-Recommendation pending approval: the Founders designation recognizes membership
-of the original eligible cohort and remains for the life of an eligible account.
-Discovery placements and priority for future events follow the published
-programme terms, suitability and capacity; no guaranteed lifetime top placement,
-event schedule or cash-prize entitlement. Final eligibility, enrollment cutoff or
-cohort cap must be defined before recruitment. Do not adopt the old 500-creator or
-500-member cap automatically. Q133 remains pending; the founder edits the DOCX.
-The next engineering checkpoint remains P05 / LEG-MT-088.
+This replaces the obsolete permanent-commission-benefit answer. Q132's standard
+commission treatment remains unchanged. Use the spelling "program" in new answer
+text. Program implementation and event spending remain unapproved; the founder
+edits the DOCX manually.
+
+Question 134 approved September 22, 2026 (payout frequency): plan to initiate
+eligible creator payouts twice monthly, on the 1st and 16th or
+the next business day, subject to confirmation with the payment/payout providers.
+Only available earnings that have cleared applicable holds and meet the confirmed
+minimum and required verification, tax and payout-documentation conditions qualify.
+The final schedule, cutoff times and supported payout arrangements must be
+confirmed before launch. These dates are proposed initiation dates, not guaranteed
+bank receipt dates; delivery depends on the payout method and receiving institution.
+
+Do not equate merchant settlement to Pumdoki with disbursements to creators or
+promise advances against unsettled funds. Retain Q122's proportionate treatment
+of restricted funds and ordinary payment of undisputed eligible earnings. The
+provider-specific minimums (Q135), methods (Q136), hold/reserve periods (Q137),
+and financial allocation remain pending. This approved direction does not select a payout provider, require manual
+bank transfers, authorize payments or set a seven-/fourteen-day hold.
+
+Sources checked September 22, 2026: CCBill describes a merchant billing/payment
+schedule with method, threshold and holiday exceptions, not an approved Pumdoki
+creator-payment arrangement. The creator onboarding benchmark distinguishes
+pending from available earnings and method-dependent payout timing/minimums.
+https://ccbill.com/doc/merchant-accounting-faqs
+https://help.fansly.com/en/articles/12315241-getting-started-on-fansly
+Q134 is approved as the planned schedule, subject to provider confirmation and
+implementation. The actual payout arrangement remains unconfirmed.
+
+Question 135 approved September 22, 2026 (minimum payout threshold): use USD 50
+as the proposed standard minimum available creator balance for a
+scheduled payout. Pending or held earnings do not count toward the threshold.
+This is a creator-earnings threshold, not the gross member purchase amount or a
+member wallet balance. Any different payout-method minimum must be confirmed
+with the provider and clearly disclosed before the creator selects that method.
+Do not promise a universal USD 50 minimum for all countries and payment rails.
+
+Balances below the applicable threshold carry forward to later scheduled payouts
+and are not forfeited merely for being below the minimum. Q147 below now approves
+continued entitlement and a final-settlement process after closure/termination;
+actual provider methods and procedures remain unconfirmed. The ordinary threshold
+must not silently convert unpaid creator earnings into platform revenue. Confirm provider minimums, fees and viable supported routes before launch.
+This does not approve any payout method, separate fee, withdrawal mechanism or
+change to Q134's planned twice-monthly schedule.
+
+Source checked September 22, 2026: the official payout-minimum guide uses different
+minimums by method (USD 20, 50 and 100), with a specific SEPA exception. This supports
+method-specific disclosure, not adoption of that platform's providers or exact
+limits. Pumdoki's final provider terms remain unconfirmed.
+https://help.fansly.com/en/articles/10544481-payout-minimums-by-method
+Q135 is approved as the proposed standard and carryforward rule. Actual provider
+minimums and viable supported methods still require confirmation before launch.
+
+Question 136 retained September 22, 2026 (payout methods): the original answer
+correctly leaves supported methods pending processor and business-bank confirmation
+after merchant approval. This does not approve a provider, method or country.
+Validate actual creator-disbursement capability, eligible countries, onboarding,
+fees, minimums and delivery times before launch; merchant acceptance/settlement
+alone does not establish that any bank or processor supports all creator payouts.
+No new outreach or purchase is authorized by retaining this pending answer.
+
+Question 137 approved September 22, 2026 (payment reserves and hold periods):
+replace the incorrect claim that fourteen days covers the refund/chargeback
+window. Use an initial 14-calendar-day pending
+period from each completed transaction as a pilot target, subject to confirmed
+processor settlement and reserve requirements. This is not a final provider term,
+guaranteed availability on day 14, or proof that chargeback exposure has ended.
+Do not promise advances against unsettled or unavailable provider funds.
+
+After the pending period and applicable funding conditions are satisfied,
+eligible available earnings enter the next Q134 scheduled payout, subject to Q135's
+minimum and required verification/tax/payout checks. Clearly distinguish the
+transaction pending period, a provider-imposed reserve, any separately agreed
+creator reserve, a justified individual hold, the scheduled payout date, and bank
+arrival. Earnings clearing just after a payout cutoff may wait until the next
+1st/16th run. Do not describe fourteen days as the full sale-to-bank timeline.
+
+Longer or additional holds/reserves need lawful or documented risk/provider
+grounds, defined scope, review and release conditions, and disclosure under the
+final agreement, subject to lawful notice limits. Retain Q122's proportionality,
+review/appeal route, no automatic forfeiture and ordinary payment of undisputed
+eligible earnings. No blanket rolling reserve percentage, fixed additional
+reserve duration is approved by Q137. Confirm the final hold, settlement, reserve
+and cash-buffer arrangements before live payments. Q139 below now addresses
+chargeback allocation; Q140 now supplies refund allocation. A short pending
+period does not replace those controls.
+
+Sources checked September 22, 2026: CCBill's chargeback guidance describes filing
+windows extending to 120 days and exceptions. This is evidence that fourteen days
+cannot cover the whole exposure period, not a universal maximum or a proposed
+120-day creator hold. The payout benchmark uses a seven-day pending period before
+separate request review, processing and delivery; that timing is not automatically
+transferable to Pumdoki's unconfirmed provider and funding arrangements.
+https://ccbill.com/doc/understanding-chargebacks
+https://help.fansly.com/en/articles/10544480-payout-processing-times
+Q137 is approved as the proposed pilot pending period and hold/reserve safeguards,
+not a confirmed provider arrangement or live payment authorization.
+
+Question 138 approved September 22, 2026 (circumstances allowing payout withholding):
+align with Q102/Q122/Q137. A temporary hold may be applied
+where reasonably necessary on documented grounds involving suspected fraud,
+account takeover or coercion; a trafficking, NCII, law-enforcement or material
+Creator Agreement investigation that justifies restricting payment; unresolved
+disputed transactions; missing or invalid required verification, tax or payout
+documentation; or applicable legal orders and confirmed processor restrictions.
+Do not treat every report, open investigation or minor policy breach as an
+automatic basis to withhold all earnings or presume wrongdoing.
+
+Limit holds to affected funds unless a broader restriction is justified. Document
+the reason, scope and release conditions, review regularly, and give the creator
+an explanation, updates and the established human appeal route, subject to lawful
+disclosure limits and Q102's safe-contact protections. Urgent safety, removal,
+reporting and evidence-preservation duties continue independently of financial
+review and appeals. Do not delay these duties to resolve a payout question.
+
+Release funds when the basis ends, subject to any remaining valid legal/provider
+restriction; undisputed eligible earnings follow the normal payout schedule
+unless separately restricted on justified grounds. No automatic forfeiture merely
+because an investigation/appeal is open or an account is restricted. Valid refunds,
+chargebacks or other agreed lawful adjustments may still affect the balance,
+with chargeback/refund allocation approved in Q139–140 and permitted payout-fee
+categories approved in Q141; actual provider fees remain unconfirmed.
+This replaces the original absolute
+no-forfeiture-while-open sentence with Q122's distinction between temporary holds
+and lawful financial adjustments. No new reserve rate, ban, provider appointment,
+funds seizure or live payout operation is authorized.
+
+Source rechecked September 22: CCBill's merchant FAQ identifies missing required
+contract/identity documents, account holds and payment-option changes as possible
+causes of delayed merchant payments. It does not confer blanket authority over
+creator earnings or confirm Pumdoki-specific terms. The approved proportionality,
+review, notice and appeal safeguards align with Q102/Q122.
+https://ccbill.com/doc/merchant-accounting-faqs
+Q138 is approved as the intended policy. Final policy/provider review and
+implementation are still required; this does not activate payout holds.
+
+Question 139 approved September 22, 2026 (chargeback allocation between Pumdoki
+and creators): adopt transaction-share reversal as the launch default, with an
+exception for losses caused by Pumdoki's own billing or service errors. This
+records the founder's acceptance after the platform comparison and USD 100
+examples, superseding the earlier pending proposal that lacked the exception.
+
+When a chargeback is actually applied, reverse only the creator earnings
+attributable to the charged-back amount and Pumdoki's corresponding commission.
+For a partial chargeback, reverse the corresponding partial allocation; reconcile
+tax separately as required. Pumdoki bears any applicable processor chargeback
+fee and unrecovered ordinary payment-processing costs. Do not deduct the full
+sale amount from the creator while retaining the platform commission, or add an
+unconfirmed dispute fee to creator deductions.
+
+Where the loss was caused by Pumdoki's own billing/service error and the creator
+fulfilled their obligations, preserve the creator's legitimately earned share
+and have Pumdoki bear the loss. This does not preserve duplicate or other unearned
+credits recorded by mistake. Stolen-card fraud and dishonest-buyer chargebacks
+alone do not trigger this exception: they follow the default allocation unless a
+separate funded protection policy is approved in the future. No general guarantee
+of fraud or chargeback protection is offered at launch. Do not quietly turn this
+narrow exception into a promise to insure all compliant creators' transactions.
+
+For the proposed 80/20 split and a full chargeback on a USD 100 sale excluding
+sales tax/VAT, the default reverses USD 80 of creator earnings and USD 20 of
+platform commission. If the creator share is successfully recovered, both parties
+have zero sale revenue and Pumdoki bears unrecovered costs. Under the
+platform-error exception, the creator retains legitimately earned USD 80:
+USD 100 received minus USD 80 paid minus USD 100 returned equals a USD 80 platform
+loss before unrecovered costs. Do not add another USD 20 to that loss. If the
+creator has already withdrawn and no funds can be recovered, the default case
+can also leave Pumdoki with that USD 80 loss; the accounting right to deduct is
+not cash recovery or insurance.
+
+If already-paid earnings create a negative creator balance, any offset against
+future earnings must be expressly covered by the agreed lawful terms. This is
+not permission to automatically debit a creator bank account/card. Processor
+recovery from merchant funds is separate from recovery of creator earnings.
+Retain the approved cash-buffer/risk-limit planning and validate actual reserve
+and settlement requirements before live use. The provisional 14-day pending
+period does not eliminate later exposure.
+
+Give transaction-level explanations identifying the affected amount and reason,
+consider relevant delivery/payment evidence, and provide the established human
+review/appeal route subject to lawful disclosure limits. Prevent double deductions
+for the same loss, including where a refund already reversed the creator share.
+If a chargeback is reversed and funds are actually recovered, restore the
+corresponding creator earnings without duplicating a share already protected.
+A complaint or open dispute alone is not a final loss; interim holds follow Q138.
+Preserve Q28's good-faith dispute protections and unrelated valid purchases.
+No automatic account ban or shorter replacement appeal deadline is adopted.
+Q140 below supplies refund allocation and Q141 permits actual disclosed payout
+transfer fees without markup; the actual provider fee schedule remains unconfirmed.
+
+Benchmarks reviewed September 22: Fansly's FAQ describes protection against most
+chargebacks with exceptions. LoyalFans' main Terms protect against unauthorized
+payment fraud and platform errors, but its Creator Supplement uses broader
+deduction wording and preserves platform fees. These are not copied as a single
+coherent protection promise. OnlyFans' historical terms supplied to Parliament in
+2021 allow creator-share deductions; current live wording was not verified.
+E-Pal's published guidance provides evidence-based internal order disputes and
+sanctions for malicious third-party refund activity, not a verified guarantee
+covering provider chargeback losses. Its internal 72-hour dispute window is not
+adopted as a bank deadline or a new Pumdoki appeal limit.
+https://help.fansly.com/en/articles/12328615-creator-security-faq
+https://www.loyalfans.com/legal/terms-conditions
+https://www.loyalfans.com/legal/creator-supplement
+https://committees.parliament.uk/writtenevidence/40780/default/
+https://www.epal.gg/help/faq/31
+https://www.epal.gg/help/guideline/18
+
+CCBill's accounting FAQ describes chargebacks as merchant-account deductions;
+its guide says standard pricing includes chargeback fees except EU Debit. Use
+"any applicable" fee and confirm actual terms. This does not confirm Pumdoki
+approval or a funded creator-protection arrangement.
+https://ccbill.com/doc/merchant-accounting-faqs
+https://ccbill.com/doc/understanding-chargebacks
+Q139 is approved as the intended policy. Legal/provider review, accounting,
+operational controls and implementation/testing remain required before live use.
+P06 / LEG-MT-103 remains Not Started; LEG-MT-159 cost validation remains open.
+Question 140 approved September 22, 2026 (refund allocation between Pumdoki and
+creators): when a refund is issued under applicable law or the refund policy,
+reverse the creator share of the refunded amount and Pumdoki's corresponding
+commission. Apply proportionate adjustments to partial refunds. Pumdoki absorbs
+unrecovered ordinary processing costs and any applicable refund-processing fees;
+no unconfirmed fee amount or creator-paid refund surcharge is adopted.
+
+Preserve Q139's exception: if Pumdoki's billing/service error caused the refund
+and the creator fulfilled their obligations, the creator retains legitimately
+earned pay and Pumdoki bears the loss. Duplicate/unearned credits can still be
+corrected. If affected earnings have already been paid out, a negative balance
+may be offset against future earnings under the agreed lawful terms, without
+automatic creator bank/card debits. Recovery remains uncertain; include refund
+exposure in the cost/cash-buffer model alongside Q139.
+
+Give transaction-level explanations of the refund amount and earnings adjustment
+and access to human review/appeals. Never deduct the same loss twice, including
+where a chargeback has already reversed the affected earnings. This allocation
+does not give creators a veto over legally required refunds or replace existing
+member refund eligibility and purchased-access decisions. It creates no promise
+of live refunds, new member credit/wallet features or approved provider terms.
+Final drafting/provider review, refund/ledger controls and tests remain pending.
+
+Source checked September 22: Fansly's creator-refund guidance says voluntary
+refunds are deducted from the creator balance or pending funds and processed by
+its support team. It supports an earnings-adjustment workflow, not a claim that
+all platforms adopt Pumdoki's commission reversal or platform-error exception.
+https://help.fansly.com/en/articles/12582124-can-creators-offer-fans-a-refund
+Q140 is approved as the intended policy; implementation remains incomplete.
+
+Question 141 approved September 22, 2026 (fees that may be deducted from creator
+payouts): commission is deducted once from the eligible
+sale when creator earnings are calculated, not again on withdrawal. Only actual
+payout-provider transfer fees associated with the selected supported method may
+be passed through, with no extra platform markup. Disclose the amount or
+calculation basis before method selection and any applicable fee before payout
+authorization or the scheduled payout. Actual providers, methods and fees remain
+unconfirmed; merchant-settlement charges are not automatically creator-payout
+fees. No universal free-payout promise is adopted.
+
+Ordinary sale-processing costs remain within Pumdoki's share under Q131.
+Chargeback/refund processing costs remain Pumdoki's responsibility under
+Q139–140. Valid refunds, chargeback adjustments, correction of unearned credits
+and legally required tax withholding are separately authorized adjustments, not
+additional service fees. Do not deduct commission twice or treat a notice as
+blanket authority to introduce unspecified deductions. Any new or changed fee
+needs a lawful agreed basis and advance disclosure for future application.
+
+Itemize platform deductions. Explain that the recipient's bank/e-wallet may
+separately impose transfer or currency-conversion charges; disclose known charges
+and distinguish costs outside Pumdoki's control from Pumdoki deductions. Do not
+invent an exchange rate, confirmed fee schedule or payout-provider appointment.
+The exact withholding forms, timing and reporting remain for Q142–143 and the
+actual payment arrangement; this approval does not establish tax applicability.
+
+Sources checked September 22: LoyalFans' Terms distinguish the sale commission
+from provider payout fees disclosed for each method, and from recipient bank or
+e-wallet conversion/transaction charges. Fansly's getting-started guide describes
+an 80% share with no hidden payout, processing or conversion fees. Those are
+benchmarks, not verified Pumdoki provider economics or an adopted fee schedule.
+https://www.loyalfans.com/legal/terms-conditions
+https://help.fansly.com/en/articles/12315241-getting-started-on-fansly
+Q141 is approved as the permitted fee structure, not a confirmed fee schedule,
+provider appointment or live payout authorization. Final review, disclosure and
+ledger controls remain pending.
+
+Question 142 approved September 22, 2026 (creator tax documentation, including
+W-9/W-8BEN): replace the obsolete non-U.S.-creator exclusion and universal
+first-payout collection deadline. Retain Q125's conditional international eligibility and Q124's individual-owner
+pilot. Determine documentation from U.S. tax status and the actual payment
+arrangement, not nationality or residence alone. Generally collect W-9 for U.S.
+persons and W-8BEN for foreign individual beneficial owners, with another
+applicable form where required. A U.S. citizen abroad still generally uses W-9.
+The W-8BEN-E distinction for foreign entities does not authorize entity-owned
+creator accounts or corporate payees at launch.
+
+Keep Q22/Q123's staged onboarding: obtain valid required documentation securely
+before payout or an earlier legally/provider-required event, including before
+income is paid, credited or allocated where applicable. Determine the exact
+trigger before enabling monetization; do not assume all forms can wait for a
+withdrawal request, or make every form an unconditional initial creator-approval
+requirement. Require updates when circumstances change or certification expires.
+Use restricted access and a defined retention process; do not collect tax IDs or
+forms in chat, ordinary support email or the repository. A collection provider,
+validation process and tax-document workflow remain unselected/unimplemented.
+
+Confirm the income classification/source, responsible payer/withholding/reporting
+parties, forms, thresholds and deadlines for the actual operating and payment
+arrangement with a qualified U.S. tax professional and the relevant providers
+before live monetization. Applicable reporting may include a Form 1099 variant
+or Form 1042-S where required; do not promise a 1099 for every creator or assume
+that a payment processor automatically handles all platform obligations. Keep
+collection of creator certifications separate from filing/furnishing information
+returns. A W-8BEN documents status and may support eligible treaty treatment; it
+does not automatically exempt a creator from withholding or establish a universal
+rate. Some foreign-person reporting can apply even when no tax is withheld.
+No threshold, withholding rate, treaty eligibility or tax classification is
+adopted by this approval. Q143 below now confirms creator responsibility while
+preserving platform duties and fact-dependent classification.
+
+Sources checked September 22: IRS W-8BEN instructions distinguish foreign
+individuals, entities and U.S. persons; require the applicable form before payment,
+crediting or allocation; and address changes in circumstances and form validity.
+The W-9 page identifies certification of taxpayer information for reporting.
+The 2026 Form 1042-S instructions distinguish reportable U.S.-source payments and
+exceptions, including cases with no withholding. Reporting on the actual creator
+payment flow remains unclassified. The live 1099-MISC/NEC instructions endpoint
+returned a December 2026 revision, so no current threshold or new obligation is
+adopted from that later-dated page.
+https://www.irs.gov/instructions/iw8ben
+https://www.irs.gov/forms-pubs/about-form-w-9
+https://www.irs.gov/instructions/i1042s
+Q142 is approved as the documentation and review policy. Actual income/tax
+classification, provider roles, collection workflow, withholding/reporting details
+and implementation remain unconfirmed; no real tax-data collection or live
+monetization is authorized.
+
+Question 143 approved September 22, 2026 (responsibility for creator taxes):
+creators determine, report and pay taxes legally due on their
+own earnings in relevant jurisdictions, provide accurate required tax information
+and maintain appropriate records. Preserve Pumdoki's own legally required
+withholding, information-reporting, collection/remittance and other tax duties.
+A payment provider may perform agreed functions but is not assumed to discharge
+all platform obligations. Reconcile those responsibilities through Q142's review
+of the actual payment and income arrangement; this does not select a tax rate,
+reporting form for every creator, sales-tax treatment or payroll arrangement.
+
+The Creator Agreement should describe the intended independent relationship,
+subject to applicable law and how the relationship actually operates. Do not
+assert that every creator is legally an independent contractor in every country
+merely because the agreement says so. Final classification and required
+protections cannot be contracted away. This preserves the intended independent
+creator model without labeling the current platform an employer or restarting
+an employment/entity-selection project. Review the concrete arrangement where
+necessary before live use.
+
+Sources checked September 22: IRS worker-classification guidance expressly says
+a contract label does not determine status; the facts and actual relationship
+matter. That is U.S. federal tax guidance, not a universal international
+employment-law ruling. Q142's IRS withholding/reporting sources establish why
+creator responsibility cannot erase obligations separately imposed on Pumdoki.
+https://www.irs.gov/businesses/small-businesses-self-employed/type-of-relationship
+https://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-defined
+https://www.irs.gov/instructions/i1042s
+Q143 is approved as the intended division of responsibilities, not a determination
+of every creator's tax/employment status. Concrete classification/provider review
+and implementation remain pending.
+
+Question 144 reviewed September 22 and retained (custom content and paid sessions):
+the same content rules apply, creators may decline requests without giving a
+reason and payment must use the approved platform flow, with off-platform payment
+solicitation prohibited. Apply the already approved Q72/Q73 safeguards: agree the
+scope, price and delivery terms before payment; resolve canceled accepted orders
+under the Refund Policy; payment never overrides consent or requires performance
+against a creator's wishes. Required verification, consent, records and moderation
+continue to apply. Retaining this answer does not activate paid sessions/custom
+orders or decide Q31's separately pending paid-session commission. Actual supported
+flows and provider approval remain prerequisites.
+
+Question 145 approved September 22, 2026 (subcontractors, agencies and account
+managers): align with Q124's verified individual-owner
+pilot. Only the verified creator may access and operate the creator account at
+launch. Do not permit shared credentials, shared sessions, delegated logins or
+third parties managing messages, publication or payout controls. Agency/studio-
+owned accounts and delegated account management remain deferred until separately
+approved ownership, verification, access/permission, logging, revocation, payout
+and safety controls are supported. Do not treat this as authorization to build a
+management feature or promise a later launch date.
+
+Distinguish account management from legitimate assistance without account access.
+Lawful help such as photography or editing may be used subject to applicable
+consent, rights, confidentiality, privacy and platform-content requirements.
+The verified creator remains in control and responsible for the account and
+published material. This exception grants no access to private member
+communications, platform-held verification records or account credentials.
+Record-service access remains governed by Q130. Approved collaborations still
+require every participant's verification, consent and
+recordkeeping checks. Help with production is not a workaround for unverified
+performers, corporate payees or prohibited content.
+
+Remove the unsupported assertion that third-party management is the single
+clearest trafficking/coercion indicator. Legitimate assistance alone is not proof
+of abuse. Q99/Q102 require contextual review of actual coercion, lack of consent,
+loss of account/earnings control or other credible evidence, with proportionate
+protective action and safe-contact safeguards. This pilot restriction reflects
+unsupported access controls and operational capacity, not a finding that agency
+or assistant involvement necessarily implies trafficking.
+
+Source checked September 22: Fansly's Management Sessions guide expressly allows
+controlled, permission-scoped assistance without sharing login credentials and
+restricts sensitive functions such as payouts/account closure. It demonstrates a
+supported alternative, not equivalent Pumdoki capability or a reason to introduce
+it before the needed controls exist.
+https://help.fansly.com/en/articles/12328641-management-sessions
+Q145 is approved as the launch policy: creator-only account operation with lawful
+outside production help under the stated safeguards. Delegated management remains
+deferred; no new feature or provider arrangement is authorized.
+
+Question 146 reviewed September 22 and retained (account termination procedure):
+creators may request closure at any time; platform enforcement includes notice
+and an appeal route, with immediate action for serious prohibited conduct. Apply
+Q47's ownership verification, closure consequences, stopping new transactions and
+renewals, handling existing obligations and lawful data retention/deletion without
+a mandatory recovery period. Read this short answer with Q62/Q63: urgent protective
+suspension can precede investigation, substantiated serious breaches can warrant
+termination without prior warning, and notice/appeal information remains subject
+to lawful disclosure limits and safety considerations. A report alone is not proof
+for permanent termination. This does not limit urgent action to an undefined
+"absolute prohibitions" label, create an extra warning entitlement or override
+required removal/reporting/preservation. Q147–150 separately address financial,
+purchased-access and surviving-rights consequences; retaining Q146 does not
+activate an account-deletion or enforcement system.
+
+Question 147 approved September 22, 2026 (accrued but unpaid creator earnings
+after termination): legitimate accrued earnings remain payable
+following voluntary closure or platform termination, subject to valid transaction
+adjustments, required tax withholding, agreed disclosed fees, lawful restrictions
+and actual provider requirements. Closing or banning the account is not, by
+itself, a basis for forfeiture, a new penalty or converting unpaid earnings into
+platform revenue. Do not promise payment of fraudulent/unearned amounts; Q139–142
+and applicable law govern the relevant adjustments and withholding.
+
+Release undisputed eligible earnings through the normal applicable payout cycle
+once the transaction pending/settlement conditions and required verification,
+tax and payout checks are satisfied. Do not make all remaining earnings wait for
+an unrelated investigation to finish. Q138 holds must have documented grounds,
+proportionate scope and regular review; restrict affected funds unless broader
+grounds justify more, provide reasons/updates and the existing human appeal
+route subject to lawful disclosure limits and Q102 safe-contact protections, and
+release funds when the basis ends subject to separate valid restrictions.
+Account termination does not restart the pending clock or authorize an indefinite
+hold. No bank-arrival date or advance against unavailable processor funds is
+promised. Allow a secure verified settlement/support route without requiring
+restoration of a banned account.
+
+Q135's ordinary payout minimum must not automatically forfeit the remaining
+balance on closure. Establish a documented final-settlement process and use a
+supported payment route or minimum exception where available and lawful. If
+provider minimums or other restrictions prevent payment, keep a record of the
+amount due and resolve it under the final agreement and applicable law rather
+than silently treating it as platform income. Actual closure methods, final
+fees, timing and handling of unpaid/unclaimed funds need confirmation before
+live launch. No universal provider minimum waiver, instant final payout, new
+banking rail or indefinite retention of unnecessary identity data is authorized.
+
+Sources checked September 22: Fansly's payout-minimum guide demonstrates that
+minimums differ by method. LoyalFans' closure terms discuss paying unpaid creator
+earnings and separately handling balances below the selected method's minimum;
+they also contain a forfeiture provision that is not adopted here.
+These are product comparisons, not authority to forfeit earnings or confirmation
+of Pumdoki provider capabilities. The approved continuing entitlement and hold
+safeguards align with approved Q122/Q135/Q138–142.
+https://help.fansly.com/en/articles/10544481-payout-minimums-by-method
+https://www.loyalfans.com/legal/terms-conditions
+Q147 is approved as the intended entitlement, hold and final-settlement policy.
+Final legal/provider review, supported methods and implementation are still
+required. P06 / LEG-MT-100 records the payout-flow dependency and remains Not
+Started; no parallel founder task or live payout capability is activated.
+
+Questions 148–149 reviewed September 22 and retained (purchased content after
+creator termination or voluntary closure): members retain access to the purchased
+version in accordance with Q26/Q46/Q47 and the applicable Terms and Refund Policy.
+Ordinary closure, delisting or unrelated account enforcement alone does not erase
+valid purchase entitlements. Required legal/safety removal and reversed payments
+can end affected access; do not read "absolute prohibitions" as excluding other
+applicable lawful removal grounds. Refunds required by law or the approved policy
+must be honored, rather than left to unrestricted discretion. These answers do
+not give copyright ownership to buyers, decide downloads, preserve access to
+illegal/nonconsensual material or grant access to future content. Paid version
+retention, entitlements and refund enforcement remain unimplemented.
+
+Question 150 approved September 22, 2026 (post-termination rights the platform
+needs to retain), following the founder's direction to proceed to Additional
+materials: retain a non-exclusive license only to the
+extent and for the duration necessary to store, technically process and deliver
+lawfully purchased content versions to the existing entitled purchasers, complete
+outstanding financial obligations and handle legitimate disputes. This implements
+Q26/Q46/Q47/Q127 rather than authorizing new sales after closure or public reuse.
+Creators retain ownership. No broader advertising, unrelated exploitation or
+new-sale right is implied; separate promotional permissions under Q55/Q128 remain
+a separate matter. Downloads remain undecided.
+
+Continued delivery remains subject to applicable law, consent and safety/removal
+requirements, valid payment reversals, and the Terms and Refund Policy. A surviving
+operating license is not a substitute for valid performer consent or a basis to
+serve content that must be removed. Technical processing must remain necessary
+for authorized delivery, not a right to materially alter the purchased work or
+create unrelated derivatives. Final counsel drafting must make this limited
+survival explicit and consistent with the operating-license and deletion clauses.
+
+Retain only necessary transaction, tax, consent/verification, applicable §2257,
+moderation, complaint/dispute and law-enforcement records for documented lawful
+purposes and the applicable retention periods/holds under Q46/Q130. Preserve the
+separation of statutory performer records from consent and other records. Any
+removed-content evidence must be kept only where lawful and necessary in a
+restricted, segregated evidence store; it must not remain publicly accessible or
+available to buyers merely because an evidence copy is retained. Delete or
+anonymize unnecessary personal data under the approved deletion process when
+its lawful purpose and required preservation period end. This is not a blanket
+indefinite-retention license or a claim that evidence/erasure controls operate.
+
+Sources checked September 22: Fansly's sold-media guide confirms that deleting
+sold media does not remove the purchased version from the buyer's collection.
+LoyalFans' Creator Supplement section 5.9.3 explicitly addresses continuing access
+for prior purchasers after content removal and specified archival copies. These
+support separating necessary surviving rights from ordinary publication rights;
+Pumdoki is not adopting that supplement's broader promotional/derivative rights.
+https://help.fansly.com/en/articles/12582143-if-i-delete-sold-media-will-fans-keep-access
+https://www.loyalfans.com/legal/creator-supplement
+Q150 is approved as the intended limited surviving license and retention policy;
+final drafting and operating controls remain pending. The numbered questionnaire
+review has reached its end, with previously recorded open provider/business issues
+still unresolved. The commissioned agreement and LEG-MT-021 remain In Progress,
+pending delivery, substantive review and the necessary controls.
+
+The unnumbered Additional materials note was reviewed September 22 and accepted
+in the final questionnaire handoff. Review finding: revise the first paragraph because the blanket
+statement that no processor or card-network materials are available is inaccurate.
+Public Mastercard Security Rules and Procedures (Merchant Edition, 4 August 2026,
+section 9.4.1) and CCBill documentation are available and have been consulted.
+CCBill's initial Sales correspondence is also available; the requirement for a
+functioning review site does not mean that no guidance has been issued. It permits
+password-protected online access but does not confirm that a static prototype or
+simulated checkout suffices. Final Pumdoki-specific approval, pricing/reserves,
+creator payout capability and verification-provider arrangements remain unconfirmed.
+
+Accepted replacement: available materials include the
+initial CCBill correspondence and public card-network/provider guidance. Draft
+using the agreed platform model, applicable law and current applicable card-network
+requirements, including Mastercard section 9.4.1. Identify assumptions and unresolved
+provider-dependent provisions, then reconcile the documents with the actual processor,
+acquiring-bank, payout and age-verification requirements before activating the relevant
+features or processing live payments. Do not claim that provider appointments,
+approvals or operational controls exist while they remain planned. Public guidance
+is not evidence of Pumdoki approval or confirmation of its negotiated terms.
+
+Retain the second paragraph's accurate single-operator description: the founder
+currently owns the relevant responsibilities. Trained backup/delegation is planned
+under earlier decisions, not an existing staffed department or guaranteed round-the-clock
+coverage. Describe any eventual delegation only when it is actually arranged, with
+the founder's accountability and applicable operational requirements preserved.
+The paragraph's prediction of a card network's reaction is explanatory judgment,
+not a verified statement from an underwriter; no new staffing promise is adopted.
+
+Sources rechecked September 22:
+https://www.mastercard.com/content/dam/mccom/shared/business/support/rules-pdfs/SPME-Manual.pdf
+https://ccbill.com/doc/merchant-accounting-faqs
+The September 9 Sales reply is summarized in the CCBill section below and in
+docs/product/ccbill-review-site-clarification.md; the cancelled follow-up remains
+unsent. This note is questionnaire content, not new authorization to contact counsel,
+restart provider outreach, collect identity records or activate payments.
+September 23 handoff: the founder reports correcting the final response document,
+including formation status, creator approval versus publication/payout prerequisites,
+applicable privacy-request deadlines and the duplicated impersonation answer.
+The founder edits and sends the DOCX privately; it is not a repository artifact.
+The legal task now awaits Suzanne's response and commissioned drafts. Final legal
+approval, provider details and operational implementation remain outstanding.
+The next engineering checkpoint remains P05 / LEG-MT-088; no parallel founder
+workstream or live activation is started by this handoff.
 
 CCBill requires a fully functioning site and permits online password-protected
 access. It requests URL, development/timeline, business type/location, average
@@ -3539,7 +4138,8 @@ reviewed draft version, corrections and remaining limitations of each review.
 - September 22 Q132 supersedes the earlier no-profit/cost-recovery Founders
   offer. Use the standard commission model and the public label Founders, with
   discovery placement, a web-app tag, SFW Discord events and future event priority.
-  Q133 owns unresolved duration and eligibility; cash-prize events need their own
+  Q133 approves account-lifetime recognition and conditional benefits; eligibility
+  remains open, and cash-prize events need their own
   budgets and terms. Earlier 500-person, permanent-fee and Plus promises are not
   approved. No-loss economics were never demonstrated for the superseded offer.
 - Two contacted creators may help recruit 50–100 candidates. A paid Discord

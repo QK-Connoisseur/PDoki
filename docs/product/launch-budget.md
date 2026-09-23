@@ -121,11 +121,12 @@ mail guard until approved delivery is configured and tested.
 September 22 Q132 replaces the earlier cost-recovery/no-profit founder offer.
 **Founders use the standard commission model**, with recognition, discovery and
 community/event benefits. Q131's 20% platform / 80% creator target still needs
-validation against confirmed provider and operating costs. Include programme
+validation against confirmed provider and operating costs. Include program
 operating costs in the ordinary budget; no special founder fee is assumed.
 Cash-prize events are optional and need a separately approved, funded budget
 before announcement. No prize amount, recurring event spend, fixed cohort size,
-member discount or Plus income is approved. Q133 owns duration/eligibility.
+member discount or Plus income is approved. Q133 approves account-lifetime recognition and conditional benefits; cohort
+eligibility and cutoff remain open.
 
 Primary price references checked September 6, 2026:
 

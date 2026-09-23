@@ -1234,6 +1234,18 @@ export default function BillingPage({
               controls are not active.
             </aside>
             {renderSection()}
+            <div className="mt-8 border-t border-pink-100 pt-5 text-sm text-[#755a6b]">
+              Questions about a purchase?{" "}
+              <a
+                href="/legal/refunds"
+                className="font-semibold text-[#a42e61] underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4"
+              >
+                Read our refund guide
+              </a>
+              <span className="mt-1 block text-xs">
+                Draft policy · legal review pending
+              </span>
+            </div>
           </div>
         </main>
       </div>
